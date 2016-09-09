@@ -1,0 +1,37 @@
+!!!!! scan devices !!!!!
+hcitool scan
+
+if there is an error then the bluetooth needs to be powered on
+run this to power it on
+./power.sh on
+--------------------
+
+
+
+!!!!! connect device !!!!!
+bluez5-connect xx:xx:xx:xx:xx:xx (this is python so no need to put bash at the begining)
+this will connect the device but you must disable the player before doing this then enable the player after, 
+
+this is my working php example
+<?php
+$output = shell_exec("./bluetooth/bluez5-connect FC:58:FA:48:0B:5E");
+if (strpos($output, 'org.bluez.Error.Failed') !== false) {
+    echo 'failed';
+}
+else{
+echo "connected";
+}
+?>
+
+------------------------
+!!!!! disconnect button !!!!!
+bash ./bluetooth/disconnect.sh
+expect the message (done) then you should alert (all devices disconnected)
+
+------------------------
+!!!!! unpair-all button !!!!!
+bash ./bluetooth/unpair-all.sh
+
+same again wait for (done) then if possible check the output from shell_exec and count how many (Device has been removed) there are
+so you can alert (3 devices removed) if 3 are found
+

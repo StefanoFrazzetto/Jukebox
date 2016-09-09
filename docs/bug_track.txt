@@ -1,0 +1,46 @@
+bug report :)
+
+
+the player counts up the track time but when it gets to 59 it goes to 60 very briefly then it quickly goes to 00. this needs looking at
+
+need the track names to allow any charactor in the font or have the tracknames specail charactors replaced with something else as it messes up the name, i have noticed that this charactor (') is the main issue
+
+far left row of albums changes size during pagination. sometimes it stays a smaller size to the rest
+
+could we move the player down slightly so we can see the top, i showed some people and they said it looks odd connected to the very top (maybe make the gap same distance as bottom of player)
+
+we need the scrollbars on the whole jukebox to be a lot wider. so the touchscreen can click it without accidently clicking somewhere else
+
+
+
+!!FIXED!!
+
+on uploaded albums could we fetch the lenght of the track and store that in the db for later use, like showing track lenght in playlist and also to calculate tracks on burning to disc
+
+next button shows even when there is no albums on next page and when clicked it will disapeer and wont come back untill refresh
+
+when i click the star.png could we have it ordered by album that has been played the most
+
+when i click the clock.png could we have the albums displayed by last album uploaded.
+
+i uploaded an album with no id3 and the names were "track 01 track 02" it had 5 cd's but when i play the album all the cd's are the same as the first cd, im guessing that the tracks overwritten eachother on upload
+
+arrow dissapears when i click "a b c" selection and does not come back untill page refreshed
+
+on albums with more than 1 cd ther eis an issue when i click a track other than cd one it will play fine but when i click next it will jump to a different cd.
+
+search is not working anymore.
+
+on the jukebox 50% of the time the albums are a decent size but the other time it would show 3 large albums. (this maybe the jukeboxes fault!)
+
+uploaded albums are still not ordered naturaly
+
+when i upload an image/cover with different aspect ratio it will not correct itself in the player album cover, as seen when you click now 87 album.
+
+player font pushes down tracktime passed visible view on some tracks with large names.
+
+when i click sort by album title it would not sort correctly
+
+when i upload more than 1 album without refreshing page it would show the same cover in the coose cover section even though it uploads the right cover (cache issue)
+
+convert all images uploaded to smaller size

@@ -1,0 +1,8 @@
+we will add things to this list and if you could add <DONE> next to the ones completed or <Check> next to the ones you need us to test :)
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+make ifconfig available for apache
+
+when i run "export DISPLAY=':0'; xinput_calibrator" i would need the settings to be saved perminatly
+

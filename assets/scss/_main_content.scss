@@ -1,0 +1,88 @@
+#albums {
+  min-width: 950px;
+  width: 100%;
+  position: absolute;
+  top: 200px;
+  height: calc(100% - 201px);
+}
+
+#mainContentAjax {
+  overflow: hidden;
+  margin-top: 20px;
+  margin-left: 50px;
+  margin-right: 50px;
+  table {
+    table-layout: fixed;
+    width: 100%;
+    border-spacing: 10px;
+  }
+  td {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    &:after {
+      content: '';
+      display: block;
+      margin-top: 100%;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+      border-radius: 5px;
+    }
+  }
+  .album {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+  .moar {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+    transition: 200ms all;
+    text-align: center;
+    line-height: 31px;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: 0 0 8px rgba($overlays, 0.8);
+    background-color: rgba($overlays, 0.5);
+    opacity: 0.8;
+    //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+    border-radius: 30px;
+    &:hover {
+      background-color: rgba($overlays, 0.8);
+      color: $highlight_color;
+      //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+      text-shadow: 0 0 8px $highlight_color;
+      opacity: 1;
+    }
+  }
+  .albumDetails {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+    font-size: 10pt;
+    background-color: rgba($overlays, 0.5);;
+    overflow: hidden;
+    //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+    border-radius: 0 0 5px 5px;
+  }
+  .albumArtist {
+    font-weight: bold;
+  }
+  .albumTitle {
+    margin-top: -15px;
+  }
+}

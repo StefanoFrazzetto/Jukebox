@@ -1,0 +1,65 @@
+// Main Palette
+$text_color: #f5f5f5;
+$background_color_highlight: #1e1e1e;
+$background_color: #2a2a2a;
+$border_color: #48485a;
+$overlays: #323232;
+$highlight_color: #03a9f4;
+
+$isDarkTheme: true;
+
+//$text_color: #3D3B30;
+//$background_color_highlight: #c2c6b6;
+//$background_color: #E9EDDE;
+//$highlight_color: #E7E247;
+//$border_color: #4D5061;
+//$overlays: #E9EDDE;
+
+//$text_color: #ffffff;
+//$background_color_highlight: #69140E;
+//$background_color: #3C1518;
+//$highlight_color: #D58936;
+//$border_color: #4D5061;
+//$overlays: #3C1518;
+
+//$text_color: #F0F0F0 ;
+//$background_color_highlight:  #050505  ;
+//$background_color:  #141414  ;
+//$border_color: #282828 ;
+//$overlays: #141414;
+//$highlight_color: #EB1400 ;
+
+//$text_color: #f5f5f5;
+//$background_color_highlight: #1e1e1e;
+//$background_color: #2a2a2a;
+//$border_color: #48485a;
+//$overlays: #323232;
+//$highlight_color: #1db954;
+
+//$text_color: #303030;
+//$background_color_highlight: #C4C4C4;
+//$background_color: white;
+//$border_color: #a8a8a8;
+//$overlays: #C4C4C4;
+//$highlight_color: #4c77a9;
+
+// UI elements colors
+$input_color: $background_color_highlight;//#3a3a3a;
+
+// Niggas... ehr Blacks
+
+@if $isDarkTheme {
+  $black_20: rgba(0, 0, 0, 0.2); // 2
+  $black_50: rgba(0, 0, 0, 0.5); // 5
+  $black_80: rgba(0, 0, 0, 0.8); // 8
+} @else {
+  $black_20: rgba(0, 0, 0, 0.1); // 2
+  $black_50: rgba(0, 0, 0, 0.2); // 5
+  $black_80: rgba(0, 0, 0, 0.3); // 8
+}
+
+// Whites
+$white_10: rgba(255, 255, 255, 0.10);
+
+// BLUES
+$highlight_color_50: rgba($highlight_color, 0.5);

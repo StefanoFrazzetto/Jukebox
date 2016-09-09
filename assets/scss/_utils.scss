@@ -1,0 +1,132 @@
+.hidden {
+  display: none;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.pull-right {
+  float: right;
+}
+
+.right {
+  float: right;
+}
+
+.text-center, .center {
+  text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid $border_color;
+  width: 100%;
+}
+
+.cover-picture {
+  box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.40);
+  border-radius: 5px;
+
+  transition: box-shadow 400ms;
+
+  box-sizing: border-box;
+
+  &:hover {
+    box-shadow: 0px 0px 10px 3px rgba($highlight_color, 0.40);
+  }
+
+  &:active, &.active {
+    box-shadow: 0px 0px 10px 3px rgba($highlight_color, 0.80);
+    border: 2px solid rgba($highlight_color, 0.8);
+  }
+}
+
+.half-wide {
+  width: 50% !important;
+}
+
+.cover-container {
+  width: 168px;
+  height: 168px;
+  margin: 5px;
+
+  margin-top: 0;
+
+  text-align: center;
+
+  position: relative;
+
+  display: inline-block;
+
+  vertical-align: middle;
+
+  .covers {
+    @extends .cover-picture;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    margin: auto;
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    display: block;
+  }
+}
+
+.overflow-hidden {
+  overflow: hidden;
+  height: 600px;
+}
+
+.badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+  transition: 200ms all;
+  text-align: center;
+  line-height: 31px;
+  //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  text-shadow: 0 0 8px rgba($overlays, 0.9);
+  background-color: rgba($overlays, 0.6);
+  opacity: 0.8;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 100%;
+
+  cursor: pointer;
+
+  &.badge-bottom {
+    top: inherit;
+    bottom: 5px;
+  }
+
+  &.badge-bigger{
+    width: 50px;
+    height: 50px;
+    font-size: 15px;
+    line-height: 60px;
+  }
+
+  &:hover {
+    background-color: rgba($overlays, 0.8);
+    color: $highlight_color;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: 0 0 8px $highlight_color;
+    opacity: 1;
+  }
+}
+
+// TODO REMOVE THIS
+
+form.dropzone {
+  border-color: $text_color !important;
+}

@@ -1,0 +1,59 @@
+.progressBar {
+	width: 100%;
+	height: 20px;
+	display: inline-block;
+	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+	border-radius: 10px;
+	border: 1px solid $black_50;
+	background-color: $background_color_highlight;
+	//Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+	box-shadow: 0 2px 0 0 $white_10, inset 0 1px 2px 0 $black_20;
+	// overflow: hidden;
+	margin-top: 6px;
+	margin-bottom: 16px;
+	position: relative;
+
+	&.thin {
+		height: 12px;
+
+		background-color: transparent;
+
+		box-shadow: 0 1px 0 0 $white_10, inset 0 0 3px 1px $black_20;
+	}
+	
+	.progress, .ui-slider-range {
+		height: 100%;
+		width: 0;
+		//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+		border-radius: 10px;
+		background-color: $highlight_color;
+		background-image: linear-gradient(0deg, $black_50 0, $black_20 50%, rgba(255, 255, 255, 0) 100%);
+		//Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+		box-shadow: inset 0 1px 0 0 $white_10;
+		position: absolute;
+		top: 0;
+		left: 0;
+		//Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+		transition: width 100ms;
+		text-align: center;
+	}
+
+	&.ui-slider-vertical .ui-slider-range {
+		width: 100%;
+		bottom: 0;
+		top: initial;
+		background-image: linear-gradient(270deg, $black_50 0, $black_20 50%, rgba(255, 255, 255, 0) 100%);
+	}
+
+	.ui-slider-handle {
+		//left: 5px;
+	}
+
+
+
+}
+progress[value] {
+	appearance: none;
+	width: 250px;
+	height: 20px;
+}

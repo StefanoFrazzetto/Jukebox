@@ -1,0 +1,150 @@
+.table {
+  border: 1px solid $border_color;
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  @extend %extend_2;
+  th {
+    @extend %extend_2;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  td {
+    @extend %extend_2;
+  }
+
+  input {
+    margin: -6px;
+    width: 104.6%;
+  }
+}
+
+table.cooltable {
+  //colors
+  $shadow_color: rgba(0, 0, 0, 0.1);
+
+  $color_highlight: $highlight_color; //lighten($color_shark_approx, 7%);;// #4e5066;
+
+  $color_even: darken($background_color, 11%);
+
+  $color_odd: darken($background_color, 6%);
+
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  border-collapse: collapse;
+  margin: auto;
+  padding: 5px;
+  width: 100%;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 0 5px 10px $shadow_color;
+  animation: float 5s infinite;
+  border: none;
+
+  th {
+    background-color: $background_color_highlight;
+    border-bottom: 4px solid $border_color;
+    border-right: 1px solid $border_color;
+    font-size: 20px;
+    font-weight: 100;
+    padding: 17px;
+    text-align: center;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: 0 1px 1px $shadow_color;
+    vertical-align: middle;
+    &:first-child {
+      //Instead of the line below you could use @include border-top-left-radius($radius)
+      border-top-left-radius: 3px;
+    }
+    &:last-child {
+      //Instead of the line below you could use @include border-top-right-radius($radius)
+      border-top-right-radius: 3px;
+      border-right: none;
+    }
+    &.text-left {
+      text-align: left;
+    }
+    &.text-center {
+      text-align: center;
+    }
+    &.text-right {
+      text-align: right;
+    }
+  }
+  tr {
+    border-top: 1px solid $border_color;
+    border-bottom: 1px solid $border_color;
+    font-size: 16px;
+    font-weight: normal;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: 0 1px 1px $shadow_color;
+    &:first-child {
+      border-top: none;
+    }
+    &:last-child {
+      border-bottom: none;
+      td {
+        &:first-child {
+          //Instead of the line below you could use @include border-bottom-left-radius($radius)
+          border-bottom-left-radius: 3px;
+        }
+        &:last-child {
+          //Instead of the line below you could use @include border-bottom-right-radius($radius)
+          border-bottom-right-radius: 3px;
+        }
+      }
+    }
+    &:nth-child(odd) {
+      td {
+        background: $color_odd;
+      }
+      &:hover td {
+        background: $color_highlight;
+      }
+    }
+    &:hover td {
+      background: $color_highlight;
+      color: $text_color;
+      border-top: 1px solid $background_color;
+      border-bottom: 1px solid $background_color;
+    }
+  }
+  td {
+    background: $color_even;
+    padding: 20px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 300;
+    font-size: 18px;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: -1px -1px 1px $shadow_color;
+    border-right: 1px solid $border_color;
+    &:last-child {
+      border-right: 0;
+    }
+    &.text-left {
+      text-align: left;
+    }
+    &.text-center {
+      text-align: center;
+    }
+    &.text-right {
+      text-align: right;
+    }
+  }
+  div.table-title {
+    display: block;
+    margin: auto;
+    max-width: 600px;
+    padding: 5px;
+    width: 100%;
+  }
+  .table-title h3 {
+    font-size: 30px;
+    font-weight: 400;
+    font-style: normal;
+    //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    text-shadow: -1px -1px 1px $shadow_color;
+    text-transform: uppercase;
+  }
+}

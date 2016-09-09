@@ -1,0 +1,32 @@
+#sorter {
+  position: absolute;
+  width: 35px;
+  top: 39px;
+  z-index: 100;
+  right: 36px;
+  vertical-align: middle;
+  height: auto;
+  display: none;
+  .by {
+    display: block;
+    height: 35px;
+    vertical-align: middle;
+    line-height: 35px;
+    div {
+      top: 0;
+      display: none;
+      width: 0;
+      height: 35px;
+      overflow: hidden;
+      text-align: center;
+      margin-left: -6px;
+      //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+      transition: 0.5s ease;
+    }
+  }
+  .searchbox-icon {
+    height: 35px;
+    width: 35px;
+    margin: 0;
+  }
+}

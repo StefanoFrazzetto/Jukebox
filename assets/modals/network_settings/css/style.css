@@ -1,0 +1,53 @@
+#dhcp_div {
+  float: right;
+}
+
+.inline {
+  display: inline;
+  position: relative;
+}
+
+#dhcp_module {
+  height: 50px;
+}
+
+#network_selectors table{
+  border-spacing: 0;
+}
+
+#network_selectors td, #network_selectors tr,  #network_selectors th{
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+hr {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+
+.wifiID {
+    text-align: center;
+    width: 10%;
+}
+
+.wifiESSID {
+    text-align: left;
+    width: 50%;
+}
+
+.wifiEncryption {
+    text-align: center;
+    width: 15%;
+}
+
+.wifiQuality {
+    text-align: center;
+    width: 25%;
+    padding-right: 10px;
+}
+
+#wifi_details div {
+  margin: 15px;
+}

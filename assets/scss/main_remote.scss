@@ -1,0 +1,150 @@
+@import 'vars';
+@import 'colors';
+@import 'fonts';
+@import 'mixins';
+@import 'buttons';
+@import 'forms';
+@import 'sliders';
+@import 'progressbar';
+@import 'utils';
+@import 'links';
+
+
+$remote-margin: 40px;
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: $font_2, $font_3;
+	color: $text_color;
+	background-color: $background_color;
+	font-size: $font_size;
+	text-rendering: optimizeLegibility;
+}
+
+*{
+	box-sizing: border-box;
+}
+
+html, body, #container {
+	min-height: 100vh;
+}
+
+body {
+	min-width: auto;
+
+}
+
+#container {
+	max-width: 100vw;
+
+	padding: $remote-margin;
+
+	margin: auto;
+
+	position: relative;
+	
+}
+
+#cover-container{
+
+	width: 100%;
+
+	position: relative;
+}
+
+#cover-label div {
+	text-align: center;
+	width: 100%;
+}
+
+#cover-label {
+	margin-top: $remote-margin / 4;
+	margin-bottom: $remote-margin / 2;
+}
+
+#cover{
+	max-width: 100%;
+	max-height: 100%;
+	width: 100%;
+}
+
+#remote-controls{
+	text-align: center;
+
+	padding-left: $remote-margin;
+	padding-right: $remote-margin;
+
+	position: absolute;
+
+	bottom: $remote-margin / 2;
+	left: 0;
+
+	width: 100%;
+
+
+}
+
+#artist {
+	font-size: x-large;
+}
+
+#remote-control-placeholder{
+	width: 100%;
+	height: 71px;
+}
+
+
+
+/* SMARTPHONES PORTRAIT */
+@media only screen and (min-width: 300px) {
+
+
+}
+
+/* SMARTPHONES LANDSCAPE */
+@media only screen and (min-width: 480px) {
+	
+	#container{
+		max-width: 100%;
+		height: 100%;
+		padding: $remote-margin / 2;
+	}
+
+	#cover-container{
+		width: 50% !important;
+		padding-right: $remote-margin;
+		height: 100%;
+		float: left;
+	}
+
+	#remote-controls {
+		right: $remote-margin !important;
+
+		left: initial;
+
+		top: $remote-margin !important;
+
+		width: 50% !important;
+	}
+
+	#remote-controls-placeholder {
+		float: right;
+		display: inline-block;
+		width: 50%;
+	}
+
+}
+
+/* TABLETS PORTRAIT */
+@media only screen and (min-width: 768px) {
+
+
+}
+
+
+/* TABLET LANDSCAPE / DESKTOP */
+@media only screen and (min-width: 1024px) {
+
+
+}    

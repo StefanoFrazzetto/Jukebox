@@ -1,0 +1,77 @@
+@import 'vars';
+@import 'colors';
+@import 'fonts';
+@import 'mixins';
+@import 'buttons';
+@import 'forms';
+@import 'sliders';
+@import 'keyboard';
+@import 'player';
+@import 'switch';
+@import 'progressbar';
+@import 'main_content';
+@import 'modal';
+@import 'alerts';
+@import 'tables';
+@import 'sorter';
+@import 'songstable';
+@import 'searchbar';
+@import 'utils';
+@import 'links';
+@import 'multiselect';
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: $min_body_width;
+  font-family: $font_2, $font_3;
+  color: $text_color;
+  background-color: $background_color;
+  font-size: $font_size;
+  text-rendering: optimizeLegibility;
+
+ 
+
+
+  //background-image: url('http://phandroid.s3.amazonaws.com/wp-content/uploads/2015/12/winter-snow-wallpaper-2.jpg');
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+}
+
+$arrows_opacity: 0.8;
+
+#previous {
+  @extend %extend_7;
+  left: 0;
+  img {
+    @extend %extend_6;
+    right: 0 !important;
+    &:hover {
+      opacity: $arrows_opacity;
+    }
+  }
+}
+
+#next {
+  @extend %extend_7;
+  right: 0;
+  img {
+    @extend %extend_6;
+    &:hover {
+      opacity: $arrows_opacity;
+    }
+  }
+}
+
+*::selection {
+  background: $highlight_color; /* WebKit/Blink Browsers */
+  color: $text_color;
+}
+
+*::-moz-selection {
+  background: $highlight_color; /* WebKit/Blink Browsers */
+  color: $text_color;
+}

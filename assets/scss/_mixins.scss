@@ -1,0 +1,125 @@
+// A shadow for various UI elements
+%ui_element_shadow {
+  box-shadow: inset 0 1px 0 $white_10, 0 0 16px 2px $black_20;
+}
+
+$border-radius: 5px;
+
+%ui_element {
+  @extend %ui_element_shadow;
+
+  border-radius: 0 0 $border-radius $border-radius;
+  background-image: linear-gradient(0deg, darken($background_color, 3) 0, $background_color 100%);
+
+  @extend %ui_element_shadow;
+  border: 1px solid $black_50;
+}
+
+// BUTTONS
+
+
+//original selectors
+//input, .box-btn, button
+%ui_generic_input {
+  height: 35px;
+  //Instead of the line below you could use @include box-sizing($bs)
+  box-sizing: border-box;
+  padding: 5px;
+  margin: 0;
+  background-color: $input_color;
+  vertical-align: baseline;
+  font-family: $font_2, $font_3;
+  display: inline-block;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 4px;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  //box-shadow: inset 0 1px 0 $white_10;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: inset 0 1px 0 $white_10, 0 1px 2px $black_20;
+  border: 1px solid $black_20;
+  color: $text_color;
+
+  &.disabled{
+    @extend %disabled;
+  }
+}
+
+//original selectors
+//.box-btn, input[type="button"], input[type="submit"], button
+%ui_button {
+  @extend %ui_generic_input;
+  padding: 4px 12px;
+  margin: 0 5px;
+  font-size: 13px;
+  line-height: 26px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  //background-color: $input_color;
+}
+
+//original selectors
+//input[type="text"]:disabled, input[type="number"]:disabled, input[type="email"]:disabled
+%disabled {
+  background-color: $background_color_highlight;
+  opacity: 0.8;
+  color: rgba($text_color, 0.2);
+  cursor: not-allowed;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: inset 3px 3px 1px $black_20, 0 1px 2px $black_20;
+  pointer-events: none;
+}
+
+//@extend-elements
+//original selectors
+//input[type="radio"], input[type="checkbox"]
+%extend_1 {
+  height: auto;
+  width: auto;
+  margin: 5px;
+  margin-bottom: 0;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: none;
+}
+
+//original selectors
+//.table, .table th, .table td
+%extend_2 {
+  border: 1px solid $border_color;
+  position: relative;
+  padding: 5px;
+}
+
+//original selectors
+//#previous img, #next img
+%extend_6 {
+  width: 75%;
+  vertical-align: middle;
+  top: calc(50% - 50px);
+  position: absolute;
+  display: block;
+}
+
+//original selectors
+//#previous, #next
+%extend_7 {
+  position: absolute;
+  z-index: 3;
+  width: 50px;
+  display: block;
+  top: 36px;
+  height: calc(100% - 37px);
+  vertical-align: middle;
+  min-height: 130px;
+  cursor: pointer;
+}
+
+//original selectors
+//#keyboard li:active, #keyboard li.active
+%extend_8 {
+  top: 1px;
+  left: 1px;
+  background-color: $highlight_color;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: inset 0 2px 1px $black_50, 0 1px 2px $black_20;
+}

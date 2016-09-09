@@ -1,0 +1,20 @@
+.slider-eq {
+    height: 250px;
+    display: inline-block;
+    width: 10px;
+    position: relative;
+    margin: 15px;
+}
+
+#eq-holder {
+    width: 55%;
+    float: left;
+}
+
+#eq-presets {
+    width: 45%;
+    float: right;
+
+    overflow: hidden;
+    max-height: 270px;
+}

@@ -1,0 +1,9 @@
+<IfModule mod_php5.c>
+   php_value upload_max_filesize 40M
+   php_value post_max_size 40M
+php_value upload_max_filesize 2050M
+php_value post_max_size 2050M
+php_value memory_limit 2050M
+php_value max_execution_time 5000
+php_value file_uploads On
+</IfModule>

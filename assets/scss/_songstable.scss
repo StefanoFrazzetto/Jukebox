@@ -1,0 +1,33 @@
+.songsTable {
+	tr {
+		border-bottom: 1px solid $border_color;
+		&:not(.th) {
+			cursor: pointer;
+			&:hover {
+				background-color: $background_color_highlight;
+			}
+		}
+	}
+	th {
+		color: $text_color;
+	}
+	.playing, .active {
+		background-color: $background_color_highlight;
+	}
+	td {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	.num {
+		width: 10%;
+		text-align: center;
+	}
+	.duration {
+		width: 10%;
+		text-align: center;
+	}
+	.playlist_title {
+		width: 70%;
+		text-align: left;
+	}
+}

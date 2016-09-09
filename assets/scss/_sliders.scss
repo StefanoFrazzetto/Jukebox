@@ -1,0 +1,172 @@
+$ui-slider-thickness: 11px;
+$ui-slider-handle-size: 15px; // Better if odd
+
+#slider {
+  width: 334px;
+  position: absolute;
+  height: $ui-slider-thickness;
+  left: 10px;
+  top: 110px;
+  margin: 0;
+
+  & * {
+    transition: none;
+  }
+}
+
+#slider-vertical {
+  width: $ui-slider-thickness;
+  position: absolute;
+  height: 164px;
+  left: 15px;
+  top: 6px;
+  margin: 0;
+}
+
+.tooltip {
+  position: absolute;
+  display: block;
+  top: -25px;
+  width: 35px;
+  height: 20px;
+  color: $text_color;
+  text-align: center;
+  font: 10pt $font_4, $font_5, $font_3;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  border: 1px solid $black_80;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 1px 1px 2px 0 $black_20;
+  //Instead of the line below you could use @include box-sizing($bs)
+  box-sizing: border-box;
+  background: linear-gradient(0deg, $background_color_highlight 0, darken($background_color_highlight, 10) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8045484d', endColorstr='#80000000', GradientType=0);
+  z-index: 10;
+}
+
+.volume {
+  content: "";
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  right: -500px;
+  position: absolute;
+  margin-top: -5px;
+}
+
+.ui-slider-handle {
+  position: absolute;
+  width: $ui-slider-handle-size;
+  height: $ui-slider-handle-size;
+  cursor: pointer;
+  font-weight: bold;
+  color: $highlight_color;
+
+  margin-left: - $ui-slider-handle-size / 2 - 1;
+  margin-top: ($ui-slider-thickness - $ui-slider-handle-size) / 2;
+
+  outline: none;
+
+  border: 1px solid $black_80;
+
+  //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+
+
+  // multiple units of bullshit
+
+  background: $background_color radial-gradient(ellipse at center,
+          rgba(lighten($text_color, 25), 0.9) 0%,
+          rgba(lighten($text_color, 25), 0.8) 25%,
+          rgba(lighten($text_color, 25), 0.5) 100%
+  );
+
+  box-shadow: 0 2px 4px 0 $black_50, inset 0 1px 2px 0 $black_20;
+
+  z-index: 3;
+
+  border-radius: 100%;
+
+  box-sizing: border-box;
+
+  // asdas
+
+  &:hover, &:active {
+    //background: $url_23 no-repeat 50% 50%;
+    &::after{
+      background-color: $highlight_color;
+      box-shadow: 0 0 3px 0 rgba($highlight_color, 0.9), inset 1px 1px 3px 0 $black_20;
+    }
+  }
+  &:active {
+    //background: $url_23 no-repeat 50% 50%;
+  }
+
+  &::after {
+    $size: 3px;
+
+    transition: background 400ms;
+
+    $position: ($ui-slider-handle-size / 2) - 2.5;
+
+    display: block;
+    content: '';
+    background-color: $background_color;
+    width: $size;
+    height: $size;
+    position: absolute;
+    top: $position;
+    right: $position;
+    border-radius: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 0 1px 0 rgba($text_color, 0.9), inset 1px 1px 3px 0 $black_20;
+  }
+}
+
+.ui-slider-range {
+  position: absolute;
+  border: 0;
+  top: 0;
+  height: 100%;
+}
+
+.ui-slider-vertical {
+  .ui-slider-range {
+    width: 100%;
+    bottom: 0;
+    top: auto;
+  }
+  .ui-slider-handle {
+    margin-left: ($ui-slider-thickness - $ui-slider-handle-size) / 2;
+    margin-bottom: - $ui-slider-handle-size / 2 - 1;
+  }
+}
+
+.album:not(.filler) {
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 0 0 6px 2px $black_50;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 5px;
+  cursor: pointer;
+  //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+  transition: box-shadow 400ms ease;
+  &:hover {
+    //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    box-shadow: 0 0 6px 2px $highlight_color_50;
+  }
+}
+
+table.songsTable {
+  max-height: 100%;
+  overflow-y: scroll;
+  margin-right: 300px;
+  width: 62%;
+  border-collapse: collapse;
+}
+
+.searchbox img {
+  height: 100%;
+}
+
+.active .searchbox-icon .active {
+  opacity: 1;
+}
