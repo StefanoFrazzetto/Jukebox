@@ -51,7 +51,6 @@ class BurnerHandler {
 				$Burner = new Burner($output_format);
 
 				// If the burner is not doing anything, start the process and update
-				// TODO: REMOVE THE FOLDER using burner-hander.sh and add a check to verify that the folder doesn't exist.
 				$status = self::checkStatus();
 				$output['status'] = $status;
 				if($status == self::$_status_idle) {
@@ -85,6 +84,11 @@ class BurnerHandler {
 		echo json_encode($output);
 	}
 
+    /**
+     * Check the burner status using the process.
+     *
+     * @return string
+     */
 	private static function checkStatus() {
 		if(CommandExecuter::isProcessRunning("lame")){
 			$status = self::$_status_decoding;

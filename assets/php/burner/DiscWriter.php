@@ -35,16 +35,48 @@ class DiscWriter {
 		return $size;
 	}
 
-	public static function checkDiscBlank() {
-		$cmd = shell_exec("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
-		$disc_check = shell_exec("cdrecord -v dev=/dev/sr0 -toc 2>&1");
+//	public static function checkDiscBlank() {
+//		$cmd = shell_exec("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
+//		$disc_check = shell_exec("cdrecord -v dev=/dev/sr0 -toc 2>&1");
+//
+//		if ($cmd < 10 && substr_count($disc_check, "Cannot load media") == 0) {
+//			return TRUE;
+//		} else {
+//			return FALSE;
+//		}
+//	}
 
-		if ($cmd < 10 && substr_count($disc_check, "Cannot load media") == 0) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+    /**
+     * Check if the disc is blank.
+     *
+     * @return boolean
+     * TRUE if the disc is blank, FALSE otherwise.
+     */
+    public function checkDiscBlank() {
+        $command = CommandExecuter::raw("wodim -atip -v dev=/dev/$this->device | grep 'Current:'| awk {'print $3'}");
+
+        if (strpos($command, 'Unknown') !== false) {
+            return false;
+        } elseif (strpos($command, 'DVD') !== false) {
+            $this->dvdCheckBlank();
+        } elseif (strpos($command, 'CD-ROM') !== false) {
+            return false;
+        } elseif (strpos($command, 'CD') !== false) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function dvdCheckBlank() {
+        $dvdstatus = CommandExecuter::raw("dvd+rw-mediainfo /dev/$this->device | grep -e \"Disc status:\" | awk {'print $3'}");
+
+        if ($dvdstatus == 'blank') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	public function getDiscSize() {
 		return $this->disc_size;
