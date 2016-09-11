@@ -5,7 +5,9 @@ jukebox
 node_modules
 oldjukebox
 phpmyadmin
+assets/config
 
 # Ignore files
 info.php
 zwytytws_albums.sql
+assets/cmd/network_startup.sh
