@@ -44,11 +44,12 @@ class Database {
 		return $this->_connection;
 	}
 
-	/**
-	*	Execute a raw query on the database.
-	*	
-	*	@param $query The query to be executed.
-	*/
+    /**
+     * Execute a raw query on the database.
+     *
+     * @param string $query
+     * @return bool
+     */
 	public function rawQuery($query = "") {
 		if($query == "") {
 			return false;
@@ -62,16 +63,15 @@ class Database {
 		}
 	}
 
-	/**
-	*	Add an album to `albums`
-	*
-	*	@param $table = "The table where you want to insert the album";
-	*	@param $array = ['field1' => 'field1_val', 'field2' => 'field2_val'];
-	*	@return TRUE if success, FALSE on error.
-	*/
+    /**
+     * Run an insert query.
+     *
+     * @param $table
+     * @param $array
+     * @return bool
+     */
 	public function insert($table, $array) {
 		$array_fields = array_keys($array);
-		$array_values = array_values($array);
 
 		$fields = '(' . implode(',', $array_fields) . ')';
 		$val_holders = '(:' . implode(', :', $array_fields) . ')';
@@ -88,15 +88,15 @@ class Database {
 		return $stmt->execute();
 	}
 
-	/**
-	*	Select $columns from $table with additional $query.
-	*
-	*	@param $columns = "The columns you want to select";
-	*	@param $table = "The table to select from";
-	*	@param $query = "Additional query WHERE, LIKE, etc.";
-	*
-	*	@return $rows = "Array of rows as OBJECT";
-	*/
+    /**
+     * Select $columns from $table with additional $query.
+     *
+     * @param string $columns The columns to select. Default is *.
+     * @param string $table The table where to perform the select from. Default is albums.
+     * @param string $query The additional query: WHERE ...
+     *
+     * @return array|null
+     */
 	public function select($columns = "*", $table = "albums", $query = "WHERE 1") {
 		if(is_array($columns)) {	
 			$columns = implode(', ', $columns);
@@ -121,16 +121,16 @@ class Database {
 		return $rows;
 	}
 
-	/**
-	*	Update one or more records from $table passing
-	*	$array as "column" => "value".
-	*
-	*	@param $table The table where to update the record(s)
-	*	@param $array Associative array "key" => "value"
-	*	@param $where Additional query: WHERE `column` = x LIKE "pattern"
-	*/
-	public function update($table = "", $array = "", $where = "") {
-		if($table == "" || $array == "") {
+    /**
+     * Update a record.
+     *
+     * @param string $table
+     * @param $array
+     * @param string $where
+     * @return bool
+     */
+	public function update($table = "", $array, $where = "") {
+		if($table == "" || $array == null) {
 			return false;
 		}
 
@@ -157,13 +157,15 @@ class Database {
 	}
 
 
-	/**
-	*	Removes record(s) from the table. 
-	*
-	*
-	*/
-	public function delete($table = "", $where = "") {
-		if($table == "" || $where == "") {
+    /**
+     * Remove record(s).
+     *
+     * @param string $table
+     * @param string $where
+     * @return bool
+     */
+	public function delete($table, $where) {
+		if($table == null || $where == null) {
 			return false;
 		}
 
@@ -178,11 +180,12 @@ class Database {
 		}
 	}
 
-	/**
-	*	Drop $tables.
-	*
-	*	@return TRUE on success or FALSE on failure.
-	*/
+    /**
+     * Drop one or more tables.
+     *
+     * @param string $tables
+     * @return bool
+     */
 	public function drop($tables = "") {
 
 		switch($tables) {
