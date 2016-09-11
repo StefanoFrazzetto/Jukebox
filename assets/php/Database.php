@@ -55,7 +55,7 @@ class Database {
 		}
 
 		try {
-			$stmt = $this->getConnection()->prepare($sql);
+			$stmt = $this->getConnection()->prepare($query);
 			return $stmt->execute();
 		} catch (PDOException $e) {
 			return false;
