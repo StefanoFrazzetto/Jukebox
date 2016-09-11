@@ -2,12 +2,14 @@ $.ajaxSetup({ cache: false });
 
 var selected_network = null;
 
+var network_type = $("#network_type");
+
 var modules_hash = [
 {dhcp_module: false, manual_settings: false, wifi_module: false, hotspot_module: false},
 {dhcp_module: true, manual_settings: true, wifi_module: false, hotspot_module: false},
 {dhcp_module: true, manual_settings: true, wifi_module: true, hotspot_module: false},
 {dhcp_module: false, manual_settings: false, wifi_module: false, hotspot_module: true}
-]
+];
 
 
 function toggleManualField(){
@@ -25,7 +27,7 @@ $('#dhcp').change(function (){
     toggleManualField();
 });
 
-$('#network_type').change(function(){
+network_type.change(function () {
     var val = parseInt($(this).val());
 
     // Starts the wifiscan if the wifi tab is selected
@@ -58,11 +60,13 @@ $('#network_type').change(function(){
 
 $.getJSON('assets/config/network_settings.json', function(data){
     $.each(data, function(key, value) {
+        var thing = $('#' + key);
+
         if(value == 'on'){
-            $('#'+key).prop('checked', true);
+            thing.prop('checked', true);
         } else {
-            $('#'+key).val(value);
-            $('#'+key).trigger('change');
+            thing.val(value);
+            thing.trigger('change');
         }
     });
 
@@ -88,13 +92,13 @@ $('#network_settings_form').submit(function (e){
         });
     });
 
-$("#network_type").horizontalSelector();
+network_type.horizontalSelector();
 
 function openNetworkDetails(network) {
     selected_network = network;
 
-    $('#wifi_details').show(200);
-    $('#wifiTable').hide(200);
+    $('#wifi_details').show(animation_short);
+    $('#wifiTable').hide(animation_short);
 
     stopScan();
 
@@ -117,13 +121,11 @@ function openNetworkDetails(network) {
     }
 }
 
-
-
 function closeNetworkDetails(network){
     selected_network = null;
 
-    $('#wifi_details').hide(200);
-    $('#wifiTable').show(200);
+    $('#wifi_details').hide(animation_short);
+    $('#wifiTable').show(animation_short);
 
     startScan();
 }

@@ -1,14 +1,5 @@
 var $write;
 var $well = $("#keyboardWell");
-var keyboardShown = false;
-
-function simulateKeyPress(character) {
-    $.event.trigger({
-        type: 'keypress',
-        which: 13
-    });
-}
-
 
 function bindForms() {
     $('input:not([type="submit"])').focus(function () {
@@ -35,15 +26,15 @@ function bindForms() {
             });
             $well.animate({
                 left: (window_width - $well.outerWidth()) / 2,
-                top: topPosition,
-            });
+                top: topPosition
+            }, animation_medium);
         });
     });
 
     $('input').blur(function () {
         $well.animate({
             top: "100%"
-        });
+        }, animation_medium);
         $well.hide(0);
     });
 }
@@ -54,7 +45,7 @@ $(function () {
 
     $('#keyboardWell').drags();
 
-    $('#keyboard li').click(function (event) {
+    $('#keyboard').find('li').click(function (event) {
         var $this = $(this),
             character = $this.html(); // If it's a lowercase letter, nothing happens to this variable
 
@@ -63,7 +54,7 @@ $(function () {
             $('.letter').toggleClass('uppercase');
             $('.symbol span').toggle();
 
-            shift = (shift === true) ? false : true;
+            shift = (shift !== true);
             capslock = false;
             return false;
         }
