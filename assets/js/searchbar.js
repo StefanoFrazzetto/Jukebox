@@ -6,13 +6,9 @@ var buttonsbar = $('#buttonsBar');
 
 var search_input = $('#searchbox-input');
 
-var search_items = $('#search-items');
-
 var searchbox_icon = $('#searchbox-icon');
 
 var searchbox_icon_bis = $('#searchbox-icon-bis');
-
-var searchbox_icons = $('.searchbox-icon');
 
 var artist_icon = $('#artist-icon');
 
@@ -24,7 +20,7 @@ var sorter = $('#sorter');
 
 var sort_by_btn = $('#sort-icon');
 
-var sort_by = $('#sorter .by');
+var sort_by = sorter.find('.by');
 
 var search_by = $('#search-by');
 
@@ -33,17 +29,7 @@ search_by.on("mousedown", function (e) {
     e.stopPropagation();
 });
 
-//search_items.hide();
 var opened = false;
-
-// If an event gets to the body
-/*$("body").click(function () {
- 
- });
- 
- $('.searchbox').click(function (e) {
- e.stopPropagation();
- });*/
 
 function slideToggle() {
     if (!slideClose()) {
@@ -54,8 +40,8 @@ function slideToggle() {
 function slideOpen() {
     if (!opened) {
         opened = true;
-        buttonsbar.clearQueue().fadeOut(200, function () {
-            searchbar.fadeIn(200);
+        buttonsbar.clearQueue().fadeOut(animation_short, function () {
+            searchbar.fadeIn(animation_short);
 
             search_input.focus();
         });
@@ -65,16 +51,14 @@ function slideOpen() {
 function slideClose() {
     if (opened) {
         opened = false;
-        searchbar.fadeOut(200, function () {
-            buttonsbar.fadeIn(200);
+        searchbar.fadeOut(animation_short, function () {
+            buttonsbar.fadeIn(animation_short);
         });
         return true;
     } else {
         return false;
     }
 }
-
-
 
 search_input.blur(function () {
     slideClose();
@@ -108,8 +92,8 @@ searchbox.submit(function (event) {
     slideClose();
 });
 
-sort_by.click(function (event) {
-    $('#sorter .by.active').removeClass('active');
+sort_by.click(function () {
+    $('#sorter').find('.by.active').removeClass('active');
     $(this).addClass('active');
     sort_by = $(this).attr('data-value');
     page = 1;
@@ -121,20 +105,7 @@ searchbox_icon_bis.click(function () {
     searchbox.submit();
 });
 
-sort_by_btn.click(function (e){
+sort_by_btn.click(function (e) {
     e.preventDefault();
     sorter.toggle();
 });
-
-
-
-
-//$("#searchbox-input").focus && $('#Return_Button').click(function(){		// not sure why this activates on all inputs after i use the searchbar
-//		      $("#searchbox-input").blur();		
-//});
-
-
-/*searchbox.keydown(function(){
- var search_query = search_input.val();
- search(search_query);
- });*/
