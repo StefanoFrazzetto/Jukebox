@@ -1,6 +1,6 @@
 <?php
 
-#$interface_file = __DIR__ . '/../config/wifi_interface';
+$interface_file = __DIR__ . '/../config/wifi_interface';
 $interface = shell_exec("ls /sys/class/net | grep -v 'eth0\|lo\|tunl0'");
 $wifiDB = __DIR__ . '/../config/wifiDB.json';
 
@@ -22,7 +22,7 @@ if (!file_exists($wifiDB)) {
 
 function loadFile()
 {
-    global $wifiConfig, $wifiDB;
+    global $wifiConfig;
 
     $data = file_get_contents(__DIR__ . '/../config/wifiDB.json');
     $wifiConfig = json_decode($data, true);
@@ -48,11 +48,11 @@ function getNetwork($essid)
 
 /**
  * Adds or update a network
- * @param $network a network assciative array that should contain the password
+ * @param $network array network associative array that should contain the password
  */
 function updateNetwork($network)
 {
-    global $wifiConfig, $wifiDB;
+    global $wifiConfig;
 
     $essid = $network['ESSID'];
 
