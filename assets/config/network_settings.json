@@ -1,1 +1,1 @@
-{"network_type":"1","ipaddress":"192.168.0.7","gateway":"192.168.0.1","subnetmask":"255.255.255.0","dns1":"8.8.8.8","ssid":"ThePCGuyz","hotspot_ssid":"Jukebox Wifi","hotspot_password":"password","hotspot_channel":"6"}
+{"network_type":"2","ipaddress":"192.168.0.14","gateway":"192.168.0.1","subnetmask":"255.255.255.0","dns1":"8.8.8.8","ssid":"Asgard","hotspot_ssid":"Jukebox Wifi","hotspot_password":"password","hotspot_channel":"6"}

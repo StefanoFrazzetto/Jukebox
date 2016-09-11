@@ -187,13 +187,13 @@ class Database {
 
 		switch($tables) {
 			case "albums":
-				$sql = "TRUNCATE TABLE self::$_table_albums";
+				$sql = "TRUNCATE TABLE " . self::$_table_albums;
 				break;
 			case "radio_stations":
-				$sql = "TRUNCATE TABLE self::$_table_radio_stations";
+				$sql = "TRUNCATE TABLE " . self::$_table_radio_stations;
 				break;
 			default:
-				$sql = "TRUNCATE TABLE self::$_table_albums; TRUNCATE TABLE self::$_table_radio_stations";
+				$sql = "TRUNCATE TABLE " . self::$_table_albums . "; TRUNCATE TABLE " . self::$_table_radio_stations;
 		}
 		
 		try {
