@@ -31,9 +31,11 @@ class BurnerHandler {
 			$action = "burn";
 		}
 
+		$discWriter = new DiscWriter();
+
 		switch ($action) {
 			case 'info':
-				if(DiscWriter::checkDiscBlank()) {
+				if($discWriter->checkDiscBlank()) {
 					$TracksHandler = new TracksHandler($input_type, $input_content, $output_format);
 					$output['status'] = "Idle";
 					$output['message'] = "CDs required: ".$TracksHandler->getRequiredCDS();
@@ -54,7 +56,7 @@ class BurnerHandler {
 				$status = self::checkStatus();
 				$output['status'] = $status;
 				if($status == self::$_status_idle) {
-					if(!(DiscWriter::checkDiscBlank())) {
+					if(!($discWriter->checkDiscBlank())) {
 						$output['status'] = "Error";
 						$output['message'] = "Your disc is not blank!";
 						break;
