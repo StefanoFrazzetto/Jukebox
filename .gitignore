@@ -11,3 +11,4 @@ assets/config
 info.php
 zwytytws_albums.sql
 assets/cmd/network_startup.sh
+assets/cmd/device

@@ -67,7 +67,7 @@ class BurnerHandler {
 						unset($tracks);
 						CommandExecuter::removeDir(self::$_burner_folder);
 					}
-					file_put_contents("/tmp/sono_qua", "");
+
 					//Start the burning process.
 					$Burner->burn();
 					$output['status'] = "Copying";
