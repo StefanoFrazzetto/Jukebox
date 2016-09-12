@@ -63,14 +63,15 @@ class BurnerHandler {
 					}
 
 					$tracks = TracksHandler::getTracksJSON();
-					if(count($tracks) > 0) {
+					if(count($tracks) == 0) {
 						unset($tracks);
 						CommandExecuter::removeDir(self::$_burner_folder);
-					}
-					//Start the burning process.
-					$Burner->burn();
-					$output['status'] = "Copying";
-					$output['message'] = "Please wait...The process has been started.";
+					} else {
+                        //Start the burning process.
+                        $Burner->burn();
+                        $output['status'] = "Copying";
+                        $output['message'] = "Please wait...The process has been started.";
+                    }
 				}	
 			break;
 
