@@ -53,7 +53,7 @@ class DiscWriter {
      * TRUE if the disc is blank, FALSE otherwise.
      */
     public function checkDiscBlank() {
-        $command = CommandExecuter::raw("assets/cmd/CdCheck.sh");
+        $command = CommandExecuter::raw(CommandExecuter::$scripts_folder . "CdCheck.sh"));
 
         if (strpos($command, 'Unknown') !== false) {
             return false;
@@ -67,16 +67,6 @@ class DiscWriter {
 
         return false;
     }
-
-//    private function dvdCheckBlank() {
-//        $dvdstatus = CommandExecuter::rawWithOutput("dvd+rw-mediainfo /dev/$this->device | grep -e \"Disc status:\" | awk {'print $3'}");
-//
-//        if ($dvdstatus == 'blank') {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
 
 	public function getDiscSize() {
 		return $this->disc_size;

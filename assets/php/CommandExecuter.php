@@ -2,6 +2,8 @@
 
 abstract class CommandExecuter {
 
+	public static $scripts_folder = '/var/www/html/assets/cmd/';
+
 	public static function getDevicePath($device = '') {
 		if($device == '') {
 			return null;
