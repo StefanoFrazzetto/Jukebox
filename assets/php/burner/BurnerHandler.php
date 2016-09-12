@@ -8,7 +8,7 @@ require_once 'autoload.php';
 
 class BurnerHandler {
 
-	public static $_burner_folder = "/tmp/burner/";
+	public static $_burner_folder = "/tmp/burner";
 	public static $_burner_tracks_json = "/tmp/burner_tracks.json"; 
 	public static $_burner_status_file = "/tmp/burner_status.json";
 	public static $_burner_scripts = "./scripts";
@@ -63,15 +63,15 @@ class BurnerHandler {
 					}
 
 					$tracks = TracksHandler::getTracksJSON();
-					if(count($tracks) == 0) {
+					if(count($tracks) > 0) {
 						unset($tracks);
 						CommandExecuter::removeDir(self::$_burner_folder);
-					} else {
-                        //Start the burning process.
-                        $Burner->burn();
-                        $output['status'] = "Copying";
-                        $output['message'] = "Please wait...The process has been started.";
-                    }
+					}
+					file_put_contents("/tmp/sono_qua", "");
+					//Start the burning process.
+					$Burner->burn();
+					$output['status'] = "Copying";
+					$output['message'] = "Please wait...The process has been started.";
 				}	
 			break;
 

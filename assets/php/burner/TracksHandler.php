@@ -112,10 +112,13 @@ class TracksHandler {
 	}
 
 	/**
-	*	Group the tracks together calculating the size of each group of tracks.
-	*/
+	 *	Group the tracks together calculating the size of each group of tracks.
+     * @param $tracks
+     * @param string $type
+     * @param string $output_format
+     * @return array
+     */
 	private function groupTracks($tracks, $type = "", $output_format = "") {
-		$albums = array();
 		$audio_cd = false;
 		$cd_no = 1;
 		$cds = array();
@@ -192,10 +195,6 @@ class TracksHandler {
 		// }
 
 		return $cds;
-	}
-
-	private function getDatabase() {
-		return $this->_database;
 	}
 
 }

@@ -40,6 +40,8 @@ class Burner {
 
 		$DiscWriter = new DiscWriter();
 		$DiscWriter->burnDisc(BurnerHandler::$_burner_folder, $this->_output_format);
+
+        file_put_contents("/tmp/DEBUGGGER.TXT", "Tracks: " . implode(" - ", $this->_ttb) . "Output f: " . $this->_output_format);
 	}
 	
 }
