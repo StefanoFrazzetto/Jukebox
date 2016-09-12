@@ -53,7 +53,7 @@ class DiscWriter {
      * TRUE if the disc is blank, FALSE otherwise.
      */
     public function checkDiscBlank() {
-        $command = CommandExecuter::raw(CommandExecuter::$scripts_folder . "CdCheck.sh"));
+        $command = CommandExecuter::raw(CommandExecuter::$scripts_folder . "CdCheck.sh");
 
         if (strpos($command, 'Unknown') !== false) {
             return false;
