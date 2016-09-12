@@ -53,7 +53,7 @@ class DiscWriter {
      * TRUE if the disc is blank, FALSE otherwise.
      */
     public function checkDiscBlank() {
-        $command = CommandExecuter::raw("wodim -atip -v dev=/dev/$this->device | grep 'Current:'| awk {'print $3'}");
+        $command = CommandExecuter::rawWithOutput("wodim -atip -v dev=/dev/$this->device | grep 'Current:'| awk {'print $3'}");
 
         if (strpos($command, 'Unknown') !== false) {
             return false;
@@ -69,7 +69,7 @@ class DiscWriter {
     }
 
     private function dvdCheckBlank() {
-        $dvdstatus = CommandExecuter::raw("dvd+rw-mediainfo /dev/$this->device | grep -e \"Disc status:\" | awk {'print $3'}");
+        $dvdstatus = CommandExecuter::rawWithOutput("dvd+rw-mediainfo /dev/$this->device | grep -e \"Disc status:\" | awk {'print $3'}");
 
         if ($dvdstatus == 'blank') {
             return true;

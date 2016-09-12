@@ -38,4 +38,8 @@ abstract class CommandExecuter {
 		return shell_exec($command);
 	}
 
+    public static function rawWithOutput($command) {
+        return shell_exec($command);
+    }
+
 }
