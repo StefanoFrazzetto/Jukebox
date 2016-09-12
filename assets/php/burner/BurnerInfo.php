@@ -39,7 +39,12 @@ class BurnerInfo
 	protected $percentage;
 	protected $partial_progress;
 
-	function __construct($request = "", $output_format = "")
+    /**
+     * BurnerInfo constructor.
+     * @param string $request
+     * @param string $output_format
+     */
+    function __construct($request = "", $output_format = "")
 	{
 		$this->setStatus();
 		$this->output_format = $output_format;
@@ -55,6 +60,8 @@ class BurnerInfo
 		} else {
 			return $output;
 		}
+
+		return 0;
 	}
 
 	/* ********************************************* */
@@ -79,9 +86,11 @@ class BurnerInfo
 		}
 	}
 
-	/**
-	*	$partial_progress = tracks processed / total tracks.
-	*/
+    /**
+     * $partial_progress = tracks processed / total tracks.
+     *
+     * @param $base_percentage
+     */
 	protected function setPercentage($base_percentage) {
 		$progress = $this->partial_progress * (100/self::$_steps);
 
@@ -96,7 +105,7 @@ class BurnerInfo
 
 	protected function setMessage() {
 
-		$message = "";
+//		$message = "";
 		$nextCD = false;
 		self::setPercentage(0);
 
@@ -112,7 +121,6 @@ class BurnerInfo
 				break;
 
 			case self::$_status_normalizing:
-				$otp = $this->normalizing();
 				$message = "Normalizing tracks...";
 
 				if($this->output_format == "wav") {
@@ -160,11 +168,7 @@ class BurnerInfo
 		$partial = FileUtil::countFiles(BurnerHandler::$_burner_folder, "wav");
 		$total = FileUtil::countFiles(BurnerHandler::$_burner_folder, "mp3");
 
-		if($total != null && $total != 0) {
-			$this->partial_progress = $partial/$total;
-		} else {
-			$this->partial_progress = 0;
-		}
+		$this->partial_progress = $this->percentage($partial, $total);
 
 		$handle = fopen(self::$_burner_output, "r");
 		if ($handle) {
@@ -198,7 +202,7 @@ class BurnerInfo
 			$this->partial_progress = 0;
 		}
 
-		$this->partial_progress = $json['partial']/$json['total'];
+		$this->partial_progress = $this->percentage($json['partial'], $json['total']);
 	}
 
 	protected function burning() {
@@ -207,14 +211,22 @@ class BurnerInfo
 		$tracks_count = substr_count($file_content, "Track");
 		$total = FileUtil::countFiles(BurnerHandler::$_burner_folder, "mp3");
 
-    	$this->partial_progress = $tracks_count/$total;
+    	$this->partial_progress = $this->percentage($tracks_count, $total);
 	}
 
 	/* ********************************************* */
 
+	protected function percentage($par, $tot) {
+	    if ($tot == 0 || $tot == null) {
+	        return 0;
+        }
+
+	    return $par/$tot;
+    }
+
 	protected function checkProcesses() {
 		if(CommandExecuter::isProcessRunning("lame")){
-			$output['status'] = self::$_status_encoding;
+			$output['status'] = self::$_status_decoding;
 
 		} elseif (CommandExecuter::isProcessRunning("mkisofs") || CommandExecuter::isProcessRunning("genisoimage")) {
 
