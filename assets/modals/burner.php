@@ -41,7 +41,7 @@
 	}
 
 	.burner-icons-complete {
-		background: url("/assets/img/burner/copying.svg");
+		background: url("/assets/img/burner/finished.svg");
 	}
 
 
