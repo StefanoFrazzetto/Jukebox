@@ -149,9 +149,9 @@ class TracksHandler {
 				// exit($string);
 			}
 
-			if($type == "playlist" || $audio_cd) {
-				$track['title'] = sprintf("%02d", $playlist_index) . "-" . str_replace([' ', '-'], "_", $track['title']);
-			}
+			
+			$track['title'] = sprintf("%02d", $playlist_index) . "-" . str_replace([' ', '-'], "_", $track['title']);
+			
 			
 			$playlist_index++;
 
