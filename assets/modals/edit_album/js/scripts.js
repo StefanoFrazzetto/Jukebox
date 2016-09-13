@@ -38,13 +38,14 @@ function submit(callback) {
         data.album_cover_url = imageSelector.imageUrl;
     }
 
-
     data = JSON.stringify(data);
 
     $.post('assets/php/edit_album.php', data, function (resp) {
         var json = $.parseJSON(resp);
 
         if (json.success == true) {
+            edit_album_deleted_tracks = [];
+
             alert("Album updated successfully.");
 
             if (typeof callback !== 'undefined') {
@@ -65,7 +66,6 @@ $('#edit-album-form').submit(function (e) {
 $('#edit-album-save').click(function () {
     submit();
 });
-
 
 
 edit_tracks.find('.edit').click(function (e) {
@@ -121,9 +121,11 @@ edit_tracks.find('.delete').click(function (e) {
 
     var li = $(this).closest('li');
 
-    var track_no = parseInt(li.attr('data-id'));
+    var track_no = li.index() - 1;//parseInt(li.attr('data-id'));
 
     li.remove();
+
+    console.log(edit_album_tracks[track_no]);
 
     edit_album_deleted_tracks.push(edit_album_tracks[track_no]);
 
@@ -153,11 +155,9 @@ if (imageSelector.imageUrl != null) {
 function appendCd() {
     var last_cd = parseInt(edit_tracks.find('.cd').last().attr('data-cd')) + 1;
 
-    console.log(last_cd);
-
     var html = $("<li class='cd header'></li>");
 
-    html.html("CD "+last_cd);
+    html.html("CD " + last_cd);
 
     html.attr('data-cd', last_cd);
 
@@ -166,18 +166,24 @@ function appendCd() {
 
 $(function () { // Allows sorting of the tracks
     var container = document.getElementById("edit-tracks");
-    var sort = Sortable.create(container, {
+    Sortable.create(container, {
         animation: animation_medium, // ms, animation speed moving items when sorting, `0` — without animation
         handle: ".handle", // Restricts sort start click/touch to the specified element
-        //draggable: ".track", // Specifies which items inside the element should be sortable
+        draggable: ".track", // Specifies which items inside the element should be sortable
         onUpdate: function (evt) {
-            //var item = evt.item; // the current dragged HTMLElement
             edit_album_tracks.move(evt.oldIndex, evt.newIndex);
+            // Sets the new cd in case it changed
 
-            // Used to update the track_no value inside the track
-            // edit_album_tracks.forEach(function (track, key) {
-            //     track.track_no = key + 1;
-            // });
+            try {
+                var cd = parseInt($(evt.item).prevAll('.cd').attr('data-cd'));
+
+                edit_album_tracks[evt.newIndex].cd = cd;
+
+                console.log(cd);
+            } catch (e) {
+                alert(e);
+                // TODO CHANGE THIS TO AN ERROR MESSAGE
+            }
         }
     });
 });

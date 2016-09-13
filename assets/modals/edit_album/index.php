@@ -45,11 +45,22 @@ $tracks = json_decode($album_details->tracks);
         <hr/>
 
         <ul class="multiselect" id="edit-tracks" style="padding-bottom: 100px">
-            <li class="cd header" data-cd="1">CD 1</li>
             <?php
+            $cd_no = 0;
+
+            function print_cd_header($cd_no)
+            {
+                echo "<li class=\"cd header\" data-cd=\"$cd_no\">CD $cd_no</li>";
+            }
 
             // var_dump($tracks);
             foreach ($tracks as $key => $track) {
+                if ($track->cd != $cd_no) {
+                    $cd_no = $track->cd;
+
+                    print_cd_header($cd_no);
+                }
+
                 echo "<li data-id='$key' class='track'><span class='title'><i class=\"fa fa-bars handle\"></i> $track->title</span> <span class='right'><i class='fa fa-pencil edit'></i> <i class='fa fa-trash delete'></i></span></li>";
             }
 
@@ -80,4 +91,4 @@ $tracks = json_decode($album_details->tracks);
 </style>
 
 <script type="text/javascript" src="/assets/js/Sortable.min.js"></script>
-<script type="text/javascript" src="/assets/modals/edit_album/js/scripts.min.js"></script>
+<script type="text/javascript" src="/assets/modals/edit_album/js/scripts.js"></script>
