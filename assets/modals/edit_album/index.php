@@ -70,10 +70,9 @@ $tracks = json_decode($album_details->tracks);
 
 </div>
 <div class="modalFooter">
-    <button>Back to Album</button>
+    <button onclick="openModalPage('assets/modals/edit_album/?id=<?php echo $id ?>')">Back to Album</button>
     <button onclick="appendCd()">Add CD</button>
     <button class="right" id="edit-album-save">Save</button>
-
 </div>
 
 <style>
