@@ -50,7 +50,7 @@ $tracks = json_decode($album_details->tracks);
 
             function print_cd_header($cd_no)
             {
-                echo "<li class=\"cd header\" data-cd=\"$cd_no\">CD $cd_no</li>";
+                echo "<li class=\"cd handle header\" data-cd=\"$cd_no\">CD $cd_no</li>";
             }
 
             // var_dump($tracks);
@@ -75,13 +75,24 @@ $tracks = json_decode($album_details->tracks);
     <button class="right" id="edit-album-save">Save</button>
 </div>
 
+<!--suppress CssUnusedSymbol -->
 <style>
     #edit-tracks .handle {
         cursor: move;
         padding: 10px;
         margin: -8px;
 
+        pointer-events: all;
+
         user-select: none;
+    }
+
+    #edit-tracks .cd.handle {
+        margin: 0;
+    }
+
+    #edit-tracks .cd.handle.nodrag {
+        pointer-events: none;
     }
 
     #edit-tracks .edit, #edit-tracks .delete {

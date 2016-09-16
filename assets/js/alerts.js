@@ -1,9 +1,9 @@
 function alert(message) {
-    var anAlerta = new Alert();
+    var anAlert = new Alert();
 
-    anAlerta.message = message;
+    anAlert.message = message;
 
-    anAlerta.show();
+    anAlert.show();
 }
 
 var Alert = function (opt) {

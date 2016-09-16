@@ -155,35 +155,57 @@ if (imageSelector.imageUrl != null) {
 function appendCd() {
     var last_cd = parseInt(edit_tracks.find('.cd').last().attr('data-cd')) + 1;
 
-    var html = $("<li class='cd header'></li>");
+    var html = $("<li class='cd handle header'></li>");
 
     html.html("CD " + last_cd);
 
     html.attr('data-cd', last_cd);
 
     edit_tracks.append(html);
+
+    $('edit-album-column').mCustomScrollbar('scrollTo', 'bottom');
 }
 
 $(function () { // Allows sorting of the tracks
     var container = document.getElementById("edit-tracks");
+    $(container).children().first().addClass('nodrag');
     Sortable.create(container, {
         animation: animation_medium, // ms, animation speed moving items when sorting, `0` — without animation
         handle: ".handle", // Restricts sort start click/touch to the specified element
-        draggable: ".track", // Specifies which items inside the element should be sortable
+        // draggable: ".track", // Specifies which items inside the element should be sortable
+        filter: '.nodrag',
+        scrollSpeed: 5,
         onUpdate: function (evt) {
-            edit_album_tracks.move(evt.oldIndex, evt.newIndex);
-            // Sets the new cd in case it changed
+            var item = $(evt.item);
 
-            try {
-                var cd = parseInt($(evt.item).prevAll('.cd').attr('data-cd'));
+            if (item.hasClass('cd')) {
+                // A CD has been dragged
 
-                edit_album_tracks[evt.newIndex].cd = cd;
+                item.siblings('.track').each(function (key, item) {
+                    updateCD($(this));
+                });
+            } else {
+                // A track has been dragged
+                edit_album_tracks.move(evt.oldIndex, evt.newIndex);
+                // Sets the new cd in case it changed
 
-                console.log(cd);
-            } catch (e) {
-                alert(e);
-                // TODO CHANGE THIS TO AN ERROR MESSAGE
+                updateCD(item);
             }
         }
     });
 });
+
+$.fn.getIndex = function () {
+    return $(this).parent().children().index($(this));
+};
+
+function updateCD(item) {
+    try {
+        var cd = parseInt(item.prevAll('.cd').attr('data-cd'));
+
+        edit_album_tracks[item.getIndex() - cd].cd = cd;
+    } catch (e) {
+        alert(e);
+        // TODO CHANGE THIS TO AN ERROR MESSAGE
+    }
+}
