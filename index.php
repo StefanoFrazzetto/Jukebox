@@ -30,7 +30,7 @@
                     <div id="power" class="crcbtn"></div>
                     <div id="settings" class="crcbtn" onclick="openModalPage('assets/modals/settings.php')"></div>
                     <div id="network_settings" class="crcbtn"
-                         onclick="openModalPage('assets/modals/bluetooth_madal.php')"></div>
+                         onclick="openModalPage('assets/modals/bluetooth.php')"></div>
                     <div id="qr" class="crcbtn" onclick="openModalPage('assets/modals/qrcode.php')"></div>
                     <div id="trash" class="crcbtn" onclick="deleteAlbum(album_id);"></div>
                     <div id="add" class="crcbtn"></div>

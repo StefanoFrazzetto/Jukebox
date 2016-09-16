@@ -34,7 +34,7 @@ function wifi_networks() {
 
             r[++j] = '<tr class="' + classes + '" data-essid="' + essid + '" data-encryption="' + encryption + '">';
 
-            r[++j] = '<td class="wifiID">'
+            r[++j] = '<td class="wifiID">';
             r[++j] = nlength + 1;
             r[++j] = '</td>';
             r[++j] = '<td class="wifiESSID">' + essid + '</td>';
