@@ -26,64 +26,63 @@
 </div>
 <script type="text/javascript">
 
-    function pair(mac_address) {
-        $.ajax({
-            url: "assets/php/Bluetooth.php",
-            method: "POST",
-            data: {action: 'pair', mac: mac_address},
-            cache: false
-        }).done(function () {
-            console.log("Device paired");
-        });
-    }
-
     $('#btn_unpair').click(function () {
-        $.ajax({
-            url: "assets/php/Bluetooth.php",
-            method: "POST",
-            data: {action: 'unpair'},
-            cache: false
-        }).done(function (res) {
-            console.log("Unpair done");
-        });
+        bluetooth({action: 'unpair'});
     });
 
     $('#btn_scan').click(function () {
         console.log("FIRE!");
         if ($('#bluetooth').prop('checked')) {
             $('#devices').find('tbody').html('<tr><td colspan="3">Loading...</td></tr>');
-            bluetooth('scan');
+
+            bluetooth({action: 'scan'});
         } else {
             alert('Turn on the bluetooth');
         }
     });
 
-    function bluetooth(b_action) {
+    function bluetooth(data) {
         $.ajax({
             url: "assets/php/Bluetooth.php",
             method: "POST",
-            data: {action: b_action},
+            data: data,
             cache: false
         }).done(function (res) {
             var output = JSON.parse(res);
-            console.log(output);
-            if (b_action == 'scan') {
-                if(output == null) {
-                    $('#devices').find('tbody').html('<tr><td colspan="3">NO DEVICES FOUND</td></td>');
-                } else {
-                    $('#devices').find('tbody').html('');
-                }
 
-                $.each(output, function (index, value) {
-                    $('#devices').append('<tr><td>' + index + '</td><td>' + value.device + '</td><td class="mac">' + value.mac + '</td></tr>');
-                });
+            switch (data.action){
 
-                $('#devices').find('tbody tr').click(function () {
-                    var mac_address = $(this).find('.mac').html();
-                    pair(mac_address);
-                    console.log(mac_address);
-                });
-            }
+                case 'scan':
+                    if(output == null) {
+                        $('#devices').find('tbody').html('<tr><td colspan="3">NO DEVICES FOUND</td></td>');
+                    } else {
+                        $('#devices').find('tbody').html('');
+
+                        $.each(output, function (index, value) {
+                            $('#devices').append('<tr><td>' + index + '</td><td>' + value.device + '</td><td class="mac">' + value.mac + '</td></tr>');
+                        });
+
+                        $('#devices').find('tbody tr').click(function () {
+                            var mac_address = $(this).find('.mac').html();
+                            console.log(mac_address);
+                            bluetooth({action: 'pair', mac: mac_address});
+                        });
+                    }
+                    break;
+
+                case 'pair':
+                    console.log("Pairing done. MAC: " + data.mac);
+                    break;
+
+                case 'unpair':
+                    console.log('Unpair done');
+                    break;
+
+                default:
+                    break;
+            } // SWITCH
+
+            console.log("OUTPUT: " + output);
         });
     }
 
@@ -95,7 +94,7 @@
             mode = 'turn_off';
         }
 
-        bluetooth(mode);
+        bluetooth({action: mode});
     }
 
     $('#bluetooth').change(function () {
