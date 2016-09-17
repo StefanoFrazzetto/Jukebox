@@ -3,7 +3,7 @@
    ██║   ██║   ██║██║  ██║██║   ██║
    ██║   ██║   ██║██║  ██║██║   ██║
    ██║   ╚██████╔╝██████╔╝╚██████╔╝
-   ╚═╝    ╚═════╝ ╚═════╝  ╚═════╝ 
+   ╚═╝    ╚═════╝ ╚═════╝  ╚═════╝
 
 
 
@@ -17,10 +17,7 @@ scrollbar: i would like the scrollbar to be wider. as wide as the volume slider 
 settings: could we have a on/off slider switch for the speakers. there is a script to get the state of the speaker (/assets/cmd/get_spearker_active.sh) 0=off 1=on
 
 bugs:
-player: when changing tracks sometimes it will hang on (loading...) im guessing it didnt load the track in time, maybe a function to check that the track is playing corrctly
-
-album uploader: if i upload an album with no image, it will not reach the final modal
-# Vittorio £ 5000.00
+player: when changing tracks sometimes it will hang on (loading...) im guessing it didnt load the track in time, maybe a function to check that the track is playing correctly
 
 ---------------------------------------------------------
 
@@ -39,19 +36,6 @@ both of these need a "are you sure" function.
 >>>>>
 
 £30
-
-#edit album <Vittorio and Stefano>
->>>>>
-need a modal to edit the album, need to be able to rename all tracks and fetch or upload new image, rename album title artist, delete album,
-
-£200
-<<<<<
-
-# Reusable image picker modal <Vittorio and Stefano>
->>>>>
-We created a modal that can be used anywhere to search or upload covers.
-£150
-<<<<<
 
 #playlist buttons
 >>>>>
@@ -106,12 +90,23 @@ will need the ability to remove stations and add images and edit station
 <Vittorio> 15£
 
 # Tracks are made sortable with CD support
-<Vittorio> 30£
+<Vittorio> 50£
 
 # alert boxes
 could we replace the messagebox from google with a custom one that goes with the page and that would also be near the modals positions
 -- I created a new library to create alert via JS, it can be reused in the whole application
 <Vittorio> 30£
+
+# edit album
+need a modal to edit the album, need to be able to rename all tracks and fetch or upload new image, rename album title artist, delete album,
+<Vittorio and Stefano> £200
+
+# Reusable image picker modal
+We created a modal that can be used anywhere to search or upload covers.
+<Vittorio and Stefano> £150
+
+# album uploader: if i upload an album with no image, it will not reach the final modal
+<Vittorio> £1
 
 ██████╗  ██████╗ ███╗   ██╗███████╗    ███╗   ██╗ █╗ ██████╗  █████╗ ██╗██████╗ 
 ██╔══██╗██╔═══██╗████╗  ██║██╔════╝    ████╗  ██║ ╚╝ ██╔══██╗██╔══██╗██║██╔══██╗
