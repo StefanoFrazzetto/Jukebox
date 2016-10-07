@@ -20,8 +20,6 @@ bugs:
 
 # the player counts up the track time but when it gets to 59 it goes to 60 very briefly then it quickly goes to 00. this needs looking at
 
-# need the track names to allow any charactor in the font or have the tracknames specail charactors replaced with something else as it messes up the name, i have noticed that this charactor (') is the main issue
-
 # far left row of albums changes size during pagination. sometimes it stays a smaller size to the rest
 
 # could we move the player down slightly so we can see the top, i showed some people and they said it looks odd connected to the very top (maybe make the gap same distance as bottom of player)
@@ -146,6 +144,8 @@ We created a modal that can be used anywhere to search or upload covers.
 
 #album burn <stefano> ### COMPLETE: TOTAL £800 - (150 + 100 ALREADY PAIED).
 >>>>
+
+# need the track names to allow any charactor in the font or have the tracknames specail charactors replaced with something else as it messes up the name, i have noticed that this charactor (') is the main issue
 
 you will need to check for a blank cd and check its size then calculate how many cd's would be needed and give the user this info in a modal.
 the album would be converted to wav files then burnt to cd one disc at a time.

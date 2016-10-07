@@ -3,7 +3,7 @@
 
 <head>
     <title>&lt;JUKEBOX&gt;</title>
-    <link href="assets/css/main.css?v5" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/main.css?v6" rel="stylesheet" type="text/css"/>
     <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css"/>
     <link rel="icon" type="image/png" href="assets/img/icons/vinyl1.png">
@@ -35,10 +35,10 @@
                     <div id="trash" class="crcbtn" onclick="deleteAlbum(album_id);"></div>
                     <div id="add" class="crcbtn"></div>
                     <div id="shuffle" class="crcbtn"></div>
-                    <div id="wifi" class="crcbtn" onclick="openModalPage('assets/modals/network_settings/')"></div>
+                    <div id="wifi" class="crcbtn" onclick="openModalPage('assets/modals/network_settings')"></div>
                     <div id="ripper" class="crcbtn" onclick="openModalPage('assets/modals/rip/rip_pre.php')"></div>
                     <div id="eq_button" class="crcbtn" onclick="openModalPage('assets/modals/eq/index.php')"></div>
-                    <div id="radio" class="crcbtn" onclick="openModalPage('assets/modals/radio/radio_1.php')"></div>
+                    <div id="radio" class="crcbtn" onclick="openModalPage('assets/modals/radio/index.php')"></div>
                     <div id="burn" class="crcbtn" onclick="openModalPage('assets/modals/burner.php')"></div>
                 </div>
 

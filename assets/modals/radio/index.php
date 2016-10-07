@@ -17,7 +17,7 @@ $results = $mysqli->query($query);
 
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
 
-    <div class="aRadio plus" onclick="openModalPage('assets/modals/radio/upload_1.php')">
+    <div class="aRadio plus" onclick="openModalPage('/assets/modals/radio/add_radio/index.php')">
         <div>+</div>
         <span>Add new radio</span>
     </div>
