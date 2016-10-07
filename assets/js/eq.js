@@ -51,7 +51,7 @@ function setupAudioNodes() {
     // create a buffer source node
     //sourceNode = context.createBufferSource();
     var player = document.getElementById('player');
-    player.crossOrigin = "Anonymous";
+    player.crossOrigin = "anonymous";
     sourceNode = context.createMediaElementSource(player);
     sourceNode.connect(analyser);
     analyser.connect(javascriptNode);
@@ -78,7 +78,7 @@ function setupAudioNodes() {
             analyser.getByteFrequencyData(array);
 
             // set the fill style
-            
+
             //ctx.fillStyle="rgba(255, 25, 0, 1)";
             //drawSpectrum2(array);
             //ctx.fillStyle="rgba(0, 25, 255, 1)";
@@ -91,27 +91,6 @@ function setupAudioNodes() {
     }
 
 }
-
-function disconnectNodes(){
-	//context.close();
-	console.log('Disconnecting the audio nodes');
-	javascriptNode.disconnect();
-	
-	analyser.disconnect();
-	
-	//sourceNode.disconnect();
-
-	//sourceNode.disconnect();
-
-	//sourceNode.connect(context.destination);
-	
-	
-
-}
-
-// when the javascript node is called
-// we use information from the analyzer node
-// to draw the volume
 
 function drawSpectrum(array) {
     
@@ -140,21 +119,7 @@ function drawSpectrum(array) {
     }
 
     ctx.fillRect(array.length * (waveWidth + wavePadding), 0, 1, waveHeight);
-};
-
-function drawSpectrum2(array) {
-    for ( var i = 0; i < (array.length); i ++ ){
-        var value = array[i];
-
-        ctx.fillRect(
-            i*(waveWidth + wavePadding),
-            waveHeight-value*waveHeightMultiplier,
-            waveWidth,
-            waveHeight + value *waveHeightMultiplier // h
-            );
-        //  console.log([i,value])
-    }
-};
+}
 
 function setupGradient(ctx){
     // create a gradient for the fill. Note the strange
