@@ -55,6 +55,17 @@ will need the ability to remove stations and add images and edit station
 £250 :)
 <<<<<<
 
+# can the artist and title be sent over to the image finder modal
+<Vittorio> 10£
+
+# Remove cd devider from the edit album
+<Vittorio> 5£
+
+# Edit radio station
+<Vittorio> 50£
+
+# Add Radion button moved to the top
+<Vittorio> 5£
 
 
 ██████╗  ██████╗ ███╗   ██╗███████╗
@@ -64,6 +75,15 @@ will need the ability to remove stations and add images and edit station
 ██████╔╝╚██████╔╝██║ ╚████║███████╗
 ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝ (but still to be paid!)
 
+
+
+
+██████╗  ██████╗ ███╗   ██╗███████╗    ███╗   ██╗ █╗ ██████╗  █████╗ ██╗██████╗ 
+██╔══██╗██╔═══██╗████╗  ██║██╔════╝    ████╗  ██║ ╚╝ ██╔══██╗██╔══██╗██║██╔══██╗
+██║  ██║██║   ██║██╔██╗ ██║█████╗      ██╔██╗ ██║    ██████╔╝███████║██║██║  ██║
+██║  ██║██║   ██║██║╚██╗██║██╔══╝      ██║╚██╗██║    ██╔═══╝ ██╔══██║██║██║  ██║
+██████╔╝╚██████╔╝██║ ╚████║███████╗    ██║ ╚████║    ██║     ██║  ██║██║██████╔╝
+╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝    ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝╚═════╝
 
 # album uploader: could you make the artists and title modal the other way around like stefano has done on the ripper, Artist at the top, title at the bottom
 <Vittorio> 2£
@@ -107,13 +127,6 @@ We created a modal that can be used anywhere to search or upload covers.
 
 # album uploader: if i upload an album with no image, it will not reach the final modal
 <Vittorio> £1
-
-██████╗  ██████╗ ███╗   ██╗███████╗    ███╗   ██╗ █╗ ██████╗  █████╗ ██╗██████╗ 
-██╔══██╗██╔═══██╗████╗  ██║██╔════╝    ████╗  ██║ ╚╝ ██╔══██╗██╔══██╗██║██╔══██╗
-██║  ██║██║   ██║██╔██╗ ██║█████╗      ██╔██╗ ██║    ██████╔╝███████║██║██║  ██║
-██║  ██║██║   ██║██║╚██╗██║██╔══╝      ██║╚██╗██║    ██╔═══╝ ██╔══██║██║██║  ██║
-██████╔╝╚██████╔╝██║ ╚████║███████╗    ██║ ╚████║    ██║     ██║  ██║██║██████╔╝
-╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝    ╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝╚═════╝ 
 
 #album burn <stefano> ### COMPLETE: TOTAL £800 - (150 + 100 ALREADY PAIED).
 >>>>
