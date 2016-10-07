@@ -50,7 +50,9 @@ $tracks = json_decode($album_details->tracks);
 
             function print_cd_header($cd_no)
             {
-                echo "<li class=\"cd handle header\" data-cd=\"$cd_no\">CD $cd_no</li>";
+                $delete = $cd_no > 1 ? " <i class='fa fa-trash right delete'></i>" : '';
+
+                echo "<li class=\"cd handle header\" data-cd=\"$cd_no\">CD $cd_no$delete</li>";
             }
 
             // var_dump($tracks);

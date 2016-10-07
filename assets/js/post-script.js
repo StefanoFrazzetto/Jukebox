@@ -29,6 +29,7 @@ var search_field = 'artist';
 
 var show, show_x, show_y;
 
+//noinspection JSUnusedGlobalSymbols
 var answer_to_life_universe_and_everything = 42; //That's probably why something still works.
 var page = 1;
 
@@ -37,6 +38,8 @@ var imageSelector = {
     to: null,
     from: null,
     imageUrl: null,
+    defaultArtist: '',
+    defaultAlbum: '',
 
     open: function () {
         openModalPage('assets/modals/image_picker/');
@@ -56,7 +59,7 @@ function reload() { //This function will load the page with AJAX!
     $.ajax({
         url: full_request,
         contentType: "text/html;charset=utf8"
-    }).done(function (response, status, xhr) {
+    }).done(function (response) {
 
         var re = /<!--(.*)-->$/;
         var m;
@@ -220,8 +223,10 @@ home_btn.click(function () {
     search_field = 'title';
     page = 1;
 
-    $('#sorter').find('.by.active').removeClass('active');
-    $('#sorter').find('.by:first-of-type').addClass('active');
+    var sorter = $('#sorter');
+
+    sorter.find('.by.active').removeClass('active');
+    sorter.find('.by:first-of-type').addClass('active');
 
     reload();
 });
@@ -266,7 +271,7 @@ $(document).mouseup(function (e)
 
 /* this should be included in a separated file to be loaded only in the local version of the app */
 
-$(window).bind('resize', function (e) { //Good job! :)
+$(window).bind('resize', function () { //Good job! :)
     window.resizeEvt;
     $(window).resize(function () {
         clearTimeout(window.resizeEvt);

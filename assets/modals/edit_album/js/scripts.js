@@ -116,27 +116,50 @@ edit_tracks.find('.edit').click(function (e) {
     });
 });
 
+
+// delete a track
 edit_tracks.find('.delete').click(function (e) {
     e.stopPropagation();
 
     var li = $(this).closest('li');
 
-    var track_no = li.index() - 1;//parseInt(li.attr('data-id'));
+    if (li.hasClass('track')) {
+        deleteTrack(li);
+    } else if (li.hasClass('cd')) {
+        deleteCD(li);
+    }
+
+
+});
+
+function deleteTrack(li) {
+    var cd = findCD(li);
+
+    var track_no = li.index() - cd;//parseInt(li.attr('data-id'));
 
     li.remove();
 
-    console.log(edit_album_tracks[track_no]);
+    console.log('removed: ' + edit_album_tracks[track_no].title);
 
     edit_album_deleted_tracks.push(edit_album_tracks[track_no]);
 
     edit_album_tracks.splice(track_no, 1);
+}
 
-});
+function deleteCD(li) {
+    li.remove();
+
+    edit_tracks.find('.track').each(function () {
+        updateCD($(this));
+    })
+}
 
 function openPickCoverModal() {
     imageSelector.albumArtist = true;
     imageSelector.to = 'assets/modals/edit_album/?id=' + album_id;
     imageSelector.from = 'assets/modals/edit_album/?id=' + album_id;
+    imageSelector.defaultArtist = $('#album-artist').val();
+    imageSelector.defaultAlbum = $('#album-title').val();
     imageSelector.open();
 }
 
@@ -181,12 +204,18 @@ $(function () { // Allows sorting of the tracks
             if (item.hasClass('cd')) {
                 // A CD has been dragged
 
-                item.siblings('.track').each(function (key, item) {
+                item.siblings('.track').each(function () {
                     updateCD($(this));
                 });
             } else {
+                var cd = findCD(edit_tracks.children().eq(evt.oldIndex));
                 // A track has been dragged
-                edit_album_tracks.move(evt.oldIndex, evt.newIndex);
+
+                var index = item.index('.track');
+
+                var mysticVariable = evt.oldIndex > evt.newIndex ? -1 : 0;
+
+                edit_album_tracks.move(evt.oldIndex - cd + mysticVariable, index);
                 // Sets the new cd in case it changed
 
                 updateCD(item);
@@ -195,13 +224,19 @@ $(function () { // Allows sorting of the tracks
     });
 });
 
-$.fn.getIndex = function () {
-    return $(this).parent().children().index($(this));
+$.fn.getIndex = function (klass) {
+    if (typeof klass === 'undefined')
+        return $(this).parent().children().index($(this));
+    return $(this).parent().children(klass).index($(this));
 };
+
+function findCD(item) {
+    return parseInt(item.prevAll('.cd').length);
+}
 
 function updateCD(item) {
     try {
-        var cd = parseInt(item.prevAll('.cd').attr('data-cd'));
+        var cd = findCD(item);
 
         edit_album_tracks[item.getIndex() - cd].cd = cd;
     } catch (e) {

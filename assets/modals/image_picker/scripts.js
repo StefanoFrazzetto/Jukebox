@@ -1,14 +1,9 @@
 var addAlbumForm = $('#coverPickerForm');
 var submit_btn = $('#imagePickerSubmit');
-var savePath = "";
 var imageURL;
 
 if (typeof imageSelector === 'undefined') {
     alert('imageSelector variable not found');
-}
-
-function setImageURL() {
-    imageURL = $('#coverImage').val();
 }
 
 $('#coverImageURL').bind('input propertychange', function () {
@@ -21,10 +16,10 @@ $('#search').on('click', function () {
     var artist = $('#artist').val();
     var album = $('#album').val();
 
-
+    var covers = $('#covers');
     if (artist != '' && album != '') {
         $('#loading-img').css('display', 'block');
-        $('#covers').find('> p').css('display', 'block');
+        covers.find('> p').css('display', 'block');
 
         $.ajax({
             url: 'assets/php-lib/image_sources/fetch.php',
@@ -33,13 +28,13 @@ $('#search').on('click', function () {
             dataType: 'json',
             success: function (data) {
                 $('.cover-container').remove();
-                $('#covers').find('> p').css('display', 'none');
+                covers.find('> p').css('display', 'none');
 
                 $('#loading-img').css('display', 'none');
 
                 // If the array is not empty
                 if (data.length === 0) {
-                    $('#covers').html("No images found. Check your connection.");
+                    covers.html("No images found. Check your connection.");
                 } else {
                     // Append the cover to #covers
                     $.each(data, function (key, value) {
@@ -52,7 +47,7 @@ $('#search').on('click', function () {
 
                         cointainerhtml.html(imagehtml);
 
-                        $('#covers').append(cointainerhtml);
+                        covers.append(cointainerhtml);
 
                         submit_btn.addClass('disabled');
                     });
@@ -60,7 +55,7 @@ $('#search').on('click', function () {
 
                 // Bind the onclick event to each cover
                 $('img.covers').on('click', function () {
-                    $('#covers').find('.active').removeClass("active");
+                    covers.find('.active').removeClass("active");
                     $(this).addClass("active");
                     imageURL = $(this).attr('src');
                     submit_btn.removeClass('disabled');
@@ -72,13 +67,13 @@ $('#search').on('click', function () {
     }
 });
 
-submit_btn.click(function (event) {
+submit_btn.click(function () {
     imageSelector.imageUrl = imageURL;
 
     imageSelector.done();
 });
 
-$('#coverPickerForm').submit(function (e) {
+addAlbumForm.submit(function (e) {
     e.preventDefault();
     submit_btn.click();
 });
@@ -87,6 +82,9 @@ $("#searchImage").submit(function (e) {
     e.preventDefault();
     $("#search").click();
 });
+
+$('#artist').val(imageSelector.defaultArtist);
+$('#album').val(imageSelector.defaultAlbum);
 
 Dropzone.autoDiscover = false;
 

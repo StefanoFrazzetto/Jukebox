@@ -55,12 +55,6 @@ will need the ability to remove stations and add images and edit station
 £250 :)
 <<<<<<
 
-# can the artist and title be sent over to the image finder modal
-<Vittorio> 10£
-
-# Remove cd devider from the edit album
-<Vittorio> 5£
-
 # Edit radio station
 <Vittorio> 50£
 
@@ -75,7 +69,11 @@ will need the ability to remove stations and add images and edit station
 ██████╔╝╚██████╔╝██║ ╚████║███████╗
 ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝ (but still to be paid!)
 
+# can the artist and title be sent over to the image finder modal
+<Vittorio> 10£
 
+# Remove cd divider from the edit album
+<Vittorio> 5£
 
 
 ██████╗  ██████╗ ███╗   ██╗███████╗    ███╗   ██╗ █╗ ██████╗  █████╗ ██╗██████╗ 
