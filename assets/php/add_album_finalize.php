@@ -46,8 +46,6 @@ if (mysqli_error($mysqli)) {
 
         session_destroy();
 
-        file_put_contents("gazzi.amari.txt", $tmp_folder);
-
         $cmd = 'mv "' . $tmp_folder . '" "../../jukebox/' . $id . '"';
         exec($cmd);
 
@@ -61,4 +59,3 @@ if (mysqli_error($mysqli)) {
     echo '-1';
     die();
 }
-echo '-1';
