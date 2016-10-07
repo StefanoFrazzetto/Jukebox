@@ -104,6 +104,7 @@
   position: absolute;
   width: 354px;
   border-bottom: 1px solid $border_color;
+  height: 94px;
 }
 
 #seek {
@@ -164,7 +165,7 @@
 
 #eq_canvas {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 2.5px;
   pointer-events: none;
 }

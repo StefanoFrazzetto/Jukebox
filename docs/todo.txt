@@ -58,7 +58,7 @@ will need the ability to remove stations and add images and edit station
 # Edit radio station
 <Vittorio> 50£
 
-# Add Radion button moved to the top
+# Add Radio button moved to the top
 <Vittorio> 5£
 
 

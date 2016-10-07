@@ -42,13 +42,15 @@
                     <div id="burn" class="crcbtn" onclick="openModalPage('assets/modals/burner.php')"></div>
                 </div>
 
-                <canvas width="354px" height="94px" id="eq_canvas"></canvas>
                 <div id="marquee">
-                    <span id="songTitle"></span>
-                    <br/>
-                    <span id="albumTitle"></span>
-                    <br/>
-                    <span id="seek">00:00</span>
+                    <canvas width="354px" height="94px" id="eq_canvas"></canvas>
+                    <div style="position: absolute; top: 0; right: 0; width: 100%">
+                        <span id="songTitle"></span>
+                        <br/>
+                        <span id="albumTitle"></span>
+                        <br/>
+                        <span id="seek">00:00</span>
+                    </div>
                 </div>
 
                 <div id="slider" class="progressBar thin"></div>
@@ -201,7 +203,7 @@
 <script type="text/javascript" src="assets/js/player.js"></script>
 <script type="text/javascript" src="assets/js/searchbar.js"></script>
 <script type="text/javascript" src="assets/js/modals.js"></script>
-<script type="text/javascript" src="assets/js/post-script.min.js"></script>
+<script type="text/javascript" src="assets/js/post-script.js"></script>
 <script type="text/javascript" src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="assets/js/alerts.js"></script>
 <?php
