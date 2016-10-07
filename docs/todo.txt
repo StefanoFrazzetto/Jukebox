@@ -12,55 +12,70 @@ These are for bugs and cosmetic fixes that will need doing, they are extras so n
 
 cosmetic issues:
 
-scrollbar: i would like the scrollbar to be wider. as wide as the volume slider please
+# scrollbar: i would like the scrollbar to be wider. as wide as the volume slider please
 
-settings: could we have a on/off slider switch for the speakers. there is a script to get the state of the speaker (/assets/cmd/get_spearker_active.sh) 0=off 1=on
+# settings: could we have a on/off slider switch for the speakers. there is a script to get the state of the speaker (/assets/cmd/get_spearker_active.sh) 0=off 1=on
 
 bugs:
-player: when changing tracks sometimes it will hang on (loading...) im guessing it didnt load the track in time, maybe a function to check that the track is playing correctly
+
+# the player counts up the track time but when it gets to 59 it goes to 60 very briefly then it quickly goes to 00. this needs looking at
+
+# need the track names to allow any charactor in the font or have the tracknames specail charactors replaced with something else as it messes up the name, i have noticed that this charactor (') is the main issue
+
+# far left row of albums changes size during pagination. sometimes it stays a smaller size to the rest
+
+# could we move the player down slightly so we can see the top, i showed some people and they said it looks odd connected to the very top (maybe make the gap same distance as bottom of player)
+
+# we need the scrollbars on the whole jukebox to be a lot wider. so the touchscreen can click it without accidently clicking somewhere else
+
+# networking modal needs a loading image when saving
+
+# networking modal needs to have dhcp set all the time so when navigating between wifi and ethernet i would like it to have the dhcp enabled untill i disable it
+
+# power button needs a modal with off/reboot buttons inside
+
+# edit playlist modal looks awfull needs updating
+
+# if i click add to playlist when nothing already there, then click play , nothing happens
+
+# format button should also erase networking settings like saved passwords
+
+# change theme modal needs making with background image uploader
+
+# need a script that will run onboot that will set user settings like speakers on
+
+# working update modal that will fetch changes from somewhere and install them. maybe a list of changes also so maybe display a txt file in the modal
+
+# player: when changing tracks sometimes it will hang on (loading...) im guessing it didnt load the track in time, maybe a function to check that the track is playing correctly
 
 ---------------------------------------------------------
 
-album uploader: on the final modal could you swap the artist title around so artist in on top, and replace the success message with something better. maybe a "Success" in the header or something
-## Stefano : 13/08/2016
+# album uploader: on the final modal could you swap the artist title around so artist in on top, and replace the success message with something better. maybe a "Success" in the header or something
+<Stefano> : 13/08/2016
 
-download album: the zip file name does not contain spaces. for instance (avril lavigne - let go) would be name AvrilLavigne-Letgo.zip needs spaces
-## Stefano : 13/08/2016
+# download album: the zip file name does not contain spaces. for instance (avril lavigne - let go) would be name AvrilLavigne-Letgo.zip needs spaces
+<Stefano> Stefano : 13/08/2016
 
-also need a button to remove everything
-stored ## wifi data. ##
-albums.
-radio stations.
+# Also need a button to remove everything
+- stored ## wifi data. ##
+- albums.
+- radio stations.
+- both of these need a "are you sure" function.
+<Stefano> £30
 
-both of these need a "are you sure" function.
->>>>>
+# Playlist buttons
+-- some clever sliding modal on the playlist to give us buttons that will, delete playlist, burn playlist, save playlist, remove a track from playlist,
+<> £200
 
-£30
+# Finish radio  (still need the ability to edit station/ test url/ and add image)
+-- will need the ability to remove stations and add images and edit station
+<Vittorio> £80
 
-#playlist buttons
->>>>>
-some clever sliding modal on the playlist to give us buttons that will, delete playlist, burn playlist, save playlist, remove a track from playlist, 
-£200
-<<<<<
-
-#finish radio <vittorio>  (still need the ability to edit station/ test url/ and add image)
->>>>>
-will need the ability to remove stations and add images and edit station 
-
-£80
-<<<<<
-
-# Remote Control Server & GUI <vittorio> (this looks exciting, will probably need many remote versions. :)
->>>>>>
-£250 :)
-<<<<<<
+# Remote Control Server & GUI (this looks exciting, will probably need many remote versions. :)
+<Vittorio> £250
 
 # Edit radio station
 <Vittorio> 50£
-
-# Add Radio button moved to the top
-<Vittorio> 5£
-
 
 ██████╗  ██████╗ ███╗   ██╗███████╗
 ██╔══██╗██╔═══██╗████╗  ██║██╔════╝
@@ -73,6 +88,9 @@ will need the ability to remove stations and add images and edit station
 <Vittorio> 10£
 
 # Remove cd divider from the edit album
+<Vittorio> 5£
+
+# Add Radio button moved to the top
 <Vittorio> 5£
 
 
