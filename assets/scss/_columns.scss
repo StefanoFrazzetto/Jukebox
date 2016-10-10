@@ -1,0 +1,22 @@
+%col {
+  width: 49.9%;
+  float: left;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.col-right {
+  @extend %col;
+  float: right;
+}
+
+.col-left {
+  @extend %col;
+  float: left;
+}
+
+.col-row {
+  @extend %col;
+  width: 100%;
+}
+

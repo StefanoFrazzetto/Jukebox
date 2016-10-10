@@ -19,6 +19,7 @@
 @import 'utils';
 @import 'links';
 @import 'multiselect';
+@import "columns";
 
 body {
   margin: 0;
@@ -29,9 +30,6 @@ body {
   background-color: $background_color;
   font-size: $font_size;
   text-rendering: optimizeLegibility;
-
- 
-
 
   //background-image: url('http://phandroid.s3.amazonaws.com/wp-content/uploads/2015/12/winter-snow-wallpaper-2.jpg');
   -webkit-background-size: cover;
