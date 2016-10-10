@@ -34,8 +34,8 @@ $results = $mysqli->query($query);
         <div class="aRadio cover-container" data-id="<?php echo $result->id ?>"
              data-url='<?php echo json_encode($parsed_address) ?>'
              data-name="<?php echo $result->name ?>">
-            <div class="badge"><i class="fa fa-trash"></i></div>
             <img src="/assets/img/album-placeholder.png" class="covers"/>
+            <div class="badge"><i class="fa fa-trash"></i></div>
             <span><?php echo $result->name ?></span>
         </div>
     <?php } ?>
