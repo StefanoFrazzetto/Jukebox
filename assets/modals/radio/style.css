@@ -1,17 +1,3 @@
-.aRadio {
-    width: 128px;
-    height: 128px;
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.aRadio img {
-    width: 100%;
-    height: 100%;
-}
-
 .aRadio span {
     padding: 2px;
     text-align: center;

@@ -16,8 +16,7 @@ $results = $mysqli->query($query);
 
 
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
-
-    <div class="aRadio plus" onclick="openModalPage('/assets/modals/radio/add_radio/index.php')">
+    <div class="aRadio plus cover-container" onclick="openModalPage('/assets/modals/radio/add_radio/index.php')">
         <div>+</div>
         <span>Add new radio</span>
     </div>
@@ -32,10 +31,11 @@ $results = $mysqli->query($query);
 
 
         ?>
-        <div class="aRadio" data-id="<?php echo $result->id ?>" data-url='<?php echo json_encode($parsed_address) ?>'
+        <div class="aRadio cover-container" data-id="<?php echo $result->id ?>"
+             data-url='<?php echo json_encode($parsed_address) ?>'
              data-name="<?php echo $result->name ?>">
             <div class="badge"><i class="fa fa-trash"></i></div>
-            <img src="/assets/img/album-placeholder.png"/>
+            <img src="/assets/img/album-placeholder.png" class="covers"/>
             <span><?php echo $result->name ?></span>
         </div>
     <?php } ?>
