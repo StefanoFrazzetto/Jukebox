@@ -14,14 +14,14 @@ set_time_limit($timeout + 1);
 
 ini_set('memory_limit', '16M');
 
-$full_address = $_GET['url'];//"http://streaming.shoutcast.com/CINEMIX-1";
+$full_address = $_GET['url'];
 
-$paresed_address = parse_url($full_address);
+$parsed_address = parse_url($full_address);
 
-$host = $paresed_address['host'];
-$request = $paresed_address['path'] . @$paresed_address['query'];
-if ($paresed_address['port'])
-    $port = $paresed_address['port'];
+$host = $parsed_address['host'];
+$request = $parsed_address['path'] . @$parsed_address['query'];
+if ($parsed_address['port'])
+    $port = $parsed_address['port'];
 else
     $port = 80;
 
@@ -30,29 +30,24 @@ $meta['cycles'] = 0;
 start:
 $meta['cycles']++;
 
-
-$fp = fsockopen($host, $port, $errno, $errstr);
+$fp = fsockopen($host, $port, $err_no, $err_str);
 
 if (!$fp) {
-    echo "ERROR: $errno - $errstr<br />\n";
+    echo json_encode(["error-code" => $err_no, "message" => $err_str]);
 } else {
 
-    @$data .= "--\r\n\r\n";
+    $data = "\r\n\r\n";
 
-    $msg =
-        "GET $request HTTP/1.0
-    Icy-MetaData: 1
-    \r\n\r\n";
-
+    $msg = "GET $request HTTP/1.0\r\nIcy-MetaData: 1\r\n\r\n";
 
     fputs($fp, $msg . $data);
 
-    $header_chunk = '';
+    $header = '';
 
     // get the response 
     while (true) {
         $header_chunk = fread($fp, 1);
-        @$header .= $header_chunk;
+        $header .= $header_chunk;
 
         if (strpos($header, "\r\n\r\n") !== false) {
             break;
@@ -63,49 +58,51 @@ if (!$fp) {
 
     foreach ($matches[1] as $key => $name) $meta[trim($name, " \t\n\r\0\x0B")] = trim($matches[2][$key], " \t\n\r\0\x0B");
 
-    $meta_int = @$meta['icy-metaint'];
+    if (isset($meta['icy-metaint'])) {
 
-    if ($meta_int) {
+        $meta_int = $meta['icy-metaint'];
+
         $mp3_chunk = fread($fp, $meta_int);
 
         if (strlen($mp3_chunk) != $meta_int && ((time() - $begin_time) < $timeout)) {
             fclose($fp);
             goto start; // God of programming, please forgive me for using a goto.
         } else if ((time() - $begin_time) >= $timeout) {
-            $meta['timeout'] = true;
+            $meta['error'] = "Request time out";
             goto end;
         }
 
         $magic_byte = ord(fread($fp, 1));
 
-        $meta_data = fread($fp, $magic_byte * 16);
+        // Checks whether the byte is actually an integer
+        if (is_int($magic_byte)) {
+            $magic_byte = intval($magic_byte);
+
+            $meta_data = fread($fp, $magic_byte * 16);
+
+            $meta['magic_byte'] = $magic_byte;
+
+            //$meta['data_data'] = $meta_data;
+
+            $meta['mp3_lenght'] = strlen($mp3_chunk);
+
+            $re = '/([a-zA-Z\-\_0-9]*)\s*\=\s*\'([^\']*)\';/';
+
+            preg_match_all($re, $meta_data, $sub_matches);
+
+            foreach ($sub_matches[1] as $key => $gne) {
+                $meta[$gne] = $sub_matches[2][$key];
+            }
+        } else {
+            $meta['no_meta_int'] = true;
+            $meta['error'] = "Magic byte not found";
+        }
     } else {
         $meta['no_meta_int'] = true;
+        $meta['error'] = "No meta int specified";
     }
     end:
     fclose($fp);
 
-    //$meta['mp3_chunk'] = $mp3_chunk;
-
-    $meta['magic_byte'] = $magic_byte;
-
-    $meta['data_data'] = $meta_data;
-
-    $meta['mp3_lenght'] = strlen($mp3_chunk);
-
     echo json_encode($meta);
-    /*
-    echo $header;
-    echo "\n = MAGIC BYTE = \n";
-    echo $magic_byte;
-    echo "\n = META= \n";
-    echo $meta_data;
-    echo "\n = MP3 CHUNK LENGHT = \n";
-    
-    echo strlen ($mp3_chunk);
-    
-    echo "\n == \n";
-    echo $mp3_chunk;
-    echo "\n == \n";  
-   */
 }
