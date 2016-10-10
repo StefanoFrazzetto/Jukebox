@@ -1,11 +1,11 @@
 var initialized = false;
 // Variables //
 var playlist = [],
-playlist_number = 0,
-track_no = 0,
-album_id, repeat = false,
-shuffle = false,
-default_volume = 10;
+    playlist_number = 0,
+    track_no = 0,
+    album_id, repeat = false,
+    shuffle = false,
+    default_volume = 10;
 
 // SELECTORS //
 var player = document.getElementById("player");
@@ -49,11 +49,11 @@ prev_btn.click(function () {
 
 /*player.onplaying = function () {
  alert("The video is now playing");
-};*/
+ };*/
 
 /*player.onpause = function () {
  playing = false;
-};*/
+ };*/
 
 player.onwaiting = function () {
     seekDiv.text('loading...');
@@ -85,7 +85,7 @@ player.addEventListener('timeupdate', updateProgressBar, false);
  play_pause();
  e.preventDefault();
  }
-});*/
+ });*/
 
 // Functions //
 
@@ -98,7 +98,7 @@ function play_pause() {
 }
 
 function pplay() {
-    if(!isReady){
+    if (!isReady) {
         return;
     }
 
@@ -203,7 +203,7 @@ function getPlaylistSong(number) {
 
     songTitle.html(playlist[number].title);
     //if (initialized) {
-        pplay();
+    pplay();
     //}
 
     highlightCurrentTrack();
@@ -300,9 +300,9 @@ function changeAlbum(id, song) {
 }
 
 function deleteAlbum(id) {
-    if(confirm("Are you sure?")){
-        $.ajax('assets/php/delete_album.php?id=' + id).done(function(){
-            if (id == album_id){
+    if (confirm("Are you sure?")) {
+        $.ajax('assets/php/delete_album.php?id=' + id).done(function () {
+            if (id == album_id) {
                 resetPlayer();
             }
             reload();
@@ -310,10 +310,16 @@ function deleteAlbum(id) {
     }
 }
 
-function deleteRadio(id){
-    if(confirm("Are you sure?")){
-        $.ajax('assets/php/delete_radio.php?id=' + id).done(function(response){
-            $('.aRadio[data-id="'+id+'"]').remove();
+function deleteRadio(id) {
+    if (confirm("Are you sure?")) {
+        $.ajax('assets/php/delete_radio.php?id=' + id).done(function (response) {
+            if (response == "success") {
+                $('.aRadio[data-id="' + id + '"]').remove();
+            }
+            else {
+                error("Error while deleting Radio. " + response + ".");
+                console.log(response);
+            }
             //reload();
         });
     }
@@ -358,7 +364,7 @@ function removeSongFromPlaylist(_playlist_no) {
     updatePlaylist();
 }
 
-function removeAllTracksFromPlaylist(){
+function removeAllTracksFromPlaylist() {
     resetPlayer();
     //updatePlaylist();
 }
@@ -405,24 +411,24 @@ function playRadio(url_object, name) {
     isReady = true;
 
     url_object = $.parseJSON(url_object);
-    
+
     var port = url_object.port;
 
     var request = url_object.path;
 
     var address = url_object.host;
-    
-    var url = 'http://'+window.location.hostname + ':4242/?address='+address+'&request='+request+'&port='+port;
+
+    var url = 'http://' + window.location.hostname + ':4242/?address=' + address + '&request=' + request + '&port=' + port;
 
     player.src = url;
     songTitle.html(name);
     pplay();
 }
 
-function resetPlayer(){
+function resetPlayer() {
     pstop();
 
-    if( typeof ctx !== 'undefined'){
+    if (typeof ctx !== 'undefined') {
         ctx.clearRect(0, 0, 354, 95);
     }
 
@@ -438,7 +444,6 @@ function resetPlayer(){
 
     updatePlaylist();
 
-    
 
     player.src = '';
 
@@ -448,7 +453,7 @@ function resetPlayer(){
 
 }
 
-function getPlayerStatus(){
+function getPlayerStatus() {
     return {
         album_id: parseInt(album_id),
         track_no: parseInt(track_no),
