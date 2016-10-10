@@ -22,7 +22,8 @@
         <div class="center col-right">
             <label>Cover</label>
             <p/>
-            <img src="/assets/img/album-placeholder.png" onclick="openChangeCover()" width="175" class="cover-picture">
+            <img src="/assets/img/album-placeholder.png" id="addRadioCover" onclick="openChangeCover()" width="175"
+                 class="cover-picture">
         </div>
 
         <div class="center col-row">
