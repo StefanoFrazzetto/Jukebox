@@ -33,26 +33,33 @@ var show, show_x, show_y;
 var answer_to_life_universe_and_everything = 42; //That's probably why something still works.
 var page = 1;
 
-var imageSelector = {
-    albumArtist: false,
-    to: null,
-    from: null,
-    imageUrl: null,
-    defaultArtist: '',
-    defaultAlbum: '',
+var imageSelector;
 
-    open: function () {
-        openModalPage('assets/modals/image_picker/');
-    },
+function initImageSelectorObject() {
+    imageSelector = {
+        albumArtist: false,
+        isRadio: false,
+        to: null,
+        from: null,
+        imageUrl: null,
+        defaultArtist: '',
+        defaultAlbum: '',
 
-    back: function (){
-        openModalPage(this.from)
-    },
+        open: function () {
+            openModalPage('assets/modals/image_picker/');
+        },
 
-    done: function () {
-      openModalPage(this.to);
+        back: function () {
+            openModalPage(this.from)
+        },
+
+        done: function () {
+            openModalPage(this.to);
+        }
     }
-};
+}
+
+initImageSelectorObject();
 
 function reload() { //This function will load the page with AJAX!
     var full_request = 'assets/php/get_albums.php?' + request + '&page=' + page + '&x=' + show_x + '&y=' + show_y + '&orderBy=' + sort_by;
@@ -95,7 +102,7 @@ function reload() { //This function will load the page with AJAX!
                 $(".album:not(.filler)").click(function () {
                     var detected_id = $(this).attr('id');
                     openModalPage('assets/modals/album_details.php?id=' + detected_id);
-                    
+
                 });
                 $(".album .moar").click(function (e) {
                     var detected_id = $(this).parent().attr('id');
@@ -125,6 +132,7 @@ function reload() { //This function will load the page with AJAX!
                     divW = w;
                 }
             }
+
             checkResize();
             //var timer = setInterval(checkResize, animation_medium);
             //Woff!
@@ -152,7 +160,7 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
     if (show_x < 3) {
         show_x = 5;
         //if (show_y <= 2)
-           // show_y = 2;
+        // show_y = 2;
     }
 
     show = show_x * show_y;
@@ -181,19 +189,19 @@ function changeSearchField(value, div) {
 
 }
 
-function showDropdownMenu(){
+function showDropdownMenu() {
     menu_btn.addClass('active');
     dropdownModal.offset({
         top: 0
     });
 }
 
-function hideDropdownMenu(){
+function hideDropdownMenu() {
     menu_btn.removeClass('active');
     dropdownModal.css('top', '-150px');
 }
 
-function toggleDropdownMenu(){
+function toggleDropdownMenu() {
     if (dropdownModal.css('top') === '0px') {
         hideDropdownMenu();
     } else if (dropdownModal.css('top') === '-150px') {
@@ -245,9 +253,9 @@ pwr_btn.click(function () {
     $.ajax('assets/cmd/exec.php?cmd=shutdown'); // How many times I pressed it by mistake, and realized I am stupid.
 });
 
-$('#albumCover').click(function (){
-    if(typeof(album_id) !== 'undefined')
-        openModalPage('assets/modals/album_details.php?id=' + album_id);  
+$('#albumCover').click(function () {
+    if (typeof(album_id) !== 'undefined')
+        openModalPage('assets/modals/album_details.php?id=' + album_id);
 });
 
 //alert(show); //Just for debugging
@@ -259,12 +267,10 @@ $(document).ready(function () {
     reload(); //We now load the remote script via ajax
 });
 
-$(document).mouseup(function (e)
-{
+$(document).mouseup(function (e) {
     if (!dropdownModal.is(e.target) // if the target of the click isn't the container...
-        // && dropdownModal.has(e.target).length === 0 // ... nor a descendant of the container
-        )
-    {
+    // && dropdownModal.has(e.target).length === 0 // ... nor a descendant of the container
+    ) {
         hideDropdownMenu();
     }
 });

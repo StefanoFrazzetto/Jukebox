@@ -1,6 +1,9 @@
+var radio_name_field = $('#radioname');
+var radio_url_field = $('#radiourl');
+
 function addNewRadio() {
-    var name = $('#radioname').val();
-    var url = $('#radiourl').val();
+    var name = radio_name_field.val();
+    var url = radio_url_field.val();
 
     var request = '/assets/modals/radio/add_radio/add_radio.php?name=' + encodeURIComponent(name) + '&url=' + encodeURIComponent(url);
 
@@ -35,7 +38,7 @@ function makeRadioObjectFromUrl(url) {
 }
 
 function testRadio() {
-    var radioUrl = document.getElementById('radiourl').value;
+    var radioUrl = radio_url_field.val();
 
     if (!validateURL(radioUrl)) {
         error("The provided URL is not valid");
@@ -59,7 +62,7 @@ function firstRadioPage() {
 }
 
 function secondRadioPage() {
-    var url = $('#radiourl').val();
+    var url = radio_url_field.val();
 
     if (!validateURL(url)) {
         error("The provided URL is not valid");
@@ -73,13 +76,13 @@ function secondRadioPage() {
 
         var request = '/assets/modals/radio/add_radio/read_meta.php?url=' + encodeURIComponent(url);
 
-        $('#radioname').val("");
+        radio_name_field.val("");
 
         $.getJSON(request)
             .done(function (response) {
                 console.log(response);
 
-                $('#radioname').val(response['icy-name']);
+                radio_name_field.val(response['icy-name']);
             })
             .fail(function (z, zz, zzz) {
                 //alert('something went wrong \n' + z + zz + zzz);
@@ -96,5 +99,14 @@ function secondRadioPage() {
 }
 
 function openChangeCover() {
+    initImageSelectorObject();
 
+    imageSelector.albumArtist = false;
+    imageSelector.isRadio = true;
+    imageSelector.to = '/assets/modals/radio/add_radio';
+    imageSelector.from = '/assets/modals/radio/add_radio';
+    imageSelector.defaultArtist = radio_name_field.val();
+    imageSelector.defaultAlbum = radio_url_field.val();
+
+    imageSelector.open();
 }

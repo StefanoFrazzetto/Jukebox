@@ -36,6 +36,6 @@
     </center>
 
     <script src="/assets/js/validateURL.js"></script>
-    <script src="/assets/modals/radio/scripts.js"></script>
+    <script src="/assets/modals/radio/add_radio/scripts.js"></script>
     <script src="/assets/js/parseUri.js"></script>
 </div>
