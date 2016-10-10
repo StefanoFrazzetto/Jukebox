@@ -4,29 +4,20 @@
 *	Mysql database class
 */
 class Database {
+    public static $_table_albums = "albums";
+    public static $_table_radio_stations = "radio_stations"; //The single instance
+    private static $_instance;
 	private $_connection;
-	private static $_instance; //The single instance
-
 	private $_host = "localhost";
 	private $_username = "root";
 	private $_password = "password1000";
 	private $_database = "zwytytws_albums";
 
-	public static $_table_albums = "albums";
-	public static $_table_radio_stations = "radio_stations";
-
 	/*
 	*	Get an instance of the Database
 	*	@return Instance
 	*/
-	public static function getInstance() {
-		if(!self::$_instance) { // If no instance then make one
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
 
-	// Constructor
 	public function __construct() {
 		try {
 			$this->_connection = new PDO("mysql:host=$this->_host;dbname=$this->_database;charset=utf8mb4", $this->_username, $this->_password);
@@ -35,14 +26,17 @@ class Database {
 		}
 	}
 
-	// Magic method clone is empty to prevent duplication of connection
-	private function __clone() { 
+    // Constructor
+
+    public static function getInstance()
+    {
+        if (!self::$_instance) { // If no instance then make one
+            self::$_instance = new self();
+        }
+        return self::$_instance;
 	}
 
-	// Get connection
-	public function getConnection() {
-		return $this->_connection;
-	}
+    // Magic method clone is empty to prevent duplication of connection
 
     /**
      * Execute a raw query on the database.
@@ -63,6 +57,13 @@ class Database {
 		}
 	}
 
+    // Get connection
+
+    public function getConnection()
+    {
+        return $this->_connection;
+    }
+
     /**
      * Run an insert query.
      *
@@ -81,12 +82,22 @@ class Database {
 
 		$stmt = $this->_connection;
 		$stmt = $stmt->prepare($sql);
-		
+
 		foreach ($array as $key => $value)
 		    $stmt->bindValue(":$key", $value);
 
 		return $stmt->execute();
 	}
+
+    /**
+     * Returns the last inserted ID
+     *
+     * @return mixed
+     */
+    public function getLastInsertedID()
+    {
+        return $this->_connection->lastInsertId();
+    }
 
     /**
      * Select $columns from $table with additional $query.
@@ -98,7 +109,7 @@ class Database {
      * @return array|null
      */
 	public function select($columns = "*", $table = "albums", $query = "WHERE 1") {
-		if(is_array($columns)) {	
+        if (is_array($columns)) {
 			$columns = implode(', ', $columns);
 		}
 
@@ -106,8 +117,8 @@ class Database {
 		$sql .= $query;
 
 		$stmt = $this->_connection->prepare($sql);
-		
-		// DEBUG
+
+        // DEBUG
 		// $stmt->debugDumpParams();
 
 		$stmt->execute();
@@ -146,8 +157,8 @@ class Database {
 
 		$stmt = $this->_connection;
 		$stmt = $stmt->prepare($sql);
-		
-		foreach ($array as $key => $value)
+
+        foreach ($array as $key => $value)
 		    $stmt->bindValue(":$key", $value);
 
 		// // DEBUG
@@ -155,7 +166,6 @@ class Database {
 
 		return $stmt->execute();
 	}
-
 
     /**
      * Remove record(s).
@@ -198,13 +208,17 @@ class Database {
 			default:
 				$sql = "TRUNCATE TABLE " . self::$_table_albums . "; TRUNCATE TABLE " . self::$_table_radio_stations;
 		}
-		
-		try {
+
+        try {
 			$stmt = $this->getConnection()->prepare($sql);
 			return $stmt->execute();
 		} catch (PDOException $e) {
 			return false;
 		}
+    }
+
+    private function __clone()
+    {
 	}
 
 }
