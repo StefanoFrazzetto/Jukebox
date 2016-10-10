@@ -155,6 +155,8 @@ function deleteCD(li) {
 }
 
 function openPickCoverModal() {
+    initImageSelectorObject();
+
     imageSelector.albumArtist = true;
     imageSelector.to = 'assets/modals/edit_album/?id=' + album_id;
     imageSelector.from = 'assets/modals/edit_album/?id=' + album_id;

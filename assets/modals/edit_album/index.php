@@ -16,13 +16,15 @@ $tracks = json_decode($album_details->tracks);
 <div class="modalBody" data-mcs-theme="dark" style="position: relative">
     <div style="position: absolute; width: 300px; height: 300px; display: inline-block; overflow: hidden">
         <img id="album_cover_img" class="cover" src="jukebox/<?php echo $id; ?>/cover.jpg" style="width: 100%;">
-        <div class="badge badge-bottom badge-bigger" onclick="openPickCoverModal()"><i class="fa fa-pencil fa-2x"></i></div>
+        <div class="badge badge-bottom badge-bigger" onclick="openPickCoverModal()"><i class="fa fa-pencil fa-2x"></i>
+        </div>
     </div>
 
-    <div class="mCustomScrollbar" id="edit-album-column" style="position: relative; margin-left: 350px; width: 480px; height: 300px;">
-        <form id="edit-album-form" >
+    <div class="mCustomScrollbar" id="edit-album-column"
+         style="position: relative; margin-left: 350px; width: 480px; height: 300px;">
+        <form id="edit-album-form">
             <label for="album-artist">Artist</label>
-            <input type="text" name="album-artist" id="album-artist" class="right"
+            <input type="text" name="album-artist" id="album-artist" class="right large"
                    value="<?php echo $album_details->artist ?>"/>
 
             <br/>
@@ -30,7 +32,7 @@ $tracks = json_decode($album_details->tracks);
             <br/>
 
             <label for="album-title">Title</label>
-            <input type="text" name="album-title" id="album-title" class="right"
+            <input type="text" name="album-title" id="album-title" class="right large"
                    value="<?php echo $album_details->title ?>"/>
 
 
@@ -72,7 +74,7 @@ $tracks = json_decode($album_details->tracks);
 
 </div>
 <div class="modalFooter">
-    <button onclick="openModalPage('assets/modals/edit_album/?id=<?php echo $id ?>')">Back to Album</button>
+    <button onclick="openModalPage('assets/modals/album_details.php?id=<?php echo $id ?>')">Back to Album</button>
     <button onclick="appendCd()">Add CD</button>
     <button class="right" id="edit-album-save">Save</button>
 </div>
