@@ -3,28 +3,39 @@
 
 <div class="modalBody">
     <center id='firstStep'>
-        <input type="text" id="radiourl" placeholder="URL"/>
-        <br/>
-
-        <br/>
+        <label for="radiourl">Radio URL</label>
+        <p/>
+        <input type="text" class="larger" id="radiourl" placeholder="URL"/>
+        <p/>
         <button onclick="openModalPage('/assets/modals/radio/index.php')">Cancel</button>
         <button onclick="testRadio()">Test</button>
         <button onclick="secondRadioPage();">Next</button>
     </center>
 
     <center id='secondStep' style='display: none'>
-        <input type="text" id="radioname" placeholder="Name"/>
-        <br/>
+        <div class="center col-left">
+            <label for="radioname">Radio Name</label>
+            <p/>
+            <input type="text" class="large" id="radioname" placeholder="Name"/>
+        </div>
 
-        <br/>
-        <button onclick="firstRadioPage()">Back</button>
-        <button onclick="addNewRadio()">Add</button>
+        <div class="center col-right">
+            <label>Cover</label>
+            <p/>
+            <img src="/assets/img/album-placeholder.png" onclick="openChangeCover()" width="175" class="cover-picture">
+        </div>
+
+        <div class="center col-row">
+            <button onclick="firstRadioPage()">Back</button>
+            <button onclick="addNewRadio()">Add</button>
+        </div>
     </center>
 
     <center id='loading' style='display: none'>
         <h2>LOADING...</h2>
     </center>
 
+    <script src="/assets/js/validateURL.js"></script>
     <script src="/assets/modals/radio/scripts.js"></script>
     <script src="/assets/js/parseUri.js"></script>
 </div>

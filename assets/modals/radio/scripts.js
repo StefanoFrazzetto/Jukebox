@@ -37,6 +37,11 @@ function makeRadioObjectFromUrl(url) {
 function testRadio() {
     var radioUrl = document.getElementById('radiourl').value;
 
+    if (!validateURL(radioUrl)) {
+        error("The provided URL is not valid");
+        return;
+    }
+
     var radio = makeRadioObjectFromUrl(radioUrl);
 
     radio = JSON.stringify(radio);
@@ -53,17 +58,22 @@ function firstRadioPage() {
     });
 }
 
-
 function secondRadioPage() {
     var url = $('#radiourl').val();
+
+    if (!validateURL(url)) {
+        error("The provided URL is not valid");
+        return;
+    }
 
     $('#firstStep').hide(function () {
         $('#loading').show(function () {
 
         });
 
-
         var request = '/assets/modals/radio/add_radio/read_meta.php?url=' + encodeURIComponent(url);
+
+        $('#radioname').val("");
 
         $.getJSON(request)
             .done(function (response) {
@@ -83,4 +93,8 @@ function secondRadioPage() {
             });
 
     });
+}
+
+function openChangeCover() {
+
 }

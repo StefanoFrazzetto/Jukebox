@@ -267,7 +267,7 @@ function updatePlaylist() {
 function getAlbumsDetails(id) {
     getAlbumDetails(id, function (data) {
         if (Object.keys(data).length == 0) {
-            error();
+            playerError();
             return;
         }
         albumTitle.html(data.title);
@@ -364,7 +364,7 @@ function removeAllTracksFromPlaylist(){
 }
 
 
-function error() {
+function playerError() {
     songTitle.text('Error!');
     albumTitle.text('');
     albumCover.fadeOut();
