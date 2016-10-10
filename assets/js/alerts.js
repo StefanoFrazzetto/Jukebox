@@ -6,6 +6,15 @@ function alert(message) {
     anAlert.show();
 }
 
+function error(message) {
+    var anAlert = new Alert();
+
+    anAlert.message = message;
+    anAlert.class = "error";
+
+    anAlert.show();
+}
+
 var Alert = function (opt) {
     this.alert = this;
 
@@ -119,8 +128,6 @@ Alert.prototype.options = function (opt) {
 
 var Button = function (opt, classes, callback) {
     this.html = $('<div tabindex="0" class="box-btn"></div>');
-
-    this.isFinal = true;
 
     if (typeof opt === 'string') {
         this.text = opt;
