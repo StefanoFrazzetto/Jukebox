@@ -15,6 +15,7 @@ abstract class FileUtil
 
 	public static $_albums_root = "/var/www/html/jukebox/";
 	public static $_temp = "/tmp/";
+    public static $_temp_uploads = "/var/www/html/jukebox/tmp_uploads/";
 
 	public static function isDirEmpty($dir) {
 		if(count(glob($dir . "/*", GLOB_NOSORT)) === 0) {

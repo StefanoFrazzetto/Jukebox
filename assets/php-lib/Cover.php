@@ -1,13 +1,11 @@
 <?php
 
-require __DIR__ . '/jpgconverter.php';
-
 class Cover
 {
     const COVER_SIZE = 300;
     const THUMB_SIZE = 160;
 
-    private $image; // A rsource type containing the image
+    private $image; // A resource type containing the image
 
     function __construct($url)
     {
@@ -38,7 +36,32 @@ class Cover
 
     }
 
-    function getResampledInstance($sizex, $sizey)
+    public function saveToAlbum($id)
+    {
+        $path = $_SERVER['DOCUMENT_ROOT'] . "/jukebox/$id";
+
+        $this->saveAlbumImagesToFolder($path);
+    }
+
+    public function saveAlbumImagesToFolder($path)
+    {
+        $cover = $this->getCoverImage();
+        $thumb = $this->getThumbImage();
+
+        if (!file_exists($path)) {
+            throw new Exception('Album folder does not exist.');
+        }
+
+        $this->saveImageToFile($cover, "$path/cover.jpg");
+        $this->saveImageToFile($thumb, "$path/thumb.jpg");
+    }
+
+    private function getCoverImage()
+    {
+        return $this->getResampledInstance(self::COVER_SIZE, self::COVER_SIZE);
+    }
+
+    public function getResampledInstance($sizex, $sizey)
     {
         $width = imagesx($this->image);
         $height = imagesy($this->image);
@@ -66,39 +89,21 @@ class Cover
         return $tmp;
     }
 
-    private function getCoverImage(){
-        return $this->getResampledInstance(self::COVER_SIZE, self::COVER_SIZE);
-    }
-
     private function getThumbImage(){
         return $this->getResampledInstance(self::THUMB_SIZE, self::THUMB_SIZE);
     }
 
-    function saveToAlbum($id)
+    public function saveImageToFile($image, $path)
     {
-        $cover = $this->getCoverImage();
-        $thumb = $this->getThumbImage();
-
-        $path = $_SERVER['DOCUMENT_ROOT'] . "/jukebox/$id";
-
-        if(!file_exists ($path)){
-            throw new Exception('Album folder does not exist.');
-        }
-
-        $this->saveImageToFile($cover, "$path/cover.jpg");
-        $this->saveImageToFile($thumb, "$path/thumb.jpg");
-    }
-
-    function saveImageToFile($image, $path){
         imagejpeg($image, $path, 100);
     }
 
-    function saveToFile($path)
+    public function saveToFile($path)
     {
         $this->saveImageToFile($this->image, $path);
     }
 
-    function saveToRadio($radio_id)
+    public function saveToRadio($radio_id)
     {
         // TODO IMPLEMENT THISSS1 :D
     }

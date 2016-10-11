@@ -1,11 +1,11 @@
 <?php
 
 #$tmp_folder = 'tmp_uploads/';
-$tmp_folder = '../../jukebox/tmp_uploads/';
+$tmp_folder = __DIR__ . '/../../jukebox/tmp_uploads/';
 
 
 function stripAccents($stripAccents) {
-    return strtr($stripAccents, 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ', 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+    return strtr($stripAccents, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
 }
 
 function sanitize($string, $force_lowercase = true, $anal = false) {
@@ -67,7 +67,7 @@ function trim_all($str, $what = NULL, $with = ' ') {
 
 function remove_bad_stuff(&$string) {
     /*
-      $string = str_replace('ÿþ', '', $string);
+      $string = str_replace('ï¿½ï¿½', '', $string);
       $string = str_replace("\0", '', $string);
       $string = trim_all($string);
       $string = preg_replace('/^\s+/', '', $string);
