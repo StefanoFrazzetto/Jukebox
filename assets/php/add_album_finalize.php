@@ -41,7 +41,8 @@ if (mysqli_error($mysqli)) {
         unset($_SESSION['covers'][$picked_cover]);
 
         foreach ($_SESSION['covers'] as $cover) {
-            unlink($tmp_folder . $cover);
+            if ($cover != "cover.jpg")
+                unlink($tmp_folder . $cover);
         }
 
         session_destroy();
