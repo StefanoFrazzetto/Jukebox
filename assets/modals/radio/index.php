@@ -14,7 +14,7 @@ $radios = Radio::getAllRadios();
     </div>
 
     <?php foreach ($radios as $radio) { ?>
-        <div class=" mnbvaRadio cover-container" data-id="<?php echo $radio->getId() ?>"
+        <div class="aRadio cover-container" data-id="<?php echo $radio->getId() ?>"
              data-url='<?php echo json_encode($radio->getParsedAddressed()) ?>'
              data-name="<?php echo $radio->getName() ?>">
             <img src="<?php echo $radio->getCover() ?>" class="covers"/>
