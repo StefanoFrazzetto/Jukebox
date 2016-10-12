@@ -1,11 +1,16 @@
 var radio_name_field = $('#radioname');
 var radio_url_field = $('#radiourl');
+var radio_cover = $('#addRadioCover');
 
 function addNewRadio() {
     var name = radio_name_field.val();
     var url = radio_url_field.val();
+    var cover = radio_cover.attr('src');
 
-    var request = '/assets/modals/radio/add_radio/add_radio.php?name=' + encodeURIComponent(name) + '&url=' + encodeURIComponent(url);
+    var request = '/assets/modals/radio/add_radio/add_radio.php?name='
+        + encodeURIComponent(name)
+        + '&url=' + encodeURIComponent(url)
+        + '&cover=' + encodeURIComponent(cover);
 
     $.getJSON(request)
         .done(function (response) {
@@ -58,6 +63,7 @@ function firstRadioPage() {
     $('#loading').hide();
     $('#secondStep').hide(function () {
         $('#firstStep').show();
+        radio_url_field.focus();
     });
 }
 
@@ -93,6 +99,7 @@ function secondRadioPage() {
             .always(function () {
                 $('#loading').hide();
                 $('#secondStep').show();
+                radio_name_field.focus();
             });
 
     });
@@ -109,4 +116,25 @@ function openChangeCover() {
     imageSelector.defaultAlbum = radio_url_field.val();
 
     imageSelector.open();
+}
+
+if (imageSelector.isRadio == true) {
+    radio_name_field.val(imageSelector.defaultArtist);
+    radio_url_field.val(imageSelector.defaultAlbum);
+
+    if (typeof imageSelector.imageUrl !== "undefined" && imageSelector.imageUrl != null && imageSelector.imageUrl !== "")
+        $.getJSON("/assets/modals/radio/add_radio/uploadcover.php?url=" + encodeURI(imageSelector.imageUrl), function (response) {
+            if (response.status != "success") {
+                error("Error! " + response.message + ".");
+            }
+
+            var urlsss = response.url;
+
+            radio_cover.attr('src', urlsss);
+        });
+
+
+    initImageSelectorObject();
+
+    secondRadioPage();
 }

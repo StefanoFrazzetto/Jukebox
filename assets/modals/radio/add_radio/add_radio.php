@@ -10,10 +10,14 @@ require __DIR__ . '/../../../php-lib/Radio.php';
 
 $url = $_GET['url'];
 $name = $_GET['name'];
+$cover = $_GET['cover'];
 
 $radio = new Radio($name, $url);
 
 $result = $radio->save();
+
+if ($cover != "/assets/img/album-placeholder.png")
+    $radio->addCover("/var/www/html" . $cover);
 
 if (!$result) {
     echo "{\"status\": \"error\"}";

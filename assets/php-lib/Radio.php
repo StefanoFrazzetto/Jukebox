@@ -8,12 +8,14 @@ class Radio
      * @var string
      */
     const radio_table = 'radio_stations';
+    const relative_path = '/jukebox/radio-covers/';
+    const covers_path = '/var/www/html/jukebox/radio-covers/';
     private $name, $url, $created = false, $id;
 
     function __construct($name, $url)
     {
         $this->name = $name;
-        $this->url = $name;
+        $this->url = $url;
     }
 
     /**
@@ -32,14 +34,55 @@ class Radio
             return null;
         }
 
-        $radio_database = $gne[0];
+        return self::makeRadioFromDatabaseArray($gne[0]);
+    }
 
-        $radio = new Radio($radio_database->name, $radio_database->url);
+    /**
+     * @param $radio_database array the object returned from a DB query
+     * @return Radio a radio object
+     * @return null if fails
+     */
+    private static function makeRadioFromDatabaseArray($radio_database)
+    {
+        try {
+            $radio = new Radio($radio_database->name, $radio_database->url);
 
-        $radio->created = true;
-        $radio->id = $radio_database->id;
+            $radio->created = true;
+            $radio->id = $radio_database->id;
 
-        return $radio;
+            return $radio;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return Radio[]
+     * @return null if fails
+     */
+    public static function getAllRadios()
+    {
+        $database = new Database();
+
+        $gne = $database->select('*', Radio::radio_table);
+
+        /** @var Radio[] $radios */
+        $radios = [];
+
+        if ($gne == null) {
+            return null;
+        }
+
+        foreach ($gne as $radaisodai) {
+            $radios[] = self::makeRadioFromDatabaseArray($radaisodai);
+        }
+
+        return $radios;
+    }
+
+    function delete()
+    {
+        self::deleteRadio($this->id);
     }
 
     /**
@@ -50,6 +93,8 @@ class Radio
     static function deleteRadio($id)
     {
         $database = new Database();
+
+        rmdir(self::covers_path . $id);
 
         return $database->delete(Radio::radio_table, "`id` = $id");
     }
@@ -95,4 +140,68 @@ class Radio
         $this->url = $url;
     }
 
+    public function addCover($url)
+    {
+        require __DIR__ . "/Cover.php";
+
+        $cover = new Cover($url);
+
+        $where = self::covers_path . $this->id;
+
+        mkdir($where);
+
+        $cover->saveAlbumImagesToFolder($where);
+
+    }
+
+    public function getParsedAddressed()
+    {
+        $parsed_address = parse_url($this->url);
+
+        if (!isset($parsed_address['port'])) {
+            $parsed_address['port'] = 80;
+        }
+
+        return $parsed_address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string cover location
+     */
+    public function getCover()
+    {
+        $where = self::covers_path . $this->id . "/cover.jpg";
+
+        if (file_exists($where)) {
+            return self::relative_path . $this->id . "/cover.jpg";
+        } else {
+            return "/assets/img/album-placeholder.png";
+        }
+
+
+    }
 }
