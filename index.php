@@ -70,9 +70,8 @@
             </div>
         </div>
         <audio id="player"></audio>
-    </div>
-    <div id="albums">
-        <div id="buttonsBar" class="toolbar" style="position: relative;">
+
+        <div id="buttonsBar" class="toolbar">
 
                 <span class="searchbox-icon" id="home-btn">
                     <i class="fa fa-home"></i>
@@ -179,13 +178,13 @@
                 </span>
 
         </div>
-
+    </div>
+    <div id="albums">
         <div id="mainContentAjax">
             <div id="previous"><img src="assets/img/icons/previous.png"></div>
             <table id="mainContentAjaxLoader"></table>
             <div id="next"><img src="assets/img/icons/next.png"></div>
         </div>
-
     </div>
     <div id="modal">
         <img src="assets/img/icons/close.png" class="closeModal" onclick="closeModal()"/>

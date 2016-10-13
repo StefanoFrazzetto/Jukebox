@@ -8,7 +8,7 @@ $border-radius: 5px;
 %ui_element {
   @extend %ui_element_shadow;
 
-  border-radius: 0 0 $border-radius $border-radius;
+  border-radius: $border-radius;
   background-image: linear-gradient(0deg, darken($background_color, 3) 0, $background_color 100%);
 
   @extend %ui_element_shadow;

@@ -1,14 +1,12 @@
 #albums {
   min-width: 950px;
   width: 100%;
-  position: absolute;
-  top: 200px;
-  height: calc(100% - 201px);
+  position: relative;
+  margin-top: 10px;
 }
 
 #mainContentAjax {
   overflow: hidden;
-  margin-top: 20px;
   margin-left: 50px;
   margin-right: 50px;
   table {

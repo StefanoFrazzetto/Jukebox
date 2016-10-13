@@ -5,17 +5,32 @@
 	height: 35px;
 }
 
-#buttonsBar {
+#buttonsBar, #searchBar {
+	position: relative;
+
 	width: 850px;
-	margin: auto;
+
+	height: 35px;
+
+	box-sizing: border-box;
+
+	margin: 10px auto;
+}
+
+#buttonsBar {
 	a {
-		height: 35px;
 		vertical-align: middle;
 		line-height: 34px;
 		text-transform: capitalize;
 		cursor: pointer;
-	
+		position: relative;
 	}
+}
+
+#searchBar {
+
+	height: 35px;
+	display: none;
 }
 
 #alphabet {
@@ -31,13 +46,6 @@
 	}
 }
 
-#searchBar {
-	margin: auto;
-	width: 850px;
-	height: 37px;
-	display: none;
-	position: relative;
-}
 #search-items {
 	display: inline;
 }

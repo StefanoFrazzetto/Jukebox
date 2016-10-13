@@ -1,11 +1,13 @@
 %player_ui_element{
   @extend %ui_element;
-  border-top: none;
+  overflow: hidden;
+  //border-top: none;
 }
 
 #controls {
-  height: 200px;
-  min-width: 950px;
+  min-width: $min_body_width;
+  margin-top: 10px;
+
   .crcbtn {
     position: absolute;
     bottom: 9px;
@@ -21,13 +23,9 @@
 }
 
 #maskLower {
-  width: 950px;
   height: 178px;
-  position: absolute;
+  position: relative;
   padding: 0;
-  top: 0;
-  left: 0;
-  right: 0;
   margin-left: auto;
   margin-right: auto;
 }
@@ -51,6 +49,7 @@
   top: 0;
   left: 50%;
   margin-left: -233px;
+  overflow: visible;
   .tooltip {
     left: 34px;
   }
