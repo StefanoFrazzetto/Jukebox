@@ -89,6 +89,12 @@ $('#album').val(imageSelector.defaultAlbum);
 Dropzone.autoDiscover = false;
 
 $(function () {
+    if (imageSelector.albumArtist === false) {
+        var cont = $('#searchImage');
+        cont.find('#album').hide().val(' ');
+        cont.find('#artist').addClass("large");
+    }
+
     var ImgPickerDropzone = new Dropzone("#image_picker_dropzone");
 
     ImgPickerDropzone.uploadMultiple = false;
