@@ -89,6 +89,20 @@ player.addEventListener('timeupdate', updateProgressBar, false);
 
 // Functions //
 
+albumCover.on("error", function () {
+    hideCover();
+});
+
+function changeCover(src) {
+    albumCover.fadeOut(animation_medium, function () {
+        albumCover.attr('src', src).fadeIn(animation_medium);
+    });
+}
+
+function hideCover() {
+    albumCover.fadeOut(animation_medium);
+}
+
 function play_pause() {
     if (playing) {
         ppause();
@@ -249,7 +263,7 @@ function updatePlaylist() {
     });
     playlistTable.html(items);
 
-    $('#playlistTable td').click(function () {
+    $('#playlistTable').find('td').click(function () {
         var detected_track = $(this).attr('id').substring(6);
         getPlaylistSong(detected_track);
 
@@ -271,9 +285,7 @@ function getAlbumsDetails(id) {
             return;
         }
         albumTitle.html(data.title);
-        albumCover.fadeOut(function () {
-            albumCover.attr('src', data.cover).fadeIn();
-        });
+        changeCover(data.cover);
     });
 }
 
@@ -373,39 +385,39 @@ function removeAllTracksFromPlaylist() {
 function playerError() {
     songTitle.text('Error!');
     albumTitle.text('');
-    albumCover.fadeOut();
+    hideCover();
 }
 
-function BTConnect(mac) {
-    var stoptime = player.currentTime;
-    var playerstatus = playing;
-
-    play_pause();
-
-    var connect = "assets/php/BTConnect.php?mac=" + mac;
-    document.getElementById(mac).style.backgroundColor = 'orange';
-
-    $.ajax({
-        type: "GET",
-        url: connect,
-        success: function (data) {
-            if (data == "Connected") {
-                document.getElementById(mac).style.backgroundColor = 'green';
-                if (playerstatus) {
-                    pplay();
-                }
-                player.currentTime = stoptime;
-            } else {
-                document.getElementById(mac).style.backgroundColor = 'red';
-                if (playerstatus) {
-                    pplay();
-                }
-                player.currentTime = stoptime;
-            }
-        }
-    });
-
-}
+// function BTConnect(mac) {
+//     var stoptime = player.currentTime;
+//     var playerstatus = playing;
+//
+//     play_pause();
+//
+//     var connect = "assets/php/BTConnect.php?mac=" + mac;
+//     document.getElementById(mac).style.backgroundColor = 'orange';
+//
+//     $.ajax({
+//         type: "GET",
+//         url: connect,
+//         success: function (data) {
+//             if (data == "Connected") {
+//                 document.getElementById(mac).style.backgroundColor = 'green';
+//                 if (playerstatus) {
+//                     pplay();
+//                 }
+//                 player.currentTime = stoptime;
+//             } else {
+//                 document.getElementById(mac).style.backgroundColor = 'red';
+//                 if (playerstatus) {
+//                     pplay();
+//                 }
+//                 player.currentTime = stoptime;
+//             }
+//         }
+//     });
+//
+// }
 
 function playRadio(url_object, name) {
     isReady = true;
@@ -418,10 +430,12 @@ function playRadio(url_object, name) {
 
     var address = url_object.host;
 
-    var url = 'http://' + window.location.hostname + ':4242/?address=' + address + '&request=' + request + '&port=' + port;
-
-    player.src = url;
+    player.src = 'http://' + window.location.hostname + ':4242/?address=' + address + '&request=' + request + '&port=' + port;
     songTitle.html(name);
+
+    if (typeof url_object.cover !== "undefined")
+        changeCover(url_object.cover);
+
     pplay();
 }
 
@@ -432,7 +446,7 @@ function resetPlayer() {
         ctx.clearRect(0, 0, 354, 95);
     }
 
-    albumCover.hide();
+    hideCover();
 
     albumTitle.html('');
 

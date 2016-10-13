@@ -162,7 +162,25 @@ class Radio
             $parsed_address['port'] = 80;
         }
 
+        $parsed_address['cover'] = $this->getCover();
+
         return $parsed_address;
+    }
+
+    /**
+     * @return string cover location
+     */
+    public function getCover()
+    {
+        $where = self::covers_path . $this->id . "/cover.jpg";
+
+        if (file_exists($where)) {
+            return self::relative_path . $this->id . "/cover.jpg";
+        } else {
+            return "/assets/img/album-placeholder.png";
+        }
+
+
     }
 
     /**
@@ -187,21 +205,5 @@ class Radio
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return string cover location
-     */
-    public function getCover()
-    {
-        $where = self::covers_path . $this->id . "/cover.jpg";
-
-        if (file_exists($where)) {
-            return self::relative_path . $this->id . "/cover.jpg";
-        } else {
-            return "/assets/img/album-placeholder.png";
-        }
-
-
     }
 }

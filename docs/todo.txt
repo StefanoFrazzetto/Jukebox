@@ -65,10 +65,6 @@ bugs:
 -- some clever sliding modal on the playlist to give us buttons that will, delete playlist, burn playlist, save playlist, remove a track from playlist,
 <> £200
 
-# Finish radio  (still need the ability to edit station/ test url/ and add image)
--- will need the ability to remove stations and add images and edit station
-<Vittorio> £80
-
 # Remote Control Server & GUI (this looks exciting, will probably need many remote versions. :)
 <Vittorio> £250
 
@@ -91,6 +87,10 @@ bugs:
 # Add Radio button moved to the top
 <Vittorio> 5£
 
+# Finish radio  (still need the ability to / test url/ and add image)
+-- will need the ability to remove stations and add images
+-- Widely improved the radio functions
+<Vittorio> £100
 
 ██████╗  ██████╗ ███╗   ██╗███████╗    ███╗   ██╗ █╗ ██████╗  █████╗ ██╗██████╗ 
 ██╔══██╗██╔═══██╗████╗  ██║██╔════╝    ████╗  ██║ ╚╝ ██╔══██╗██╔══██╗██║██╔══██╗
