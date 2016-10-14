@@ -15,8 +15,8 @@ var pwr_btn = $('#power');
 var dropdownModal = $('#dropdownModal');
 
 //Sizes of the album divs
-var box_size_x = 170;
-var box_size_y = 170;
+var box_size_x = 172;
+var box_size_y = box_size_x;
 
 //Getting the window size. Look, it's sunny outisde! No, not anymore, I'm in Scotland.
 //var height = container.height();
@@ -28,12 +28,15 @@ var sort_by = '1';
 var search_field = 'artist';
 
 var show, show_x, show_y;
+var page = 1;
 
 //noinspection JSUnusedGlobalSymbols
 var answer_to_life_universe_and_everything = 42; //That's probably why something still works.
-var page = 1;
+
 
 var imageSelector;
+
+var albums_storage = [];
 
 function initImageSelectorObject() {
     imageSelector = {
@@ -61,120 +64,174 @@ function initImageSelectorObject() {
 
 initImageSelectorObject();
 
-function reload() { //This function will load the page with AJAX!
-    var full_request = 'assets/php/get_albums.php?' + request + '&page=' + page + '&x=' + show_x + '&y=' + show_y + '&orderBy=' + sort_by;
-    $.ajax({
-        url: full_request,
-        contentType: "text/html;charset=utf8"
-    }).done(function (response) {
+function paginate() {
+    var lastPage = Math.ceil(albums_storage.length / show);
 
-        var re = /<!--(.*)-->$/;
-        var m;
+    if (page < 1) {
+        page = 1;
+    }
 
-        if ((m = re.exec(response)) !== null) {
-            if (m.index === re.lastIndex) {
-                re.lastIndex++;
-            }
+    if (page > lastPage) {
+        page = lastPage;
+    }
+
+    if (page <= 1) {
+        previous.hide();
+    } else {
+        previous.show();
+    }
+
+    if (page >= lastPage) {
+        next.hide();
+    } else {
+        next.show();
+    }
+
+    loader.html("");
+    var i = -1;
+    albums_storage.forEach(function (data) {
+        i++;
+
+        if (i >= show * (page - 1) && i < show * page) {
+            var html = makeAlbumHtmlFromObject(data);
+            loader.append(html);
         }
+    });
 
-        var json_response = $.parseJSON(m[1]);
-
-        if (json_response.code === 1) {
-            //No results :(
-            alert('No albums found matching the search criteria.');
-        } else {
-
-            if (json_response.isLastPage) {
-                next.hide();
-            } else {
-                next.show();
-            }
-
-            if (json_response.isFirstPage) {
-                previous.hide();
-            } else {
-                previous.show();
-            }
-
-
-            loader.fadeOut(animation_medium, function () {
-                loader.html(response);
-                $(".album:not(.filler)").click(function () {
-                    var detected_id = $(this).attr('id');
-                    openModalPage('assets/modals/album_details.php?id=' + detected_id);
-
-                });
-                $(".album .moar").click(function (e) {
-                    var detected_id = $(this).parent().attr('id');
-                    changeAlbum(detected_id);
-                    e.stopPropagation();
-                });
-            });
-
-            /* BOXES RESIZING WATCHDOG */
-            divH = divW = 0;
-            var element = $("#mainContentAjax").find("td");
-
-            divW = element.width();
-            divH = element.height();
-
-            function checkResize() {
-                element = $("#mainContentAjax").find("td");
-                var w = element.width();
-                var h = element.height();
-                if (w != divW || h != divH) {
-                    /*what ever*/
-                    element.height(0);
-                    element.width(0);
-                    element.height('100%');
-                    element.width('100%');
-                    divH = h;
-                    divW = w;
-                }
-            }
-
-            checkResize();
-            //var timer = setInterval(checkResize, animation_medium);
-            //Woff!
-
-            loader.fadeIn();
-
-
-        }
+    $(".album:not(.filler)").click(function () {
+        var detected_id = $(this).attr('id');
+        openModalPage('assets/modals/album_details.php?id=' + detected_id);
+    });
+    $(".album .moar").click(function (e) {
+        var detected_id = $(this).parent().attr('id');
+        changeAlbum(detected_id);
+        e.stopPropagation();
     });
 }
 
-function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here I guess :P
+function reload() {
+    var address = '/assets/php/get_all_album.json.php';
+
+    $.getJSON(address)
+        .done(function (data) {
+            albums_storage = [];
+
+            data.forEach(function (data, index) {
+                albums_storage[index] = data;
+            });
+
+            paginate();
+
+            console.log("loaded", memorySizeOf(albums_storage), "of albums storage.");
+
+        })
+        .fail(function () {
+            error("An error occurred while loading the albums.");
+        });
+}
+
+// TODO remove this in production
+function memorySizeOf(obj) {
+    var bytes = 0;
+
+    function sizeOf(obj) {
+        if (obj !== null && obj !== undefined) {
+            switch (typeof obj) {
+                case 'number':
+                    bytes += 8;
+                    break;
+                case 'string':
+                    bytes += obj.length * 2;
+                    break;
+                case 'boolean':
+                    bytes += 4;
+                    break;
+                case 'object':
+                    var objClass = Object.prototype.toString.call(obj).slice(8, -1);
+                    if (objClass === 'Object' || objClass === 'Array') {
+                        for (var key in obj) {
+                            if (!obj.hasOwnProperty(key)) continue;
+                            sizeOf(obj[key]);
+                        }
+                    } else bytes += obj.toString().length * 2;
+                    break;
+            }
+        }
+        return bytes;
+    };
+
+    function formatByteSize(bytes) {
+        if (bytes < 1024) return bytes + " bytes";
+        else if (bytes < 1048576) return (bytes / 1024).toFixed(3) + " KiB";
+        else if (bytes < 1073741824) return (bytes / 1048576).toFixed(3) + " MiB";
+        else return (bytes / 1073741824).toFixed(3) + " GiB";
+    };
+
+    return formatByteSize(sizeOf(obj));
+};
+
+function makeAlbumHtmlFromObject(object) {
+    var album_container = $("<div class='album'>");
+    album_container.attr("id", object.id);
+    album_container.append("<div class=\"moar\"><i class=\"fa fa-play\"></i></div>");
+
+    var img = $("<img>");
+    img.attr("src", "jukebox/" + object.id + "/thumb.jpg");
+
+    album_container.append(img);
+
+    album_container.fadeOut(0);
+
+    img.on("load", function () {
+        album_container.fadeIn(animation_short);
+    });
+
+    return album_container;
+
+    /*
+     <div class="album" id="21">
+     <div class="moar"><i class="fa fa-play"></i></div>
+     <img src="jukebox/21/thumb.jpg">
+     <div class="albumDetails">
+     <p class="albumArtist">Alanis Morissette</p>
+     <p class="albumTitle">Jagged Little pill</p>
+     </div>
+     </div>
+     */
+}
+
+function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here I guess
     var height = $(window).height() - container.offset().top; //297 //Dovrebbe essere 287 + 10    --- 1019 - 297 = 722!! //Inline calculations...
-    var width = $(window).width() - 100;
+    var width = $(container).width();
+
+    if (width < 850) {
+        width = 850;
+    }
 
     //Some random math to get how many albums are to be showed
-    show_x = (Math.round(width / box_size_x));
-    var resto_x = (width / box_size_x) - show_x; //Don't ask
+    show_x = (Math.floor(width / box_size_x));
 
-    /* this one below need some fixin' */
-    show_y = (Math.floor(((height - (resto_x * box_size_y)) / box_size_y))); //Don't ask really. It works. No matter WHY.
+    show_y = (Math.floor(height / box_size_y));
 
     if (show_y < 2)
         show_y = 2;
     if (show_x < 3) {
         show_x = 5;
-        //if (show_y <= 2)
-        // show_y = 2;
     }
 
     show = show_x * show_y;
-
-    //alert(show);
+    return show;
 }
 
 function alphabet(value) {
+    // TODO update this
     page = 1;
     request = "type=alphabet&alphabet=" + value;
     reload();
 }
 
 function search(value) {
+    // TODO update this
     page = 1;
     request = "type=search&searchField=" + search_field + "&search=" + value;
     reload();
@@ -186,7 +243,6 @@ function changeSearchField(value, div) {
     div.addClass('active');
     search_field = value;
     search_input.focus();
-
 }
 
 function showDropdownMenu() {
@@ -208,17 +264,14 @@ function toggleDropdownMenu() {
         showDropdownMenu();
     }
 }
-
 next.click(function () { //Next button click event
     page++;
-    reload();
+    paginate();
 });
 
 previous.click(function () { // Previous button click event
-    if (page > 1) {
-        page--;
-        reload();
-    }
+    page--;
+    paginate();
 });
 
 menu_btn.click(function () {
@@ -278,12 +331,16 @@ $(document).mouseup(function (e) {
 /* this should be included in a separated file to be loaded only in the local version of the app */
 
 $(window).bind('resize', function () { //Good job! :)
-    window.resizeEvt;
+    //window.resizeEvt;
     $(window).resize(function () {
         clearTimeout(window.resizeEvt);
         window.resizeEvt = setTimeout(function () {
+            var _show = show;
             getHowManyAlbumsToShow();
-            reload();
+
+            if (_show != show) {
+                paginate();
+            }
         }, animation_short);
     });
 });

@@ -1,28 +1,25 @@
 #albums {
   min-width: 950px;
   width: 100%;
-  position: relative;
   margin-top: 10px;
 }
 
 #mainContentAjax {
-  overflow: hidden;
-  margin-left: 50px;
-  margin-right: 50px;
-  table {
-    table-layout: fixed;
+  margin-left: 45px;
+  margin-right: 45px;
+  text-align: center;
+
+  #mainContentAjaxLoader {
     width: 100%;
-    border-spacing: 10px;
   }
-  td {
+
+  .album {
     position: relative;
-    width: 100%;
-    height: 100%;
-    &:after {
-      content: '';
-      display: block;
-      margin-top: 100%;
-    }
+    width: 162px;
+    height: 162px;
+    display: inline-block;
+    margin: 5px;
+
     img {
       width: 100%;
       height: 100%;
@@ -31,14 +28,6 @@
       //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
       border-radius: 5px;
     }
-  }
-  .album {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
   }
   .moar {
     position: absolute;

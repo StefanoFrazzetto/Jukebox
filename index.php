@@ -182,7 +182,7 @@
     <div id="albums">
         <div id="mainContentAjax">
             <div id="previous"><img src="assets/img/icons/previous.png"></div>
-            <table id="mainContentAjaxLoader"></table>
+            <div id="mainContentAjaxLoader"></div>
             <div id="next"><img src="assets/img/icons/next.png"></div>
         </div>
     </div>

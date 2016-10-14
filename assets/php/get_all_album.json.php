@@ -12,6 +12,6 @@ header('Content-Type: application/json');
 
 $database = new Database();
 
-$albums = $database->select('id, title, artist');
+$albums = $database->select('id, title, artist, hits, last_played');
 
 echo json_encode($albums);
