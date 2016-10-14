@@ -178,8 +178,22 @@ function makeAlbumHtmlFromObject(object) {
     var img = $("<img>");
     img.attr("src", "jukebox/" + object.id + "/thumb.jpg");
 
-    album_container.append(img);
+    var details = $("<div class='albumDetails'>");
 
+    var artist = $("<p>");
+    var title = $("<p>");
+
+    artist.addClass("albumArtist");
+    title.addClass("albumTitle");
+
+    artist.html(object.artist);
+    title.html(object.title);
+
+    details.append(artist);
+    details.append(title);
+
+    album_container.append(img);
+    album_container.append(details);
     album_container.fadeOut(0);
 
     img.on("load", function () {
