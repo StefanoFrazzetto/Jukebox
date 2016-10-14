@@ -96,7 +96,15 @@ function sortByArtist() {
     albums_storage.sort(function (a, b) {
         var x = a.artist.toLowerCase();
         var y = b.artist.toLowerCase();
-        return x < y ? -1 : x > y ? 1 : 0;
+        var gne = x < y ? -1 : x > y ? 1 : 0;
+
+        if (gne == 0) {
+            x = a.title.toLowerCase();
+            y = b.title.toLowerCase();
+            return x < y ? -1 : x > y ? 1 : 0;
+        }
+
+        return gne;
     });
 }
 
@@ -104,13 +112,29 @@ function sortByTitle() {
     albums_storage.sort(function (a, b) {
         var x = a.title.toLowerCase();
         var y = b.title.toLowerCase();
-        return x < y ? -1 : x > y ? 1 : 0;
+        var gne = x < y ? -1 : x > y ? 1 : 0;
+
+        if (gne == 0) {
+            x = a.artist.toLowerCase();
+            y = b.artist.toLowerCase();
+            return x < y ? -1 : x > y ? 1 : 0;
+        }
+
+        return gne;
     });
 }
 
 function sortByHits() {
     albums_storage.sort(function (a, b) {
-        return b.hits - a.hits;
+        var gne = b.hits - a.hits;
+
+        if (gne == 0) {
+            var x = a.artist.toLowerCase();
+            var y = b.artist.toLowerCase();
+            return x < y ? -1 : x > y ? 1 : 0;
+        }
+
+        return gne;
     });
 }
 
@@ -129,26 +153,18 @@ function sortByLastAdded() {
 function getItSorted(method) {
     switch (method) {
         case '1':
-            sortByTitle();
             sortByArtist();
             break;
         case '2':
-            sortByArtist();
             sortByTitle();
             break;
         case '3':
-            sortByTitle();
-            sortByArtist();
             sortByHits();
             break;
         case '4':
-            sortByTitle();
-            sortByArtist();
             sortByLastPlayed();
             break;
         case '5':
-            sortByTitle();
-            sortByArtist();
             sortByLastAdded();
             break;
         default:
