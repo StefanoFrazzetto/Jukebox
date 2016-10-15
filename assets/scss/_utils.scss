@@ -1,3 +1,5 @@
+@import "colors";
+
 .hidden {
   display: none;
 }
@@ -25,7 +27,7 @@ hr {
 }
 
 .cover-picture {
-  box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.40);
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.40);
   border-radius: 5px;
 
   transition: box-shadow 400ms;
@@ -33,11 +35,11 @@ hr {
   box-sizing: border-box;
 
   &:hover {
-    box-shadow: 0px 0px 10px 3px rgba($highlight_color, 0.40);
+    box-shadow: 0 0 10px 3px rgba($highlight_color, 0.40);
   }
 
   &:active, &.active {
-    box-shadow: 0px 0px 10px 3px rgba($highlight_color, 0.80);
+    box-shadow: 0 0 10px 3px rgba($highlight_color, 0.80);
     border: 2px solid rgba($highlight_color, 0.8);
   }
 }
@@ -46,12 +48,14 @@ hr {
   width: 50% !important;
 }
 
+.full-wide {
+  width: 100% !important;
+}
+
 .cover-container {
   width: 168px;
   height: 168px;
-  margin: 5px;
-
-  margin-top: 0;
+  margin: 0 5px 5px;
 
   text-align: center;
 
