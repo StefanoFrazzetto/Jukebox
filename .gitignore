@@ -1,7 +1,6 @@
 # Ignore folders
 downloads
 .idea
-jukebox
 node_modules
 oldjukebox
 phpmyadmin
@@ -9,7 +8,4 @@ phpmyadmin
 # Ignore files
 info.php
 zwytytws_albums.sql
-assets/cmd/network_startup.sh
-assets/cmd/device
-/assets/php/php-error.log
 jukebox.iml
