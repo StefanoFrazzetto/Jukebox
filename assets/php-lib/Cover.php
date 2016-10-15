@@ -3,7 +3,7 @@
 class Cover
 {
     const COVER_SIZE = 300;
-    const THUMB_SIZE = 160;
+    const THUMB_SIZE = 162;
 
     private $image; // A resource type containing the image
 
