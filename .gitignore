@@ -1,7 +1,7 @@
 # Ignore folders
 downloads
 .idea
-node_modules
+#node_modules
 oldjukebox
 phpmyadmin
 
