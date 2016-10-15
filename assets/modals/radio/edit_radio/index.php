@@ -42,7 +42,8 @@ if ($radio == null) {
         <div class="col-right">
             <label for="">Cover</label>
             <p>
-                <img class="cover-picture" src="<?php echo $radio->getCover() ?>" width="150" id="editRadioCover">
+                <img class="cover-picture" src="<?php echo $radio->getCover() ?>" width="150"
+                     id="editRadioCover">
             </p>
         </div>
         <input type="submit" class="invisible"/>
@@ -55,73 +56,4 @@ if ($radio == null) {
 </div>
 
 <script src="/assets/js/validateURL.js"></script>
-
-<script>
-    var radioNameField = $('#radioName');
-    var radioUrlField = $('#radioUrl');
-
-    var editRadioSaveBtn = $('#editRadioSave');
-    var editRadioCancelBtn = $('#editRadioCancel');
-
-    var editRadioCoverImg = $('#editRadioCover');
-    var editRadioId = parseInt($('#editRadioId').val());
-
-    var editRadioForm = $('#editRadioForm');
-
-    function editRadioSubmit() {
-        var name = radioNameField.val();
-        var url = radioUrlField.val();
-
-        if (name.length == 0) {
-            error("Radio name must not be empty.");
-            return;
-        }
-
-        if (url.length == 0) {
-            error("Radio name must not be empty.");
-            return;
-        }
-
-        if (!validateURL(url)) {
-            error("Please, provide a valid url.");
-            return;
-        }
-
-        $.getJSON("/assets/modals/radio/edit_radio/edit_radio.php",
-            {id: editRadioId, name: name, url: url})
-            .done(function (response) {
-                if (response.status == "success") {
-                    alert("Radio edited successfully!");
-                    backToRadios();
-                }
-                else
-                    error("Radio not edited successfully. " + response.message + ".");
-            })
-            .fail(function (a, b, c) {
-                error("Radio not edited successfully. " + c);
-            });
-    }
-
-    function backToRadios() {
-        openModalPage("/assets/modals/radio");
-    }
-
-    editRadioSaveBtn.click(function () {
-        editRadioSubmit();
-    });
-
-    editRadioForm.submit(function (e) {
-        editRadioSubmit();
-        e.preventDefault();
-    });
-
-    editRadioCancelBtn.click(function () {
-        backToRadios();
-    });
-
-    editRadioCoverImg.click(function () {
-        alert("Take me to the edit cover modal, plz.");
-        // TODO
-    });
-
-</script>
+<script src="/assets/modals/radio/edit_radio/scripts.js"></script>

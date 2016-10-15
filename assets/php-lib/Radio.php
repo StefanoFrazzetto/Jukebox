@@ -10,7 +10,7 @@ class Radio
     const radio_table = 'radio_stations';
     const relative_path = '/jukebox/radio-covers/';
     const covers_path = '/var/www/html/jukebox/radio-covers/';
-    private $name, $url, $created = false, $id;
+    private $name, $url, $created = false, $id, $coverToken;
 
     function __construct($name, $url)
     {
@@ -49,6 +49,7 @@ class Radio
 
             $radio->created = true;
             $radio->id = $radio_database->id;
+            $radio->coverToken = $radio_database->cover_cached_token;
 
             return $radio;
         } catch (Exception $e) {
@@ -109,7 +110,7 @@ class Radio
         $database = new Database();
 
         if ($this->created) {
-            return $database->update(Radio::radio_table, ["name" => $this->name, "url" => $this->url], "`id` = $this->id");
+            return $database->update(Radio::radio_table, ["name" => $this->name, "url" => $this->url, "cover_cached_token" => $this->coverToken], "`id` = $this->id");
         } else {
             $status = $database->insert(Radio::radio_table, ["name" => $this->name, "url" => $this->url]);
 
@@ -152,6 +153,7 @@ class Radio
 
         $cover->saveAlbumImagesToFolder($where);
 
+        $this->coverToken++;
     }
 
     public function getParsedAddressed()
@@ -175,7 +177,7 @@ class Radio
         $where = self::covers_path . $this->id . "/cover.jpg";
 
         if (file_exists($where)) {
-            return self::relative_path . $this->id . "/cover.jpg";
+            return self::relative_path . $this->id . "/cover.jpg?$this->coverToken";
         } else {
             return "/assets/img/album-placeholder.png";
         }
