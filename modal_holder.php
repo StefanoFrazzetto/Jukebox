@@ -27,8 +27,9 @@
     <script type="text/javascript" src="assets/js/sliders.js"></script>
     <script type="text/javascript" src="assets/js/modals.js"></script>
     <script type="text/javascript" src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="assets/js/alerts.js"></script>
     <script type="text/javascript">
-        openModalPage('assets/modals/image_picker/');
+        openModalPage('assets/modals/radio/edit_radio?id=2');
     </script>
     
 </body>

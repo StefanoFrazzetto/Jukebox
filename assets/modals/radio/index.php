@@ -18,7 +18,8 @@ $radios = Radio::getAllRadios();
              data-url='<?php echo json_encode($radio->getParsedAddressed()) ?>'
              data-name="<?php echo $radio->getName() ?>">
             <img src="<?php echo $radio->getCover() ?>" class="covers"/>
-            <div class="badge"><i class="fa fa-trash"></i></div>
+            <div class="badge delete"><i class="fa fa-trash"></i></div>
+            <div class="badge badge-left edit"><i class="fa fa-pencil"></i></div>
             <span><?php echo $radio->getName() ?></span>
         </div>
     <?php } ?>
@@ -32,9 +33,15 @@ $radios = Radio::getAllRadios();
         playRadio($(this).attr('data-url'), $(this).attr('data-name'));
     });
 
-    $(".aRadio:not(.plus) .badge").click(function (e) {
+    $(".aRadio:not(.plus) .delete").click(function (e) {
         var id = $(this).parent().attr('data-id');
         deleteRadio(id);
+        e.stopPropagation();
+    });
+
+    $(".aRadio:not(.plus) .edit").click(function (e) {
+        var id = $(this).parent().attr('data-id');
+        openModalPage("/assets/modals/radio/edit_radio?id=" + id);
         e.stopPropagation();
     });
 

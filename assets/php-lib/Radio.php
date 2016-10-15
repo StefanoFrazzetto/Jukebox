@@ -109,7 +109,7 @@ class Radio
         $database = new Database();
 
         if ($this->created) {
-
+            return $database->update(Radio::radio_table, ["name" => $this->name, "url" => $this->url], "`id` = $this->id");
         } else {
             $status = $database->insert(Radio::radio_table, ["name" => $this->name, "url" => $this->url]);
 
