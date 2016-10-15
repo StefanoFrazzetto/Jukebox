@@ -83,6 +83,7 @@
 		}).done(function(data){
 			init();
 			$('#format_end').html("<p>" + data + "</p>");
+			reload();
 		});
 	});
 
@@ -92,6 +93,7 @@
 		}).done(function(data){
 			init();
 			$('#format_end').html("<p>" + data + "</p>");
+            reload();
 		});
 	});
 
