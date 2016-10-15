@@ -170,19 +170,28 @@ class Radio
     }
 
     /**
+     * @param bool $thumb
      * @return string cover location
      */
-    public function getCover()
+    public function getCover($thumb = false)
     {
-        $where = self::covers_path . $this->id . "/cover.jpg";
+        if (!$thumb)
+            $file_name = "/cover.jpg";
+        else
+            $file_name = "/thumb.jpg";
+
+        $where = self::covers_path . $this->id . $file_name;
 
         if (file_exists($where)) {
-            return self::relative_path . $this->id . "/cover.jpg?$this->coverToken";
+            return self::relative_path . $this->id . $file_name . "?" . $this->coverToken;
         } else {
             return "/assets/img/album-placeholder.png";
         }
+    }
 
-
+    public function getCoverThumb()
+    {
+        return $this->getCover(true);
     }
 
     /**
