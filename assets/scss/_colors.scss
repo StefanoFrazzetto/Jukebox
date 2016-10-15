@@ -6,12 +6,12 @@ $border_color: #48485a;
 $overlays: #323232;
 $highlight_color: #03a9f4;
 
-$isDarkTheme: true;
+$isDarkTheme: false;
 
 //$text_color: #3D3B30;
 //$background_color_highlight: #c2c6b6;
 //$background_color: #E9EDDE;
-//$highlight_color: #E7E247;
+//$highlight_color: #d1cc40;
 //$border_color: #4D5061;
 //$overlays: #E9EDDE;
 
@@ -48,14 +48,14 @@ $input_color: $background_color_highlight;//#3a3a3a;
 
 // Niggas... ehr Blacks
 
+$black_20: rgba(0, 0, 0, 0.1); // 2
+$black_50: rgba(0, 0, 0, 0.2); // 5
+$black_80: rgba(0, 0, 0, 0.3); // 8
+
 @if $isDarkTheme {
   $black_20: rgba(0, 0, 0, 0.2); // 2
   $black_50: rgba(0, 0, 0, 0.5); // 5
   $black_80: rgba(0, 0, 0, 0.8); // 8
-} @else {
-  $black_20: rgba(0, 0, 0, 0.1); // 2
-  $black_50: rgba(0, 0, 0, 0.2); // 5
-  $black_80: rgba(0, 0, 0, 0.3); // 8
 }
 
 // Whites

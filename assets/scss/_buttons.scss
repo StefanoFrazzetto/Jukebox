@@ -1,3 +1,4 @@
+@import 'colors';
 //urls
 $url_3: url('../img/buttons/playButton.png');
 $url_4: url('../img/buttons/fwd.png');
@@ -117,7 +118,7 @@ select {
     &:active {
       border-color: $highlight-color;
 
-      box-shadow: 0px 0px 9px 0px $highlight-color;
+      box-shadow: 0 0 9px 0 $highlight-color;
     }
 
     &:hover {
