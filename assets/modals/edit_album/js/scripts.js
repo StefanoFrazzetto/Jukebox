@@ -242,7 +242,6 @@ function updateCD(item) {
 
         edit_album_tracks[item.getIndex() - cd].cd = cd;
     } catch (e) {
-        alert(e);
-        // TODO CHANGE THIS TO AN ERROR MESSAGE
+        error(e);
     }
 }

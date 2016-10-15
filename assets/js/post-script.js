@@ -37,6 +37,8 @@ var answer_to_life_universe_and_everything = 42; //That's probably why something
 var imageSelector;
 
 var albums_storage = [];
+var album_store_secondary;
+var is_storage_partial = false;
 
 function initImageSelectorObject() {
     imageSelector = {
@@ -63,6 +65,19 @@ function initImageSelectorObject() {
 }
 
 initImageSelectorObject();
+
+function restoreStorage() {
+    if (is_storage_partial) {
+        albums_storage = album_store_secondary;
+        is_storage_partial = false;
+    }
+}
+
+function backupStorage() {
+    restoreStorage();
+    album_store_secondary = albums_storage.slice(0); // clones database
+    is_storage_partial = true;
+}
 
 function paginate() {
     var lastPage = Math.ceil(albums_storage.length / show);
@@ -158,17 +173,17 @@ function memorySizeOf(obj) {
             }
         }
         return bytes;
-    };
+    }
 
     function formatByteSize(bytes) {
         if (bytes < 1024) return bytes + " bytes";
         else if (bytes < 1048576) return (bytes / 1024).toFixed(3) + " KiB";
         else if (bytes < 1073741824) return (bytes / 1048576).toFixed(3) + " MiB";
         else return (bytes / 1073741824).toFixed(3) + " GiB";
-    };
+    }
 
     return formatByteSize(sizeOf(obj));
-};
+}
 
 function makeAlbumHtmlFromObject(object) {
     var album_container = $("<div class='album'>");
@@ -238,17 +253,66 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
 }
 
 function alphabet(value) {
-    // TODO update this
+    restoreStorage();
+
+    var results = [];
+
+    albums_storage.forEach(function (element, index) {
+        if (value != 0) {
+            if (element.artist.charAt(0) == value) {
+                results[index] = element;
+            }
+        }
+        else if ((/[^a-zA-Z0-9]/.test(element.artist.charAt(0))))
+            results[index] = element;
+    });
+
+    results = results.filter(function (n) {
+        return n != undefined
+    }); // remove undefined from array
+
+    if (results.length == 0) {
+        error("No artists found starting with '" + value + "'.");
+        return;
+    }
+
+    backupStorage();
+    albums_storage = results;
+
     page = 1;
-    request = "type=alphabet&alphabet=" + value;
-    reload();
+    paginate();
 }
 
 function search(value) {
-    // TODO update this
+    restoreStorage();
+
+    var results = [];
+
+    if (search_field == "tracks") {
+        error("not implemented");
+        // TODO load results from database
+        return;
+    }
+
+    albums_storage.forEach(function (element, index) {
+        if (element[search_field].toLowerCase().includes(value.toLowerCase()))
+            results[index] = element;
+    });
+    results = results.filter(function (n) {
+        return n != undefined
+    });
+
+    if (results.length == 0) {
+        error("No albums found with '" + value + "' in " + search_field + ".");
+        return;
+    }
+
+    backupStorage();
+
+    albums_storage = results;
+
     page = 1;
-    request = "type=search&searchField=" + search_field + "&search=" + value;
-    reload();
+    paginate();
 }
 
 function changeSearchField(value, div) {
@@ -293,7 +357,8 @@ menu_btn.click(function () {
 });
 
 home_btn.click(function () {
-    request = 'type=all';
+    restoreStorage();
+
     sort_by = '1';
     search_field = 'title';
     page = 1;
@@ -303,7 +368,7 @@ home_btn.click(function () {
     sorter.find('.by.active').removeClass('active');
     sorter.find('.by:first-of-type').addClass('active');
 
-    reload();
+    paginate();
 });
 
 add_btn.click(function () {
