@@ -3,10 +3,11 @@
 
 <head>
     <title>&lt;JUKEBOX&gt;</title>
-    <link href="assets/css/main.css?v6" rel="stylesheet" type="text/css"/>
+    <!--suppress HtmlUnknownTarget -->
+    <link href="assets/css/main.css?<?php echo uniqid() ?>" rel="stylesheet" type="text/css"/>
     <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css"/>
-    <link rel="icon" type="image/png" href="assets/img/icons/vinyl1.png">
+    <link href="assets/css/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
+    <link href="assets/img/icons/vinyl1.png" rel="icon" type="image/png">
     <meta name="theme-color" content="#2a2a2a">
     <meta charset="UTF-8">
 </head>
