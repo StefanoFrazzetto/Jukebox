@@ -271,6 +271,12 @@ function updatePlaylist() {
 
     });
 
+    if (playlist.length > 0)
+        if (!isReady) {
+            getPlaylistSong(0);
+            isReady = true;
+        }
+
     try {
         updateBigPlaylist();
     } catch (ex) {
