@@ -152,7 +152,7 @@ function addZero(value) {
 
 function timestamp(time) {
     var minutes = Math.floor(time / 60);
-    var seconds = Math.round(time - minutes * 60);
+    var seconds = Math.floor(time - minutes * 60);
     return addZero(minutes) + ':' + addZero(seconds);
 }
 
@@ -171,6 +171,8 @@ function pseek(value) {
 function updateProgressBar() {
     var percentage = (100 / player.duration) * player.currentTime;
     slider.slider('value', percentage);
+
+
     seekDiv.text(timestamp(player.currentTime));
 
 }
