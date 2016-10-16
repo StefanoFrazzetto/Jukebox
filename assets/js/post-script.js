@@ -130,14 +130,18 @@ function reload() {
         .done(function (data) {
             albums_storage = [];
 
-            data.forEach(function (data, index) {
-                albums_storage[index] = data;
-            });
+            try {
+                if (data != null)
+                    data.forEach(function (data, index) {
+                        albums_storage[index] = data;
+                    });
+            } catch (e) {
+
+            }
 
             paginate();
 
             console.log("loaded", memorySizeOf(albums_storage), "of albums storage.");
-
         })
         .fail(function () {
             error("An error occurred while loading the albums.");
