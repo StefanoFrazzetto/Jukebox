@@ -28,9 +28,9 @@ abstract class FileUtil
     public static function emptyDirectory($pathToDirectory)
     {
         $res1 = shell_exec("rm -rf $pathToDirectory/*");
-        $res2 = shell_exec("rm -rf $pathToDirectory/.[!.]*");
+        //$res2 = shell_exec("rm -rf $pathToDirectory/.[!.]*");
 
-        return "$res1 $res2";
+        return $res1;
     }
 
     public static function renameFile($path, $file_name, $new_name)
