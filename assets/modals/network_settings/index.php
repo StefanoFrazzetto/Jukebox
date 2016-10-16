@@ -97,9 +97,8 @@
 </div>
 
 
-
-<link rel="stylesheet" type="text/css" href="assets/modals/network_settings/css/style.css">
-<link rel="stylesheet" type="text/css" href="assets/modals/network_settings/css/horizontal_selector.css">
-<script src="assets/modals/network_settings/js/horizontal_selector.js"></script>
-<script type="text/javascript" src="assets/modals/network_settings/js/scripts.js"></script>
-<script type="text/javascript" src="assets/modals/network_settings/js/wifi_scan.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/modals/network_settings/css/style.css">
+<link rel="stylesheet" type="text/css" href="/assets/modals/network_settings/css/horizontal_selector.css">
+<script src="/assets/modals/network_settings/js/horizontal_selector.js"></script>
+<script type="text/javascript" src="/assets/modals/network_settings/js/scripts.js"></script>
+<script type="text/javascript" src="/assets/modals/network_settings/js/wifi_scan.js"></script>
