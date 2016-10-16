@@ -89,7 +89,7 @@
 
 	$('#format_factory').click(function() {
 		$.ajax({
-			url: "assets/php/format.php?operation="
+			url: "assets/php/format.php?operation=factory_reset"
 		}).done(function(data){
 			init();
 			$('#format_end').html("<p>" + data + "</p>");
