@@ -15,8 +15,7 @@ var pwr_btn = $('#power');
 var dropdownModal = $('#dropdownModal');
 
 //Sizes of the album divs
-var box_size_x = 172;
-var box_size_y = box_size_x;
+var box_size = 172;
 
 //Getting the window size. Look, it's sunny outisde! No, not anymore, I'm in Scotland.
 //var height = container.height();
@@ -238,9 +237,9 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
     }
 
     //Some random math to get how many albums are to be showed
-    show_x = (Math.floor(width / box_size_x));
+    show_x = (Math.floor(width / box_size));
 
-    show_y = (Math.floor(height / box_size_y));
+    show_y = (Math.floor(height / box_size));
 
     if (show_y < 2)
         show_y = 2;
@@ -382,7 +381,26 @@ buttonsLetter.click(function (event) { // Previous button click event
 });
 
 pwr_btn.click(function () {
-    $.ajax('assets/cmd/exec.php?cmd=shutdown'); // How many times I pressed it by mistake, and realized I am stupid.
+    new Alert({
+        message: "Select an option:",
+        title: "Shutdown",
+        buttons: [
+            {
+                text: "Shutdown",
+                callback: function () {
+                    $.ajax('assets/cmd/exec.php?cmd=shutdown');
+                    // How many times I pressed it by mistake, and realized I was stupid.
+                }
+            },
+            {
+                text: "Restart",
+                callback: function () {
+                    $.ajax('assets/cmd/exec.php?cmd=reboot');
+                }
+            },
+            "Cancel"
+        ]
+    }).show();
 });
 
 $('#albumCover').click(function () {
