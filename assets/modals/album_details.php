@@ -316,7 +316,8 @@ if (file_exists($outputFile)) {
 
         $('#download').show();
 
-        var folderSize = <?php echo $albumSize; ?>;
+        var folderSize = 0;
+        folderSize = <?php echo $albumSize; ?>;
         console.log("Album size: " + folderSize);
         var timeRequired = (folderSize * 60) / 100;
         var nowTimestamp = new Date().getTime() / 1000;
@@ -328,7 +329,7 @@ if (file_exists($outputFile)) {
             $('#download').html("<div class='download-link'>" + data + "</div>");
             $('#progressContainer').remove();
             clearProgress();
-        }).error(function () {
+        }).fail(function () {
             alert("Something went wrong. Please try again.");
         });
 
