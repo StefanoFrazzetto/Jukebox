@@ -52,6 +52,10 @@ function testRadio() {
 
     var radio = makeRadioObjectFromUrl(radioUrl);
 
+    if (radio.port == "") {
+        radio.port = 80;
+    }
+
     radio = JSON.stringify(radio);
 
     console.log("Testing radio: ", radio);
