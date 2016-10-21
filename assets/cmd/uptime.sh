@@ -1,3 +1,15 @@
 #!/bin/bash
 
-cat /proc/uptime | grep -oE '^([0-9]*)'
+#!/bin/bash
+# uptime.sh
+# get uptime from /proc/uptime
+
+uptime=$(</proc/uptime)
+uptime=${uptime%%.*}
+
+seconds=$(( uptime%60 ))
+minutes=$(( uptime/60%60 ))
+hours=$(( uptime/60/60%24 ))
+days=$(( uptime/60/60/24 ))
+
+echo "$days days, $hours hours, $minutes minutes, $seconds seconds"
