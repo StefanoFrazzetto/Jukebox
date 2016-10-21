@@ -1,8 +1,6 @@
 #!/bin/bash
 
-#!/bin/bash
-# uptime.sh
-# get uptime from /proc/uptime
+# Get uptime from /proc/uptime
 
 uptime=$(</proc/uptime)
 uptime=${uptime%%.*}
