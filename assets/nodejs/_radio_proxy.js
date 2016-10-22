@@ -1,11 +1,8 @@
 var http = require('http');
-//var fs = require('fs');
-//http://205.164.62.21:8045/;*.mp3
 
 function getParameterByName(name, url) {
     if (!url) url = req.url;
-    url = url.toLowerCase(); // This is just to avoid case sensitiveness  
-    name = name.replace(/[\[\]]/g, "\\$&").toLowerCase();// This is just to avoid case sensitiveness for query parameter name
+    name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
     results = regex.exec(url);
     if (!results) return null;
@@ -31,25 +28,24 @@ function sendHeaderSuccess(res){
     });
 }
 
-http.createServer(function (req, res) {
-    var port = 8045;
-    var address = '205.164.62.21';
-    var request = "/;*mp3";
+console.log('Starting server...');
 
-    port = parseInt(getParameterByName('port', req.url));
-    address = getParameterByName('address', req.url);
-    request = getParameterByName('request', req.url);
+http.createServer(function (req, res) {
+    console.log('Client connecting...');
+
+    var port = parseInt(getParameterByName('port', req.url));
+    var address = getParameterByName('address', req.url);
+    var request = getParameterByName('request', req.url);
 
     if (!(port && address && request)){
-        port = 8045;
-        address = '205.164.62.21';
-        request = "/;*mp3";
+        port = 80;
+        address = 'media-sov.musicradio.com';
+        request = "/HeartPlymouthMP3";
     }
 
     var client, net = require('net');
 
     client = new net.Socket();
-
     
     client.connect(port, address, function () {
         //console.log("req");
@@ -76,8 +72,6 @@ http.createServer(function (req, res) {
         //console.log(textChunk);
 
         res.write(data);
-
-        return;
     });
 
     client.on('error', function(err) {
@@ -85,7 +79,7 @@ http.createServer(function (req, res) {
         res.end();
     });
 
-    req.on('close', function (err) {
+    req.on('close', function () {
         console.log('Connection Closed');
         client.destroy();
     });
