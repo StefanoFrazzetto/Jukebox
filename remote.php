@@ -4,6 +4,7 @@
     <title>Jukebox Remote</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <!--suppress HtmlUnknownTarget -->
     <link href="assets/css/main_remote.css?v5" rel="stylesheet" type="text/css"/>
     <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css"/>
@@ -21,7 +22,7 @@
 
     <div id="remote-controls">
 
-        <div id="log"></div>
+        <div id="log" class="hidden"></div>
 
         <button onclick="sendEvent('refresh')">REFRESH</button>
         <input type="text" name="" id="album_id" placeholder="album_id" value="642">
@@ -152,11 +153,6 @@
                 updateTrackProgress();
                 //albumChangedEvent();
             }
-
-
-            setAlbumDetails();
-
-            //console.log(r);
 
             $('#log').text(JSON.stringify(r, null, '\n'));
         });

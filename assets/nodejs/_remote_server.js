@@ -1,136 +1,52 @@
 var http = require('http');
 
-var globalRes = null;
+var jukebox_connection = null;
 
 var jukebox_connected = false;
 
-var keepAliveHandler;
+var playerStatus = [];
 
-var playerStatus = "{}";
-
-function sendHeaderSuccess(res){
-    res.writeHead(200, {
-        //'Accept-Ranges': 'none',
-        'Access-Control-Allow-Origin': 'http://localhost',
-        'Connection': 'keep-alive',
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Headers': 'Origin, Accept, X-Requested-With, Content-Type',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS, HEAD',
-        'Cache-Control': 'no-cache, no-store',
-        'Content-Type': 'text/event-stream',
-        //'Transfer-Encoding': '',
-        //'Pragma': 'no-cache'
-    });
-}
-
-function sendTestEvent(res){
+// <editor-fold desc="Events" >
+function sendTestEvent(res) {
     res.write("event: ping\n");
     res.write('data: {"msg": "loool"}');
     res.write("\n\n");
 }
 
-function sendEvent (name, data){
+function sendEvent(name, data) {
 
     var data_string = JSON.stringify(data);
 
     sendRawEvent(name, data_string);
 }
 
-function sendKeepAlive(){
-    globalRes.write(".\n"); 
-    //globalRes.write("\n\n"); 
+function sendRawEvent(name, raw_data) {
+
+    jukebox_connection.write("event: " + name + "\n");
+    jukebox_connection.write('data: ' + raw_data);
+    jukebox_connection.write("\n\n");
 }
 
-function sendRawEvent(name, raw_data){
+// </editor-fold>
 
-    globalRes.write("event: "+name+"\n");
-    globalRes.write('data: '+raw_data);
-    globalRes.write("\n\n"); 
-}
+// Server where the jukebox interface connects to
+// <editor-fold desc="4201 Server" >
+http.createServer(function (req, res) {
+    var keepAliveHandler;
 
-function sendTestEventG(){
-    sendTestEvent(globalRes);
-}
-
-function handleStatusRequest(req, res){
-    if(globalRes == null){
-        res.end();
-        return;
+    switch (getConnectionType(req)) {
+        case 'post':
+            handleSetStatusRequest(req, res);
+            return;
+        case 'sse':
+            handleInternalEventRequest(req, res);
+            return;
+        default:
+            sendError(res, 400, "Bad request");
+            return;
     }
 
-    var jsonString = '';
-
-    req.on('data', function (data) {
-        jsonString += data;
-    });
-
-    req.on('end', function () {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-
-        //res.setHeader('Access-Control-Allow-Origin', 'null');
-
-        res.end();
-
-        playerStatus = jsonString;
-
-        //var data = JSON.parse(jsonString);
-
-        //console.log(data);
-
-        //sendRawEvent(data.name, JSON.stringify(data.data));
-    });
-}
-
-http.createServer(function (req, res) {
-
-    if(req.headers.accept != 'text/event-stream'){
-        if (req.method == 'POST') {
-            handleStatusRequest(req, res);
-            return;
-        }
-
-        res.end('nothing here for you');
-
-        return;
-    }
-
-    console.log('Incoming connection...');
-
-    clearInterval(keepAliveHandler);
-
-    keepAliveHandler = setInterval(function (){
-        console.log('Sending keep-alive...');
-        sendKeepAlive();
-    }, 30000);
-
-    //if(!jukebox_connected){
-        globalRes = res;
-    //}
-
-    sendHeaderSuccess(res);
-
-    jukebox_connected = true;
-
-    req.on('close', function (err) {
-        console.log('Connection Closed');
-        jukebox_connected = false;
-        globalRes = null;
-        clearInterval(keepAliveHandler);
-    });
-
-}).listen(4201);
-
-
-http.createServer(function (req, res) {
-    //res.end(playerStatus);
-
-    if(globalRes == null){
-            res.end();
-            return;
-        }
-
-    if (req.method == 'POST') {       
-
+    function handleSetStatusRequest() {
         var jsonString = '';
 
         req.on('data', function (data) {
@@ -142,35 +58,155 @@ http.createServer(function (req, res) {
 
             //res.setHeader('Access-Control-Allow-Origin', 'null');
 
+            try {
+                playerStatus = JSON.parse(jsonString);
+            } catch (e) {
+                console.log("Failed to parse json");
+                sendError(res, 400, "Bad request. Unable to parse JSON.");
+                return;
+            }
+
             res.end();
 
-            var data = JSON.parse(jsonString);
+            console.log("Finished handleSetStatusRequest.");
+        });
+    }
 
-            if(typeof data.data === "undefined"){
+    function handleInternalEventRequest() {
+        console.log('Incoming connection...');
+
+        clearInterval(keepAliveHandler);
+
+        keepAliveHandler = setInterval(function () {
+            sendKeepAlive();
+        }, 30000);
+
+        //if(!jukebox_connected){
+        jukebox_connection = res;
+        //}
+
+        sendHeaderEventSuccess(res);
+
+        jukebox_connected = true;
+
+        req.on('close', function (err) {
+            console.log('Connection Closed');
+            jukebox_connected = false;
+            jukebox_connection = null;
+            clearInterval(keepAliveHandler);
+        });
+    }
+
+}).listen(4201);
+// </editor-fold>
+
+// <editor-fold desc="4202 Server">
+http.createServer(function (req, res) {
+    //res.end(playerStatus);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    if (!jukebox_connected) {
+        console.log("No jukebox connected");
+        sendError(res, 412, "No jukebox currently connected.");
+        return;
+    }
+
+    switch (getConnectionType(req)) {
+        case 'post':
+            handleSendEventRequest();
+            return;
+        case 'get':
+            handleGetStatusRequest();
+            return;
+        default:
+            sendError(res, 400, "Bad request");
+            return;
+    }
+
+    function handleGetStatusRequest() {
+        res.setHeader('content-type', 'application/json');
+
+        res.setHeader('charset', 'utf8');
+
+        res.setHeader('connection', 'close');
+
+        var buff = new Buffer(JSON.stringify(playerStatus));
+
+        res.setHeader('Content-Length', buff.length);
+
+        res.end(buff);
+
+        console.log("Finished handleGetStatusRequest.");
+    }
+
+    function handleSendEventRequest() {
+        var jsonString = '';
+
+        req.on('data', function (data) {
+            jsonString += data;
+        });
+
+        req.on('end', function () {
+            res.end();
+
+            try {
+                var data = JSON.parse(jsonString);
+            } catch (e) {
+                console.log("Failed to parse json");
+                sendError(res, 422, "Unprocessable Entity. Given an invalid json.");
+                return;
+            }
+
+
+            if (typeof data.data === "undefined") {
                 data.data = [];
             }
 
             console.log(data.name, data.data);
 
             sendRawEvent(data.name, JSON.stringify(data.data));
+
+            console.log("Finished handleSendEventRequest.");
         });
     }
-
-    if(req.method == 'GET'){
-
-
-        res.setHeader('Access-Control-Allow-Origin', '*');
-
-        res.setHeader( 'content-type', 'application/json' );
-
-        res.setHeader( 'charset', 'utf8' );
-
-        res.setHeader( 'connection', 'close' );
-
-        var length = new Buffer(playerStatus).length;
-
-        res.setHeader('Content-Length', length);
-        
-        res.end(playerStatus);
-    }
 }).listen(4202);
+// </editor-fold>
+
+function sendKeepAlive() {
+    jukebox_connection.write(".\n");
+    //jukebox_connection.write("\n\n");
+}
+
+function getConnectionType(req) {
+    if (req.headers.accept == 'text/event-stream') {
+        return 'sse';
+    } else if (req.headers.accept == 'text/time') {
+        return 'time';
+    } else if (req.method == 'POST') {
+        return 'post';
+    } else if (req.method == 'GET') {
+        return 'get';
+    } else {
+        return 'other';
+    }
+}
+
+function sendError(res, code, message) {
+    res.writeHead(code, message);
+    res.end(message);
+}
+
+function sendHeaderEventSuccess(res) {
+    res.writeHead(200, {
+        //'Accept-Ranges': 'none',
+        'Access-Control-Allow-Origin': 'http://localhost',
+        'Connection': 'keep-alive',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Headers': 'Origin, Accept, X-Requested-With, Content-Type',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS, HEAD',
+        'Cache-Control': 'no-cache, no-store',
+        'Content-Type': 'text/event-stream'
+        //'Transfer-Encoding': '',
+        //'Pragma': 'no-cache'
+    });
+}
