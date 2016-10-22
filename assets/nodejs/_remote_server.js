@@ -7,13 +7,8 @@ var jukebox_connected = false;
 var playerStatus = [];
 
 // <editor-fold desc="Events" >
-function sendTestEvent(res) {
-    res.write("event: ping\n");
-    res.write('data: {"msg": "loool"}');
-    res.write("\n\n");
-}
-
-function sendEvent(name, data) {
+//noinspection JSUnusedLocalSymbols
+function sendEventJson(name, data) {
 
     var data_string = JSON.stringify(data);
 
@@ -26,7 +21,6 @@ function sendRawEvent(name, raw_data) {
     jukebox_connection.write('data: ' + raw_data);
     jukebox_connection.write("\n\n");
 }
-
 // </editor-fold>
 
 // Server where the jukebox interface connects to
@@ -89,7 +83,7 @@ http.createServer(function (req, res) {
 
         jukebox_connected = true;
 
-        req.on('close', function (err) {
+        req.on('close', function () {
             console.log('Connection Closed');
             jukebox_connected = false;
             jukebox_connection = null;
@@ -114,6 +108,9 @@ http.createServer(function (req, res) {
     switch (getConnectionType(req)) {
         case 'post':
             handleSendEventRequest();
+            return;
+        case 'time':
+            handleGetTimeRequest();
             return;
         case 'get':
             handleGetStatusRequest();
@@ -169,11 +166,16 @@ http.createServer(function (req, res) {
             console.log("Finished handleSendEventRequest.");
         });
     }
+
+    function handleGetTimeRequest() {
+        res.end((new Date().getTime()).toString());
+    }
 }).listen(4202);
 // </editor-fold>
 
 function sendKeepAlive() {
-    jukebox_connection.write(".\n");
+    if (jukebox_connection != null)
+        jukebox_connection.write(".\n");
     //jukebox_connection.write("\n\n");
 }
 
