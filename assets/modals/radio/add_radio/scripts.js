@@ -52,10 +52,12 @@ function testRadio() {
 
     var radio = makeRadioObjectFromUrl(radioUrl);
 
+
     // Put port 80 if it is not assigned from URL
     if (radio.port == "") {
         radio.port = 80;
     }
+    
 
     radio = JSON.stringify(radio);
 
