@@ -3,18 +3,14 @@
  */
 var playerStatus = {};
 var albumDetailsCache = [];
-
-var localCurrenTime = 0;
-
+var deltaTime;
+var latency;
 var clockTimerHandle;
 
 function startTimer() {
     clearInterval(clockTimerHandle);
     clockTimerHandle = setInterval(function () {
-        localCurrenTime += 0.1;
-
         updateTrackProgress();
-
     }, 100);
 }
 
@@ -36,9 +32,19 @@ function albumChangedEvent() {
 
 function trackChangedEvent() {
     updateTrackProgress();
-    localCurrenTime = 0;
-    startTimer();
 
+    if (playerStatus.playing)
+        startTimer();
+    else
+        stopTimer();
+}
+
+function getLocalCurrentTime() {
+    var value = playerStatus.playing ?
+    playerStatus.currentTime + (((new Date().getTime()) - (playerStatus.timestamp + deltaTime)) / 1000)
+        : playerStatus.currentTime;
+    $('#debug-time').text(timestamp(value));
+    return value;
 }
 
 function getThings() {
@@ -61,10 +67,7 @@ function getThings() {
         }
 
         if (oldPlayingStatus.currentTime != r.currentTime) {
-
-            localCurrenTime = r.currentTime;
             updateTrackProgress();
-            //albumChangedEvent();
         }
 
         $('#log').text(JSON.stringify(r, null, '\n'));
@@ -72,25 +75,32 @@ function getThings() {
 
 }
 
-getThings();
-
-setInterval(function () {
-    getThings();
-}, 500);
-
-
 $(document).ready(function () {
     var height = $('#remote-controls').outerHeight();
 
     $('#remote-controls-placeholder').outerHeight(height);
 
-    getTimeDelta(function (delta) {
+    getDeltaTime(function (delta) {
         console.log(delta);
+
+        deltaTime = delta;
+        //       getThings();
+
+        setInterval(function () {
+            getThings();
+        }, 500);
+
     })
 });
 
 function updateTrackProgress() {
-    $('#trackProgress').width((localCurrenTime / playerStatus.duration * 100) + "%");
+    var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
+
+    if (percentage > 100) {
+        percentage = 100;
+    }
+
+    $('#trackProgress').width(percentage + "%");
 }
 
 function updatePlayButton() {
@@ -115,7 +125,20 @@ function getAlbumDetails(id, callback) {
     }
 }
 
-function getTimeDelta(callback) {
+function timestamp(time) {
+    function addZero(value) {
+        if (value < 10)
+            return '0' + value;
+        else
+            return value;
+    }
+
+    var minutes = Math.floor(time / 60);
+    var seconds = Math.floor(time - minutes * 60);
+    return addZero(minutes) + ':' + addZero(seconds);
+}
+
+function getDeltaTime(callback) {
     var oReq = new XMLHttpRequest();
     oReq.open("POST", url);
     oReq.setRequestHeader('accept', 'text/time');
@@ -123,11 +146,14 @@ function getTimeDelta(callback) {
         if (this.readyState == 4 && this.status == 200) {
             var now = new Date().getTime();
 
-            var request_time = now - d;
+            latency = now - d;
 
-            var delta = now - parseInt(this.responseText) - request_time / 2;
+            var delta = now - parseInt(this.responseText) - latency / 2;
 
             callback(delta);
+
+            $('#debug-delta-time').text(delta + "ms");
+            $('#debug-latency').text(latency + "ms");
         }
     };
 
@@ -136,3 +162,8 @@ function getTimeDelta(callback) {
     oReq.send();
 }
 
+function setDeltaTime() {
+    getDeltaTime(function (delta) {
+        deltaTime = delta;
+    })
+}

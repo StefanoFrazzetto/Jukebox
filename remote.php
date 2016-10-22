@@ -50,7 +50,9 @@
 
         <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
 
-
+        <div id="debug-time"></div>
+        <div id="debug-latency"></div>
+        <div id="debug-delta-time"></div>
     </div>
 </div>
 
