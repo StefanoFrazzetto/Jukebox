@@ -484,6 +484,7 @@ function getPlayerStatus() {
         shuffle: shuffle,
         currentTime: player.currentTime,
         duration: player.duration,
-        volume: player.volume
+        volume: player.volume,
+        timestamp: new Date().getTime()
     }
 }
