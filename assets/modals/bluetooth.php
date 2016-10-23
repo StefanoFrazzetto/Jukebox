@@ -25,6 +25,9 @@
     </table>
 </div>
 <script type="text/javascript">
+    $(document).ready(function () {
+        toggleBluetooth();
+    });
 
     $('#btn_unpair').click(function () {
         bluetooth({action: 'unpair'});
@@ -77,6 +80,11 @@
 
                 case 'unpair':
                     console.log('Unpair done');
+                    break;
+
+                case 'turn_on':
+                case 'turn_off':
+                    console.log("Toggle bluetooth: " + data.action);
                     break;
 
                 default:

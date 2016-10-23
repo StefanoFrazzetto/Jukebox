@@ -2,11 +2,13 @@
 
 class Bluetooth
 {
+    private $config;
+
     /** The bluetooth devices array */
     protected $devices;
 
     /** Bluetooth scripts */
-    protected $cmd_folder = '../cmd/bluetooth/';
+    protected $cmd_folder;
 
     /**
      * Bluetooth constructor.
@@ -16,6 +18,9 @@ class Bluetooth
      */
     public function __construct($act, $mac = "")
     {
+        $this->config = include "../config.php";
+        $this->cmd_folder = $this->config['assets_path'] . '/cmd/bluetooth/';
+
         switch ($act) {
             case 'turn_on':
                 $this->power('on');
