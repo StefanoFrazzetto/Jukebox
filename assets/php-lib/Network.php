@@ -71,13 +71,13 @@ class Network
     {
         global $wifiConfig;
 
-        require_once __DIR__ . '/wifi_utils.php';
+        require_once __DIR__ . '/Wifi.php';
 
         $network = $wifiConfig[$this->ssid];
 
         //print_r($wifiConfig);
 
-        $this->password = decodePassword($network['password'], $network['salt']);
+        $this->password = Wifi::decodePassword($network['password'], $network['salt']);
 
         if ($network['encryption'] == "open") {
             $this->encryption = "open";

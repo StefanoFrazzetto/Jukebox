@@ -2,10 +2,6 @@
 
 header('Content-Type: application/json');
 
-require '../../../php-lib/wifi_utils.php';
+require '../../../php-lib/Wifi.php';
 
-
-
-echo json_encode(wifiScan());
-
-//var_dump((getConnectedNetwork()));
+echo json_encode((new Wifi())->wifiScan());
