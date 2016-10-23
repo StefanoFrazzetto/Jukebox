@@ -1,3 +1,0 @@
-<?php
-
-$upload_dir = '';
