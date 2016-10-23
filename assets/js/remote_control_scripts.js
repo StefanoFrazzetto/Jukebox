@@ -47,32 +47,28 @@ function getLocalCurrentTime() {
     return value;
 }
 
-function getThings() {
-    getRemotePlayerStatus(function (r) {
+function getThings(r) {
+    var oldPlayingStatus = playerStatus;
 
-        var oldPlayingStatus = playerStatus;
+    playerStatus = r;
 
-        playerStatus = r;
+    if (oldPlayingStatus.playing != r.playing) {
+        playingStatusChangedEvent();
+    }
 
-        if (oldPlayingStatus.playing != r.playing) {
-            playingStatusChangedEvent();
-        }
+    if (oldPlayingStatus.album_id != r.album_id) {
+        albumChangedEvent();
+    }
 
-        if (oldPlayingStatus.album_id != r.album_id) {
-            albumChangedEvent();
-        }
+    if (oldPlayingStatus.track_no != r.track_no) {
+        trackChangedEvent();
+    }
 
-        if (oldPlayingStatus.track_no != r.track_no) {
-            trackChangedEvent();
-        }
+    if (oldPlayingStatus.currentTime != r.currentTime) {
+        updateTrackProgress();
+    }
 
-        if (oldPlayingStatus.currentTime != r.currentTime) {
-            updateTrackProgress();
-        }
-
-        $('#log').text(JSON.stringify(r, null, '\n'));
-    });
-
+    $('#log').text(JSON.stringify(r, null, '\n'));
 }
 
 $(document).ready(function () {
@@ -81,14 +77,14 @@ $(document).ready(function () {
     $('#remote-controls-placeholder').outerHeight(height);
 
     getDeltaTime(function (delta) {
-        console.log(delta);
-
         deltaTime = delta;
-        //       getThings();
 
-        setInterval(function () {
-            getThings();
-        }, 500);
+        var evtSource = new EventSource(url, {withCredentials: true});
+
+        evtSource.addEventListener("status", function (lol) {
+            getThings($.parseJSON(lol.data));
+        });
+
 
     })
 });
@@ -162,8 +158,8 @@ function getDeltaTime(callback) {
     oReq.send();
 }
 
-function setDeltaTime() {
-    getDeltaTime(function (delta) {
-        deltaTime = delta;
-    })
-}
+// function setDeltaTime() {
+//     getDeltaTime(function (delta) {
+//         deltaTime = delta;
+//     })
+// }
