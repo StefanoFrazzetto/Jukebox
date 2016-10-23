@@ -49,20 +49,21 @@
             cache: false
         }).done(function (res) {
             var output = JSON.parse(res);
+            var devices = $('#devices');
 
             switch (data.action){
 
                 case 'scan':
                     if(output == null) {
-                        $('#devices').find('tbody').html('<tr><td colspan="3">NO DEVICES FOUND</td></td>');
+                        devices.find('tbody').html('<tr><td colspan="3">NO DEVICES FOUND</td></td>');
                     } else {
-                        $('#devices').find('tbody').html('');
+                        devices.find('tbody').html('');
 
                         $.each(output, function (index, value) {
-                            $('#devices').append('<tr><td>' + index + '</td><td>' + value.device + '</td><td class="mac">' + value.mac + '</td></tr>');
+                            devices.append('<tr><td>' + index + '</td><td>' + value.device + '</td><td class="mac">' + value.mac + '</td></tr>');
                         });
 
-                        $('#devices').find('tbody tr').click(function () {
+                        devices.find('tbody tr').click(function () {
                             var mac_address = $(this).find('.mac').html();
                             console.log(mac_address);
                             bluetooth({action: 'pair', mac: mac_address});
