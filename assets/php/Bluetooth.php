@@ -61,10 +61,10 @@ class Bluetooth
 
     private function unpair() {
         $cmd = shell_exec($this->cmd_folder . 'unpair-all.sh');
-        if (strpos($cmd, 'Device has been removed') === false) {
+        if (strpos($cmd, 'done') === false) {
             $this->output("Error unpairing the devices");
         } else {
-            $this->output("Fuck yeah!");
+            $this->output("All devices unpaired.");
         }
     }
 

@@ -125,6 +125,11 @@
                     break;
 
                 case 'pair':
+                    if (output == "connected") {
+                        console.log("Successfully connected!");
+                    } else if (output == "failed") {
+                        console.log("Unsuccessfully not connected!");
+                    }
                     console.log("Pairing done. MAC: " + data.mac);
                     break;
 

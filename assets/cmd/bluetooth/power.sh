@@ -7,6 +7,7 @@ if [ $1 == 'on' ]; then
     send \"power on\r\"
     expect \"Changing power on succeeded\"
     send \"exit\r\"
+    expect eof
     "
     echo "on"
 fi
@@ -19,6 +20,7 @@ if [ $1 == 'off' ]; then
     send \"power off\r\"
     expect \"Changing power off succeeded\"
     send \"exit\r\"
+    expect eof
     "
     echo "off"
 fi
