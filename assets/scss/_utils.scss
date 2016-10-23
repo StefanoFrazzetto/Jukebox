@@ -86,7 +86,8 @@ hr {
 
 .overflow-hidden {
   overflow: hidden;
-  height: 600px;
+  min-height: 150px;
+  max-height: 301px;
 }
 
 .badge {
