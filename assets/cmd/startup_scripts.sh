@@ -17,7 +17,7 @@ fi
 ./int_speakers_on.sh
 
 # Set volume to 88%
-amixer set Master 88%
+su -c amixer set Master 88% bananapi
 
 # Execute PHP scripts.
 $PHP "$PHP_STARTUP_FILE"
