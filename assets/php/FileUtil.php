@@ -132,7 +132,7 @@ abstract class FileUtil
      *    Get the total size by an array of tracks.
      *
      * @param $tracks : array of tracks.
-     * @return Total size in KB.
+     * @return int - the size in KB.
      */
     public static function getTracksSize($tracks)
     {
@@ -149,7 +149,7 @@ abstract class FileUtil
      *    Get the size of a file.
      *
      * @param $tracks : array of tracks.
-     * @return Total size in KB.
+     * @return int the size in KB.
      */
     public static function getFileSize($file_path)
     {
@@ -160,7 +160,8 @@ abstract class FileUtil
     }
 
     /**
-     *    Return the track length in seconds.
+     * Return the track length in seconds.
+     * @return int - the track length in seconds
      */
     public static function getTrackLength($track_path)
     {
