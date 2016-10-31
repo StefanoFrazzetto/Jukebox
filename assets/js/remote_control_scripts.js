@@ -7,6 +7,8 @@ var deltaTime;
 var latency;
 var clockTimerHandle;
 
+var albums_storage = [];
+
 function startTimer() {
     clearInterval(clockTimerHandle);
     clockTimerHandle = setInterval(function () {
@@ -70,24 +72,6 @@ function getThings(r) {
 
     $('#log').text(JSON.stringify(r, null, '\n'));
 }
-
-$(document).ready(function () {
-    var height = $('#remote-controls').outerHeight();
-
-    $('#remote-controls-placeholder').outerHeight(height);
-
-    getDeltaTime(function (delta) {
-        deltaTime = delta;
-
-        var evtSource = new EventSource(url, {withCredentials: true});
-
-        evtSource.addEventListener("status", function (lol) {
-            getThings($.parseJSON(lol.data));
-        });
-
-
-    })
-});
 
 function updateTrackProgress() {
     var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
@@ -157,6 +141,110 @@ function getDeltaTime(callback) {
 
     oReq.send();
 }
+
+var results_container = $('#results');
+
+$('#remote-search-field').on("focus keyup", function () {
+    var value = $(this).val().toLowerCase();
+
+    results_container.html('');
+
+    if (value.length < 3)
+        return;
+
+    if (typeof albums_storage === 'undefined' || albums_storage.length == 0) {
+        console.error('Album storage is empty');
+        return;
+    }
+
+    albums_storage.forEach(function (album, key) {
+            if (album.title.toLowerCase().indexOf(value) !== -1 || album.artist.toLowerCase().indexOf(value) !== -1) {
+                results_container.append(makeSearchResult(album));
+            }
+        }
+    );
+
+    function makeSearchResult(album) {
+        var div = $('<div>');
+        div.addClass('result');
+
+        div.click(function () {
+            console.log("hi?");
+            sendEvent('play_album', {
+                album_id: parseInt(album.id)
+            })
+        });
+
+
+        var img = $('<img>');
+
+        var title = $('<div>');
+
+        title.html(album.title);
+
+        title.addClass('title');
+
+        var artist = $('<div>');
+
+        artist.html(album.artist);
+
+        artist.addClass('artist');
+
+        img.attr('src', '/jukebox/' + album.id + '/thumb.jpg');
+
+        div.append(img);
+
+        div.append(title);
+        div.append(artist);
+
+        return div;
+    }
+}).blur(function () {
+    setTimeout(function () {
+        results_container.html('');
+    }, 200);
+});
+
+function loadAlbumStorage() {
+    var address = '/assets/php/get_all_album.json.php';
+
+    $.getJSON(address)
+        .done(function (data) {
+            albums_storage = [];
+
+            try {
+                if (data != null)
+                    data.forEach(function (data, index) {
+                        albums_storage[index] = data;
+                    });
+            } catch (e) {
+
+            }
+
+            console.log("Loaded", data.length, "albums.");
+        })
+        .fail(function () {
+            error("An error occurred while loading the albums.");
+        });
+}
+
+$(document).ready(function () {
+    var height = $('#remote-controls').outerHeight();
+
+    $('#remote-controls-placeholder').outerHeight(height);
+
+    getDeltaTime(function (delta) {
+        deltaTime = delta;
+
+        var evtSource = new EventSource(url, {withCredentials: true});
+
+        evtSource.addEventListener("status", function (lol) {
+            getThings($.parseJSON(lol.data));
+        });
+    });
+
+    loadAlbumStorage();
+});
 
 // function setDeltaTime() {
 //     getDeltaTime(function (delta) {
