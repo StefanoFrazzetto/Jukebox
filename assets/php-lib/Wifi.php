@@ -98,11 +98,17 @@ class Wifi
     {
         $interface = self::getInterface();
 
-        echo shell_exec("sudo ifconfig $interface up");
+        $cmd = __DIR__ . "/../cmd/wifi_scan.sh";
 
-        $mega_regex1 = '/\s*([^[:|=]*)[\:|=]\s*(.*)/';
+        if (!file_exists($cmd)) {
+            throw new Exception("wifi_scan.sh not found!");
+        }
 
-        echo $mega_command = shell_exec("sudo iwlist $interface scanning | egrep 'ESSID|Encryption|Quality|IE'");
+        $mega_command = shell_exec("bash $cmd $interface");
+
+        if ($mega_command == '') {
+            return null;
+        }
 
         $wifi_array = explode("\n", trim($mega_command));
 
@@ -111,6 +117,8 @@ class Wifi
         $networks = [];
 
         $network_index = false;
+
+        $mega_regex1 = '/\s*([^[:|=]*)[\:|=]\s*(.*)/';
 
         foreach ($wifi_array as $key => $wifi) {
             $wifi = trim($wifi);
