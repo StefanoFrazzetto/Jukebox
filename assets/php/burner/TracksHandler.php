@@ -143,14 +143,11 @@ class TracksHandler {
 			// Skip the track if either album or url is not set.
 			if(!isset($track['album']) || !isset($track['url'])) {
 				continue;
-				// $output['status'] = "Error";
-				// $output['message'] = "Track album or url not defined. Source: burner/TracksHandler.php";
-				// $string = json_encode($output, true);
-				// exit($string);
 			}
 
-			
-			$track['title'] = sprintf("%02d", $playlist_index) . "-" . str_replace([' ', '-'], "_", $track['title']);
+            // Updated on 31/10/2016
+            // Some files were incorrectly parsed due to special chars
+            $track['title'] = sprintf("%02d", $playlist_index) . "-" . Utility::cleanString($track['title']);
 			
 			
 			$playlist_index++;
