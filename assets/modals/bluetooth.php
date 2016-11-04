@@ -12,7 +12,7 @@
     }
 </style>
 <div class="modalHeader">Bluetooth</div>
-<div class="modalBody" data-mcs-theme="dark">
+<div id="bluetooth-modal" class="modalBody" data-mcs-theme="dark">
     <div class="mCustomScrollbar overflow-hidden">
         <table class="songsTable text-center" id="devices"
                style="min-width: 100%; padding-top: 0; margin-top: 0; margin-bottom: 30px">
@@ -48,7 +48,8 @@
 </div>
 <script type="text/javascript">
     var bluetooth_switch_on;
-    var continue_scanning;
+    var keep_scanning;
+    var devices;
 
     $(document).ready(function () {
         initBluetooth();
@@ -60,9 +61,11 @@
     function initBluetooth() {
         // Turn ON the bluetooth interface when this modal is opened.
         bluetooth_switch_on = true;
+        devices = $('#devices');
         toggleBluetooth(bluetooth_switch_on);
-
         startScan();
+
+        count = 0;
     }
 
     /**
@@ -73,17 +76,17 @@
             $('#btn_scan').addClass("active");
             $('#btn_scan').text("SCANNING...");
 
-            $('#devices').find('tbody').html('<tr><td></td><td>SCANNING...</td><td></td></tr>');
+            cleanDevicesList("SCANNING...");
 
-            continue_scanning = true;
-            bluetooth({action: "scan", continous: true});
+            keep_scanning = true;
+            bluetooth({action: "scan"});
         } else {
             alert('You need to turn ON the bluetooth.');
         }
     }
 
     function stopScan() {
-        continue_scanning = false;
+        keep_scanning = false;
         $('#btn_scan').removeClass("active");
         $('#btn_scan').text("SCAN FOR DEVICES");
     }
@@ -97,40 +100,57 @@
         }).done(function (res) {
             var output = JSON.parse(res);
             var devices = $('#devices');
+            console.log(output);
 
             switch (data.action) {
 
                 case 'scan':
-                    if (output == null) {
-                        devices.find('tbody').html('<tr><td></td><td>NO DEVICES FOUND.</td><td></td></td>');
-                    } else {
-                        devices.find('tbody').html('');
+                    // Clear the devices list
+                    // Parse the devices found if the output contains any
+                    // Bind every device found to the click event
+                    if (output != null) {
+//                        console.log("Found device: " + data.device_name);
+                        cleanDevicesList();
 
                         $.each(output, function (index, value) {
-                            devices.append('<tr><td>' + index + '</td><td>' + value.device + '</td><td class="mac">' + value.mac + '</td></tr>');
+                            devices.append('<tr><td>' + index + '</td><td class="device_name">' + value.device + '</td><td class="mac">' + value.mac + '</td></tr>');
                         });
 
                         devices.find('tbody tr').click(function () {
                             stopScan();
                             var mac_address = $(this).find('.mac').html();
-                            console.log(mac_address);
-                            bluetooth({action: 'pair', mac: mac_address});
+                            var device_name = $(this).find('.device_name').html();
+                            console.log("Trying to pair: " + mac_address);
+                            bluetooth({action: 'pair', mac: mac_address, device_name: device_name});
                         });
+                    } else if (keep_scanning) {
+                        cleanDevicesList("SCANNING...");
                     }
 
-                    if (data.continous && continue_scanning) {
-                        setTimeout(bluetooth({action: "scan", continous: true}), 500);
+                    // Stop scanning if the modal is not visible
+                    if (!$('#bluetooth-modal').is(':visible')) {
+                        stopScan();
                     }
+
+                    // Keep scanning if the variable is set to true
+                    if (keep_scanning) {
+                        count++;
+                        console.log(">>>> COUNT: " + count);
+                        setTimeout(bluetooth.bind(null, {action: "scan"}), 3500);
+                    }
+
+                    output = null;
 
                     break;
 
                 case 'pair':
                     if (output == "connected") {
-                        console.log("Successfully connected!");
+                        console.log("Paired to: " + data.device_name);
+                        alert("Successfully connected to " + data.device_name);
                     } else if (output == "failed") {
-                        console.log("Unsuccessfully not connected!");
+                        console.log("Pairing error: " + data.device_name + " - MAC: " + data.mac);
+                        alert("Error, device not paired. Try again.");
                     }
-                    console.log("Pairing done. MAC: " + data.mac);
                     break;
 
                 case 'unpair':
@@ -138,15 +158,17 @@
                     break;
 
                 case 'turn_on':
+                    console.log("Bluetooth " + data.action);
+                    break;
+
                 case 'turn_off':
-                    console.log("Toggle bluetooth: " + data.action);
+                    stopScan();
+                    console.log("Bluetooth: " + data.action);
                     break;
 
                 default:
                     break;
             } // SWITCH
-
-            console.log("OUTPUT: " + output);
         });
     }
 
@@ -155,12 +177,19 @@
     });
 
     $('#btn_scan').click(function () {
-        if (continue_scanning) {
+        if (keep_scanning) {
             stopScan();
         } else {
             startScan();
         }
     });
+
+    function cleanDevicesList(message) {
+        if (message == undefined)
+            devices.find('tbody').html('');
+        else
+            devices.find('tbody').html('<tr><td></td><td>' + message + '</td><td></td></tr>');
+    }
 
     function toggleBluetooth() {
         if (bluetooth_switch_on) {
@@ -175,6 +204,7 @@
     }
 
     $('#bluetooth').change(function () {
+        cleanDevicesList();
         bluetooth_switch_on = !bluetooth_switch_on;
         toggleBluetooth();
     });
