@@ -120,7 +120,7 @@ function timestamp(time) {
 
 function getDeltaTime(callback) {
     var oReq = new XMLHttpRequest();
-    oReq.open("POST", url);
+    oReq.open("POST", getRemoteServerUrl());
     oReq.setRequestHeader('accept', 'text/time');
     oReq.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -157,7 +157,7 @@ $('#remote-search-field').on("focus keyup", function () {
         return;
     }
 
-    albums_storage.forEach(function (album, key) {
+    albums_storage.forEach(function (album) {
             if (album.title.toLowerCase().indexOf(value) !== -1 || album.artist.toLowerCase().indexOf(value) !== -1) {
                 results_container.append(makeSearchResult(album));
             }
@@ -236,7 +236,8 @@ $(document).ready(function () {
     getDeltaTime(function (delta) {
         deltaTime = delta;
 
-        var evtSource = new EventSource(url, {withCredentials: true});
+        //noinspection JSUnresolvedFunction
+        var evtSource = new EventSource(getRemoteServerUrl(), {withCredentials: true});
 
         evtSource.addEventListener("status", function (lol) {
             getThings($.parseJSON(lol.data));
