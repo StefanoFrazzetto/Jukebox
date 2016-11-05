@@ -74,7 +74,7 @@
 
 
 <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="assets/js/remote_client.js"></script>
+<script type="text/javascript" src="assets/js/remote_client.js?<?php echo uniqid() ?>"></script>
 <script type="text/javascript" src="assets/js/remote_control_scripts.js?<?php echo uniqid() ?>"></script>
 </body>
 </html>

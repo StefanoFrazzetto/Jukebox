@@ -5,7 +5,8 @@ var playlist = [],
     track_no = 0,
     album_id, repeat = false,
     shuffle = false,
-    default_volume = 10;
+    default_volume = 10,
+    isRadio = false;
 
 // SELECTORS //
 var player = document.getElementById("player");
@@ -311,7 +312,7 @@ function getAlbumDetails(id, callback) {
 
 function changeAlbum(id, song) {
     album_id = id;
-
+    isRadio = false;
     isReady = true;
 
     getAlbumPlaylist(id, song);
@@ -429,8 +430,16 @@ function playerError() {
 
 function playRadio(url_object, name) {
     isReady = true;
+    album_id = null;
+    track_no = null;
 
     url_object = $.parseJSON(url_object);
+
+    try {
+        isRadio = parseInt(url_object.id);
+    } catch (e) {
+        isRadio = true;
+    }
 
     var port = url_object.port;
 
@@ -472,19 +481,28 @@ function resetPlayer() {
     player.load();
 
     isReady = false;
-
 }
 
 function getPlayerStatus() {
-    return {
-        album_id: parseInt(album_id),
-        track_no: parseInt(track_no),
-        playing: playing,
-        repeat: repeat,
-        shuffle: shuffle,
-        currentTime: player.currentTime,
-        duration: player.duration,
-        volume: player.volume,
-        timestamp: new Date().getTime()
-    }
+    if (isRadio)
+        return {
+            isRadio: isRadio,
+            playing: playing,
+            volume: player.volume,
+            currentTime: player.currentTime,
+            timestamp: new Date().getTime()
+        };
+    else
+        return {
+            album_id: parseInt(album_id),
+            track_no: parseInt(track_no),
+            playing: playing,
+            repeat: repeat,
+            shuffle: shuffle,
+            currentTime: player.currentTime,
+            duration: player.duration,
+            volume: player.volume,
+            isRadio: isRadio,
+            timestamp: new Date().getTime()
+        }
 }

@@ -159,39 +159,6 @@ class Radio implements JsonSerializable
         $this->coverToken++;
     }
 
-    public function getParsedAddressed()
-    {
-        $parsed_address = parse_url($this->url);
-
-        if (!isset($parsed_address['port'])) {
-            $parsed_address['port'] = 80;
-        }
-
-        $parsed_address['cover'] = $this->getCover();
-
-        return $parsed_address;
-    }
-
-    /**
-     * @param bool $thumb
-     * @return string cover location
-     */
-    public function getCover($thumb = false)
-    {
-        if (!$thumb)
-            $file_name = "/cover.jpg";
-        else
-            $file_name = "/thumb.jpg";
-
-        $where = self::covers_path . $this->id . $file_name;
-
-        if (file_exists($where)) {
-            return self::relative_path . $this->id . $file_name . "?" . $this->coverToken;
-        } else {
-            return "/assets/img/album-placeholder.png";
-        }
-    }
-
     /**
      * @return mixed
      */
@@ -225,7 +192,42 @@ class Radio implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return ["id" => $this->id, "name" => $this->name, "url" => $this->url, "cover" => $this->getCover(), "thumb" => $this->getCoverThumb()];
+        return ["id" => $this->id, "name" => $this->name, "url" => $this->getParsedAddressed(), "cover" => $this->getCover(), "thumb" => $this->getCoverThumb()];
+    }
+
+    public function getParsedAddressed()
+    {
+        $parsed_address = parse_url($this->url);
+
+        if (!isset($parsed_address['port'])) {
+            $parsed_address['port'] = 80;
+        }
+
+        $parsed_address['cover'] = $this->getCover();
+
+        $parsed_address['id'] = $this->id;
+
+        return $parsed_address;
+    }
+
+    /**
+     * @param bool $thumb
+     * @return string cover location
+     */
+    public function getCover($thumb = false)
+    {
+        if (!$thumb)
+            $file_name = "/cover.jpg";
+        else
+            $file_name = "/thumb.jpg";
+
+        $where = self::covers_path . $this->id . $file_name;
+
+        if (file_exists($where)) {
+            return self::relative_path . $this->id . $file_name . "?" . $this->coverToken;
+        } else {
+            return "/assets/img/album-placeholder.png";
+        }
     }
 
     public function getCoverThumb()

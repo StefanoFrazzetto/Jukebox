@@ -51,6 +51,10 @@ handleSSE('play_album', function (data) {
     pplay();
 });
 
+handleSSE('play_radio', function (data) {
+    playRadio(JSON.stringify(data.radio_url), data.radio_name);
+});
+
 handleSSE('set_volume', function (value) {
     var volume = parseInt(value.value);
 
@@ -75,3 +79,5 @@ function updateStatusHandler() {
 setInterval(function () {
     sendPlayerStatus();
 }, 30000);
+
+sendPlayerStatus();

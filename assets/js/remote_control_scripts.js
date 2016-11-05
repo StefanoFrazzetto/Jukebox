@@ -8,6 +8,7 @@ var latency;
 var clockTimerHandle;
 
 var albums_storage = [];
+var radios_storage = [];
 
 function startTimer() {
     clearInterval(clockTimerHandle);
@@ -25,11 +26,15 @@ function playingStatusChangedEvent() {
 }
 
 function albumChangedEvent() {
-    getAlbumDetails(playerStatus.album_id, function (data) {
-        $('#cover').attr('src', data.cover);
-        $('#artist').html(data.artist);
-        $('#title').html(data.title);
-    });
+    if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id != null) {
+        getAlbumDetails(playerStatus.album_id, function (data) {
+            $('#cover').attr('src', data.cover);
+            $('#artist').html(data.artist);
+            $('#title').html(data.title);
+        });
+    }
+    else
+        console.log("Sorry, album id not provided");
 }
 
 function trackChangedEvent() {
@@ -42,8 +47,17 @@ function trackChangedEvent() {
 }
 
 function getLocalCurrentTime() {
+    // TODO remove if no improvements are shown
+    var now;
+
+    try {
+        now = performance.timing.navigationStart + performance.now();
+    } catch (e) {
+        now = new Date().getTime();
+    }
+
     var value = playerStatus.playing ?
-    playerStatus.currentTime + (((new Date().getTime()) - (playerStatus.timestamp + deltaTime)) / 1000)
+    playerStatus.currentTime + (((now) - (playerStatus.timestamp + deltaTime)) / 1000)
         : playerStatus.currentTime;
     $('#debug-time').text(timestamp(value));
     return value;
@@ -94,6 +108,7 @@ function updatePlayButton() {
 }
 
 function getAlbumDetails(id, callback) {
+    // TODO use the local storage instead calling the details again
     if (typeof albumDetailsCache[id] == 'undefined') {
         var url_request = "assets/php/get_album_details.php?id=" + id;
         $.getJSON(url_request, callback).done(function (data) {
@@ -164,15 +179,31 @@ $('#remote-search-field').on("focus keyup", function () {
         }
     );
 
-    function makeSearchResult(album) {
+    if (typeof radios_storage !== 'undefined' && radios_storage.length != 0)
+        radios_storage.forEach(function (radio) {
+            if (radio.name.toLowerCase().indexOf(value) !== -1) {
+                results_container.append(makeSearchResult(radio, true));
+            }
+        });
+
+    function makeSearchResult(album, is_radio) {
+        if (typeof is_radio === "undefined")
+            is_radio = false;
+
         var div = $('<div>');
         div.addClass('result');
 
         div.click(function () {
-            console.log("hi?");
-            sendEvent('play_album', {
-                album_id: parseInt(album.id)
-            })
+            if (!is_radio)
+                sendEvent('play_album', {
+                    album_id: parseInt(album.id)
+                });
+            else
+                sendEvent('play_radio', {
+                    radio_id: parseInt(album.id),
+                    radio_url: album.url,
+                    radio_name: album.name
+                });
         });
 
 
@@ -180,17 +211,25 @@ $('#remote-search-field').on("focus keyup", function () {
 
         var title = $('<div>');
 
-        title.html(album.title);
-
+        if (!is_radio)
+            title.html(album.title);
+        else
+            title.html(album.name);
         title.addClass('title');
 
         var artist = $('<div>');
 
-        artist.html(album.artist);
+        if (!is_radio)
+            artist.html(album.artist);
+        else
+            artist.text("Radio Station");
 
         artist.addClass('artist');
 
-        img.attr('src', '/jukebox/' + album.id + '/thumb.jpg');
+        if (!is_radio)
+            img.attr('src', '/jukebox/' + album.id + '/thumb.jpg');
+        else
+            img.attr('src', album.thumb);
 
         div.append(img);
 
@@ -214,8 +253,8 @@ function loadAlbumStorage() {
 
             try {
                 if (data != null)
-                    data.forEach(function (data, index) {
-                        albums_storage[index] = data;
+                    data.forEach(function (data) {
+                        albums_storage[data.id] = data;
                     });
             } catch (e) {
 
@@ -225,6 +264,29 @@ function loadAlbumStorage() {
         })
         .fail(function () {
             error("An error occurred while loading the albums.");
+        });
+}
+
+function loadRadioStorage() {
+    var address = '/assets/php/get_all_radios.json.php';
+
+    $.getJSON(address)
+        .done(function (data) {
+            radios_storage = [];
+
+            try {
+                if (data != null)
+                    data.forEach(function (data) {
+                        radios_storage[data.id] = data;
+                    });
+            } catch (e) {
+
+            }
+
+            console.log("Loaded", data.length, "radios.");
+        })
+        .fail(function () {
+            error("An error occurred while loading the radios.");
         });
 }
 
@@ -245,6 +307,7 @@ $(document).ready(function () {
     });
 
     loadAlbumStorage();
+    loadRadioStorage();
 });
 
 // function setDeltaTime() {
