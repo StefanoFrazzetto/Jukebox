@@ -55,7 +55,7 @@
         </div>
 
         <div class="progressBar thin">
-            <div class="progress" id="trackProgress" style="width: 50%;"></div>
+            <div class="progress" id="trackProgress"></div>
         </div>
 
         <div class="holo-btn" onclick="sendEvent('previous')"><i class="fa fa-step-backward"></i></div>
