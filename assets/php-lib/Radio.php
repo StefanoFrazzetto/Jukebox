@@ -2,7 +2,7 @@
 
 include_once __DIR__ . '/../php/Database.php';
 
-class Radio
+class Radio implements JsonSerializable
 {
     /**
      * @var string
@@ -45,10 +45,13 @@ class Radio
     private static function makeRadioFromDatabaseArray($radio_database)
     {
         try {
+            /** @noinspection PhpUndefinedFieldInspection */
             $radio = new Radio($radio_database->name, $radio_database->url);
 
             $radio->created = true;
+            /** @noinspection PhpUndefinedFieldInspection */
             $radio->id = $radio_database->id;
+            /** @noinspection PhpUndefinedFieldInspection */
             $radio->coverToken = $radio_database->cover_cached_token;
 
             return $radio;
@@ -189,11 +192,6 @@ class Radio
         }
     }
 
-    public function getCoverThumb()
-    {
-        return $this->getCover(true);
-    }
-
     /**
      * @return mixed
      */
@@ -216,5 +214,22 @@ class Radio
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id, "name" => $this->name, "url" => $this->url, "cover" => $this->getCover(), "thumb" => $this->getCoverThumb()];
+    }
+
+    public function getCoverThumb()
+    {
+        return $this->getCover(true);
     }
 }
