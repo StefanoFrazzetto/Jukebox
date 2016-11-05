@@ -63,6 +63,15 @@ function getLocalCurrentTime() {
     return value;
 }
 
+function radioChangeEvent() {
+    var radio = radios_storage[playerStatus.isRadio];
+    if (radio == false)
+        return;
+    $('#cover').attr('src', radio.cover);
+    $('#artist').html(radio.name);
+    $('#title').html("Radio station");
+}
+
 function getThings(r) {
     var oldPlayingStatus = playerStatus;
 
@@ -76,6 +85,10 @@ function getThings(r) {
         albumChangedEvent();
     }
 
+    if (oldPlayingStatus.isRadio != r.isRadio && r.isRadio != false) {
+        radioChangeEvent();
+    }
+
     if (oldPlayingStatus.track_no != r.track_no) {
         trackChangedEvent();
     }
@@ -83,15 +96,17 @@ function getThings(r) {
     if (oldPlayingStatus.currentTime != r.currentTime) {
         updateTrackProgress();
     }
-
-    $('#log').text(JSON.stringify(r, null, '\n'));
 }
 
 function updateTrackProgress() {
-    var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
+    if (typeof playerStatus.duration != "undefined") {
+        var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
 
-    if (percentage > 100) {
-        percentage = 100;
+        if (percentage > 100) {
+            percentage = 100;
+        }
+    } else {
+        percentage = 0;
     }
 
     $('#trackProgress').width(percentage + "%");
