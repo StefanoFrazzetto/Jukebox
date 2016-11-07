@@ -15,7 +15,7 @@ if ! grep -q "$THIS_SCRIPT_PATH" "$RC_LOCAL" ; then
 	# Enable services autostart
 	update-rc.d nodeserver defaults
 	update-rc.d nodeserver enable
-	
+
 	update-rc.d node-sass defaults
 	update-rc.d node-sass enable
 fi
