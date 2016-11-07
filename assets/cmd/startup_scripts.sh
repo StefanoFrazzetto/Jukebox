@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RC_LOCAL="/etc/rc.local"
-THIS_SCRIPT_PATH="/var/www/html/assets/cmd/startup_script.sh"
+THIS_SCRIPT_PATH="/var/www/html/assets/cmd/startup_scripts.sh"
 
 PHP=$(which php)
 PHP_STARTUP_FILE="/var/www/html/assets/php/startup_scripts.php"

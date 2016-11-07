@@ -5,13 +5,8 @@
 $fullstring = shell_exec("export DISPLAY=':0'; xinput_calibrator");
 $parsed     = str_replace(",", " ", preg_replace('/\s+/', '', str_replace("\n", "", get_string_between($fullstring, 'Setting calibration data:', '-->'))));
 
-if ($parsed == '') {
-    break;
-}
-
-
-if (!ctype_digit(str_replace(" ", "", $parsed))) {
-    break;
+if ($parsed == '' || !ctype_digit(str_replace(" ", "", $parsed))) {
+    exit();
 }
 
 $content  = file_get_contents('/usr/share/X11/xorg.conf.d/10-evdev.conf');
