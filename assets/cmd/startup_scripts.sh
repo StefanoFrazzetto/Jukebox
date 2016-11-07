@@ -29,3 +29,7 @@ su - bananapi -c $SPEAKERS_CMD
 
 # Execute PHP scripts.
 $PHP "$PHP_STARTUP_FILE"
+
+# MAYBE to be removed
+service nodeserver start
+service node-sass start
