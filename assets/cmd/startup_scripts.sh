@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RC_LOCAL="/etc/rc.local"
-THIS_SCRIPT_PATH="/var/www/html/assets/cmd/startup_script.sh"
+THIS_SCRIPT_PATH="/var/www/html/assets/cmd/startup_scripts.sh"
 
 PHP=$(which php)
 PHP_STARTUP_FILE="/var/www/html/assets/php/startup_scripts.php"
@@ -15,7 +15,7 @@ if ! grep -q "$THIS_SCRIPT_PATH" "$RC_LOCAL" ; then
 	# Enable services autostart
 	update-rc.d nodeserver defaults
 	update-rc.d nodeserver enable
-	
+
 	update-rc.d node-sass defaults
 	update-rc.d node-sass enable
 fi
