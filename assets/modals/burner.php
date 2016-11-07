@@ -199,7 +199,6 @@
 		setWavIcons();
 		if(error_set == false) {
 			$('#burner_step1').hide();
-			$('#burner_step2').show();
 			setBurnerVariables("", "", "wav");
 			burnerHandler("info");
 		}
@@ -210,7 +209,6 @@
 		setMp3Icons();
 		if(error_set == false) {
 			$('#burner_step1').hide();
-			$('#burner_step2').show();	
 			setBurnerVariables("", "", "mp3");
 			burnerHandler("info");
 		}
@@ -279,15 +277,15 @@
 		$('.burner-icons').children().css('opacity', '0.3');
 	}
 
-	function progressHandler(burner_status) {
+    function progressHandler(burner_status, next_cd) {
 
 		switchOffIcons();
 		burner_status = burner_status.toLowerCase();
 
 		switch(burner_status) {
 			case "idle":
-				
-			break;
+                $('#burner_step2').show();
+                break;
 
 			case "copying":
 				$('.burner-icons-copying').css('opacity', '1');
@@ -313,7 +311,13 @@
 			case "complete":
 				$('.burner-icons-complete').css('opacity', '1');
 				$('#burner_step3-progress_bar-progress').css('background-color', 'green');
-				$('#burner_step2').show();
+
+                clearInterval(burnerInfoSet);
+                // Check for next CD
+                if (output['nextCD'] == true) {
+                    $('#burner_step2').show();
+                    setBurnerVariables("", "nextCD", "");
+                }
 				break;
 
 			default:
@@ -338,7 +342,7 @@
 			console.log(output);
 
 			// Progress bar and icons update
-			progressHandler(output['status']);
+            progressHandler(output['status'], output['nextCD']);
 
 			$.each(output, function( index, value ) {
 				// console.log("INDEX: " + index);
@@ -355,20 +359,7 @@
 					$('#burner-'+index).remove()
 				}
 
-				if(output['status'] == "Complete") {
-					clearInterval(burnerInfoSet);
-				}
-
 				setProgressBar(output['percentage']);
-
-				// Check for next CD
-				if(output['nextCD'] == true) {
-						clearInterval(burnerInfoSet);
-
-						$('#burner_step2').show();
-						// $('#burner_step3').show();
-						setBurnerVariables("", "nextCD", "");
-				}
 			});
 		});
 	}
