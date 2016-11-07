@@ -11,6 +11,13 @@ PHP_STARTUP_FILE="/var/www/html/assets/php/startup_scripts.php"
 if ! grep -q "$THIS_SCRIPT_PATH" "$RC_LOCAL" ; then
 	echo -e "# Startup script\n$THIS_SCRIPT_PATH\n" | cat - $RC_LOCAL > /tmp/out && mv /tmp/out $RC_LOCAL
 	chmod +x $THIS_SCRIPT_PATH
+
+	# Enable services autostart
+	update-rc.d nodeserver defaults
+	update-rc.d nodeserver enable
+	
+	update-rc.d node-sass defaults
+	update-rc.d node-sass enable
 fi
 
 # Turn on the speakers
