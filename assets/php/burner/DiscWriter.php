@@ -35,16 +35,17 @@ class DiscWriter {
 		return $size;
 	}
 
-//	public static function checkDiscBlank() {
-//		$cmd = shell_exec("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
-//		$disc_check = shell_exec("cdrecord -v dev=/dev/sr0 -toc 2>&1");
-//
-//		if ($cmd < 10 && substr_count($disc_check, "Cannot load media") == 0) {
-//			return TRUE;
-//		} else {
-//			return FALSE;
-//		}
-//	}
+    public static function checkBlank()
+    {
+        $cmd = shell_exec("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
+        $disc_check = shell_exec("wodim -v dev=/dev/sr0 -toc 2>&1");
+
+        if ($cmd < 10 && substr_count($disc_check, "Cannot load media") == 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     /**
      * Check if the disc is blank.
@@ -58,7 +59,7 @@ class DiscWriter {
         if (strpos($command, 'Unknown') !== false) {
             return false;
         } elseif (strpos($command, 'DVD') !== false) {
-            $this->dvdCheckBlank();
+            $this->checkBlank();
         } elseif (strpos($command, 'CD-ROM') !== false) {
             return false;
         } elseif (strpos($command, 'CD') !== false) {

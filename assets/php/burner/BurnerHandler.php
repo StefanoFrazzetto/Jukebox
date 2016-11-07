@@ -102,7 +102,7 @@ class BurnerHandler {
 		} elseif (CommandExecuter::isProcessRunning("mkisofs") || CommandExecuter::isProcessRunning("genisoimage")) {
 			$status = self::$_status_burning;
 
-		} elseif (CommandExecuter::isProcessRunning("cdrecord")) {
+        } elseif (CommandExecuter::isProcessRunning("wodim")) {
 			$status = self::$_status_burning;
 
 		} else {

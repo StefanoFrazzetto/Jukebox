@@ -235,7 +235,7 @@ class BurnerInfo
 		} elseif (CommandExecuter::isProcessRunning("normalize-audio")) {
 			$output['status'] = self::$_status_normalizing;
 
-		} elseif (CommandExecuter::isProcessRunning("cdrecord")) {
+        } elseif (CommandExecuter::isProcessRunning("wodim")) {
 			$output['status'] = self::$_status_burning;
 
 			$output['message'] = "Please wait. Your DISC will be ejected once the process will be complete.";
