@@ -395,8 +395,7 @@
 			var output = JSON.parse(data);
             // Progress bar and icons update
             var burner_status = output['status'].toLowerCase();
-            var burner_nextCD = output['nextCD'].toLowerCase();
-            progressHandler(burner_status, burner_nextCD);
+            progressHandler(burner_status, "");
 
 			$.each(output, function( index, value ) {
 				$('#burner-'+index).html(index.charAt(0).toUpperCase() + index.slice(1) + ': ' + value);
