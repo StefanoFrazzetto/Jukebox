@@ -284,7 +284,7 @@
 
 		switch(burner_status) {
 			case "idle":
-                $('#burner_step2').show();
+
                 break;
 
 			case "copying":
@@ -342,7 +342,14 @@
 			console.log(output);
 
 			// Progress bar and icons update
-            progressHandler(output['status'], output['nextCD']);
+            var burner_status = output['status'].toLowerCase();
+            var burner_nextCD = output['nextCD'].toLowerCase();
+
+            progressHandler(burner_status, burner_nextCD);
+
+            if (burner_status == "idle") {
+                $('#burner_step2').show();
+            }
 
 			$.each(output, function( index, value ) {
 				// console.log("INDEX: " + index);
