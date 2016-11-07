@@ -283,8 +283,12 @@
 		burner_status = burner_status.toLowerCase();
 
 		switch(burner_status) {
-			case "idle":
+            case "error":
+                $('#burner_step2').hide();
+                break;
 
+			case "idle":
+                $('#burner_step2').show();
                 break;
 
 			case "copying":
@@ -314,7 +318,7 @@
 
                 clearInterval(burnerInfoSet);
                 // Check for next CD
-                if (output['nextCD'] == true) {
+                if (next_cd == true) {
                     $('#burner_step2').show();
                     setBurnerVariables("", "nextCD", "");
                 }
@@ -346,10 +350,6 @@
             var burner_nextCD = output['nextCD'].toLowerCase();
 
             progressHandler(burner_status, burner_nextCD);
-
-            if (burner_status == "idle") {
-                $('#burner_step2').show();
-            }
 
 			$.each(output, function( index, value ) {
 				// console.log("INDEX: " + index);
@@ -393,9 +393,10 @@
 			}
 
 			var output = JSON.parse(data);
-			if(output['status'] == "Error") {
-				$('#burner_step2').hide();
-			}
+            // Progress bar and icons update
+            var burner_status = output['status'].toLowerCase();
+            var burner_nextCD = output['nextCD'].toLowerCase();
+            progressHandler(burner_status, burner_nextCD);
 
 			$.each(output, function( index, value ) {
 				$('#burner-'+index).html(index.charAt(0).toUpperCase() + index.slice(1) + ': ' + value);
