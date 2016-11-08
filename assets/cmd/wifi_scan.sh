@@ -1,3 +1,3 @@
 #!/bin/bash
 sudo ifconfig $1 up
-iwlist $1 scanning | egrep 'ESSID|Encryption|Quality|IE'
+sudo iwlist $1 scanning | egrep 'ESSID|Encryption|Quality|IE'
