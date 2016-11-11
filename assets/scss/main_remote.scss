@@ -8,6 +8,7 @@
 @import 'progressbar';
 @import 'utils';
 @import 'links';
+@import 'tables';
 
 $remote-margin: 45px;
 
@@ -40,6 +41,8 @@ body {
   width: 100%;
   background-color: $background_color;
   border-bottom: 1px solid $black_50;
+  z-index: 1;
+  position: relative;
 
   #remote-menu-btn, #remote-playlist-btn {
     width: $remote-margin;
@@ -138,6 +141,32 @@ body {
   margin: auto;
 
   position: relative;
+
+  overflow-x: hidden;
+
+}
+
+#playlist-section {
+  position: fixed;
+  top: 0;
+  left: 100%;
+  width: 100vw;
+  height: 100vh;
+
+  padding: $remote-margin ($remote-margin - 1) 0 0;
+
+  overflow: hidden;
+
+  overflow-y: scroll;
+
+  box-sizing: border-box;
+
+  text-align: justify;
+
+  background-color: $background_color_highlight;
+  border-left: 1px solid $black_80;
+
+  opacity: .99;
 
 }
 

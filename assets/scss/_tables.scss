@@ -45,9 +45,9 @@ table.cooltable {
     background-color: $background_color_highlight;
     border-bottom: 4px solid $border_color;
     border-right: 1px solid $border_color;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 100;
-    padding: 17px;
+    padding: 15px;
     text-align: center;
     //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
     text-shadow: 0 1px 1px $shadow_color;
@@ -111,7 +111,7 @@ table.cooltable {
   }
   td {
     background: $color_even;
-    padding: 20px;
+    padding: 15px;
     text-align: left;
     vertical-align: middle;
     font-weight: 300;
@@ -146,5 +146,19 @@ table.cooltable {
     //Instead of the line below you could use @include text-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
     text-shadow: -1px -1px 1px $shadow_color;
     text-transform: uppercase;
+  }
+
+  &.small {
+    padding: 0;
+    border-radius: 0;
+
+    th {
+      padding: 11px;
+      font-size: 18px;
+    }
+    td {
+      padding: 9px;
+      font-size: 17px;
+    }
   }
 }

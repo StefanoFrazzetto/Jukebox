@@ -14,61 +14,76 @@
 <body>
 
 <div id="container">
-    <div id="remote-upper-bar">
-        <div id="remote-menu-btn">
-            <i class="fa fa-bars"></i>
-        </div>
-        <div id="remote-search-bar">
-            <input id="remote-search-field" autofocus type="text" class="full-wide" placeholder="Search..."/>
-            <div id="results"></div>
-        </div>
-        <div id="remote-playlist-btn">
-            <i class="fa fa-list-ul"></i>
-        </div>
-    </div>
-
-    <div id="cover-container">
-        <img src="/assets/img/album-placeholder.png" id="cover" class="cover-picture"/>
-    </div>
-
-    <div id="remote-controls-placeholder"></div>
-
-    <div id="remote-controls">
-
-        <div id="log" class="hidden"></div>
-
-        <!--
-        <button onclick="sendEvent('refresh')">REFRESH</button>
-        <input type="text" name="" id="album_id" placeholder="album_id" value="642">
-        <button onclick="
-		sendEvent('play_album', {
-			album_id: parseInt(document.getElementById('album_id').value)
-		})
-
-		">PLAY album
-        </button>
-    -->
-
-        <div id="cover-label">
-            <div id="artist">-</div>
-            <div id="title">-</div>
+    <div id="main-section">
+        <div id="remote-upper-bar">
+            <div id="remote-menu-btn">
+                <i class="fa fa-bars"></i>
+            </div>
+            <div id="remote-search-bar">
+                <input id="remote-search-field" autofocus type="text" class="full-wide" placeholder="Search..."/>
+                <div id="results"></div>
+            </div>
+            <div id="remote-playlist-btn">
+                <i class="fa fa-list-ul"></i>
+            </div>
         </div>
 
-        <div class="progressBar thin">
-            <div class="progress" id="trackProgress"></div>
+        <div id="cover-container">
+            <img src="/assets/img/album-placeholder.png" id="cover" class="cover-picture"/>
         </div>
 
-        <div class="holo-btn" onclick="sendEvent('previous')"><i class="fa fa-step-backward"></i></div>
+        <div id="remote-controls-placeholder"></div>
 
-        <div class="holo-btn big" onclick="sendEvent('play/pause')" id="play-pause"><i class="fa fa-pause"></i></div>
+        <div id="remote-controls">
 
-        <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
+            <div id="log" class="hidden"></div>
 
-        <!--
-        <div id="debug-time"></div>
-        <div id="debug-latency"></div>
-        <div id="debug-delta-time"></div>
+            <!--
+            <button onclick="sendEvent('refresh')">REFRESH</button>
+            <input type="text" name="" id="album_id" placeholder="album_id" value="642">
+            <button onclick="
+            sendEvent('play_album', {
+                album_id: parseInt(document.getElementById('album_id').value)
+            })
+
+            ">PLAY album
+            </button>
         -->
+
+            <div id="cover-label">
+                <div id="artist">-</div>
+                <div id="title">-</div>
+            </div>
+
+            <div class="progressBar thin">
+                <div class="progress" id="trackProgress"></div>
+            </div>
+
+            <div class="holo-btn" onclick="sendEvent('previous')"><i class="fa fa-step-backward"></i></div>
+
+            <div class="holo-btn big" onclick="sendEvent('play/pause')" id="play-pause"><i class="fa fa-pause"></i>
+            </div>
+
+            <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
+
+            <!--
+            <div id="debug-time"></div>
+            <div id="debug-latency"></div>
+            <div id="debug-delta-time"></div>
+            -->
+        </div>
+    </div>
+    <div id="playlist-section">
+        <table id="remote-playlist-table" class="cooltable small">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Song</th>
+                <th>Time</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 

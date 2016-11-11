@@ -2,7 +2,6 @@
  * Created by Vittorio on 22-Oct-16.
  */
 var playerStatus = {};
-var albumDetailsCache = [];
 var deltaTime;
 var latency;
 var clockTimerHandle;
@@ -27,14 +26,41 @@ function playingStatusChangedEvent() {
 
 function albumChangedEvent() {
     if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id != null) {
-        getAlbumDetails(playerStatus.album_id, function (data) {
-            $('#cover').attr('src', data.cover);
+        getAlbumDetails(playerStatus.album_id, function () {
+            var data = albums_storage[playerStatus.album_id];
+
+            $('#cover').attr('src', '/jukebox/' + playerStatus.album_id + '/cover.jpg');
             $('#artist').html(data.artist);
             $('#title').html(data.title);
+
+            populatePlaylist(data);
         });
     }
     else
         console.log("Sorry, album id not provided");
+
+    function populatePlaylist(data) {
+        var div = $('#playlist-section').find('tbody');
+
+        div.html('');
+
+        data.songs.forEach(function (song, index) {
+            div.append("<tr><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
+        })
+    }
+
+    function addZero(value) {
+        if (value < 10)
+            return '0' + value;
+        else
+            return value;
+    }
+
+    function timestamp(time) {
+        var minutes = Math.floor(time / 60);
+        var seconds = Math.floor(time - minutes * 60);
+        return addZero(minutes) + ':' + addZero(seconds);
+    }
 }
 
 function trackChangedEvent() {
@@ -123,15 +149,18 @@ function updatePlayButton() {
 }
 
 function getAlbumDetails(id, callback) {
-    // TODO use the local storage instead calling the details again
-    if (typeof albumDetailsCache[id] == 'undefined') {
-        var url_request = "assets/php/get_album_details.php?id=" + id;
-        $.getJSON(url_request, callback).done(function (data) {
-            albumDetailsCache[id] = data;
+    if (id == null || typeof id == "undefined")
+        return;
+
+    if (typeof albums_storage[id] == 'undefined') {
+        loadAlbumStorage(function () {
+            loadAlbumPlaylist(id, callback);
         });
     } else {
-        var data = albumDetailsCache[id];
-        callback(data);
+        if (typeof albums_storage[id].songs !== "undefined")
+            callback();
+        else
+            loadAlbumPlaylist(id, callback);
     }
 }
 
@@ -259,7 +288,7 @@ $('#remote-search-field').on("focus keyup", function () {
     }, 200);
 });
 
-function loadAlbumStorage() {
+function loadAlbumStorage(callback) {
     var address = '/assets/php/get_all_album.json.php';
 
     $.getJSON(address)
@@ -272,17 +301,21 @@ function loadAlbumStorage() {
                         albums_storage[data.id] = data;
                     });
             } catch (e) {
-
+                return;
             }
 
             console.log("Loaded", data.length, "albums.");
+
+            if (typeof callback !== "undefined")
+                callback();
+
         })
         .fail(function () {
             error("An error occurred while loading the albums.");
         });
 }
 
-function loadRadioStorage() {
+function loadRadioStorage(callback) {
     var address = '/assets/php/get_all_radios.json.php';
 
     $.getJSON(address)
@@ -299,9 +332,34 @@ function loadRadioStorage() {
             }
 
             console.log("Loaded", data.length, "radios.");
+
+            if (typeof callback !== "undefined")
+                callback();
         })
         .fail(function () {
             error("An error occurred while loading the radios.");
+        });
+}
+
+function loadAlbumPlaylist(id, callback) {
+    var address = '/assets/php/get_playlist.php?id=' + id;
+
+    $.getJSON(address)
+        .done(function (data) {
+            if (data == null) {
+                error("Unable to find album with id: " + id + ". It might have been deleted");
+                return;
+            }
+
+            console.log("Loaded", data.length, "songs.");
+
+            albums_storage[id].songs = data;
+
+            if (typeof callback !== "undefined")
+                callback();
+        })
+        .fail(function () {
+            error("An error occurred while loading the playlist.");
         });
 }
 
@@ -321,12 +379,16 @@ $(document).ready(function () {
         });
     });
 
+    $('#remote-playlist-btn').click(function () {
+        var asd = $('#playlist-section');
+
+        asd.toggleClass("open", "close");
+
+        var property = asd.hasClass("open") ? {left: "44px"} : {left: "100%"};
+
+        asd.animate(property, 200);
+    });
+
     loadAlbumStorage();
     loadRadioStorage();
 });
-
-// function setDeltaTime() {
-//     getDeltaTime(function (delta) {
-//         deltaTime = delta;
-//     })
-// }
