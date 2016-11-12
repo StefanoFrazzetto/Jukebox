@@ -44,8 +44,6 @@ class Network
 
     private function run_term($string)
     {
-        echo "../cmd/network_setup.sh $string"; // TODO CHANGE THIS
-
         return shell_exec("sudo ../cmd/network_setup.sh $string");
     }
 
@@ -74,8 +72,6 @@ class Network
         require_once __DIR__ . '/Wifi.php';
 
         $network = $wifiConfig[$this->ssid];
-
-        //print_r($wifiConfig);
 
         $this->password = Wifi::decodePassword($network['password'], $network['salt']);
 
@@ -118,8 +114,6 @@ class Network
     public function load_network()
     {
         $json = file_get_contents(__DIR__ . '/../config/network_settings.json');
-
-        echo $json, PHP_EOL; // TODO REMOVE THIS
 
         $this->set_network_from_json($json);
     }
