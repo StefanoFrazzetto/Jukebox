@@ -51,6 +51,11 @@ handleSSE('play_album', function (data) {
     pplay();
 });
 
+handleSSE('play_song', function (data) {
+    getPlaylistSong(parseInt(data.song_no));
+    pplay();
+});
+
 handleSSE('play_radio', function (data) {
     playRadio(JSON.stringify(data.radio_url), data.radio_name);
 });

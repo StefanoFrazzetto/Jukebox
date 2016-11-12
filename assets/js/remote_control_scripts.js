@@ -34,6 +34,7 @@ function albumChangedEvent() {
             $('#title').html(data.title);
 
             populatePlaylist(data);
+            trackChangedEvent();
         });
     }
     else
@@ -45,7 +46,13 @@ function albumChangedEvent() {
         div.html('');
 
         data.songs.forEach(function (song, index) {
-            div.append("<tr><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
+            var asd = $("<tr><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
+
+            asd.click(function () {
+                sendEvent('play_song', {song_no: index});
+            });
+
+            div.append(asd);
         })
     }
 
@@ -70,6 +77,12 @@ function trackChangedEvent() {
         startTimer();
     else
         stopTimer();
+
+    var div = $('#playlist-section').find('tbody');
+
+    div.find('.active').removeClass('active');
+
+    div.children().eq(playerStatus.track_no).addClass("active");
 }
 
 function getLocalCurrentTime() {
@@ -384,6 +397,7 @@ $(document).ready(function () {
 
         asd.toggleClass("open", "close");
 
+        // TODO use a dynamic size instead of 44px
         var property = asd.hasClass("open") ? {left: "44px"} : {left: "100%"};
 
         asd.animate(property, 200);

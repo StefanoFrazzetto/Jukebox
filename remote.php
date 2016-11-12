@@ -38,18 +38,6 @@
 
             <div id="log" class="hidden"></div>
 
-            <!--
-            <button onclick="sendEvent('refresh')">REFRESH</button>
-            <input type="text" name="" id="album_id" placeholder="album_id" value="642">
-            <button onclick="
-            sendEvent('play_album', {
-                album_id: parseInt(document.getElementById('album_id').value)
-            })
-
-            ">PLAY album
-            </button>
-        -->
-
             <div id="cover-label">
                 <div id="artist">-</div>
                 <div id="title">-</div>
@@ -68,7 +56,6 @@
 
             <!--
             <div id="debug-time"></div>
-            <div id="debug-latency"></div>
             <div id="debug-delta-time"></div>
             -->
         </div>
@@ -84,6 +71,11 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <hr/>
+        <button onclick="sendEvent('refresh')">REFRESH</button>
+        Ping: <span id="debug-latency"></span>
+        <hr/>
     </div>
 </div>
 

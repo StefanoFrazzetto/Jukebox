@@ -94,15 +94,17 @@ table.cooltable {
         }
       }
     }
+
     &:nth-child(odd) {
       td {
         background: $color_odd;
       }
-      &:hover td {
+      &:hover td, &.active td {
         background: $color_highlight;
       }
     }
-    &:hover td {
+
+    &:hover td, &.active td {
       background: $color_highlight;
       color: $text_color;
       border-top: 1px solid $background_color;
