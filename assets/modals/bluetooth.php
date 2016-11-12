@@ -88,7 +88,8 @@
     function stopScan() {
         keep_scanning = false;
         $('#btn_scan').removeClass("active");
-        $('#btn_scan').text("SCAN FOR DEVICES");
+        $('#btn_scan').text("SCAN");
+        cleanDevicesList("PRESS SCAN TO START");
     }
 
     function bluetooth(data) {
