@@ -54,10 +54,6 @@
 
             <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
 
-            <!--
-            <div id="debug-time"></div>
-            <div id="debug-delta-time"></div>
-            -->
         </div>
     </div>
     <div id="playlist-section">
@@ -73,9 +69,21 @@
         </table>
 
         <hr/>
-        <button onclick="sendEvent('refresh')">REFRESH</button>
-        Ping: <span id="debug-latency"></span>
-        <hr/>
+
+    </div>
+    <div id="menu-section">
+        <ul class="multiselect">
+            <li>
+                <label for="debug-volume">Volume</label>
+                <input step="0.1" type="number" id="debug-volume"/>
+            </li>
+            <li>Track time <span id="debug-time"></span></li>
+            <li>Ping <span id="debug-latency"></span></li>
+            <li>Delta Time <span id="debug-delta-time"></span></li>
+            <li>
+                <button onclick="sendEvent('refresh')">Refresh Jukebox Page</button>
+            </li>
+        </ul>
     </div>
 </div>
 

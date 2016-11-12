@@ -61,7 +61,7 @@ handleSSE('play_radio', function (data) {
 });
 
 handleSSE('set_volume', function (value) {
-    var volume = parseInt(value.value);
+    var volume = parseFloat(value.value);
 
     if (volume != null)
         setVolume(volume);
@@ -76,6 +76,7 @@ function sendPlayerStatus() {
 player.addEventListener('play', updateStatusHandler, false);
 player.addEventListener('pause', updateStatusHandler, false);
 player.addEventListener('canplay', updateStatusHandler, false);
+player.addEventListener('volumechange', updateStatusHandler, false);
 
 function updateStatusHandler() {
     sendPlayerStatus();

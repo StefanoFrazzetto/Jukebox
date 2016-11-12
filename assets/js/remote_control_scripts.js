@@ -48,8 +48,9 @@ function albumChangedEvent() {
         data.songs.forEach(function (song, index) {
             var asd = $("<tr><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
 
-            asd.click(function () {
+            asd.click(function (e) {
                 sendEvent('play_song', {song_no: index});
+                e.preventDefault();
             });
 
             div.append(asd);
@@ -135,7 +136,19 @@ function getThings(r) {
     if (oldPlayingStatus.currentTime != r.currentTime) {
         updateTrackProgress();
     }
+
+    if (oldPlayingStatus.volume != r.volume) {
+        volumeChangeEvent();
+    }
+
+    function volumeChangeEvent() {
+        $('#debug-volume').val(r.volume * 100);
+    }
 }
+
+$('#debug-volume').change(function () {
+    sendEvent("set_volume", {value: parseFloat($(this).val())});
+});
 
 function updateTrackProgress() {
     if (typeof playerStatus.duration != "undefined") {
@@ -250,7 +263,7 @@ $('#remote-search-field').on("focus keyup", function () {
         var div = $('<div>');
         div.addClass('result');
 
-        div.click(function () {
+        div.click(function (e) {
             if (!is_radio)
                 sendEvent('play_album', {
                     album_id: parseInt(album.id)
@@ -261,6 +274,8 @@ $('#remote-search-field').on("focus keyup", function () {
                     radio_url: album.url,
                     radio_name: album.name
                 });
+
+            e.preventDefault();
         });
 
 
@@ -377,7 +392,9 @@ function loadAlbumPlaylist(id, callback) {
 }
 
 $(document).ready(function () {
-    var height = $('#remote-controls').outerHeight();
+    var remoteControls = $('#remote-controls');
+
+    var height = remoteControls.outerHeight();
 
     $('#remote-controls-placeholder').outerHeight(height);
 
@@ -392,15 +409,32 @@ $(document).ready(function () {
         });
     });
 
-    $('#remote-playlist-btn').click(function () {
+    var margin = remoteControls.css('padding-left');
+
+    console.log(margin);
+
+    $('#remote-playlist-btn').click(function (e) {
         var asd = $('#playlist-section');
 
         asd.toggleClass("open", "close");
 
-        // TODO use a dynamic size instead of 44px
-        var property = asd.hasClass("open") ? {left: "44px"} : {left: "100%"};
+        var property = asd.hasClass("open") ? {left: margin} : {left: "100%"};
 
         asd.animate(property, 200);
+
+        e.preventDefault();
+    });
+
+    $('#remote-menu-btn').click(function (e) {
+        var asd = $('#menu-section');
+
+        asd.toggleClass("open", "close");
+
+        var property = asd.hasClass("open") ? {left: "-" + margin} : {left: "-100%"};
+
+        asd.animate(property, 200);
+
+        e.preventDefault();
     });
 
     loadAlbumStorage();

@@ -9,7 +9,7 @@
 @import 'utils';
 @import 'links';
 @import 'tables';
-
+@import 'multiselect';
 $remote-margin: 45px;
 
 body {
@@ -146,14 +146,12 @@ body {
 
 }
 
-#playlist-section {
+%side-section {
   position: fixed;
   top: 0;
-  left: 100%;
+
   width: 100vw;
   height: 100vh;
-
-  padding: $remote-margin ($remote-margin - 1) 0 0;
 
   overflow: hidden;
 
@@ -164,10 +162,29 @@ body {
   text-align: justify;
 
   background-color: $background_color_highlight;
-  border-left: 1px solid $black_80;
 
   opacity: .99;
 
+  padding: $remote-margin 0 0 0;
+
+  border: 0 solid $black_80;
+}
+
+#playlist-section {
+  @extend %side-section;
+
+  left: 100%;
+  padding-right: ($remote-margin - 1);
+  border-left-width: 1px;
+}
+
+#menu-section {
+  @extend %side-section;
+
+  left: -100%;
+  padding-left: $remote-margin - 1;
+  border-right-width: 1px;
+  overflow-y: auto;
 }
 
 #cover-container {
