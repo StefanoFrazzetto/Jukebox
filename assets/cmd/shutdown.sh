@@ -1,1 +1,3 @@
-poweroff -f
+#!/bin/bash
+
+sudo shutdown -Ph now
