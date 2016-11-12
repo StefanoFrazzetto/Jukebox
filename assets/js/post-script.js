@@ -408,6 +408,10 @@ pwr_btn.click(function () {
 });
 
 $('#albumCover').click(function () {
+    if (isRadio) {
+        openModalPage('/assets/modals/radio');
+        return;
+    }
     if (typeof(album_id) !== 'undefined')
         openModalPage('assets/modals/album_details.php?id=' + album_id);
 });
