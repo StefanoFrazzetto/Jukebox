@@ -28,7 +28,6 @@ var albumDetailsCache = [];
 // INIT //
 var playing = false;
 var isReady = false;
-sliderv.slider("value", default_volume);
 setVolume(default_volume);
 // Events //
 
@@ -142,6 +141,8 @@ function pstop() {
 
 function setVolume(value) {
     player.volume = value / 100;
+    if (value != sliderv.slider("value"))
+        sliderv.slider("value", value);
 }
 
 function addZero(value) {

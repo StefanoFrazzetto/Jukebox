@@ -411,8 +411,6 @@ $(document).ready(function () {
 
     var margin = remoteControls.css('padding-left');
 
-    console.log(margin);
-
     $('#remote-playlist-btn').click(function (e) {
         var asd = $('#playlist-section');
 
