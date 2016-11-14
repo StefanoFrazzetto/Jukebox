@@ -409,7 +409,7 @@ $(document).ready(function () {
         });
     });
 
-    var margin = remoteControls.css('padding-left');
+    var margin = parseInt(remoteControls.css('padding-left'));
 
     $('#remote-playlist-btn').click(function (e) {
         var asd = $('#playlist-section');
@@ -428,7 +428,7 @@ $(document).ready(function () {
 
         asd.toggleClass("open", "close");
 
-        var property = asd.hasClass("open") ? {left: "-" + margin} : {left: "-100%"};
+        var property = asd.hasClass("open") ? {left: -(margin - 1)} : {left: "-100%"};
 
         asd.animate(property, 200);
 
