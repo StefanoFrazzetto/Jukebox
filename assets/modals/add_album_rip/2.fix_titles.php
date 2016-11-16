@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 require_once '../rip/rip_functions.php';
 setSessionCoversURLS();
@@ -10,7 +7,7 @@ setSessionTracks();
 ?>
 <div class="modalHeader">Titles Enhance<?php if(isset($_SESSION['cd_title'])) echo ": ". $_SESSION['cd_title']; ?></div>
 
-<div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 500px;">
+<div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
 	<form action="assets/php/fix_title.php" id="fixTitleForm">
 		<table class="cooltable">
 			<tr>
