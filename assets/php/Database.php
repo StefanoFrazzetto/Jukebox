@@ -83,8 +83,10 @@ class Database {
 		$stmt = $this->_connection;
 		$stmt = $stmt->prepare($sql);
 
-		foreach ($array as $key => $value)
-		    $stmt->bindValue(":$key", $value);
+        foreach ($array as $key => $value) {
+            $value = addslashes($value);
+            $stmt->bindValue(":$key", $value);
+        }
 
 		return $stmt->execute();
 	}
@@ -148,6 +150,7 @@ class Database {
 		$sql = "UPDATE $table SET ";
 
 		foreach ($array as $key => $value) {
+            $value = addslashes($value);
 			$sql .= $key . "=" . "'$value'" . ",";
 		}
 
@@ -161,7 +164,7 @@ class Database {
         foreach ($array as $key => $value)
 		    $stmt->bindValue(":$key", $value);
 
-		// // DEBUG
+        // DEBUG
 		// $stmt->debugDumpParams();
 
 		return $stmt->execute();
