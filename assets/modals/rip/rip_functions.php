@@ -18,12 +18,14 @@ $musicbrainz_json = "/var/www/html/jukebox/cdparanoia/musicbrainz.json";
 $devicedisc_json = "/var/www/html/jukebox/cdparanoia/devicedisc.json";
 $tracklist_json = "/var/www/html/jukebox/ripper_encoded/tracklist.json";
 
-function storeDeviceDiscInfo ($data) {
+function storeDeviceDiscInfo($data)
+{
     global $devicedisc_json;
     file_put_contents($devicedisc_json, $data);
 }
 
-function readDeviceDiscInfo () {
+function readDeviceDiscInfo()
+{
     global $devicedisc_json, $scripts;
     $devicedisc_info = @file_get_contents($devicedisc_json);
     $devicedisc_info_decoded = json_decode($devicedisc_info, true);
@@ -44,7 +46,8 @@ $device = (string)$devicedisc_info['device'];
 $discid = (string)$devicedisc_info['discid'];
 $total_tracks = (int)$devicedisc_info['total_tracks'];
 
-function clearSession() {
+function clearSession()
+{
     unset($_SESSION['tracks']);
     unset($_SESSION['album_title']);
     unset($_SESSION['cd_title']);
@@ -54,13 +57,15 @@ function clearSession() {
 }
 
 
-function storeMusicBrainzInfo ($data) {
+function storeMusicBrainzInfo($data)
+{
     global $musicbrainz_json;
     file_put_contents($musicbrainz_json, $data);
 }
 
 
-function readMusicBrainzInfo () {
+function readMusicBrainzInfo()
+{
     global $musicbrainz_json;
     $musicbrainz_info = @file_get_contents($musicbrainz_json);
     if ($musicbrainz_info !== FALSE && $musicbrainz_info != '') {
@@ -80,7 +85,7 @@ function getMusicBrainzInfo()
     clearSession();
     $musicbrainz_array = readMusicBrainzInfo();
 
-    if($musicbrainz_array === FALSE) {
+    if ($musicbrainz_array === FALSE) {
         global $discid;
         $query = "http://musicbrainz.org/ws/2/discid/$discid?inc=aliases+recordings&fmt=json";
         $json = @file_get_contents($query);
@@ -130,7 +135,7 @@ function countRippedTracks()
  */
 function countEncodedTracks($folder = "")
 {
-    global $scripts, $cdnumber;
+    global $scripts;
 
     $encoded_tracks = intval(trim(shell_exec("$scripts/encoded_tracks.sh $folder")));
     if ($encoded_tracks == "") {
@@ -172,7 +177,7 @@ function isEncoding()
 function delRipped()
 {
     global $scripts;
-    exec("$scripts/remove_ripped.sh 2>&1 &");
+    exec("$scripts/remove_ripped.sh > /dev/null 2>&1");
 }
 
 /**
@@ -181,7 +186,7 @@ function delRipped()
 function delEncoded()
 {
     global $scripts;
-    exec("$scripts/remove_encoded.sh 2>&1 &");
+    exec("$scripts/remove_encoded.sh > /dev/null 2>&1 &");
 }
 
 /**
@@ -192,7 +197,7 @@ function startRipping()
     global $scripts;
     delRipped();
     $_SESSION['ripping']['status'] = 'ripping';
-    exec("$scripts/rip.sh | at now >> /tmp/cdparanoia_log.log 2>&1 &");
+    exec("$scripts/rip.sh | at now > /dev/null 2>&1");
 }
 
 /**
@@ -202,7 +207,7 @@ function startEncoding()
 {
     global $scripts;
     $_SESSION['ripping']['status'] = 'encoding';
-    exec("$scripts/encode.sh | at now >> /tmp/lame_log.log 2>&1 &");
+    exec("$scripts/encode.sh | at now > /dev/null 2>&1");
 }
 
 /**
@@ -238,9 +243,8 @@ function getTrackInfo()
 
     $track['artalb'] = $musicbrainz_array->releases[0]->title;
     $tracks = $musicbrainz_array->releases[0]->media[0]->tracks;
-    if(is_array($tracks)){
-        foreach (@$tracks as $temp)
-        {
+    if (is_array($tracks)) {
+        foreach (@$tracks as $temp) {
             $track[$temp->number] = array('title' => $temp->recording->title, 'number' => $temp->number, 'length' => $temp->recording->length);
         }
     }
@@ -261,23 +265,25 @@ function setSessionAlbum($track_info)
 }
 
 
-function getTrackList() {
+function getTrackList()
+{
     global $encoding_folder;
 
     $tracklist_json = "$encoding_folder/tracklist.json";
 
-    if(file_exists($tracklist_json)) {
+    if (file_exists($tracklist_json)) {
         $tracklist_json = file_get_contents($tracklist_json);
         $tracklist = json_decode($tracklist_json, true);
     } else {
         $tracklist = FALSE;
     }
-    
+
     // Array
     return $tracklist;
 }
 
-function setSessionTrackList() {
+function setSessionTrackList()
+{
     $tracklist = getTrackList();
 
     foreach ($tracklist as $value) {
@@ -285,62 +291,62 @@ function setSessionTrackList() {
     }
 }
 
-function moveTracksCovers($origin, $destination) {
+function moveTracksCovers($origin, $destination)
+{
     @mkdir($destination);
     exec("mv $origin/*.mp3 $destination");
 }
 
 // Create or edit the json file.
-function putTrackList($tracks){
-    global $cdnumber, $encoding_folder, $tracklist_json, $scripts;
+function putTrackList($tracks)
+{
+    global $cdnumber, $encoding_folder;
 
     $tracklist_file = getTrackList();
 
     $cd = "CD$cdnumber";
-    if($tracklist_file === FALSE || $tracklist_file == "null") {
+    if ($tracklist_file === FALSE || $tracklist_file == "null") {
         $tracklist_file = $tracks;
     } else {
         $tracklist_keys = array_keys($tracks);
         $tracklist_file_keys = array_keys($tracklist_file);
         $missing_keys = array_diff($tracklist_keys, $tracklist_file_keys);
-        
-        if(!empty($missing_keys)) {
-        	foreach($missing_keys as $key) {
-               $tracklist_file[$key] = $tracks[$key];
-           }
-       }
-   }
 
-   file_put_contents("$encoding_folder/tracklist.json", json_encode($tracklist_file));
+        if (!empty($missing_keys)) {
+            foreach ($missing_keys as $key) {
+                $tracklist_file[$key] = $tracks[$key];
+            }
+        }
+    }
+
+    file_put_contents("$encoding_folder/tracklist.json", json_encode($tracklist_file));
 }
+
 // **************** //
 
 
-function dirToArray($dir) { 
+function dirToArray($dir)
+{
 
-    $result = array(); 
+    $result = array();
 
-    $cdir = scandir($dir, SCANDIR_SORT_DESCENDING); 
-    foreach ($cdir as $key => $value) 
-    { 
-        if (!in_array($value,array(".",".."))) 
-        { 
-            if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
-            { 
-                $result[$value] = dirToArray($dir . DIRECTORY_SEPARATOR . $value); 
-            } 
-            else 
-            { 
-                $result[] = $value; 
-            } 
-        } 
-    } 
+    $cdir = scandir($dir, SCANDIR_SORT_DESCENDING);
+    foreach ($cdir as $key => $value) {
+        if (!in_array($value, array(".", ".."))) {
+            if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
+                $result[$value] = dirToArray($dir . DIRECTORY_SEPARATOR . $value);
+            } else {
+                $result[] = $value;
+            }
+        }
+    }
 
-    return $result; 
+    return $result;
 }
 
-function handleTracksAndInfo() {
-    global $musicbrainz_array, $encoding_folder, $tracklist_json, $cdnumber;
+function handleTracksAndInfo()
+{
+    global $encoding_folder, $cdnumber;
 
     $track_info = getTrackInfo();
     setSessionAlbum($track_info);
@@ -349,7 +355,7 @@ function handleTracksAndInfo() {
     $_SESSION['tmp_folder'] = $encoding_folder . "/";
     $destination_folder = "$encoding_folder/CD$cdnumber/";
 
-    if(!file_exists($destination_folder)) {
+    if (!file_exists($destination_folder)) {
         // Crea la cartella di destinazione e ci inserisce le tracce
         moveTracksCovers($encoding_folder, $destination_folder);
     }
@@ -358,26 +364,29 @@ function handleTracksAndInfo() {
     $i = 1;
     foreach ($folders as $key => $item) {
 
-        if(strpos($key, 'CD') !== FALSE) {
+        if (strpos($key, 'CD') !== FALSE) {
             $cd_folder = $key;
+            $cd_no = str_replace('CD', '', $key);
+        } else {
+            $cd_folder = 1;
             $cd_no = str_replace('CD', '', $key);
         }
 
-        if(is_array($item)) {
-            foreach(array_reverse($item) as $file) {
+        if (is_array($item)) {
+            foreach (array_reverse($item) as $file) {
 
-            // Se il file é mp3
+                // Se il file é mp3
                 if (strpos($file, '.mp3') !== FALSE) {
 
                     if ($track_info !== FALSE && $track_info[$i]['title'] != null) {
-                // Se c'e' connessione:
+                        // Se c'e' connessione:
                         $length = round($track_info[$i]['length'] / 1000);
                         $track = array('title' => $track_info[$i]['title'], 'track_no' => $track_info[$i]['number'], 'url' => "$cd_folder/$file", 'cd' => $cd_no, 'length' => $length);
                         $tracks[$cd_folder][] = $track;
                     } else {
-                // Se NON c'e' connessione:
-                    	$track_length = shell_exec("mp3info -p \"%S\" $encoding_folder/$cd_folder/$file");
-                    	$length = (int)$track_length;
+                        // Se NON c'e' connessione:
+                        $track_length = shell_exec("mp3info -p \"%S\" $encoding_folder/$cd_folder/$file");
+                        $length = (int)$track_length;
                         $track = array('title' => "Track $i", 'track_no' => $i, 'url' => "$cd_folder/$file", 'cd' => $cd_no, 'length' => $length);
                         $tracks[$cd_folder][] = $track;
                     }
@@ -386,7 +395,7 @@ function handleTracksAndInfo() {
             }
         }
     }
-  
+
     putTrackList($tracks);
 }
 
@@ -395,19 +404,16 @@ function handleTracksAndInfo() {
  */
 function setSessionTracks()
 {
-    global $encoding_folder;
     handleTracksAndInfo();
 
     $tracklist = getTrackList();
 
     if (is_array($tracklist) || is_object($tracklist)) {
         foreach ($tracklist as $CD) {
-            foreach($CD as $track) {
+            foreach ($CD as $track) {
                 $_SESSION['tracks'][] = array('title' => $track['title'], 'track_no' => $track['track_no'], 'url' => $track['url'], 'cd' => $track['cd'], 'length' => $track['length']);
             }
         }
     }
-
-    //var_dump($_SESSION['tracks']);
 
 }
