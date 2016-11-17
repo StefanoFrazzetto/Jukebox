@@ -44,7 +44,8 @@ class Network
 
     private function run_term($string)
     {
-        return shell_exec("sudo ../cmd/network_setup.sh $string");
+        $path = __DIR__ . '/../cmd/network_setup.sh';
+        return shell_exec("sudo $path $string");
     }
 
     private function getDhcpParams()
@@ -79,7 +80,7 @@ class Network
             $this->encryption = "open";
         } elseif ($network['encryption_type'] == "WPA" || $network['encryption_type'] == "WPA2") {
             $this->encryption = "wpa";
-        } elseif ($network['encryption_type'] == "WEP"){
+        } elseif ($network['encryption_type'] == "WEP") {
             $this->encryption = "wep";
         }
 
@@ -99,14 +100,16 @@ class Network
         // TODO check if all the other values are valid
     }
 
-    private function getHotspotParams(){
+    private function getHotspotParams()
+    {
         if (!$this->isHotspotValid())
             throw new InvalidArgumentException();
 
         return "\"$this->hotspot_ssid\" \"$this->hotspot_password\" $this->hotspot_channel";
     }
 
-    public function isHotspotValid(){
+    public function isHotspotValid()
+    {
         return isset($this->hotspot_ssid, $this->hotspot_password, $this->hotspot_channel);
         // TODO proper value check
     }
@@ -130,8 +133,7 @@ class Network
                     $this->interface = 'ethernet';
                 elseif ($setting == '2') {
                     $this->interface = 'wifi';
-                }
-                elseif ($setting == '3') {
+                } elseif ($setting == '3') {
                     $this->interface = 'hotspot';
                 }
             } elseif ($key === 'dhcp') {
@@ -150,11 +152,11 @@ class Network
                 $this->dns = $setting;
             } elseif ($key === 'ssid') {
                 $this->ssid = $setting;
-            } elseif($key === 'hotspot_ssid'){
+            } elseif ($key === 'hotspot_ssid') {
                 $this->hotspot_ssid = $setting;
-            } elseif($key === 'hotspot_password'){
+            } elseif ($key === 'hotspot_password') {
                 $this->hotspot_password = $setting;
-            } elseif($key === 'hotspot_channel'){
+            } elseif ($key === 'hotspot_channel') {
                 $this->hotspot_channel = $setting;
             }
 
