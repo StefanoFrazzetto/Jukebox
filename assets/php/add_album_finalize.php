@@ -24,9 +24,9 @@ $json_tracks = str_replace('\'', '\\\'', json_encode($tracks));
 
 $tracks_no = count($tracks);
 
-$result = $mysqli->query("INSERT INTO albums (title,artist,tracks_no,tracks) VALUES('$album', '$artist','$tracks_no','$json_tracks')");
+$result = $mysqli->query("INSERT INTO albums (title,artist,tracks_no,tracks) VALUES('$album','$artist','$tracks_no','$json_tracks')");
 if (mysqli_error($mysqli)) {
-    echo '-1';
+    echo -2;
     die;
 } else {
     $result = $mysqli->query("SELECT LAST_INSERT_ID()");
