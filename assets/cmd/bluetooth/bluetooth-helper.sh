@@ -1,11 +1,11 @@
 #!/bin/bash
 
-COMMAND=$0
-DEVICE_MAC=$1
+COMMAND="$1"
+DEVICE_MAC="$2"
 
 case "$COMMAND" in
 "scan")
-    sudo hcitool scan
+    hcitool scan
     ;;
 "connect")
 
@@ -16,5 +16,3 @@ case "$COMMAND" in
     echo "invalid command"
     ;;
 esac
-
-echo "done"
