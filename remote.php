@@ -20,7 +20,7 @@
                 <i class="fa fa-bars"></i>
             </div>
             <div id="remote-search-bar">
-                <input id="remote-search-field" autofocus type="text" class="full-wide" placeholder="Search..."/>
+                <input id="remote-search-field" type="text" class="full-wide" placeholder="Search..."/>
                 <div id="results"></div>
             </div>
             <div id="remote-playlist-btn">
