@@ -1,3 +1,5 @@
+@import 'colors';
+
 // A shadow for various UI elements
 %ui_element_shadow {
   box-shadow: inset 0 1px 0 $white_10, 0 0 16px 2px $black_20;
@@ -16,7 +18,6 @@ $border-radius: 5px;
 }
 
 // BUTTONS
-
 
 //original selectors
 //input, .box-btn, button
@@ -39,7 +40,7 @@ $border-radius: 5px;
   border: 1px solid $black_20;
   color: $text_color;
 
-  &.disabled{
+  &.disabled {
     @extend %disabled;
   }
 }
@@ -91,27 +92,30 @@ $border-radius: 5px;
 }
 
 //original selectors
-//#previous img, #next img
-%extend_6 {
-  width: 75%;
-  vertical-align: middle;
-  top: calc(50% - 50px);
-  position: absolute;
-  display: block;
-}
-
-//original selectors
 //#previous, #next
-%extend_7 {
+%arrows {
+  $arrows_opacity: 0.8;
+
   position: absolute;
   z-index: 3;
   width: 50px;
-  display: block;
   top: 36px;
   height: calc(100% - 37px);
   vertical-align: middle;
   min-height: 130px;
   cursor: pointer;
+
+  img {
+    width: 75%;
+    vertical-align: middle;
+    top: calc(50% - 50px);
+    position: absolute;
+    display: block;
+
+    &:hover {
+      opacity: $arrows_opacity;
+    }
+  }
 }
 
 //original selectors

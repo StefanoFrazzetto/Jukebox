@@ -36,32 +36,19 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-
 }
 
-$arrows_opacity: 0.8;
-
 #previous {
-  @extend %extend_7;
+  @extend %arrows;
   left: 0;
   img {
-    @extend %extend_6;
     right: 0 !important;
-    &:hover {
-      opacity: $arrows_opacity;
-    }
   }
 }
 
 #next {
-  @extend %extend_7;
+  @extend %arrows;
   right: 0;
-  img {
-    @extend %extend_6;
-    &:hover {
-      opacity: $arrows_opacity;
-    }
-  }
 }
 
 *::selection {

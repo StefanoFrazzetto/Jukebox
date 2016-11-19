@@ -182,9 +182,9 @@
     </div>
     <div id="albums">
         <div id="mainContentAjax">
-            <div id="previous"><img src="assets/img/icons/previous.png"></div>
+            <div id="previous" class="hidden"><img src="assets/img/icons/previous.png"></div>
+            <div id="next" class="hidden"><img src="assets/img/icons/next.png"></div>
             <div id="mainContentAjaxLoader"></div>
-            <div id="next"><img src="assets/img/icons/next.png"></div>
         </div>
     </div>
     <div id="modal">
