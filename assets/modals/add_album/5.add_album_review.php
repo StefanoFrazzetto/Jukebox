@@ -6,7 +6,7 @@ session_start();
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 350px;">
     <div style="float: left;">
         <img onerror="this.src= 'assets/img/album-placeholder.png';" class="cover-picture"
-             src="jukebox/tmp_uploads/cover.jpg?<?php echo time() ?>"
+             src="/jukebox/tmp_uploads/cover.jpg?<?php echo time() ?>"
              style=" margin-left: 25px; margin-top: 25px; width: 250px; float: left;"/>
     </div>
     <div class="mCustomScrollbar" style="float: right; max-height: 300px; width: 520px;">
@@ -24,31 +24,15 @@ session_start();
             <?php
             $tracks = $_SESSION['tracks'];
 
-            /*
-            uasort($tracks, function ($i, $j) {
-                return strnatcmp($i['title'], $j['title']);
-            });
-            
-            uasort($tracks, function ($i, $j) {
-                return strnatcmp($i['track_no'], $j['track_no']);
-            });
-
-            require '../../php-lib/matrix-sorter.php';
-            
-            sort_matrix($tracks, 'track_no');
-
-            $_SESSION['tracks'] = $tracks;
-            */
-
             session_write_close();
-
 
             foreach ($tracks as $key => $track) {
                 if (!isset($track['track_no'])) {
                     $track['track_no'] = $key;
                 }
-                echo "
-                <tr>",
+
+                echo
+                "<tr>",
                 "<td>", $track['track_no'], "</td>",
                 "<td>", $track['title'], "</td>",
                 "<td>", gmdate("i:s", (int)$track['length']), "</td>",
@@ -58,7 +42,6 @@ session_start();
             ?>
         </table>
     </div>
-
 
 </div>
 <div class="modalFooter">
@@ -70,30 +53,29 @@ session_start();
     </div>
 </div>
 
-
 <script>
-    var addAlbumForm = $('#finalizeAlbumForm');
+    $('#submit').click(function () {
+        $('#status').html('Please wait...');
 
-    var submit_btn = $('#submit');
-
-    submit_btn.click(function () {
-        $('#status').text('Please wait &hellip;');
         $.ajax('assets/php/add_album_finalize.php').done(function (data) {
-            console.log("ciao", data);
-
             data = parseInt(data);
 
-            if (data > -1) {
-                //openModalPage('assets/modals/success.html');
-                $('#status').text('The new album has been added successfully.');
+            if (data > -1 || isNumber(data)) {
+                closeModal();
 
-                $('#openNewAlbum').removeClass('hidden').click(function () {
-                    openModalPage('assets/modals/album_details.php?id=' + data);
-                });
-
-                submit_btn.addClass('hidden');
-
-                $('#last-modal-previous-btn').addClass('hidden');
+                new Alert({
+                    message: "The new album has been uploaded successfully!",
+                    title: "Upload success",
+                    buttons: [
+                        "Okay",
+                        {
+                            text: "Open Album",
+                            callback: function () {
+                                openModalPage('assets/modals/album_details.php?id=' + data);
+                            }
+                        }
+                    ]
+                }).show();
 
                 reload();
             } else {
@@ -101,5 +83,4 @@ session_start();
             }
         });
     });
-
 </script>
