@@ -20,19 +20,22 @@ switch ($mode) {
 
         session_start();
 
-        $_SESSION['cover'] = $_SESSION['covers'][$picked_cover];
+        if (isset($_SESSION['covers'][$picked_cover]) && is_string($_SESSION['covers'][$picked_cover])) {
+            $_SESSION['cover'] = $_SESSION['covers'][$picked_cover];
 
-        $cover = new Cover($tmp_folder . $_SESSION['cover']);
+            $cover = new Cover($tmp_folder . $_SESSION['cover']);
 
-        $cover->saveAlbumImagesToFolder($tmp_folder);
+            $cover->saveAlbumImagesToFolder($tmp_folder);
+        }
+
         echo 0;
         break;
     case 1:
         $url = filter_input($input, 'coverURL', FILTER_VALIDATE_URL);
-        $tmp_folder_ripper = $_POST['savePath'];
 
-        if (isset($tmp_folder_ripper) && $tmp_folder_ripper !== '') {
-            $tmp_folder = $tmp_folder_ripper;
+
+        if (isset($_POST['savePath']) && $_POST['savePath'] !== '') {
+            $tmp_folder = $_POST['savePath'];;
         }
 
         if (!$url) {
@@ -51,8 +54,8 @@ switch ($mode) {
 
             $cover->saveAlbumImagesToFolder($tmp_folder);
         } catch (Exception $e) {
-            echo 'Vi e stato un terribile errore!';
-            print_r(e);
+            echo 'A fatal error has happened.', PHP_EOL;
+            print_r($e);
         }
         echo 0;
         break;

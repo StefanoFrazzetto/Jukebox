@@ -75,8 +75,8 @@ session_start();
                 <!-- <img id="loading-img" src="#" style="display: none;" /> -->
             </div>
             <div class="row" id="covers">
-            	 <?php            
-		            if($_SESSION['covers'] != NULL){
+            	 <?php
+                 if (isset($_SESSION['covers'])) {
 		                foreach ($_SESSION['covers'] as $key => $cover) {
 		                    echo "<img src=\"jukebox/tmp_uploads/$cover?". time() ."\" data-type='local' data-id='$key' class='covers local'>";
 		                }
