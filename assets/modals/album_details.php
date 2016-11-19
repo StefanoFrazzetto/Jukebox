@@ -120,36 +120,42 @@ if (file_exists($outputFile)) {
             <th>Length</th>
         </tr>
         <?php
-        if (end($tracks)->cd != $tracks[0]->cd) {
-            $differentCDs = true;
-            $CD = -1;
-            $album['cds'] = 0;
-        }
 
-        foreach ($tracks as $key => $track) {
-
-            if (@$differentCDs) {
-                if ($track->cd != $CD) {
-                    $CD = $track->cd;
-                    $album['cds'] += 1;
-                    echo "<tr class='th'><th colspan='3' data-cd='", $CD, "' class='CDth'>CD ", $CD, "<span class='addTrackToPlaylist'>+</span></th></tr>";
-                }
-
-                $CDMap[$CD][] = $key;
-
+        if (is_array($tracks) && count($tracks) > 0) {
+            if (end($tracks)->cd != $tracks[0]->cd) {
+                $differentCDs = true;
+                $CD = -1;
+                $album['cds'] = 0;
             }
-            ?>
-            <tr class="trackRow" data-track-no="<?php echo $key ?>" data-album="<?php echo $albumID ?>">
-                <td class="num">
-                    <?php echo $key + 1; ?>
-                </td>
-                <td class="playlist_title">
-                    <?php echo $track->title; ?>
-                    <span class="addTrackToPlaylist">+</span>
-                </td>
-                <td class="duration">
-                    <?php echo @makeTimeNice($track->length); ?>
-                </td>
+
+            foreach ($tracks as $key => $track) {
+                if (@$differentCDs) {
+                    if ($track->cd != $CD) {
+                        $CD = $track->cd;
+                        $album['cds'] += 1;
+                        echo "<tr class='th'><th colspan='3' data-cd='", $CD, "' class='CDth'>CD ", $CD, "<span class='addTrackToPlaylist'>+</span></th></tr>";
+                    }
+
+                    $CDMap[$CD][] = $key;
+
+                }
+                ?>
+                <tr class="trackRow" data-track-no="<?php echo $key ?>" data-album="<?php echo $albumID ?>">
+                    <td class="num">
+                        <?php echo $key + 1; ?>
+                    </td>
+                    <td class="playlist_title">
+                        <?php echo $track->title; ?>
+                        <span class="addTrackToPlaylist">+</span>
+                    </td>
+                    <td class="duration">
+                        <?php echo @makeTimeNice($track->length); ?>
+                    </td>
+                </tr>
+            <?php }
+        } else { ?>
+            <tr class="th">
+                <th colspan="3">No tracks found</th>
             </tr>
         <?php } ?>
     </table>
@@ -227,30 +233,15 @@ if (file_exists($outputFile)) {
         openModalPage('assets/modals/burner.php');
     });
 
-    // $('#burner_single_album').click(function(){
-    // 	input_type_value = "albums";
-    // 	var album_id = <?php echo $albumID; ?>;
-    // 	try {
-    // 		// If the albums IDs array exists
-    // 		// put the album ID if not already there.
-    // 		if($.inArray(album_id, input_content_values) === -1){
-    // 			input_content_values.push(album_id);
-    // 		}
-    // 	} catch(err) {
-    // 		// Albums IDs array does not exist yet.
-    // 		input_content_values = [];
-    // 		input_content_values.push(album_id);
-    // 	}
-    // 	$('#album_cover_img').before('<p>Album added to the compilation!</p>');
-    // });
+    var album_details = $('#albumDetails');
 
-    $('#albumDetails .trackRow').click(function () {
+    album_details.find('.trackRow').click(function () {
         var _albumID = $(this).closest('table').attr('data-album');
         var _trackNo = $(this).attr('data-track-no');
         changeAlbum(_albumID, _trackNo);
     });
 
-    $('#albumDetails .trackRow .addTrackToPlaylist').click(function (e) {
+    album_details.find('.trackRow .addTrackToPlaylist').click(function (e) {
         var _albumID = $(this).closest('table').attr('data-album');
         var _trackNo = $(this).parent().parent().attr('data-track-no');
         addAlbumSongToPlaylist(_albumID, _trackNo);
@@ -258,7 +249,7 @@ if (file_exists($outputFile)) {
         e.stopPropagation();
     });
 
-    $('#albumDetails .CDth .addTrackToPlaylist').click(function (e) {
+    album_details.find('.CDth .addTrackToPlaylist').click(function (e) {
         var _albumID = $(this).closest('table').attr('data-album');
         var _CD = $(this).parent().attr('data-cd');
 
