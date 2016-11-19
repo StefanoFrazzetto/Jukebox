@@ -69,8 +69,9 @@ session_start();
         <center>
 
         	<div class="row" id="cover_info">
-                <input type="text" id="album" name="album" placeholder="Album" value="<?php echo @$_SESSION['albumTitle'] ?>" required />
                 <input type="text" id="artist" name="artist" placeholder="Artist" value="<?php echo @$_SESSION['albumArtist'] ?>" required />
+                <input type="text" id="album" name="album" placeholder="Album"
+                       value="<?php echo @$_SESSION['albumTitle'] ?>" required/>
                 <div class="box-btn" id="search">SEARCH</div>
                 <!-- <img id="loading-img" src="#" style="display: none;" /> -->
             </div>
