@@ -202,7 +202,9 @@ function handleSearch() {
         if (!is_radio)
             img.attr('src', '/jukebox/' + album.id + '/thumb.jpg');
         else
+        //noinspection JSUnresolvedVariable
             img.attr('src', album.thumb);
+
 
         div.append(img);
 
@@ -350,6 +352,7 @@ function getLocalCurrentTime() {
     var now;
 
     try {
+        //noinspection JSUnresolvedVariable
         now = performance.timing.navigationStart + performance.now();
     } catch (e) {
         now = new Date().getTime();
