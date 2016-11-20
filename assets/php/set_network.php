@@ -1,25 +1,23 @@
 <pre>
 <?php
 
-include __DIR__."/../php-lib/Network.php";
+include __DIR__ . "/../php-lib/Network.php";
 
 $network = new Network();
 
-//$network->interface = 'ra0';
-//
-//$network->ssid = "SSID";
-//
-//$network->encryption = "open";
-//
-//$network->dhcp = true;
-
 $network->load_network();
 
+// TODO remove this
 print_r($network);
 
 try {
     $network->connect();
+    echo "success";
 } catch (Exception $e) {
-    echo "error!";
+    error_log("Failed to connect to the network. Cause: $e");
+    echo "<pre>";
+    echo $e;
     print_r($e->getTraceAsString());
+    print_r($network);
+    echo "</pre>";
 }
