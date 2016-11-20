@@ -72,9 +72,9 @@ function openNetworkDetails(network) {
     selected_network = network;
 
     $('#wifi_details').show(animation_short);
-    $('#wifitable').hide(animation_short);
+    $('#wifiTable').hide(animation_short);
 
-    stopscan();
+    stopScan();
 
     $('#network_details_essid').text(selected_network['essid']);
 
