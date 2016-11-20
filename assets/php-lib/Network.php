@@ -114,6 +114,25 @@ class Network
         // TODO proper value check
     }
 
+    public function debug_connect()
+    {
+        if ($this->interface === 'none') {
+            echo('none');
+        }
+
+        if ($this->interface === 'ethernet') {
+            echo 'ethernet ' . $this->getDhcpParams();
+        }
+
+        if ($this->interface === 'wifi') {
+            echo 'wifi ' . $this->getDhcpParams() . ' ' . $this->getWifiParams();
+        }
+
+        if ($this->interface === 'hotspot') {
+            echo 'hotspot ' . $this->getHotspotParams();
+        }
+    }
+
     public function load_network()
     {
         $file = __DIR__ . '/../config/network_settings.json';
