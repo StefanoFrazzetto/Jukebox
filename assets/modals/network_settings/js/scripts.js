@@ -38,10 +38,6 @@ network_type.change(function () {
         stopScan();
     }
 
-    // modules_hash[val].forEach(function (value, key){
-    //  console.log(valu, key);
-    // });
-
     for (var key in modules_hash[val]) {
         if (modules_hash[val][key]) {
             $('#' + key).show();
@@ -54,7 +50,7 @@ network_type.change(function () {
         toggleManualField();
     }
 
-
+    network_type.updateSelector();
 });
 
 $('#network_settings_form').submit(function (e) {
@@ -114,25 +110,42 @@ $('#network_details_forget').click(function () {
 });
 
 
-$.getJSON('assets/config/network_settings.json')
-    .done(function (data) {
-        $.each(data, function (key, value) {
-            var thing = $('#' + key);
+function loadConfigurationFromJson(data) {
+    $.each(data, function (key, value) {
+        var thing = $('#' + key);
 
-            if (value == 'on') {
-                thing.prop('checked', true);
-            } else {
-                thing.val(value);
-                thing.trigger('change');
-            }
-        });
-
-        var val = data.network_type;
-
-        if (typeof val != "undefined" && (val === 2 || val === 1)) {
-            toggleManualField();
+        if (value == 'on') {
+            thing.prop('checked', true);
+        } else {
+            thing.val(value);
         }
+
+        thing.trigger('change');
+        thing.triggerHandler('change');
+    });
+
+    var val = data.network_type;
+
+    if (typeof val != "undefined" && (val == 2 || val == 1)) {
+        toggleManualField();
+    }
+}
+
+function loadDefaultConfiguration() {
+    console.log("Loading the default network configuration file");
+    $.getJSON('/assets/config/default_network_settings.json')
+        .done(function (data) {
+            loadConfigurationFromJson(data);
+        }).fail(function () {
+        error("Unable to load the default configuration file.");
+    });
+}
+
+
+$.getJSON('/assets/config/network_settings.json')
+    .done(function (data) {
+        loadConfigurationFromJson(data);
     })
     .fail(function () {
-        alert("No configuration file found");
+        loadDefaultConfiguration();
     });

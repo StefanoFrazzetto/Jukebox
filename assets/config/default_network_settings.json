@@ -1,0 +1,12 @@
+{
+  "network_type": "1",
+  "dhcp": "on",
+  "ipaddress": "192.168.0.2",
+  "gateway": "192.168.0.1",
+  "subnetmask": "255.255.255.0",
+  "dns1": "8.8.8.8",
+  "ssid": "",
+  "hotspot_ssid": "Jukebox Wifi",
+  "hotspot_password": "password",
+  "hotspot_channel": "1"
+}
