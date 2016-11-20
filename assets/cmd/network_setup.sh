@@ -74,12 +74,12 @@ echo "" > /etc/network/interfaces
 		
 		
 		if [ $Security == "wpa" ]; then 			
-			wpa_passphrase $networkname $password > /etc/wpa_supplicant.conf;			
+			wpa_passphrase "$networkname" "$password" > /etc/wpa_supplicant.conf;
 			echo "	wpa-ssid $networkname" >> /etc/network/interfaces;
 			echo "	wpa-passphrase $password" >> /etc/network/interfaces;
 			
 		elif [ $Security == "wep" ]; then 			
-			wpa_passphrase $networkname $password > /etc/wpa_supplicant.conf;			
+			wpa_passphrase "$networkname" "$password" > /etc/wpa_supplicant.conf;
 			echo "	wireless-essid $networkname" >> /etc/network/interfaces;
 			echo "	wireless-key \"$password\"" >> /etc/network/interfaces;
 		elif [ $Security == "open" ]; then			
@@ -91,20 +91,20 @@ echo "" > /etc/network/interfaces
 		fi
 				
 			
-		 sudo ifconfig $interface down;
+		 sudo ifconfig "$interface" down;
 		 killall wpa_supplicant;
-		 sudo ifconfig $interface up;
-		 sudo dhclient -r $interface;
+		 sudo ifconfig "$interface" up;
+		 sudo dhclient -r "$interface";
 			if [ $Security == "open" ]; then 
-				sudo wpa_supplicant -B -i $interface -c /etc/wpa_supplicant.conf -Dwext &
+				sudo wpa_supplicant -B -i "$interface" -c /etc/wpa_supplicant.conf -Dwext &
 			else
-				sudo wpa_supplicant -Dwext -i$interface -c/etc/wpa_supplicant.conf &
+				sudo wpa_supplicant -Dwext -i"$interface" -c/etc/wpa_supplicant.conf &
 				sleep 3
 			fi
 		 
 		 
 		
-		 sudo dhclient $interface;
+		 sudo dhclient "$interface";
 		 echo "sudo bash /var/www/html/assets/cmd/network_setup.sh \"$1\" \"$2\" \"$3\" \"$4\" \"$5\"  " > /var/www/html/assets/cmd/network_startup.sh
 	else
 		if [ $# != 9 ]; then
