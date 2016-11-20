@@ -7,9 +7,6 @@ $network = new Network();
 
 $network->load_network();
 
-// TODO remove this
-print_r($network);
-
 try {
     $network->connect();
     echo "success";

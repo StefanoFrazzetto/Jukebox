@@ -45,10 +45,8 @@ class Wifi
 
     public function getNetworkByEssid($essid)
     {
-        global $wifiConfig;
-
         try {
-            return $wifiConfig[$essid];
+            return $this->wifiConfig[$essid];
         } catch (Exception $e) {
             return null;
         }
@@ -70,7 +68,7 @@ class Wifi
 
         $network['password'] = self::encodePassword($network['password'], $salt);
 
-        $wifiConfig[$essid] = $network;
+        $this->wifiConfig[$essid] = $network;
 
         $this->saveFile();
     }
@@ -213,7 +211,7 @@ class Wifi
 
     private function getConnectedNetwork()
     {
-        global $interface;
+        $interface = self::getInterface();
 
         $output = shell_exec('sudo iwconfig ' . $interface);
 

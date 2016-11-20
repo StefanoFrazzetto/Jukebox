@@ -68,11 +68,11 @@ class Network
 
     private function getWifiParams()
     {
-        global $wifiConfig;
-
         require_once __DIR__ . '/Wifi.php';
 
-        $network = $wifiConfig[$this->ssid];
+        $wifi = new Wifi();
+
+        $network = $wifi->getNetworkByEssid($this->ssid);
 
         $this->password = Wifi::decodePassword($network['password'], $network['salt']);
 
