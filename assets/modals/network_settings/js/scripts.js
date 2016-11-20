@@ -54,6 +54,11 @@ network_type.change(function () {
 });
 
 $('#network_settings_form').submit(function (e) {
+    var btn = $('.saveBtn');
+    btn.attr('disabled', true);
+    btn.addClass('disabled');
+    btn.val('Wait...');
+
     e.preventDefault();
     var data = $(this).serialize();
 
@@ -71,6 +76,10 @@ $('#network_settings_form').submit(function (e) {
         }
     }).fail(function (a, b, c) {
         error("Something went wrong while contacting the saving network server. " + c);
+    }).always(function () {
+        btn.attr('disabled', false);
+        btn.removeClass('disabled');
+        btn.val('Save');
     });
 });
 

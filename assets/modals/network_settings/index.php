@@ -85,7 +85,7 @@
 
 			<button class="danger" id="network_details_forget">Forget</button>
 
-			<button class="success" onclick="setSelectedNetwork()">Save & Connect</button>
+            <button class="success saveBtn" onclick="setSelectedNetwork()">Save & Connect</button>
 
 			
 		</div>
@@ -93,7 +93,7 @@
 </div>
 
 <div class="modalFooter">
-	<input type="submit" value="Save" class="right" onclick="$('#network_settings_form').submit();" />
+    <input type="submit" value="Save" class="right saveBtn" onclick="$('#network_settings_form').submit();"/>
 </div>
 
 
