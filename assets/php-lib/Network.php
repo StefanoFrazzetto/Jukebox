@@ -116,7 +116,16 @@ class Network
 
     public function load_network()
     {
-        $json = file_get_contents(__DIR__ . '/../config/network_settings.json');
+        $file = __DIR__ . '/../config/network_settings.json';
+        $default_file = __DIR__ . '/../config/default_network_settings.json';
+
+        if (file_exists($file)) {
+            $json = file_get_contents($file);
+        } else {
+            if (!file_exists($default_file))
+                throw new Exception("Default network settings file not found");
+            $json = file_get_contents($default_file);
+        }
 
         $this->set_network_from_json($json);
     }
