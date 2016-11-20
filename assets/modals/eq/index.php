@@ -37,4 +37,4 @@
 	</div>
 </div>
 
-<script type="text/javascript" src="assets/modals/eq/script.js"></script>
+<script type="text/javascript" src="/assets/modals/eq/script.js"></script>
