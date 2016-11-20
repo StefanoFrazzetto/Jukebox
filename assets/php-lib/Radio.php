@@ -74,7 +74,7 @@ class Radio implements JsonSerializable
         $radios = [];
 
         if ($gne == null) {
-            return null;
+            return [];
         }
 
         foreach ($gne as $radaisodai) {
