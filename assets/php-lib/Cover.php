@@ -26,10 +26,10 @@ class Cover
                 break;
             case 2:   //   jpeg -> jpg
                 $this->image = imagecreatefromjpeg($url);
-		    	break;
+                break;
             case 3:  //   png -> jpg
                 $this->image = imagecreatefrompng($url);
-		    	break;
+                break;
         }
 
         return true;
@@ -61,35 +61,41 @@ class Cover
         return $this->getResampledInstance(self::COVER_SIZE, self::COVER_SIZE);
     }
 
-    public function getResampledInstance($sizex, $sizey)
+    public function getResampledInstance($sizex, $sizey, $mantain_ration = false)
     {
         $width = imagesx($this->image);
         $height = imagesy($this->image);
 
-        //$x = $sizex;
-        $y = $sizey;
+        if ($mantain_ration) {
+
+            //$x = $sizex;
+            $y = $sizey;
 
 
-        if($height < $sizey){
-            $y = $height;
+            if ($height < $sizey) {
+                $y = $height;
+            }
+
+            //we should't let the picture be magnified
+
+            $x = intval($width / $height * $y); //Used to maintain the ratio
+
+            $tmp = imagecreatetruecolor($x, $y);
+
+            imagecopyresampled($tmp, $this->image, 0, 0, 0, 0, $x, $y, $width, $height);
+
+
+        } else {
+            $tmp = imagecreatetruecolor($sizex, $sizey);
+
+            imagecopyresampled($tmp, $this->image, 0, 0, 0, 0, $sizex, $sizey, $width, $height);
         }
-
-//        if($width < $sizex){
-//            $x = $width ;
-//        }
-
-        //we should't let the picture be magnified
-
-        $x = intval($width / $height * $y); //Used to maintain the ratio
-
-        $tmp = imagecreatetruecolor($x, $y);
-
-        imagecopyresampled($tmp, $this->image, 0, 0, 0, 0, $x, $y, $width, $height);
 
         return $tmp;
     }
 
-    private function getThumbImage(){
+    private function getThumbImage()
+    {
         return $this->getResampledInstance(self::THUMB_SIZE, self::THUMB_SIZE);
     }
 
