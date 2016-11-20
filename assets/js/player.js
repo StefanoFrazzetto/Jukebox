@@ -322,14 +322,26 @@ function changeAlbum(id, song) {
 }
 
 function deleteAlbum(id) {
-    if (confirm("Are you sure?")) {
-        $.ajax('assets/php/delete_album.php?id=' + id).done(function () {
-            if (id == album_id) {
-                resetPlayer();
-            }
-            reload();
-        });
-    }
+    new Alert({
+        message: "Are you sure you want to delete this album?",
+        title: "Confirm",
+        buttons: [
+            {
+                text: "Yes, delete it",
+                callback: function () {
+                    $.ajax('assets/php/delete_album.php?id=' + id).done(function () {
+                        if (id == album_id) {
+                            resetPlayer();
+                        }
+
+                        closeModal();
+                        reload();
+                    });
+                }
+            },
+            "No, keep it"
+        ]
+    }).show();
 }
 
 function deleteRadio(id) {

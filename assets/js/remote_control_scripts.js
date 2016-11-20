@@ -13,6 +13,7 @@ var remoteControls = $('#remote-controls');
 var playlistSection = $('#playlist-section');
 var menuSection = $('#menu-section');
 var results_container = $('#results');
+var cover = $('#cover');
 
 // The margin imposed by the css layout
 var margin = parseInt(remoteControls.css('padding-left'));
@@ -40,7 +41,7 @@ function albumChangedEvent() {
         getAlbumDetails(playerStatus.album_id, function () {
             var data = albums_storage[playerStatus.album_id];
 
-            $('#cover').attr('src', '/jukebox/' + playerStatus.album_id + '/cover.jpg');
+            cover.attr('src', '/jukebox/' + playerStatus.album_id + '/cover.jpg');
             $('#artist').html(data.artist);
             $('#title').html(data.title);
 
@@ -101,7 +102,7 @@ function radioChangeEvent() {
     var radio = radios_storage[playerStatus.isRadio];
     if (radio == false)
         return;
-    $('#cover').attr('src', radio.cover);
+    cover.attr('src', radio.cover);
     $('#artist').html(radio.name);
     $('#title').html("Radio station");
 }
@@ -518,6 +519,8 @@ $(document).ready(function () {
 
     $('#remote-controls-placeholder').outerHeight(height);
 
+    cover.height(cover.width());
+
     $('#remote-playlist-btn').click(function (e) {
         playlistSection.slider.toggle();
         e.preventDefault();
@@ -565,4 +568,13 @@ $(document).ready(function () {
             updateRemoteStatus($.parseJSON(lol.data));
         });
     });
+});
+
+$(window).resize(function () {
+    var height = remoteControls.outerHeight();
+    margin = parseInt(remoteControls.css('padding-left'));
+
+    $('#remote-controls-placeholder').outerHeight(height);
+
+    cover.height(cover.width());
 });

@@ -1,4 +1,3 @@
-<pre>
 <?php
 
 include __DIR__ . "/../php-lib/Network.php";

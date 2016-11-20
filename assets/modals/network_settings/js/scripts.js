@@ -58,13 +58,19 @@ $('#network_settings_form').submit(function (e) {
     var data = $(this).serialize();
 
     $.ajax({
-        url: "assets/php/set_network_settings.php",
+        url: "/assets/php/set_network_settings.php",
         method: "POST",
         data: data
-    }).done(function () {
-        alert("Network settings saved successfully!");
+    }).done(function (data) {
+
+        if (data == "success")
+            alert("Network settings saved successfully!");
+        else {
+            error("En error occurred while saving. Check the logs for more.");
+            console.log(data);
+        }
     }).fail(function (a, b, c) {
-        error("Something went wrong while saving network settings. " + c);
+        error("Something went wrong while contacting the saving network server. " + c);
     });
 });
 
