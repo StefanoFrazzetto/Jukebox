@@ -396,6 +396,18 @@ function updateRemoteStatus(r) {
 
     function volumeChangeEvent() {
         $('#debug-volume').val(r.volume * 100);
+        $('#volume-slider').slider('value', r.volume * 100);
+
+        var icon = $('#volume-icon');
+
+        icon.removeClass();
+        if (r.volume == 0) {
+            icon.addClass("fa fa-volume-off");
+        } else if (r.volume < .5) {
+            icon.addClass("fa fa-volume-down");
+        } else {
+            icon.addClass("fa fa-volume-up");
+        }
     }
 }
 //endregion
@@ -524,6 +536,20 @@ $(document).ready(function () {
 
     $('#debug-volume').change(function () {
         sendEvent("set_volume", {value: parseFloat($(this).val())});
+    });
+
+    $('#volume-slider').slider({
+        //Config
+        range: "min",
+        animate: "fast",
+        min: 0,
+        change: function (event, ui) {
+            sendEvent("set_volume", {value: ui.value});
+        }
+    });
+
+    $('#volume-icon').click(function () {
+        sendEvent("set_volume", {value: 0});
     });
 
     loadAlbumStorage();

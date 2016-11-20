@@ -39,8 +39,8 @@
             <div id="log" class="hidden"></div>
 
             <div id="cover-label">
-                <div id="artist">-</div>
-                <div id="title">-</div>
+                <div id="artist"></div>
+                <div id="title"></div>
             </div>
 
             <div class="progressBar thin">
@@ -73,6 +73,10 @@
     </div>
     <div id="menu-section">
         <ul class="multiselect">
+            <li class="text-center">
+                <i class="fa fa-volume-up" id="volume-icon"></i>
+                <div id="volume-slider" class="progressBar thin"></div>
+            </li>
             <li>
                 <label for="debug-volume">Volume</label>
                 <input step="0.1" type="number" id="debug-volume"/>
@@ -89,6 +93,7 @@
 
 
 <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="assets/js/remote_client.js?<?php echo uniqid() ?>"></script>
 <script type="text/javascript" src="assets/js/remote_control_scripts.js?<?php echo uniqid() ?>"></script>
 </body>
