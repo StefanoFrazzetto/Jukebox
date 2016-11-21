@@ -38,7 +38,7 @@ $width: 850px;
   display: none;
 
   min-height: $min-height;
-  max-height: 450px;
+  //max-height: 450px;
   z-index: 100;
 
   @include window;
@@ -74,12 +74,10 @@ $width: 850px;
 
   .modalFooter {
     padding: 10px;
+    min-height: 56px;
     width: $width;
     border-top: 1px solid $border_color;
     box-sizing: border-box;
-    .box-btn {
-      margin-bottom: 9px;
-    }
   }
 
   .ajaxloader {
