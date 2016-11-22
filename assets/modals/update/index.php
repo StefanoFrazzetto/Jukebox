@@ -13,11 +13,13 @@
     <div class="center">
         <div class="col-left">
             <div id="loader">
+                <p></p>
                 <i class="fa fa-spinner fa-5x fa-spin"></i>
                 <p>Checking for updates...</p>
             </div>
 
             <div id="updating" class="hidden">
+                <p></p>
                 <i class="fa fa-spinner fa-5x fa-spin"></i>
                 <p>Updating...</p>
             </div>
@@ -28,6 +30,7 @@
                 <button class="check-update-btn">
                     <i class="fa fa-refresh"></i> Check for update
                 </button>
+                <button class="update-btn"><i class="fa fa-arrow-circle-o-up"></i> UPDATE</button>
             </div>
 
             <div id="not-up-to-date" class="hidden">
@@ -43,7 +46,7 @@
                 <button class="check-update-btn"><i class="fa fa-refresh"></i> Check for update</button>
             </div>
         </div>
-        <div class="col-right mCustomScrollbar" style="max-height: 165px">
+        <div class="col-right mCustomScrollbar" style="max-height: 155px">
             Latest changes:
             <ul class="changes" style="text-align: left">
                 <?php
@@ -100,6 +103,7 @@
     checkForUpdates();
 
     $('.update-btn').click(function () {
+        $('#up-to-date, #not-up-to-date, #error').hide();
         var updating = $('#updating');
         updating.show();
 
