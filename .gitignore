@@ -9,3 +9,6 @@ phpmyadmin
 info.php
 zwytytws_albums.sql
 jukebox.iml
+
+# Ignore log files globaly
+*.log
