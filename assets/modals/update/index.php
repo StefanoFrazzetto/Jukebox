@@ -30,7 +30,6 @@
                 <button class="check-update-btn">
                     <i class="fa fa-refresh"></i> Check for update
                 </button>
-                <button class="update-btn"><i class="fa fa-arrow-circle-o-up"></i> UPDATE</button>
             </div>
 
             <div id="not-up-to-date" class="hidden">
