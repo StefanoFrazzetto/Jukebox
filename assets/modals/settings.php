@@ -46,6 +46,7 @@ function getSpeakerStatus()
         <button onclick="$.ajax('assets/cmd/exec.php?cmd=reboot');">Reboot</button>
         <button onclick="$.ajax('assets/cmd/exec.php?cmd=eject');">Eject</button>
         <button onclick="$.ajax('assets/php/calibrate_screen.php');">Calibrate Screen</button>
+        <button onclick="openModalPage('assets/modals/update');">Update</button>
         <button onclick="location.reload();">Refresh</button>
         <button class="nuclear" onclick="openModalPage('assets/modals/format.php');">Factory Reset</button>
     </div>
