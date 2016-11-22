@@ -14,7 +14,12 @@
         <div class="col-left">
             <div id="loader">
                 <i class="fa fa-spinner fa-5x fa-spin"></i>
-                <p>Checking for updates</p>
+                <p>Checking for updates...</p>
+            </div>
+
+            <div id="updating" class="hidden">
+                <i class="fa fa-spinner fa-5x fa-spin"></i>
+                <p>Updating...</p>
             </div>
 
             <div id="up-to-date" class="hidden">
@@ -61,12 +66,6 @@
     var updateTried = false;
 
     function checkForUpdates() {
-
-        function error(error) {
-            $('#errorMessage').html(error);
-            $('#error').show();
-        }
-
         $('#up-to-date, #not-up-to-date, #error').hide();
         $('#loader').show();
 
@@ -86,20 +85,34 @@
                 }
             })
             .fail(function () {
-                error("Failed to contact the update server");
+                error("Failed to contact the update checker.");
             })
             .always(function () {
                 $('#loader').hide();
             });
     }
 
+    function error(error) {
+        $('#errorMessage').html(error);
+        $('#error').show();
+    }
+
     checkForUpdates();
 
     $('.update-btn').click(function () {
+        var updating = $('#updating');
+        updating.show();
+
         $.ajax('/assets/cmd/exec.php?cmd=git_force_pull')
             .done(function () {
                 updateTried = true;
                 checkForUpdates();
+            })
+            .fail(function () {
+                error("Failed to contact the update server.")
+            })
+            .always(function () {
+                updating.hide();
             });
     });
 
