@@ -15,7 +15,7 @@ function getConsecutiveCombinations($array) {
 }
 
 if (!$album_count = count($_SESSION['possible_albums']) OR ! $artist_count = count($_SESSION['possible_artist'])) { // if there are no album or artist get from id3 it will try to get some from the filenames
-    require '../../php-lib/isThisPatternEverywhere.php';
+    require '../../php-lib/uploader_utilities/isThisPatternEverywhere.php';
     $tracks = $_SESSION['tracks'];
     $urls = array_column($tracks, 'url');
     $name_slices = explode('-', preg_replace('/(\.[^.]*$)/', '', $urls[0]));

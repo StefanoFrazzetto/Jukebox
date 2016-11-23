@@ -33,7 +33,7 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
         $extension = pathinfo($name, PATHINFO_EXTENSION);
         session_start();
         if (in_array(strtolower($extension), $allowed_music)) {
-            require '../php-lib/phpID3.php';
+            require '../php-lib/uploader_utilities/phpID3.php';
         }
         if (in_array(strtolower($extension), $allowed_cover)) {
             $_SESSION['covers'][] = $sanitizedName;

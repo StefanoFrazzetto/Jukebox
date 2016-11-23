@@ -25,14 +25,14 @@ $error = false;
         goto footer;
     }
 
-    require '../../php-lib/matrix-sorter.php';
+    require '../../php-lib/uploader_utilities/matrix-sorter.php';
 
     if (areAllTrackNoPresent($tracks)) {
         $sortBy = 'cd,track_no,title';
         //echo 'ci su tutti pari, figgh\'i bottana ';
     } else {
 
-        require '../../php-lib/isThisPatternEverywhere.php';
+        require '../../php-lib/uploader_utilities/isThisPatternEverywhere.php';
 
         /* MESSY STUFF STARTS HERE */
         /* this should get useful data from the filenames*/
