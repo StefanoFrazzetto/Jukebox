@@ -1,5 +1,7 @@
 <?php
 
+ini_set("error_log", __DIR__ . "/../../logs/network-errors.log");
+
 class Network
 {
 

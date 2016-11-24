@@ -1,4 +1,7 @@
 <?php
+
+ini_set("error_log", __DIR__ . "/../../logs/set-network-errors.log");
+
 $output = $_POST;
 
 $json = json_encode($output);
