@@ -1,6 +1,6 @@
 <?php
 require '../php-lib/dbconnect.php';
-require '../php-lib/getMp3Length.php';
+require '../php-lib/uploader_utilities/getMp3Length.php';
 
 function addZeroes($digit)
 {
