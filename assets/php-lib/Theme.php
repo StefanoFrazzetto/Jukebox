@@ -184,6 +184,30 @@ class Theme implements JsonSerializable
     }
 
     /**
+     * Returns the currently applied theme object. Even if it shouldn't happen, will return null in case of failure.
+     * @return Theme | null on failure
+     */
+    public static function getAppliedTheme()
+    {
+        if ($id = self::getAppliedId())
+            return self::getThemeById($id);
+        else
+            return null;
+    }
+
+    /**
+     * @return int
+     */
+    private static function getAppliedId()
+    {
+        $line = fgets(fopen(self::THEME_FILE, 'r'));
+
+        $line = str_replace('//', '', $line);
+
+        return intval($line);
+    }
+
+    /**
      * Saves the theme to the database
      * @return bool true on success
      */
@@ -256,6 +280,7 @@ class Theme implements JsonSerializable
     }
 
     //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
+
     /**
      * @return string
      */
