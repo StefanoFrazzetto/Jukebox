@@ -177,6 +177,10 @@ class Theme implements JsonSerializable
         \$dark_accents: $dark_accents;";
 
         file_put_contents(self::THEME_FILE, $theme);
+
+        $script = __DIR__ . '/../nodejs/sass.js';
+
+        exec("node $script");
     }
 
     /**

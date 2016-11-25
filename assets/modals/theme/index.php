@@ -32,9 +32,10 @@ $themes = Theme::getAllThemes();
                 .done(function (data) {
                     if (data == 'success') {
                         alert("Theme applied successfully");
+
                         setTimeout(function () {
-                            realoadCSS();
-                        }, 500);
+                            reloadCSS();
+                        }, 250);
 
                     } else {
                         error(data);
@@ -43,12 +44,11 @@ $themes = Theme::getAllThemes();
                 .fail(function (x, xx) {
                     error("Failed to change theme. " + xx);
                 })
-                .always()
-            ;
+                .always();
         });
     }
 
-    function realoadCSS() {
+    function reloadCSS() {
         var queryString = '?reload=' + new Date().getTime();
         $('link[rel="stylesheet"]').each(function () {
             this.href = this.href.replace(/\?.*|$/, queryString);
