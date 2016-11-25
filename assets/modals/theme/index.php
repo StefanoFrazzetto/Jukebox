@@ -9,6 +9,7 @@
 include '../../php-lib/Theme.php';
 
 $themes = Theme::getAllThemes();
+$current_theme = Theme::getAppliedTheme();
 ?>
 <div class="modalHeader">Themes</div>
 <div class="modalBody">
@@ -17,7 +18,8 @@ $themes = Theme::getAllThemes();
             <?php
             foreach ($themes as $theme) {
                 $id = $theme->getId();
-                echo "<li data-id='$id'>", $theme->getName(), "</li>";
+                $class = $id == $current_theme->getId() ? 'active' : '';
+                echo "<li data-id='$id' class='$class'>", $theme->getName(), "</li>";
             }
             ?>
         </ul>
@@ -26,7 +28,8 @@ $themes = Theme::getAllThemes();
 <script>
     function bindClicks() {
         $('#themes-list').find('li').click(function () {
-            var id = $(this).attr('data-id');
+            var el = $(this);
+            var id = el.attr('data-id');
 
             $.ajax('/assets/modals/theme/ajax/set_theme.php?id=' + id)
                 .done(function (data) {
@@ -35,6 +38,8 @@ $themes = Theme::getAllThemes();
 
                         setTimeout(function () {
                             reloadCSS();
+                            el.siblings().removeClass('active');
+                            el.addClass('active');
                         }, 250);
 
                     } else {
