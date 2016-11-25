@@ -25,6 +25,9 @@ print_r($network);
 echo "<hr/>Command: ";
 $network->debug_connect();
 
+echo "<hr/>Connected Wifi Network: ";
+$wifi->getConnectedNetwork();
+
 echo "<hr/>Network scan ";
 
 ob_flush();

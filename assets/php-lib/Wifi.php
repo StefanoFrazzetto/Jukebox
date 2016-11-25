@@ -212,7 +212,7 @@ class Wifi
         return strpos($haystack, $needle) !== false;
     }
 
-    private function getConnectedNetwork()
+    public function getConnectedNetwork()
     {
         $interface = self::getInterface();
 
