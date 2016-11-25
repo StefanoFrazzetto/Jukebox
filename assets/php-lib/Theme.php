@@ -10,7 +10,7 @@ require __DIR__ . '/../php/Database.php';
 
 class Theme implements JsonSerializable
 {
-    const THEME_FILE = __DIR__ . '/../scss/_colors_theme.scss';
+    const THEME_FILE = '/var/www/html/assets/scss/_colors_theme.scss';
 
     private $name = "Theme";
     /**
