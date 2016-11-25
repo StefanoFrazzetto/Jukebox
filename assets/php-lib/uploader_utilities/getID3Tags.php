@@ -1,6 +1,7 @@
 <?php
 
-function readRow($table, $row) {
+function readRow($table, $row)
+{
     //^[[:alnum:]]+:\W(.*)$
     $pattern = '/\n' . $row . ':\W(.*)\n/';
     if (preg_match($pattern, $table, $matches) !== FALSE) {
@@ -9,14 +10,17 @@ function readRow($table, $row) {
         return FALSE;
 }
 
-function preg_remove($pattern, &$string) {
+function preg_remove($pattern, &$string)
+{
     $string = preg_replace($pattern, '', $string);
 }
 
-function getID3Tags($file) {
+function getID3Tags($file)
+{
     if (file_exists($file)) {
         $cmd = "id3v2 -R \"$file\"";
         $output = shell_exec($cmd);
+        $return = new stdClass();
         $return->title = readRow($output, 'TIT2');
         $return->album = readRow($output, 'TALB');
         $return->artist = readRow($output, 'TPE1');

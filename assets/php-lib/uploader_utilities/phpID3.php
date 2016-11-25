@@ -5,22 +5,24 @@ require __DIR__ . '/getMp3Length.php';
 
 $tags = getID3Tags($tmp_folder . $sanitizedName);
 
-$this_track;
+$this_track = [];
 
 $this_album = remove_bad_stuff($tags->album);
 
 if ($this_album) {
-    if (!in_array($this_album, $_SESSION['possible_albums'])) {
-        $_SESSION['possible_albums'][] = $this_album;
-    }
+    if (isset($_SESSION['possible_albums']))
+        if (!in_array($this_album, $_SESSION['possible_albums'])) {
+            $_SESSION['possible_albums'][] = $this_album;
+        }
 }
 
 $this_artist = remove_bad_stuff($tags->artist);
 
 if ($this_artist) {
-    if (!in_array($this_artist, $_SESSION['possible_artist'])) {
-        $_SESSION['possible_artist'][] = $this_artist;
-    }
+    if (isset($_SESSION['possible_artist']))
+        if (!in_array($this_artist, $_SESSION['possible_artist'])) {
+            $_SESSION['possible_artist'][] = $this_artist;
+        }
 }
 
 $title = remove_bad_stuff($tags->title);
