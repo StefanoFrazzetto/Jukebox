@@ -21,11 +21,17 @@ class Theme implements JsonSerializable
      * @var boolean
      */
     private $dark_accents;
-
+    /**
+     * @var boolean
+     */
     private $isStored;
-
+    /**
+     * @var int
+     */
     private $id;
-
+    /**
+     * @var bool
+     */
     private $isReadOnly = false;
 
     /**
@@ -117,7 +123,6 @@ class Theme implements JsonSerializable
 
             return $theme;
         } catch (Exception $e) {
-            echo $e;
             return null;
         }
     }
@@ -162,14 +167,14 @@ class Theme implements JsonSerializable
     {
         $dark_accents = $this->dark_accents ? "true" : "false";
 
-        $theme = "        // $this->id
+        $theme = "        //$this->id
         \$text_color: $this->text_color;
         \$background_color: $this->background_color;
         \$background_color_highlight: $this->background_color_highlight;
         \$border_color: $this->border_color;
         \$overlays: $this->overlays;
         \$highlight_color: $this->highlight_color;
-        \$dark_accents: $dark_accents";
+        \$dark_accents: $dark_accents;";
 
         file_put_contents(self::THEME_FILE, $theme);
     }
@@ -245,4 +250,150 @@ class Theme implements JsonSerializable
             "dark_accents" => $this->dark_accents,
             "read_only" => $this->isReadOnly];
     }
+
+    //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
+    /**
+     * @return string
+     */
+    public function getTextColor()
+    {
+        return $this->text_color;
+    }
+
+    /**
+     * @param string $text_color
+     */
+    public function setTextColor($text_color)
+    {
+        $this->text_color = $text_color;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackgroundColor()
+    {
+        return $this->background_color;
+    }
+
+    /**
+     * @param string $background_color
+     */
+    public function setBackgroundColor($background_color)
+    {
+        $this->background_color = $background_color;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackgroundColorHighlight()
+    {
+        return $this->background_color_highlight;
+    }
+
+    /**
+     * @param string $background_color_highlight
+     */
+    public function setBackgroundColorHighlight($background_color_highlight)
+    {
+        $this->background_color_highlight = $background_color_highlight;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBorderColor()
+    {
+        return $this->border_color;
+    }
+
+    /**
+     * @param string $border_color
+     */
+    public function setBorderColor($border_color)
+    {
+        $this->border_color = $border_color;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOverlays()
+    {
+        return $this->overlays;
+    }
+
+    /**
+     * @param string $overlays
+     */
+    public function setOverlays($overlays)
+    {
+        $this->overlays = $overlays;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHighlightColor()
+    {
+        return $this->highlight_color;
+    }
+
+    /**
+     * @param string $highlight_color
+     */
+    public function setHighlightColor($highlight_color)
+    {
+        $this->highlight_color = $highlight_color;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDarkAccents()
+    {
+        return $this->dark_accents;
+    }
+
+    /**
+     * @param boolean $dark_accents
+     */
+    public function setDarkAccents($dark_accents)
+    {
+        $this->dark_accents = $dark_accents;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsReadOnly()
+    {
+        return $this->isReadOnly;
+    }
+    //</editor-fold>
 }
