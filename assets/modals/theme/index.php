@@ -18,7 +18,8 @@ $current_theme = Theme::getAppliedTheme();
             <?php
             foreach ($themes as $theme) {
                 $id = $theme->getId();
-                $class = $id == $current_theme->getId() ? 'active' : '';
+                $current_theme_id = $current_theme != null ? $current_theme->getId() : 0;
+                $class = $id == $current_theme_id ? 'active' : '';
                 echo "<li data-id='$id' class='$class'>", $theme->getName(), "</li>";
             }
             ?>
