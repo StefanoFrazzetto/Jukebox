@@ -18,6 +18,14 @@ $musicbrainz_json = "/var/www/html/jukebox/cdparanoia/musicbrainz.json";
 $devicedisc_json = "/var/www/html/jukebox/cdparanoia/devicedisc.json";
 $tracklist_json = "/var/www/html/jukebox/ripper_encoded/tracklist.json";
 
+if (!file_exists($ripping_folder)) {
+    mkdir($ripping_folder);
+}
+
+if (!file_exists($encoding_folder)) {
+    mkdir($encoding_folder);
+}
+
 function storeDeviceDiscInfo($data)
 {
     global $devicedisc_json;
