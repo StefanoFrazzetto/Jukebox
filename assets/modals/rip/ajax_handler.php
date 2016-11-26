@@ -7,7 +7,7 @@ $ripper['total_tracks'] = $total_tracks;
 $ripper['cd_title'] = getCDTitle();
 
 function percentage($partial, $total){
-    if($partial == 0 && $total == 0) {
+    if ($partial == 0 || $total == 0) {
         $percentage = 0 ;
     } else {
         $percentage = intval(floor(($partial/$total)*100));
