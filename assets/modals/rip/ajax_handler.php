@@ -7,6 +7,10 @@ $ripper['total_tracks'] = $total_tracks;
 $ripper['cd_title'] = getCDTitle();
 
 function percentage($partial, $total){
+    // Fix division by zero error
+    $partial = intval($partial);
+    $total = intval($total);
+
     if ($partial == 0 || $total == 0) {
         $percentage = 0 ;
     } else {
@@ -15,21 +19,43 @@ function percentage($partial, $total){
     return $percentage;
 }
 
+/**
+ * Count the ripped tracks and outputs status, number of ripped tracks and the percentage.
+ */
 function ajaxRipping () {
     global $ripper;
     $processed = countRippedTracks();
     $ripper = array_merge($ripper, array("status" => "ripping", "processed_tracks" => $processed, "percentage" => percentage($processed, $ripper['total_tracks'])));
-    echo json_encode($ripper);
-    //var_dump(json_encode($ripper));
+
+    outputMessage("ripping", $processed, percentage($processed, $ripper['total_tracks']));
 }
 
+/**
+ * Count the encoded track and outputs status, number of encoded tracks and the percentage.
+ */
 function ajaxEncoding () {
     global $ripper;
-    $processed = countEncodedTracks();
     $ripped = countRippedTracks();
+    $encoded = countEncodedTracks();
     $ripper['total_tracks'] = $ripped;
-    $ripper = array_merge($ripper, array("status" => "encoding", "processed_tracks" => $processed, "percentage" => percentage($processed, $ripped)));
-    echo json_encode($ripper);
+
+    outputMessage("encoding", $encoded, percentage($encoded, $ripped));
+}
+
+/**
+ * Outputs the json encoded message.
+ *
+ * @param $status
+ * @param int $proc_tracks
+ * @param int $percentage
+ */
+function outputMessage($status, $proc_tracks = 0, $percentage = 0)
+{
+    global $ripper;
+    $res = array("status" => $status, "processed_tracks" => $proc_tracks, "percentage" => $percentage);
+    $res = array_merge($ripper, $res);
+
+    echo json_encode($res);
 }
 
 if (!isset($_SESSION['CD'])) {
@@ -64,11 +90,13 @@ if( isRipping() ) {
         if ( countRippedTracks() == 0 && $anything_encoded) {
 
             startRipping();
+            outputMessage("starting the process");
 
         } elseif ( countRippedTracks() != 0 && $anything_encoded ) {
 
             // There're already ripped tracks and it's not ripping, let's encode them.
             startEncoding();
+            outputMessage("encoding");
 
         } elseif ( !$anything_encoded ) {
 
