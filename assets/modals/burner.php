@@ -47,7 +47,7 @@
 </style>
 
 <div class="modalHeader">
-    <center>Burner</center>
+    <div style="text-align: center;">Burner</div>
 </div>
 <div id="burner_modal" class="modalBody" data-mcs-theme="dark">
 
@@ -227,7 +227,7 @@
         $('#burner_step2').hide();
         $('#burner_step3').show();
         $('#burner-status').html("Copying");
-        $('#burner-message').html("Please wait...The process has been started.");
+        $('#burner-message').html("Please wait... The process has been started.");
         resetProgressBar();
         $('.burner-icons-copying').css('opacity', '1');
         burnerHandler("burn");
@@ -344,7 +344,7 @@
 
             // Progress bar and icons update
             var burner_status = output['status'].toLowerCase();
-            var burner_nextCD = output['nextCD'].toLowerCase();
+            var burner_nextCD = output['nextCD'];
 
             progressHandler(burner_status, burner_nextCD);
 

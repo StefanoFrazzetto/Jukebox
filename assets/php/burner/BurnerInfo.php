@@ -142,14 +142,14 @@ class BurnerInfo
 				break;
 
 			case self::$_status_complete:
-				$message = "Process completed!";
+                $message = "Your disc is ready!";
 				self::setPercentage(100);
 				unlink(self::$_burner_status);
 				// Check if there's something else to burn.
 				$tracks = TracksHandler::getTracksJSON();
 				if($tracks !== null && count($tracks) > 0) {
 					$nextCD = true;
-					$message = "Ready. Insert the next CD";
+                    $message = "Ready. Insert the NEXT DISC.";
 				}
 				break;
 			
