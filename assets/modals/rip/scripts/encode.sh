@@ -1,15 +1,15 @@
 #!/bin/bash
 
-tracks=$(find /var/www/html/jukebox/cdparanoia/ -type f -name "*.wav")
-target="/var/www/html/jukebox/ripper_encoded"
+TRACKS=$(find /var/www/html/jukebox/cdparanoia/ -type f -name "*.wav")
+TARGET="/var/www/html/jukebox/ripper_encoded"
 
-mkdir -p "$target"
+mkdir -p "$TARGET"
 
-for track in $tracks;
+for track in "$TRACKS";
 do
 	tr=$(basename "$track")
-	trackname="${tr%.*}"
+	track_name="${tr%.*}"
 	#echo "Now converting $trackname"
-	lame --vbr-new "$track" "$target/$trackname".mp3
+	lame --vbr-new "$track" "$TARGET/$track_name".mp3
 done
 exit
