@@ -10,6 +10,6 @@ do
 	tr=$(basename "$track")
 	track_name="${tr%.*}"
 	#echo "Now converting $trackname"
-	lame --vbr-new "$track" "$TARGET/$track_name".mp3
+	lame --vbr-new "$track" "$TARGET/$track_name".mp3 > /dev/null 2>&1
 done
 exit
