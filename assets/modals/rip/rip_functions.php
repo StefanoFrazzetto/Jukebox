@@ -205,7 +205,7 @@ function startRipping()
     global $scripts;
     delRipped();
     $_SESSION['ripping']['status'] = 'ripping';
-    exec("$scripts/rip.sh | at now >> /tmp/cdparanoia_log.log 2>&1 &");
+    exec("$scripts/rip.sh >> /tmp/cdparanoia_log.log 2>&1 &");
 }
 
 /**
@@ -215,7 +215,7 @@ function startEncoding()
 {
     global $scripts;
     $_SESSION['ripping']['status'] = 'encoding';
-    exec("$scripts/encode.sh | at now >> /tmp/lame_log.log 2>&1 &");
+    exec("$scripts/encode.sh >> /tmp/lame_log.log 2>&1 &");
 }
 
 /**
