@@ -1,13 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Stefano
- * Date: 07/02/2016
- * Time: 12:08
- */
-
-?>
-
 <style>
     .center {
         text-align: center;
