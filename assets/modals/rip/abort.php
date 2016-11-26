@@ -15,7 +15,7 @@ exec("$scripts/remove_encoded.sh > /dev/null 2>&1 &");
 
 <div class="modalHeader">Operation canceled</div>
 <div class="modalBody">
-	<center>
+	<div class="center">
 		<div>The operation has been canceled.</div>
-	</center>
+	</div>
 </div>
