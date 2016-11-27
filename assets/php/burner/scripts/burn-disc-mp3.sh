@@ -1,8 +1,9 @@
 #!/bin/bash
 device=$1
 input_directory=$2
-file_name=$3
+log_file=$3
 
-wodim -dao -speed=2 -eject dev="/dev/$device" ${input_directory}/${file_name}.iso > /tmp/burner.log 2>&1
+
+wodim -dao -speed=2 -eject dev="/dev/$device" ${input_directory}/*.iso > $log_file 2>&1
 
 exit

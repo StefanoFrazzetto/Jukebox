@@ -13,6 +13,7 @@ class BurnerHandler {
 	public static $_burner_status_file = "/tmp/burner_status.json";
 	public static $_burner_scripts = "./scripts";
 	public static $_burner_abs_scripts = "/var/www/html/assets/php/burner/scripts";
+    public static $_burner_logs = "/tmp";
 
 	private static $_status_idle = "Idle";
 	private static $_status_decoding = "Decoding";

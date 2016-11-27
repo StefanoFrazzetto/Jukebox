@@ -1,3 +1,3 @@
 <?php
 
-$burner_folder = "/tmp/burner/";
+$burner_folder = "/var/www/html/jukebox/burner";

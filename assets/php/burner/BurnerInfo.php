@@ -12,18 +12,18 @@ require_once "autoload.php";
 */
 class BurnerInfo
 {
-
-	protected static $_status_idle = "Idle";
-	protected static $_status_decoding = "Decoding";
-	protected static $_status_iso = "Creating ISO";
-	protected static $_status_normalizing = "Normalizing";
-	protected static $_status_burning = "Burning";
-	protected static $_status_complete = "Complete";
-
-	protected static $_burner_folder = "/tmp/burner/";
+    protected static $_burner_folder = "/var/www/html/jukebox/burner";
 	protected static $_burner_status = "/tmp/burner_status.json";
 	protected static $_burner_message = "/tmp/burner_message.json";
-    protected static $_burner_output = "/tmp/burner.log";
+    protected static $_burn_output = "/tmp/burn.log";
+    protected static $_decode_output = "/tmp/decode.log";
+
+    protected static $_status_idle = "Idle";
+    protected static $_status_decoding = "Decoding";
+    protected static $_status_iso = "Creating ISO";
+    protected static $_status_normalizing = "Normalizing";
+    protected static $_status_burning = "Burning";
+    protected static $_status_complete = "Complete";
 
 	protected $output_format;
 
@@ -170,7 +170,7 @@ class BurnerInfo
 
 		$this->partial_progress = $this->percentage($partial, $total);
 
-		$handle = fopen(self::$_burner_output, "r");
+        $handle = fopen(self::$_decode_output, "r");
 		if ($handle) {
 			while (($line = fgets($handle)) !== false) {
 		        if(strpos($line, 'input:'))
@@ -206,7 +206,7 @@ class BurnerInfo
 	}
 
 	protected function burning() {
-		$file_content = file_get_contents(self::$_burner_output);
+        $file_content = file_get_contents(self::$_burn_output);
 		
 		$tracks_count = substr_count($file_content, "Track");
 		$total = FileUtil::countFiles(BurnerHandler::$_burner_folder, "mp3");

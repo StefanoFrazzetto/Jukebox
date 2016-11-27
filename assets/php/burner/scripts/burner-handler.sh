@@ -3,10 +3,9 @@
 # Created by Stefano Frazzetto
 
 scripts="/var/www/html/assets/php/burner/scripts"
-burner_folder="/tmp/burner";
 status_file="/tmp/burner_status.json"
 message_file="/tmp/burner_message.json"
-output_file="/tmp/burner.log"
+
 status="Idle"
 
 if [[ ! $input_directory || ! $device || ! $output_format ]]; then
@@ -33,13 +32,13 @@ normalize() {
 
 	tracks=$(find "$input_directory" -type f -name "*.$1")
 
-	total_tracks=$(ls -l $burner_folder | grep .*.mp3 | wc -l)
+	total_tracks=$(ls -l $input_directory | grep .*.mp3 | wc -l)
 	counter=0
 	for track in $tracks;
 	do
 		counter=$((counter+1))
 		setPercentage $counter $total_tracks
-		$scripts/normalize-audio.sh "$track"
+		$scripts/normalize-audio.sh "$track" "$output_log_dir/normalize.log"
 	done
 }
 
@@ -49,12 +48,12 @@ normalize() {
 if [ "$output_format" == wav ]; then
 	setStatus "Decoding"
 
-	$scripts/decode.sh "$input_directory" $output_file
+	$scripts/decode.sh "$input_directory" "$output_log_dir/decode.log"
 
 	normalize "wav"
 
 	setStatus "Burning"
-	$scripts/burn-disc-wav.sh "$device" $input_directory $output_file
+	$scripts/burn-disc-wav.sh "$device" $input_directory "$output_log_dir/burn.log"
 fi
 
 
@@ -66,13 +65,13 @@ if [ "$output_format" == mp3 ]; then
 	normalize "mp3"
 
 	setStatus "Creating ISO image"
-	$scripts/mp3toiso.sh "$input_directory" $file_name $output_file
+	$scripts/mp3toiso.sh "$input_directory" $file_name $"$output_log_dir/mp3toiso.log"
 
 	setStatus "Burning"
-	$scripts/burn-disc-mp3.sh "$device" $input_directory $file_name $output_file
+	$scripts/burn-disc-mp3.sh "$device" $input_directory $file_name "$output_log_dir/burn.log"
 fi
 
-rm -rfv $input_directory
+#rm -rfv $input_directory
 
 setStatus "Complete"
 

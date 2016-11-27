@@ -12,4 +12,5 @@ require_once "TracksHandler.php";
 require_once "BurnerHandler.php";
 require_once "../../php-lib/Utility.php";
 
-$scripts = "./scripts/";
+$burner_folder = BurnerHandler::$_burner_folder;
+$scripts = BurnerHandler::$_burner_abs_scripts;

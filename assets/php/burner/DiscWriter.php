@@ -56,7 +56,7 @@ class DiscWriter {
     public function checkDiscBlank() {
         $command = CommandExecuter::raw(CommandExecuter::$scripts_folder . "CdCheck.sh");
 
-        if (strpos($command, 'Unknown') !== false) {
+        if (strpos($command, '<<No disc in drive>>') !== false) {
             return false;
         } elseif (strpos($command, 'DVD') !== false) {
             $this->checkBlank();
@@ -79,8 +79,9 @@ class DiscWriter {
 		putenv("input_directory=$directory");
 		putenv("device=$this->device");
 		putenv("output_format=$output_format");
+        putenv("output_log_dir=" . BurnerHandler::$_burner_logs);
 
-		shell_exec("$scripts/burner-handler.sh > /dev/null 2>&1 &");
+        shell_exec("$scripts/burner-handler.sh > /tmp/burner-errors.log 2>&1 &");
 		
 	}
 
