@@ -2,6 +2,6 @@
 device=$1
 input_directory=$2
 
-sudo wodim -nocopy -eject dev="/dev/$device" -audio -pad $input_directory/*.wav > $3 2>&1
+wodim speed=1 -nocopy -eject dev="/dev/$device" -pad -audio ${input_directory}/*.wav > /tmp/burner.log 2>&1
 
 exit

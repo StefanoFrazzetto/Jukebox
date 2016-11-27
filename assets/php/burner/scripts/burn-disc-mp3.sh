@@ -3,6 +3,6 @@ device=$1
 input_directory=$2
 file_name=$3
 
-sudo wodim -dao -speed=4 -eject dev="/dev/$device" $input_directory/$file_name.iso > $4 2>&1
+wodim -dao -speed=2 -eject dev="/dev/$device" ${input_directory}/${file_name}.iso > /tmp/burner.log 2>&1
 
 exit
