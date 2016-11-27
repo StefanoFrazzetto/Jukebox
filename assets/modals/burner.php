@@ -348,6 +348,10 @@
 
             progressHandler(burner_status, burner_nextCD);
 
+            if (burner_status != "idle" || burner_status != "complete") {
+                $('#burner_step2').hide();
+            }
+
             $.each(output, function (index, value) {
                 // console.log("INDEX: " + index);
                 // console.log("VALUE: " + value);
