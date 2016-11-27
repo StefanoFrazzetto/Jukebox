@@ -97,7 +97,7 @@ class Theme implements JsonSerializable
         $themes = [];
 
         foreach ($results as $result)
-            $themes[] = self::makeThemeFromDBObject($result);
+            $themes[] = self::makeThemeFromObject($result);
 
         return $themes;
 //        return [
@@ -109,22 +109,24 @@ class Theme implements JsonSerializable
 //        ];
     }
 
-    private static function makeThemeFromDBObject($db_object)
+    public static function makeThemeFromObject($db_object, $stored = true)
     {
-        try {
-            /** @noinspection PhpUndefinedFieldInspection */
-            $theme = new Theme($db_object->name, $db_object->text_color, $db_object->background_color_highlight, $db_object->background_color, $db_object->border_color, $db_object->overlays, $db_object->highlight_color, boolval($db_object->dark_accents));
 
-            $theme->isReadOnly = boolval($db_object->read_only);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $theme = new Theme($db_object->name, $db_object->text_color, $db_object->background_color_highlight, $db_object->background_color, $db_object->border_color, $db_object->overlays, $db_object->highlight_color, boolval($db_object->dark_accents));
 
-            $theme->isStored = true;
+        $theme->isReadOnly = boolval($db_object->read_only);
 
+        $theme->isStored = $stored;
+
+        if ($stored) {
+            if (!isset($db_object->id))
+                throw new Exception("The theme was supposed to be stored, but it's lacking of id");
             $theme->id = $db_object->id;
-
-            return $theme;
-        } catch (Exception $e) {
-            return null;
         }
+
+        return $theme;
+
     }
 
     /**
@@ -157,7 +159,7 @@ class Theme implements JsonSerializable
         if ($result == null)
             return null;
 
-        return self::makeThemeFromDBObject($result);
+        return self::makeThemeFromObject($result);
     }
 
     /**

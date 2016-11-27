@@ -13,7 +13,7 @@ $current_theme = Theme::getAppliedTheme();
 ?>
 <div class="modalHeader">Themes</div>
 <div class="modalBody">
-    <div class="col-left mCustomScrollbar">
+    <div class="col-left mCustomScrollbar" style="max-height: 300px; overflow: hidden;">
         <ul class="multiselect" id="themes-list">
             <?php
             foreach ($themes as $theme) {
@@ -24,6 +24,9 @@ $current_theme = Theme::getAppliedTheme();
             }
             ?>
         </ul>
+    </div>
+    <div class="col-right">
+        <button onclick="openModalPage('/assets/modals/theme/add_theme.php')">Create theme</button>
     </div>
 </div>
 <script>
