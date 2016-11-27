@@ -6,7 +6,7 @@ scripts="/var/www/html/assets/php/burner/scripts"
 burner_folder="/tmp/burner";
 status_file="/tmp/burner_status.json"
 message_file="/tmp/burner_message.json"
-output_file="/tmp/burner_output.txt"
+output_file="/tmp/burner.log"
 status="Idle"
 
 if [[ ! $input_directory || ! $device || ! $output_format ]]; then

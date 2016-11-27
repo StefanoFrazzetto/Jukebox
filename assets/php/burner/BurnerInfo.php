@@ -23,7 +23,7 @@ class BurnerInfo
 	protected static $_burner_folder = "/tmp/burner/";
 	protected static $_burner_status = "/tmp/burner_status.json";
 	protected static $_burner_message = "/tmp/burner_message.json";
-	protected static $_burner_output = "/tmp/burner_output.txt";
+    protected static $_burner_output = "/tmp/burner.log";
 
 	protected $output_format;
 

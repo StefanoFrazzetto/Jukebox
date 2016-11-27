@@ -8,7 +8,7 @@ require_once 'autoload.php';
 
 class BurnerHandler {
 
-	public static $_burner_folder = "/tmp/burner";
+    public static $_burner_folder = "/var/www/html/jukebox/burner";
 	public static $_burner_tracks_json = "/tmp/burner_tracks.json"; 
 	public static $_burner_status_file = "/tmp/burner_status.json";
 	public static $_burner_scripts = "./scripts";
@@ -71,7 +71,7 @@ class BurnerHandler {
 					//Start the burning process.
 					$Burner->burn();
 					$output['status'] = "Copying";
-					$output['message'] = "Please wait...The process has been started.";
+                    $output['message'] = "Please wait... The process has been started.";
 				}	
 			break;
 
