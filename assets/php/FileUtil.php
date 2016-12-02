@@ -7,7 +7,7 @@
  * https://github.com/stefanofrazzetto
  * Last update: 15 Jul 2016
  *
- * NOTE : ABASTRACTION NEEDED FOR $SCRIPTS
+ * NOTE : ABSTRACTION NEEDED FOR $SCRIPTS
  */
 abstract class FileUtil
 {
@@ -173,7 +173,7 @@ abstract class FileUtil
         foreach (glob($dir . "*") as $file) {
 
 
-            if (filemtime($file) < time() - $seconds) {
+            if (filemtime($file) < time() - $seconds && !is_dir($file)) {
                 unlink($file);
             }
         }
