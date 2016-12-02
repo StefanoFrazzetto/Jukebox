@@ -2,7 +2,7 @@
 <?php
 
 if (isset($_GET['clear']) && $_GET['clear'] == 'y') {
-    exec("bash ./clear_apache_log.sh");
+    exec("sudo ./clear_apache_log.sh");
     header('location: /logs/');
 }
 
