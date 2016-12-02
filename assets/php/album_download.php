@@ -9,7 +9,7 @@ $zipCheck = $outputDIR . 'zipCheck';
 
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-if((time() - file_get_contents($zipCheck)) > 300)
+if ((time() - file_get_contents($zipCheck)) > 300 && file_exists($zipCheck))
 {
     unlink($zipCheck);
 }
