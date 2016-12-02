@@ -2,7 +2,8 @@
 
 class Zipper {
 
-    public function zip($albumMap, $outputFileName, $folderToZip = '') {
+    public static function zip($albumMap, $outputFileName, $folderToZip = '')
+    {
 
         if ($folderToZip == '') {
             die('Error: folder not selected.');

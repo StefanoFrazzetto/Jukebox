@@ -49,7 +49,7 @@ if (!file_exists($zipCheck)) {
         }
     }
 
-    if (!file_exists($outputFile)) {
+    if (!file_exists($outputFile) && isset($albumMap)) {
         Zipper::zip($albumMap, $outputFileName, $albumID);
     }
 
