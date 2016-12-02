@@ -118,7 +118,7 @@
       method: "post",
       withCredentials: false,
         parallelUploads: 6,
-        uploadMultiple: true,
+        uploadMultiple: false,
       maxFilesize: 256,
       paramName: "file",
       createImageThumbnails: true,
