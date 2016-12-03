@@ -1,12 +1,11 @@
 <?php
 
 /**
- * Class MusicBrainz retrieves a CD/DVD tracks information using
- * MusicBrainz API v2.
+ * Class MusicBrainz retrieves a CD/DVD information using MusicBrainz API v2.
  *
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
- * @see http://musicbrainz.org/doc/Development/XML_Web_Service/Version_2
  * @version 1.0.0
+ * @see http://musicbrainz.org/doc/Development/XML_Web_Service/Version_2
  * @licence GNU AGPL v3 - https://www.gnu.org/licenses/agpl-3.0.txt
  */
 class MusicBrainz
