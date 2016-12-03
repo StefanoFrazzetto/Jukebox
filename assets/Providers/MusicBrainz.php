@@ -2,7 +2,12 @@
 
 /**
  * Class MusicBrainz retrieves a CD/DVD tracks information using
- * MusicBrainz API.
+ * MusicBrainz API v2.
+ *
+ * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
+ * @see http://musicbrainz.org/doc/Development/XML_Web_Service/Version_2
+ * @version 1.0.0
+ * @licence GNU AGPL v3 - https://www.gnu.org/licenses/agpl-3.0.txt
  */
 class MusicBrainz
 {
@@ -36,22 +41,23 @@ class MusicBrainz
 
             // Parse and store the tracks.
             $this->raw_tracks = $release->media[0]->tracks;
-            $this->parseTracksInfo($this->raw_tracks);
         }
     }
 
     /**
      * Parses the tracks information and stores their TITLE, NUMBER and LENGTH.
      *
-     * @param $tracks - the raw tracks array from MusicBrainz.
+     * @return array - the parsed tracks array.
      */
-    private function parseTracksInfo($tracks)
+    private function parseTracksInfo()
     {
-        if (is_array($tracks)) {
-            foreach (@$tracks as $temp) {
-                $this->tracks[$temp->number] = array('title' => $temp->recording->title, 'number' => $temp->number, 'length' => $temp->recording->length);
+        $temp_tracks = [];
+        if (is_array($this->raw_tracks) && count($this->raw_tracks) > 0) {
+            foreach ($this->raw_tracks as $temp) {
+                $temp_tracks[$temp->number] = array('title' => $temp->recording->title, 'number' => $temp->number, 'length' => $temp->recording->length);
             }
         }
+        return $temp_tracks;
     }
 
     /**
@@ -67,7 +73,7 @@ class MusicBrainz
     /**
      * Returns the release id if found, empty string otherwise.
      *
-     * @return string - the release id if found, empty string otherwise.
+     * @return string - the release ID if found, empty string otherwise.
      */
     public function getReleaseID()
     {
@@ -75,13 +81,21 @@ class MusicBrainz
     }
 
     /**
-     * Returns the array containing the tracks parsed info: TITLE, NUMBER, LENGTH.
+     * Returns the array containing the tracks information.
+     * If the parameter passed is <b>TRUE</b>, the returned array will contain only the tracks TITLE, NUMBER and LENGTH.
+     * If the parameter is <b>FALSE</b>, the array will contain all the information from MusicBrainz.
      *
-     * @return array - the array containing TITLE, NUMBER and LENGTH of each track.
+     * @param boolean - true to get a parsed array, false to get all the info from MusicBrainz.
+     * @return array - the array containing the tracks information.
      */
-    public function getTracks()
+    public function getTracks($return_parsed = true)
     {
+        if ($return_parsed) {
+            return $this->parseTracksInfo();
+        }
+
         return $this->tracks;
     }
+
 
 }
