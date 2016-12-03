@@ -30,7 +30,7 @@ class MusicBrainz
         $json = @file_get_contents($query);
         $this->res_array = json_decode($json);
 
-        if ($this->res_array != NULL) {
+        if ($json !== FALSE && $this->res_array != NULL) {
             $release = $this->res_array->releases[0];
 
             // Store the CD/DVD title.
