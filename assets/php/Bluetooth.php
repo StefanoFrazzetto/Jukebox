@@ -21,7 +21,7 @@ class Bluetooth
      */
     public function __construct($act, $mac = "")
     {
-        $this->config = include "../config.php";
+        $this->config = include "../config/config.php";
         $this->cmd_folder = $this->config['assets_path'] . '/cmd/bluetooth/';
         $this->helper = $this->cmd_folder . 'bluetooth-helper.sh';
 
