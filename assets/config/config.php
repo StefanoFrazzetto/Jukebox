@@ -40,5 +40,13 @@ return [
      * |----------------------------------------------
      * |The application debug mode.
      */
-    'debug' => true
+    'debug' => true,
+
+    /**
+     * |----------------------------------------------
+     * | Burner path
+     * |----------------------------------------------
+     * |The path where all the burner files are stored.
+     */
+    'burner_path' => $_SERVER['DOCUMENT_ROOT'] . '/assets/php/burner/'
 ];
