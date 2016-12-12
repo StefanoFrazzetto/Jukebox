@@ -47,19 +47,7 @@
         </div>
         <div class="col-right mCustomScrollbar" style="max-height: 155px">
             Latest changes:
-            <ul class="changes" style="text-align: left">
-                <?php
-                $changes = shell_exec('git log -20 --pretty=%B');
-
-                $changes = explode("\n\n", $changes);
-
-                array_pop($changes);
-
-                foreach ($changes as $change) {
-                    echo '<li>', $change, '</li>';
-                }
-                ?>
-            </ul>
+            <ul id="changes" style="text-align: left"></ul>
         </div>
     </div>
 
@@ -91,15 +79,9 @@
             })
             .always(function () {
                 $('#loader').hide();
+                loadChangeList();
             });
     }
-
-    function error(error) {
-        $('#errorMessage').html(error);
-        $('#error').show();
-    }
-
-    checkForUpdates();
 
     $('.update-btn').click(function () {
         $('#up-to-date, #not-up-to-date, #error').hide();
@@ -119,7 +101,28 @@
             });
     });
 
+    function loadChangeList() {
+        $.getJSON('/assets/modals/update/changelist.json.php')
+            .done(function (data) {
+                var cont = $('#changes').html('');
+                data.forEach(function (entry) {
+                    cont.append("<li>" + entry + "</li>");
+                })
+            })
+            .fail(function () {
+                error("Failed to load change list");
+            });
+    }
+
+    function error(error) {
+        $('#errorMessage').html(error);
+        $('#error').show();
+    }
+
     $('.check-update-btn').click(function () {
         checkForUpdates();
     });
+
+    loadChangeList();
+    checkForUpdates();
 </script>
