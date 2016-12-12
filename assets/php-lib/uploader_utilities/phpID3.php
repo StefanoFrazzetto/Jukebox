@@ -38,7 +38,7 @@ if ($track_no) {
     $this_track['track_no'] = $track_no;
 }
 
-if ($tags->cd) {
+if (isset($tags->cd)) {
     $this_track['cd'] = $tags->cd;
 } else {
     if (isset($_SESSION['CD'])) {
