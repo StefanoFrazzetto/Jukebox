@@ -144,12 +144,20 @@ function handleSearch() {
         return;
     }
 
+    var result = [];
+
     albums_storage.forEach(function (album) {
             if (album.title.toLowerCase().indexOf(value) !== -1 || album.artist.toLowerCase().indexOf(value) !== -1) {
-                results_container.append(makeSearchResult(album));
+                result.push(album);
             }
         }
     );
+
+    result.sort(artistSortingFunction);
+
+    result.forEach(function (album) {
+        results_container.append(makeSearchResult(album))
+    });
 
     if (typeof radios_storage !== 'undefined' && radios_storage.length != 0)
         radios_storage.forEach(function (radio) {
@@ -360,7 +368,7 @@ function getLocalCurrentTime() {
     }
 
     var value = playerStatus.playing ?
-    playerStatus.currentTime + (((now) - (playerStatus.timestamp + deltaTime)) / 1000)
+        playerStatus.currentTime + (((now) - (playerStatus.timestamp + deltaTime)) / 1000)
         : playerStatus.currentTime;
     $('#debug-time').text(timestamp(value));
     return value;
@@ -512,6 +520,8 @@ menuSection.slider.toggle = function () {
         menuSection.slider.open();
 };
 //endregion
+
+$.getScript('/assets/js/storageSorter.js');
 
 $(document).ready(function () {
     var height = remoteControls.outerHeight();

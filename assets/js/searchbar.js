@@ -20,7 +20,7 @@ var sorter = $('#sorter');
 
 var sort_by_btn = $('#sort-icon');
 
-var sort_by = sorter.find('.by');
+var sort_by_menu = sorter.find('.by');
 
 var search_by = $('#search-by');
 
@@ -60,136 +60,60 @@ function slideClose() {
     }
 }
 
-search_input.blur(function () {
-    slideClose();
-});
+$(document).ready(function () {
+    $.getScript('/assets/js/storageSorter.js', function () {
+        search_input.blur(function () {
+            slideClose();
+        });
 
-searchbox_icon.click(function () {
-    slideToggle();
-});
+        searchbox_icon.click(function () {
+            slideToggle();
+        });
 
-artist_icon.click(function (e) {
-    changeSearchField('artist', artist_icon);
-    e.preventDefault();
-});
+        artist_icon.click(function (e) {
+            changeSearchField('artist', artist_icon);
+            e.preventDefault();
+        });
 
-album_icon.click(function (e) {
-    changeSearchField('title', album_icon);
-    e.preventDefault();
-});
+        album_icon.click(function (e) {
+            changeSearchField('title', album_icon);
+            e.preventDefault();
+        });
 
-song_icon.click(function (e) {
-    e.preventDefault();
-    changeSearchField('tracks', song_icon);
-    return false;
-});
+        song_icon.click(function (e) {
+            e.preventDefault();
+            changeSearchField('tracks', song_icon);
+            return false;
+        });
 
-searchbox.submit(function (event) {
-    event.preventDefault();
+        searchbox.submit(function (event) {
+            event.preventDefault();
 
-    var search_query = search_input.val();
-    search(search_query);
-    slideClose();
-});
+            var search_query = search_input.val();
+            search(search_query);
+            slideClose();
+        });
 
-function sortByArtist() {
-    albums_storage.sort(function (a, b) {
-        var x = a.artist.toLowerCase();
-        var y = b.artist.toLowerCase();
-        var gne = x < y ? -1 : x > y ? 1 : 0;
+        sort_by_menu.click(function () {
+            $('#sorter').find('.by.active').removeClass('active');
+            $(this).addClass('active');
+            sort_by = $(this).attr('data-value');
 
-        if (gne == 0) {
-            x = a.title.toLowerCase();
-            y = b.title.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
-        }
+            getItSorted(sort_by);
 
-        return gne;
+            page = 1;
+            paginate();
+            sorter.toggle(animation_short);
+        });
+
+        searchbox_icon_bis.click(function () {
+            searchbox.submit();
+        });
+
+        sort_by_btn.click(function (e) {
+            e.preventDefault();
+            sorter.toggle();
+        });
     });
-}
-
-function sortByTitle() {
-    albums_storage.sort(function (a, b) {
-        var x = a.title.toLowerCase();
-        var y = b.title.toLowerCase();
-        var gne = x < y ? -1 : x > y ? 1 : 0;
-
-        if (gne == 0) {
-            x = a.artist.toLowerCase();
-            y = b.artist.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
-        }
-
-        return gne;
-    });
-}
-
-function sortByHits() {
-    albums_storage.sort(function (a, b) {
-        var gne = b.hits - a.hits;
-
-        if (gne == 0) {
-            var x = a.artist.toLowerCase();
-            var y = b.artist.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
-        }
-
-        return gne;
-    });
-}
-
-function sortByLastPlayed() {
-    albums_storage.sort(function (a, b) {
-        return b.last_played - a.last_played;
-    });
-}
-
-function sortByLastAdded() {
-    albums_storage.sort(function (a, b) {
-        return b.id - a.id;
-    });
-}
-
-function getItSorted(method) {
-    switch (method) {
-        case '1':
-            sortByArtist();
-            break;
-        case '2':
-            sortByTitle();
-            break;
-        case '3':
-            sortByHits();
-            break;
-        case '4':
-            sortByLastPlayed();
-            break;
-        case '5':
-            sortByLastAdded();
-            break;
-        default:
-            sortByTitle();
-            sortByArtist();
-    }
-}
-
-sort_by.click(function () {
-    $('#sorter').find('.by.active').removeClass('active');
-    $(this).addClass('active');
-    sort_by = $(this).attr('data-value');
-
-    getItSorted(sort_by);
-
-    page = 1;
-    paginate();
-    sorter.toggle(animation_short);
 });
 
-searchbox_icon_bis.click(function () {
-    searchbox.submit();
-});
-
-sort_by_btn.click(function (e) {
-    e.preventDefault();
-    sorter.toggle();
-});
