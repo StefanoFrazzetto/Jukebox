@@ -268,11 +268,11 @@ function alphabet(value) {
 
     albums_storage.forEach(function (element, index) {
         if (value != 0) {
-            if (element.artist.charAt(0) == value) {
+            if (element.artist.charAt(0).toLowerCase() == value.toLowerCase()) {
                 results[index] = element;
             }
         }
-        else if ((/[^a-zA-Z0-9]/.test(element.artist.charAt(0))))
+        else if ((/[^a-zA-Z]/.test(element.artist.charAt(0))))
             results[index] = element;
     });
 
