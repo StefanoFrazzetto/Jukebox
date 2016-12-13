@@ -116,6 +116,7 @@ function paginate() {
         var detected_id = $(this).attr('id');
         openModalPage('assets/modals/album_details.php?id=' + detected_id);
     });
+
     $(".album .moar").click(function (e) {
         var detected_id = $(this).parent().attr('id');
         changeAlbum(detected_id);
@@ -215,6 +216,11 @@ function makeAlbumHtmlFromObject(object) {
     album_container.fadeOut(0);
 
     img.on("load", function () {
+        album_container.fadeIn(animation_short);
+    });
+
+    img.on("error", function () {
+        img.attr('src', '/assets/img/album-placeholder.png');
         album_container.fadeIn(animation_short);
     });
 
