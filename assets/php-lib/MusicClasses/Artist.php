@@ -96,7 +96,6 @@ class Artist implements JsonSerializable
         $database = new Database();
 
         if ($this->created) {
-            echo $this->id;
             return $database->update(Artist::ARTIST_TABLE, ["name" => $this->name], "`id` = $this->id");
         } else {
             $status = $database->insert(Artist::ARTIST_TABLE, ["name" => $this->name]);
