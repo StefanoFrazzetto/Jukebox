@@ -42,7 +42,7 @@ class Database {
      * Execute a raw query on the database.
      *
      * @param string $query
-     * @return bool
+     * @return array | boolean
      */
 	public function rawQuery($query = "") {
 		if($query == "") {
@@ -51,7 +51,13 @@ class Database {
 
 		try {
 			$stmt = $this->getConnection()->prepare($query);
-			return $stmt->execute();
+            $stmt->execute();
+
+            if ($stmt === false) {
+                return false;
+            }
+
+            return $stmt->fetchAll(PDO::FETCH_NUM);
 		} catch (PDOException $e) {
 			return false;
 		}
@@ -115,7 +121,7 @@ class Database {
 			$columns = implode(', ', $columns);
 		}
 
-		$sql = "SELECT $columns FROM `$table`";
+        $sql = "SELECT $columns FROM $table";
 		$sql .= $query;
 
 		$stmt = $this->_connection->prepare($sql);
