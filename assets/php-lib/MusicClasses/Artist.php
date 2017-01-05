@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . '/../../php/Database.php';
+require_once __DIR__ . '/../../php/Database.php';
 
 /**
  * Created by PhpStorm.
@@ -38,7 +38,7 @@ class Artist implements JsonSerializable
     {
         $db = new Database();
 
-        $db_object = $db->select('*', Artist::ARTIST_TABLE, "WHERE `id` = $id");
+        $db_object = $db->select('*', self::ARTIST_TABLE, "WHERE `id` = $id");
 
         if (!isset($db_object[0]))
             return null;
@@ -63,6 +63,23 @@ class Artist implements JsonSerializable
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public static function getArtistIdsInAlbum($id)
+    {
+        $db = new Database();
+
+        $db_object = $db->rawQuery(
+            "SELECT DISTINCT song_artists.artist_id
+            FROM song_artists
+            INNER JOIN songs ON song_artists.song_id = songs.id
+            WHERE songs.album_id = $id"
+        );
+
+//        if (!isset($db_object[0]))
+//            return null;
+
+        return $db_object;
     }
 
     public static function getAllArtists()
