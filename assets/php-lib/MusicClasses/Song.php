@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . '/../../php/Database.php';
+require_once __DIR__ . '/../../php/Database.php';
 
 /**
  * Created by PhpStorm.
