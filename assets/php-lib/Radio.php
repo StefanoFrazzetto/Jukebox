@@ -50,7 +50,7 @@ class Radio implements JsonSerializable
 
             $radio->created = true;
             /** @noinspection PhpUndefinedFieldInspection */
-            $radio->id = $radio_database->id;
+            $radio->id = intval($radio_database->id);
             /** @noinspection PhpUndefinedFieldInspection */
             $radio->coverToken = $radio_database->cover_cached_token;
 
