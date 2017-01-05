@@ -57,12 +57,27 @@ class Artist implements JsonSerializable
 
             $artist->created = true;
 
-            $artist->id = $db_object->id;
+            $artist->id = intval($db_object->id);
 
             return $artist;
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public static function getAllArtists()
+    {
+        $db = new Database();
+
+        $db_object = $db->select('*', Artist::ARTIST_TABLE);
+
+        $artists = [];
+
+        foreach ($db_object as $artist) {
+            $artists[] = self::makeArtistFromDatabaseObject($artist);
+        }
+
+        return $artists;
     }
 
     /**
