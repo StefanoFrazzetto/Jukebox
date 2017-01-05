@@ -98,7 +98,8 @@ class Song implements JsonSerializable
     }
 
     /**
-     * @return integer length of seconds of the mp3 file
+     * @param $file string the file to get the length from
+     * @return int length of seconds of the mp3 file
      */
     public static function getLength($file)
     {
