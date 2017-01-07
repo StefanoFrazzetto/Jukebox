@@ -3,7 +3,7 @@
 wifi_interface=$(ls /sys/class/net | grep -v 'eth0\|lo\|tunl0')
 
 INTERFACE_FILE=/etc/network/interfaces
-WPA_SUPPLICANT=/etc/wpa_supplicant.conf;
+WPA_SUPPLICANT=/etc/wpa_supplicant.conf
 DNS_CONF=/etc/resolv.conf
 
 # Releases the DHCP and brings down the interface
@@ -100,7 +100,8 @@ if [ $1 == "none" ]; then
     sudo dhclient -r eth0
     sudo hap_app stop
     echo "" > "$INTERFACE_FILE"
-    exit 1
+
+    exit 0
 fi
 
 
@@ -109,8 +110,6 @@ dhcp=$2
 
 # LAN
 if [ $network == "ethernet" ]; then 
-    sudo hap_app "$wifi_interface"
-
     stopInterface "$wifi_interface"
 
     # Write the configuration to the interfaces file
@@ -118,15 +117,10 @@ if [ $network == "ethernet" ]; then
 
     # Set the DNS servers
     setDns "8.8.8.8" "8.8.4.4"
-
-echo "$@" > /var/www/html/logs/jerrystupido.log
-
 fi	
 
 # WIFI
 if [ $network == "wifi" ]; then 
-    sudo hap_app "$wifi_interface"
-
     networkname=$3
     password=$4
     wifi_encryption=$5
@@ -142,20 +136,19 @@ if [ $network == "wifi" ]; then
 
     # Set DNS servers
     setDns "8.8.8.8" "8.8.4.4"
-
 fi
 
 # HOTSPOT
 if [ $network == "hotspot" ]; then 
-echo "" > "$INTERFACE_FILE"
-	if [ $# -lt 2 ]; then
-		echo -e "Script Requires 4 arguments."
-		echo -e "<hotspot> <ssid> <password> <channel>"
-		exit 1
-	fi
-sudo hap_app "$wifi_interface"
-killall wpa_supplicant
-sudo dhclient -r eth0
+    echo "" > "$INTERFACE_FILE"
+        if [ $# -lt 2 ]; then
+            echo -e "Script Requires 4 arguments."
+            echo -e "<hotspot> <ssid> <password> <channel>"
+            exit 1
+        fi
+    sudo hap_app "$wifi_interface"
+    killall wpa_supplicant
+    sudo dhclient -r eth0
 
-sudo hap_app "$wifi_interface" "$2" "$3" "$4"
+    sudo hap_app "$wifi_interface" "$2" "$3" "$4"
 fi
