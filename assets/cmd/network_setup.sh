@@ -113,7 +113,7 @@ if [ $network == "ethernet" ]; then
     stopInterface "$wifi_interface"
 
     # Write the configuration to the interfaces file
-    writeConfig "eth0" "dhcp" "192.168.0.7" "255.255.255.0" "192.168.0.1"
+    writeConfig "eth0" "$dhcp" "$3" "$4" "$5"
 
     # Set the DNS servers
     setDns "8.8.8.8" "8.8.4.4"
@@ -121,21 +121,25 @@ fi
 
 # WIFI
 if [ $network == "wifi" ]; then 
-    networkname=$3
-    password=$4
-    wifi_encryption=$5
+    ip_address=$3	#192.168.1.1
+ 	netmask=$4	    #255.255.255.0
+ 	gateway=$5	    #192.168.1.1
+ 	dns=$6		    #8.8.8.8
+ 	network_name=$7
+ 	password=$8
+ 	wifi_encryption=$9	#wpa
 
     # Stop ethernet connection
     stopInterface "eth0"
 
     # Write the configuration to the interfaces file
-    writeConfig "$wifi_interface" "$dhcp" "192.168.0.7" "255.255.255.0" "192.168.0.1"
+    writeConfig "$wifi_interface" "$dhcp" "$ip_address" "$netmask" "$gateway"
 
     # Set wifi password
-    setWifiPassword "$wifi_encryption" "$networkname" "$password"
+    setWifiPassword "$wifi_encryption" "$network_name" "$password"
 
     # Set DNS servers
-    setDns "8.8.8.8" "8.8.4.4"
+    setDns "$dns" "8.8.4.4"
 fi
 
 # HOTSPOT
