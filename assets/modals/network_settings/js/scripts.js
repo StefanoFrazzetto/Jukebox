@@ -62,24 +62,35 @@ $('#network_settings_form').submit(function (e) {
     e.preventDefault();
     var data = $(this).serialize();
 
+    stopScan();
+
     $.ajax({
         url: "/assets/php/set_network_settings.php",
         method: "POST",
+        timeout: 20000, // SETTE!!!
         data: data
     }).done(function (data) {
 
         if (data == "success")
             alert("Network settings saved successfully!");
         else {
-            error("En error occurred while saving. Check the logs for more.");
+            error("An error occurred while saving. Check the logs for more.");
             console.log(data);
         }
     }).fail(function (a, b, c) {
-        error("Something went wrong while contacting the saving network server. " + c);
+
+        if (b === 'timeout') {
+            error("The connection to the jukebox timed out. You might need to change the network configuration locally");
+        } else {
+            error("Something went wrong while contacting the saving network server. " + c);
+        }
+
     }).always(function () {
         btn.attr('disabled', false);
         btn.removeClass('disabled');
         btn.val('Save');
+
+        startScan();
     });
 });
 
