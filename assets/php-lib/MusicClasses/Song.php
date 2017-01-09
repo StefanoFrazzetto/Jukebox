@@ -163,6 +163,29 @@ class Song implements JsonSerializable
     }
 
     /**
+     * Returns all the songs in an album, given the album's id
+     * @param $id int album Id
+     * @return Song[]|null
+     */
+    public static function getSongsInAlbum($id)
+    {
+        $db = new Database();
+
+        $db_objects = $db->select('*', Song::SONGS_TABLE, "WHERE `album_id` = $id");
+
+        if (count($db_objects) === 0)
+            return null;
+
+        $songs = [];
+
+        foreach ($db_objects as $db_object) {
+            $songs[] = self::makeSongFromDatabaseObject($db_object);
+        }
+
+        return $songs;
+    }
+
+    /**
      * @return array|null of ID3v2 Tags
      */
     public function getID3Tags()
