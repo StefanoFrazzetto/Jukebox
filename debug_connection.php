@@ -15,30 +15,38 @@ $start = microtime();
 
 if ($network->isConnected()) {
     $fin = microtime();
-    echo "CONNECTED. Checked in " . ($fin - $start) . " μs";
+    echo "<h1>CONNECTED. Ping " . ($fin - $start) . " μs</h1>";
 } else {
-    echo "NOT CONNECTED :(";
+    echo "<h1>NOT CONNECTED :(</h1>";
 }
 
 $wifi = new Wifi();
 
 $network->load_network();
 
-echo "<hr/>";
+echo "<h1>WiFi interface: <i>", Wifi::getInterface(), PHP_EOL, '</i></h1>';
 
-echo "interface: ", Wifi::getInterface(), PHP_EOL;
-
-echo "<hr/>";
 print_r($network);
 
-echo "<hr/>Command: ";
+echo "<h1>Command</h1>";
 $network->debug_connect();
 
-echo "<hr/>Connected Wifi Network: ";
-$wifi->getConnectedNetwork();
+echo "<h1>Connected Wifi Network</h1>";
+print_r($wifi->getConnectedNetwork());
 
-echo "<hr/>Network scan ";
+ob_flush();
+
+echo "<h1>/etc/network/interfaces</h1>";
+
+echo file_get_contents("/etc/network/interfaces");
+
+echo "<h1>/etc/wpa_supplicant.conf</h1>";
+
+echo shell_exec("sudo cat /etc/wpa_supplicant.conf");
+
+echo "<h1>WiFi Scan</h1>";
 
 ob_flush();
 
 print_r($wifi->wifiScan());
+
