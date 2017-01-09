@@ -65,6 +65,11 @@ class Artist implements JsonSerializable
         }
     }
 
+    /**
+     * Gets all the artists participating in an album
+     * @param $id int the album id
+     * @return array | bool
+     */
     public static function getArtistIdsInAlbum($id)
     {
         $db = new Database();
@@ -75,9 +80,6 @@ class Artist implements JsonSerializable
             INNER JOIN songs ON song_artists.song_id = songs.id
             WHERE songs.album_id = $id"
         );
-
-//        if (!isset($db_object[0]))
-//            return null;
 
         return $db_object;
     }
