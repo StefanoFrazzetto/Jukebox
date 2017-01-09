@@ -11,6 +11,15 @@ require "assets/php-lib/Wifi.php";
 
 $network = new Network();
 
+$start = microtime();
+
+if ($network->isConnected()) {
+    $fin = microtime();
+    echo "CONNECTED. Checked in " . ($fin - $start) . " μs";
+} else {
+    echo "NOT CONNECTED :(";
+}
+
 $wifi = new Wifi();
 
 $network->load_network();

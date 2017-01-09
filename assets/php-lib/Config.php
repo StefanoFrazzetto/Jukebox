@@ -1,68 +1,89 @@
 <?php
 
 /**
- * Class Config provides access to the configuration file(s). When retrieving
+ * Class Config provides access to the configuration of this software.
+ *
+ * It uses both static and dynamic configuration for different purposes:
+ *
+ * - The static configuration makes use of PHP file which can only be read and holds the configuration
+ *   variables that make the software run properly.
+ *
+ * - The dynamic configuration makes use of a json file which can be read and edited in order to allow
+ *   runtime changes to the system configuration.
  *
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
- * @version 1.0.0
+ * @version 1.1.0
  */
 class Config
 {
     /** The directory containing the configuration files */
     const CONFIG_DIR = "../config/";
 
-    /** The PHP configuration file */
-    private $php_config;
-
     /** The json configuration file */
-    private $json_file;
+    private $dynamic_conf_file;
 
-    /** The json configuration */
-    private $json_config;
+    /** The static configuration */
+    private $static_conf;
+
+    /** The dynamic configuration */
+    private $dynamic_config;
 
     public function __construct()
     {
-        // Loads the configuration file
-        $this->php_config = include(self::CONFIG_DIR . "config.php");
-        $this->loadJsonConfig();
-    }
+        // Loads the static configuration file
+        $this->static_conf = include(self::CONFIG_DIR . "config.php");
 
-    private function loadJsonConfig()
-    {
-        $this->json_file = self::CONFIG_DIR . "config.json";
-        if (!file_exists($this->json_file)) {
-            file_put_contents($this->json_file, null);
+        // Loads the dynamic configuration file
+        $this->dynamic_conf_file = self::CONFIG_DIR . "config.json";
+        if (!file_exists($this->dynamic_conf_file)) {
+            file_put_contents($this->dynamic_conf_file, null);
         }
 
-        $this->json_config = json_decode(file_get_contents($this->json_file), true);
+        $this->dynamic_config = json_decode(file_get_contents($this->dynamic_conf_file), true);
     }
 
     /**
-     * Returns the config key passed as parameter if set, otherwise null.
+     * Returns the config key passed as parameter. If exists, the dynamic value will be returned,
+     * otherwise the static configuration value will be returned. In case the value is not found
+     * in any configuration file, null will be returned.
+     * If you want to force the static config to be returned, set the static flag to true.
+     *
      *
      * @param $key - the key to return
+     * @param $static - flag to force the static config to be returned
      * @return mixed - the value associated with the config key
      */
-    public function get($key)
+    public function get($key, $static = false)
     {
-        if (isset($this->php_config[$key]) && !isset($source)) {
-            return $this->php_config[$key];
-        } elseif ($source = "json") {
-            return $this->getJsonConfig($key);
+        if (isset($this->dynamic_config[$key]) && !$static) {
+            return $this->getDynamic($key);
+        } elseif (isset($this->static_conf[$key])) {
+            return $this->getStatic($key);
         } else {
             return null;
         }
     }
 
     /**
-     * Retuns the value associated with the key from the json configuration.
+     * Returns the value associated with the key from the dynamic configuration file.
      *
      * @param $key - the key to search
      * @return mixed - the return value(s)
      */
-    private function getJsonConfig($key)
+    private function getDynamic($key)
     {
-        return $this->json_config[$key];
+        return $this->dynamic_config[$key];
+    }
+
+    /**
+     * Returns the value associated with the key from the static configuration file.
+     *
+     * @param $key - the key to search
+     * @return mixed - the return value(s)
+     */
+    private function getStatic($key)
+    {
+        return $this->static_conf[$key];
     }
 
     /**
@@ -73,17 +94,16 @@ class Config
      */
     public function set($key, $value)
     {
-        $this->json_config[$key] = $value;
-        $this->saveJsonConfig();
+        $this->dynamic_config[$key] = $value;
+        $this->saveDynamicConfig();
     }
 
     /**
-     * Saves the configuration into the json file.
+     * Saves the configuration into the dynamic configuration file in json format.
      */
-    private function saveJsonConfig()
+    private function saveDynamicConfig()
     {
-        file_put_contents($this->json_file, json_encode($this->json_config));
-
+        file_put_contents($this->dynamic_conf_file, json_encode($this->dynamic_config));
     }
 
 }
