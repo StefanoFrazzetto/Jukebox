@@ -225,6 +225,29 @@ class Database
     }
 
     /**
+     * Counts the occurrences of a query in a table
+     * @param $table
+     * @param $where
+     * @return int the number of occurrences
+     */
+    public function count($table, $where)
+    {
+        $sql = "SELECT COUNT(*) FROM $table WHERE $where";
+
+        $stmt = $this->_connection->prepare($sql);
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_NUM);
+        $row_count = $stmt->rowCount();
+
+        if ($row_count == 0) {
+            return 0;
+        }
+
+        return intval($rows[0][0]);
+    }
+
+    /**
      * Remove record(s).
      *
      * @param string $table
