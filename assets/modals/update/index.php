@@ -52,6 +52,31 @@
     </div>
 
 </div>
+<div class="modalFooter">
+    <label for="branch">Branch: </label>
+    <select id="branch">
+        <?php
+        $cmd = shell_exec("git branch -r");
+
+        $branches = explode("\n", $cmd);
+
+        $branches = array_slice($branches, 1);
+
+        $current_branch = trim(`git rev-parse --symbolic-full-name --abbrev-ref HEAD`);
+
+        foreach ($branches as $branch) {
+            $branch = trim($branch);
+
+            if ($branch != '') {
+                $selected = ($branch == "origin/$current_branch") ? ' selected' : '';
+
+                echo "<option$selected value='$branch'>$branch</option>";
+            }
+        }
+        ?>
+    </select>
+    Current Branch: <?php echo "origin/$current_branch"; ?>
+</div>
 <script>
     var updateTried = false;
 
