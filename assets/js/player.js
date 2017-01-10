@@ -346,13 +346,13 @@ function deleteAlbum(id) {
 
 function deleteRadio(id) {
     if (confirm("Are you sure?")) {
-        $.ajax('assets/php/delete_radio.php?id=' + id).done(function (response) {
-            if (response == "success") {
+        $.getJSON('assets/API/delete_radio.php?id=' + id).done(function (response) {
+            if (response.status == "success") {
                 $('.aRadio[data-id="' + id + '"]').remove();
             }
             else {
-                error("Error while deleting Radio. " + response + ".");
-                console.log(response);
+                error("Error while deleting Radio. " + response.message + ".");
+                console.log(response.message);
             }
             //reload();
         });
