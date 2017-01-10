@@ -27,8 +27,6 @@ function folderSize($dir)
     return $size;
 }
 
-require '../php/get_cover.php';
-
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 $results = $mysqli->query("SELECT * FROM $albums WHERE id = $albumID LIMIT 1");
 $result = $results->fetch_object();
@@ -36,7 +34,10 @@ $result = $results->fetch_object();
 $title = $result->title;
 $artist = $result->artist;
 $tracks = json_decode($result->tracks);
-$cover_url = get_cover($albumID);
+
+// TODO MAKE THIS WORK AGAIN
+//$cover_url = get_cover($albumID);
+$cover_url = '/assets/img/album-placeholder.png';
 
 $dir = '/var/www/html/jukebox/' . $albumID;
 $albumSize = number_format(folderSize($dir) / 1048576, 2);

@@ -219,8 +219,6 @@ class Album implements JsonSerializable
         return $this->last_played;
     }
 
-    //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
-
     /**
      * @return int the last played count
      */
@@ -243,6 +241,16 @@ class Album implements JsonSerializable
         file_put_contents(self::LAST_PLAYED_FILE, $last);
 
         return $last;
+    }
+
+    //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
+
+    /**
+     * @return string absolute unix path to cover thumb file
+     */
+    public function getThumbPath()
+    {
+        return FileUtil::$_albums_root . "/$this->id/cover.jpg";
     }
 
     /**
@@ -334,7 +342,7 @@ class Album implements JsonSerializable
 
     public function serializableArray()
     {
-        return ["id" => $this->getId(), "title" => $this->getTitle(), "artists" => $this->getArtists(), "hits" => $this->getHits(), "last_played" => $this->getLastPlayed()];
+        return ["id" => $this->getId(), "title" => $this->getTitle(), "artists" => $this->getArtists(), "hits" => $this->getHits(), "last_played" => $this->getLastPlayed(), "cover" => $this->getCoverID()];
     }
 
     /**
@@ -372,6 +380,37 @@ class Album implements JsonSerializable
     public function getHits()
     {
         return $this->hits;
+    }
+
+    /**
+     * Returns the timestamp of the last time the cover was edited.
+     *
+     * @return int|null
+     */
+    public function getCoverID()
+    {
+        if (!file_exists($this->getCoverPath()))
+            return null;
+
+        return filemtime($this->getCoverPath());
+    }
+
+    /**
+     * @return string absolute unix path to cover file.
+     */
+    public function getCoverPath()
+    {
+        return FileUtil::$_albums_root . "/$this->id/cover.jpg";
+    }
+
+    public function getCoverUrl($thumb = false)
+    {
+        if (!file_exists($this->getCoverPath()))
+            return '/assets/img/album-placeholder.png';
+
+        $file = $thumb ? 'thumb' : 'cover';
+
+        return FileUtil::$_albums_root . "$this->id/$file.jpg?" . $this->getCoverID();
     }
 
     //</editor-fold>
