@@ -301,10 +301,11 @@ function getAlbumsDetails(id) {
 
 function getAlbumDetails(id, callback) {
     if (typeof albumDetailsCache[id] == 'undefined') {
-        var url_request = "assets/php/get_album_details.php?id=" + id;
-        $.getJSON(url_request, callback).done(function (data) {
-            albumDetailsCache[id] = data;
-        });
+        // var url_request = "assets/php/get_album_details.php?id=" + id;
+        // $.getJSON(url_request, callback).done(function (data) {
+        //     albumDetailsCache[id] = data;
+        // });
+        error("Unable to find this album. Report this to @Vittorio.");
     } else {
         var data = albumDetailsCache[id];
         callback(data);
