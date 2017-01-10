@@ -207,6 +207,12 @@ function highlightCurrentTrack() {
 function getPlaylistSong(number) {
     number = parseInt(number);
     playlist_number = number;
+
+    if (typeof playlist[number] == 'undefined') { // Small failsafe
+        error("Track [" + number + "] missing from the local database.");
+        return;
+    }
+
     track_no = playlist[number].track_no;
 
     if (playlist[number].album != album_id) {
