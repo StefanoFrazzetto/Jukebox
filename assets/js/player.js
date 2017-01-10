@@ -17,13 +17,10 @@ var stop_btn = $('#stop');
 var next_btn = $('#fwd');
 var prev_btn = $('#bwd');
 
-
 var seekDiv = $('#seek');
 var songTitle = $('#songTitle');
 var albumTitle = $('#albumTitle');
 var albumCover = $('#albumCover');
-
-var albumDetailsCache = [];
 
 // INIT //
 var playing = false;
@@ -210,11 +207,11 @@ function highlightCurrentTrack() {
 function getPlaylistSong(number) {
     number = parseInt(number);
     playlist_number = number;
-    track_no = playlist[number].no;
+    track_no = playlist[number].track_no;
 
     if (playlist[number].album != album_id) {
         album_id = playlist[number].album;
-        getAlbumsDetails(album_id);
+        showAlbumsDetails(album_id);
     }
 
     pgetSong(playlist[number].url);
@@ -250,7 +247,7 @@ function getAlbumPlaylist(album_id, song) {
 }
 
 function getPlaylist(_album_id, callback) {
-    var url_request = "/assets/API/playlist.php" + _album_id;
+    var url_request = "/assets/API/playlist.php?id=" + _album_id;
 
     $.getJSON(url_request, function (data) {
         callback(data);
@@ -288,26 +285,34 @@ function updatePlaylist() {
     highlightCurrentTrack();
 }
 
-function getAlbumsDetails(id) {
-    getAlbumDetails(id, function (data) {
-        if (Object.keys(data).length == 0) {
-            playerError();
-            return;
-        }
-        albumTitle.html(data.title);
-        changeCover(data.cover);
-    });
+function showAlbumsDetails(id) {
+    //id = parseInt(id);
+
+    if (typeof albums_storage[id] === 'undefined') {
+        error("Album [" + id + "] missing from local DB. Report to @Vittorio.");
+        return;
+    }
+
+    var data = albums_storage[id];
+
+    albumTitle.html(data.title);
+
+    if (data.cover != null)
+        changeCover("/jukebox/" + id + "/cover.jpg?" + data.cover);
+    else
+        changeCover(cover_placeholder);
 }
 
 function getAlbumDetails(id, callback) {
-    if (typeof albumDetailsCache[id] == 'undefined') {
+    if (typeof albums_storage[id] == 'undefined') {
         // var url_request = "assets/php/get_album_details.php?id=" + id;
         // $.getJSON(url_request, callback).done(function (data) {
         //     albumDetailsCache[id] = data;
         // });
-        error("Unable to find this album. Report this to @Vittorio.");
+        error("Unable to find this album (" + id + "). Report this to @Vittorio.");
     } else {
-        var data = albumDetailsCache[id];
+        var data = albums_storage[id];
+
         callback(data);
     }
 }
@@ -318,7 +323,7 @@ function changeAlbum(id, song) {
     isReady = true;
 
     getAlbumPlaylist(id, song);
-    getAlbumsDetails(id);
+    showAlbumsDetails(id);
     pstop();
 }
 
