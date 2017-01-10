@@ -250,7 +250,7 @@ function getAlbumPlaylist(album_id, song) {
 }
 
 function getPlaylist(_album_id, callback) {
-    var url_request = "assets/php/get_playlist.php?id=" + _album_id;
+    var url_request = "/assets/API/playlist.php" + _album_id;
 
     $.getJSON(url_request, function (data) {
         callback(data);

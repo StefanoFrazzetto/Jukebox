@@ -319,7 +319,7 @@ function loadRadioStorage(callback) {
 }
 
 function loadAlbumPlaylist(id, callback) {
-    var address = '/assets/php/get_playlist.php?id=' + id;
+    var address = '/assets/API/playlist.php?id=' + id;
 
     $.getJSON(address)
         .done(function (data) {
