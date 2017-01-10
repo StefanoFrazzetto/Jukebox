@@ -329,7 +329,7 @@ function deleteAlbum(id) {
             {
                 text: "Yes, delete it",
                 callback: function () {
-                    $.ajax('assets/php/delete_album.php?id=' + id).done(function () {
+                    $.ajax('assets/API/delete_album.php?id=' + id).done(function () {
                         if (id == album_id) {
                             resetPlayer();
                         }
