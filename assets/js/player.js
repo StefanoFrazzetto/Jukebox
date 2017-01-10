@@ -44,16 +44,8 @@ prev_btn.click(function () {
     pprevious();
 });
 
-/*player.onplaying = function () {
- alert("The video is now playing");
- };*/
-
-/*player.onpause = function () {
- playing = false;
- };*/
-
 player.onwaiting = function () {
-    seekDiv.text('loading...');
+    seekDiv.html('loading&hellip;');
 };
 
 player.onended = function () {
@@ -205,6 +197,9 @@ function highlightCurrentTrack() {
 }
 
 function getPlaylistSong(number) {
+    if (typeof album_id === 'undefined')
+        return error("[album_id] is undefined inside getPlaylistSong()");
+
     number = parseInt(number);
     playlist_number = number;
 
@@ -215,8 +210,13 @@ function getPlaylistSong(number) {
 
     track_no = playlist[number].track_no;
 
-    if (playlist[number].album != album_id) {
-        album_id = playlist[number].album;
+    if (playlist[number].album_id != album_id) {
+
+        var _album_id = playlist[number].album_id;
+
+        if (typeof _album_id != 'undefined') // SE QUALCUNO LO LEVA GLI STACCO LO SCACCO
+            album_id = _album_id;
+
         showAlbumsDetails(album_id);
     }
 
@@ -236,6 +236,7 @@ function pgetSong(url) {
 }
 
 function getAlbumPlaylist(album_id, song) {
+
     getPlaylist(album_id, function (data) {
         playlist = data;
 
@@ -266,7 +267,7 @@ function updatePlaylist() {
     var items = '';
 
     $.each(playlist, function (key, val) {
-        items = items + ("<tr><td data-album='" + val.album + "' data-track-no='" + val.no + "' id='track_" + key + "'>" + val.title + "</td></tr>");
+        items = items + ("<tr><td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' id='track_" + key + "'>" + val.title + "</td></tr>");
     });
     playlistTable.html(items);
 
@@ -292,7 +293,8 @@ function updatePlaylist() {
 }
 
 function showAlbumsDetails(id) {
-    //id = parseInt(id);
+    if (typeof id === 'undefined')
+        return;
 
     if (typeof albums_storage[id] === 'undefined') {
         error("Album [" + id + "] missing from local DB. Report to @Vittorio.");
@@ -324,13 +326,21 @@ function getAlbumDetails(id, callback) {
 }
 
 function changeAlbum(id, song) {
+    if (typeof id == 'undefined')
+        return;
+
+    if (typeof song == 'undefined')
+        song = 0;
+
     album_id = id;
     isRadio = false;
     isReady = true;
 
-    getAlbumPlaylist(id, song);
     showAlbumsDetails(id);
-    pstop();
+
+    getAlbumPlaylist(id, song);
+
+    // pstop();
 }
 
 function deleteAlbum(id) {
@@ -421,37 +431,6 @@ function playerError() {
     albumTitle.text('');
     hideCover();
 }
-
-// function BTConnect(mac) {
-//     var stoptime = player.currentTime;
-//     var playerstatus = playing;
-//
-//     play_pause();
-//
-//     var connect = "assets/php/BTConnect.php?mac=" + mac;
-//     document.getElementById(mac).style.backgroundColor = 'orange';
-//
-//     $.ajax({
-//         type: "GET",
-//         url: connect,
-//         success: function (data) {
-//             if (data == "Connected") {
-//                 document.getElementById(mac).style.backgroundColor = 'green';
-//                 if (playerstatus) {
-//                     pplay();
-//                 }
-//                 player.currentTime = stoptime;
-//             } else {
-//                 document.getElementById(mac).style.backgroundColor = 'red';
-//                 if (playerstatus) {
-//                     pplay();
-//                 }
-//                 player.currentTime = stoptime;
-//             }
-//         }
-//     });
-//
-// }
 
 function playRadio(url_object, name) {
     isReady = true;

@@ -86,23 +86,15 @@ function paginate() {
     loader.html("");
     var i = -1;
     albums_storage.forEach(function (data) {
+        if (typeof data === 'undefined')
+            return;
+
         i++;
 
         if (i >= show * (page - 1) && i < show * page) {
             var html = makeAlbumHtmlFromObject(data);
             loader.append(html);
         }
-    });
-
-    $(".album:not(.filler)").click(function () {
-        var detected_id = $(this).attr('id');
-        openModalPage('assets/modals/album_details.php?id=' + detected_id);
-    });
-
-    $(".album .moar").click(function (e) {
-        var detected_id = $(this).parent().attr('id');
-        changeAlbum(detected_id);
-        e.stopPropagation();
     });
 }
 
@@ -114,8 +106,10 @@ function reload() {
 
 function makeAlbumHtmlFromObject(object) {
     var album_container = $("<div class='album'>");
+    var play = $("<div class=\"moar\"><i class=\"fa fa-play\"></i></div>");
+
     album_container.attr("id", object.id);
-    album_container.append("<div class=\"moar\"><i class=\"fa fa-play\"></i></div>");
+    album_container.append(play);
 
     var img = $("<img>");
 
@@ -142,6 +136,18 @@ function makeAlbumHtmlFromObject(object) {
     album_container.append(details);
     album_container.fadeOut(0);
 
+    // NO COMMENT
+
+    play.click(function (e) {
+        changeAlbum(object.id, 0);
+        e.stopPropagation();
+        e.preventDefault();
+    });
+
+    album_container.click(function () {
+        openModalPage('assets/modals/album_details.php?id=' + object.id);
+    });
+
     img.on("load", function () {
         album_container.fadeIn(animation_short);
     });
@@ -152,17 +158,6 @@ function makeAlbumHtmlFromObject(object) {
     });
 
     return album_container;
-
-    /*
-     <div class="album" id="21">
-     <div class="moar"><i class="fa fa-play"></i></div>
-     <img src="jukebox/21/thumb.jpg">
-     <div class="albumDetails">
-     <p class="albumArtist">Alanis Morissette</p>
-     <p class="albumTitle">Jagged Little pill</p>
-     </div>
-     </div>
-     */
 }
 
 function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here I guess
