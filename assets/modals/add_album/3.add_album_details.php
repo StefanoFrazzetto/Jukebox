@@ -134,7 +134,7 @@ if (!$album_count = count($_SESSION['possible_albums']) OR ! $artist_count = cou
     function checkIfAblumExists(){
          var title = albumTitleField.val();
 
-        $.getJSON('assets/php/check_album_exists.php?title=' + title).done(function(response) {
+        $.getJSON('assets/API/check_album_exists.php?title=' + title).done(function (response) {
             if (response[0] != 0) {
                 $('#titleWarning').html('Warning, there is another album with a similar name: <br> "' + response.title + '" <br> <img height= "80" src="' + response.cover_url + '"/>');
             } else {

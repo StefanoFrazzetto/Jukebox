@@ -64,7 +64,7 @@ if(isset($_SESSION['cd_title'])){
 	albumTitleField.change(function() {
 		var title = $(this).val();
 
-		$.getJSON('assets/php/check_album_exists.php?title=' + title).done(function(response) {
+        $.getJSON('assets/API/check_album_exists.php?title=' + title).done(function (response) {
 			if (response[0] != 0) {
 				$('#titleWarning').html('Warning, there is another album with a similar name: <br> "' + response.title + '" <br> <img height= "80" src="' + response.cover_url + '"/>');
 			} else {

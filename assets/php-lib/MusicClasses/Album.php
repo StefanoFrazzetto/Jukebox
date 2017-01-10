@@ -141,6 +141,26 @@ class Album implements JsonSerializable
     }
 
     /**
+     * Returns an array of albums that matches the given title
+     * @param $title string title of the album
+     * @return Album[]
+     */
+    public static function findAlbumByTitle($title)
+    {
+        $db = new Database();
+
+        $db_objects = $db->select('*', self::ALBUMS_TABLE, "WHERE `title` LIKE '$title'");
+
+        $albums = [];
+
+        foreach ($db_objects as $db_object) {
+            $albums[] = self::makeAlbumFromDatabaseObject($db_object);
+        }
+
+        return $albums;
+    }
+
+    /**
      * Saves or update the song to the database
      * @return bool
      */
