@@ -1,6 +1,6 @@
 <?php
 
-require '../php-lib/file-functions.php';
+require '../../php-lib/file-functions.php';
 
 if (file_exists($tmp_folder)) {
     deleteDir($tmp_folder);

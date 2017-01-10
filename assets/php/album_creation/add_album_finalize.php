@@ -5,9 +5,9 @@ ini_set("error_log", "php-error.log");
 
 session_start();
 
-$remove_from_cdparanoia_folder = "../modals/rip/scripts/remove_ripped.sh";
-require '../php-lib/dbconnect.php';
-require '../php-lib/file-functions.php';
+$remove_from_cdparanoia_folder = "../../modals/rip/scripts/remove_ripped.sh";
+require '../../php-lib/dbconnect.php';
+require '../../php-lib/file-functions.php';
 
 // tmp_folder from ripper
 if (isset($_SESSION['tmp_folder'])) {
@@ -47,7 +47,7 @@ if (mysqli_error($mysqli)) {
 
         session_destroy();
 
-        $cmd = 'mv "' . $tmp_folder . '" "../../jukebox/' . $id . '"';
+        $cmd = 'mv "' . $tmp_folder . '" "../../../jukebox/' . $id . '"';
         exec($cmd);
 
         exec($remove_from_cdparanoia_folder);
