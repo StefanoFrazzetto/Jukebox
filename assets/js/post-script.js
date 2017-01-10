@@ -381,7 +381,7 @@ home_btn.click(function () {
 });
 
 add_btn.click(function () {
-    $.ajax('assets/php/prepare_upload.php');
+    $.ajax('assets/php/album_creation/prepare_upload.php');
     openModalPage('assets/modals/add_album/1.upload_album.php');
 });
 

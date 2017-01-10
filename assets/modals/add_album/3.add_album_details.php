@@ -73,7 +73,7 @@ if (!$album_count = count($_SESSION['possible_albums']) OR ! $artist_count = cou
         }
 
     ?>
-    <form id="addAlbumForm" action="assets/php/add_album_details.php" class="text-center">
+    <form id="addAlbumForm" action="/assets/php/album_creation/add_album_details.php" class="text-center">
         <h3>Artist</h3>
             <label>
                 <input type="text" id="albumArtistField" name="albumArtist" placeholder="Artist" class="half-wide" value="<?php echo $artist_value ?>" required/>

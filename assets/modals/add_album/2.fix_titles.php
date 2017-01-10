@@ -69,7 +69,7 @@ $error = false;
 
     $previousCD = -1;
     ?>
-    <form action="/assets/php/fix_title.php" id="fixTitleForm">
+    <form action="/assets/php/album_creation/fix_title.php" id="fixTitleForm">
         <table class="cooltable">
             <tr>
                 <th>#</th>

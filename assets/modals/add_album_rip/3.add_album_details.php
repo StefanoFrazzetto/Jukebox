@@ -13,7 +13,7 @@ if(isset($_SESSION['cd_title'])){
 ?>
 <div class="modalHeader">Add new album<?php if(isset($_SESSION['cd_title'])) echo ": ". $_SESSION['cd_title']; ?></div>
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 350px;">
-	<form id="addAlbumForm" class="text-center" action="assets/php/add_album_details.php">
+    <form id="addAlbumForm" class="text-center" action="/assets/php/album_creation/add_album_details.php">
 
 		<h3>Artist</h3>
 			<label>
