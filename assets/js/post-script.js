@@ -145,7 +145,7 @@ function makeAlbumHtmlFromObject(object) {
     });
 
     album_container.click(function () {
-        openModalPage('assets/modals/album_details.php?id=' + object.id);
+        openModalPage('assets/modals/album_details?id=' + object.id);
     });
 
     img.on("load", function () {
@@ -341,7 +341,7 @@ $('#albumCover').click(function () {
         return;
     }
     if (typeof(album_id) !== 'undefined')
-        openModalPage('assets/modals/album_details.php?id=' + album_id);
+        openModalPage('assets/modals/album_details?id=' + album_id);
 });
 
 //alert(show); //Just for debugging

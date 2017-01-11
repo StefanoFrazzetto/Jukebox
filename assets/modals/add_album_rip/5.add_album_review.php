@@ -67,7 +67,7 @@ session_start();
 					$('#status').text('The new album has been added successfully.');
 
 					$('#openNewAlbum').removeClass('hidden').click(function(){
-						openModalPage('assets/modals/album_details.php?id=' + data);    
+                        openModalPage('assets/modals/album_details?id=' + data);
 					});
 
 					submit_btn.addClass('hidden');

@@ -71,7 +71,7 @@ session_start();
                         {
                             text: "Open Album",
                             callback: function () {
-                                openModalPage('assets/modals/album_details.php?id=' + data);
+                                openModalPage('assets/modals/album_details?id=' + data);
                             }
                         }
                     ]
