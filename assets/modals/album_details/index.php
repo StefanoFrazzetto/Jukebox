@@ -6,6 +6,14 @@ $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 $album = Album::getAlbum($albumID);
 
+$artists_ids = $album->getArtists();
+
+$artists = [];
+
+foreach ($artists_ids as $artist_id) {
+    $artists[] = Artist::getArtist($artist_id)->getName();
+}
+
 //<editor-fold desc="Downloader Stuff">
 // TODO @Stefano you should look into this
 // P.S. It's possibly totally broken now. :)
@@ -27,7 +35,7 @@ if (file_exists($outputFile)) {
 <div class="modalHeader">
     <div class="center">
         <?php echo $album->getTitle() ?> -
-        <?php echo implode(', ', $album->getArtists()) ?>
+        <?php echo implode(', ', $artists) ?>
     </div>
 </div>
 
