@@ -421,4 +421,22 @@ class Song implements JsonSerializable
     {
         return $this->id;
     }
+
+    /**
+     * @return string a player friendly time expressed in mm:ss
+     */
+    public function getTimeString()
+    {
+        $addZeros = function ($digit) {
+            if ($digit < 10) {
+                $digit = '0' . $digit;
+            }
+            return $digit;
+        };
+
+        $minutes = floor($this->length / 60);
+        $seconds = $this->length - $minutes * 60;
+
+        return $addZeros($minutes) . ':' . $addZeros($seconds);
+    }
 }

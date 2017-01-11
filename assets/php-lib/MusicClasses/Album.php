@@ -265,22 +265,6 @@ class Album implements JsonSerializable
     }
 
     /**
-     * @return Song[] | null the songs in an album
-     */
-    public function getTracks()
-    {
-        return Song::getSongsInAlbum($this->getId());
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * @return array
      */
     public function getAddedOn()
@@ -343,6 +327,14 @@ class Album implements JsonSerializable
     public function serializableArray()
     {
         return ["id" => $this->getId(), "title" => $this->getTitle(), "artists" => $this->getArtists(), "hits" => $this->getHits(), "last_played" => $this->getLastPlayed(), "cover" => $this->getCoverID()];
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -410,7 +402,7 @@ class Album implements JsonSerializable
 
         $file = $thumb ? 'thumb' : 'cover';
 
-        return FileUtil::$_albums_root . "$this->id/$file.jpg?" . $this->getCoverID();
+        return "/jukebox/$this->id/$file.jpg?" . $this->getCoverID();
     }
 
     /**
@@ -438,6 +430,20 @@ class Album implements JsonSerializable
     }
 
     /**
+     * The size in MB of the album folder (tracks and covers)
+     * @return float|null
+     */
+    public function getAlbumFolderSize()
+    {
+        return FileUtil::getDirectorySize($this->getAlbumPath());
+    }
+
+    public function getAlbumPath()
+    {
+        return FileUtil::$_albums_root . $this->getId() . '/';
+    }
+
+    /**
      * Gets an artist from the previous artist configuration and return a new Artist object
      * @return Artist
      */
@@ -450,6 +456,22 @@ class Album implements JsonSerializable
         $artist = $result[0]->artist;
 
         return Artist::softCreateArtist($artist);
+    }
+
+    /**
+     * @return int the number of CDs in the album
+     */
+    public function getCdCount()
+    {
+        return end($this->getTracks())->getCd();
+    }
+
+    /**
+     * @return Song[] | null the songs in an album
+     */
+    public function getTracks()
+    {
+        return Song::getSongsInAlbum($this->getId());
     }
 
     //</editor-fold>

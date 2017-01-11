@@ -267,7 +267,8 @@ function updatePlaylist() {
     var items = '';
 
     $.each(playlist, function (key, val) {
-        items = items + ("<tr><td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' id='track_" + key + "'>" + val.title + "</td></tr>");
+        if (typeof val != 'undefined')
+            items = items + ("<tr><td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' id='track_" + key + "'>" + val.title + "</td></tr>");
     });
     playlistTable.html(items);
 
