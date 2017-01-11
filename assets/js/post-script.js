@@ -192,16 +192,6 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
 }
 
 function alphabet(value) {
-    // Returns the result of the intersection of two arrays
-    function intersect(a, b) {
-        var t;
-        if (b.length > a.length)
-            t = b, b = a, a = t; // indexOf to loop over shorter
-        return a.filter(function (e) {
-            if (b.indexOf(e) !== -1) return true;
-        });
-    }
-
     restoreStorage();
 
     var artists = []; // Lists the artists ids beginning with the chosen letter
@@ -243,6 +233,8 @@ function alphabet(value) {
 function search(value) {
     restoreStorage();
 
+    var t0 = performance.now();
+
     var results = [];
 
     if (search_field == "tracks") {
@@ -251,13 +243,33 @@ function search(value) {
         return;
     }
 
-    albums_storage.forEach(function (element, index) {
-        if (element[search_field].toLowerCase().includes(value.toLowerCase()))
-            results[index] = element;
-    });
+    if (search_field == "artist") {
+        var artists = [];
+
+        artists_storage.forEach(function (artist) {
+            if (artist.name.toLowerCase().includes(value.toLowerCase()))
+                artists.push(artist.id);
+        });
+
+        albums_storage.forEach(function (album, id) {
+            if (intersect(album.artists, artists).length > 0)
+                results[id] = album;
+        });
+
+    } else {
+        albums_storage.forEach(function (element, index) {
+            if (element[search_field].toLowerCase().includes(value.toLowerCase()))
+                results[index] = element;
+        });
+    }
+
+
     results = results.filter(function (n) {
         return n != undefined
     });
+
+    var t1 = performance.now();
+    console.log('Took', (t1 - t0).toFixed(4), 'milliseconds to perform search.');
 
     if (results.length == 0) {
         error("No albums found with '" + value + "' in " + search_field + ".");
