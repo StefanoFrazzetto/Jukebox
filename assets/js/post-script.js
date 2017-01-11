@@ -184,17 +184,35 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
 }
 
 function alphabet(value) {
+    // Returns the result of the intersection of two arrays
+    function intersect(a, b) {
+        var t;
+        if (b.length > a.length)
+            t = b, b = a, a = t; // indexOf to loop over shorter
+        return a.filter(function (e) {
+            if (b.indexOf(e) !== -1) return true;
+        });
+    }
+
     restoreStorage();
 
-    var results = [];
+    var artists = []; // Lists the artists ids beginning with the chosen letter
 
-    albums_storage.forEach(function (element, index) {
+    artists_storage.forEach(function (element) {
         if (value != 0) {
-            if (element.artist.charAt(0).toLowerCase() == value.toLowerCase()) {
-                results[index] = element;
+            if (element.name.charAt(0).toLowerCase() == value.toLowerCase()) {
+                artists.push(element.id);
             }
         }
-        else if ((/[^a-zA-Z]/.test(element.artist.charAt(0))))
+
+        else if ((/[^a-zA-Z]/.test(element.name.charAt(0))))
+            artists.push(element.id);
+    });
+
+    var results = []; // List of albums with the given artists
+
+    albums_storage.forEach(function (element, index) {
+        if ((intersect(element.artists, artists)).length > 0)
             results[index] = element;
     });
 
