@@ -8,6 +8,7 @@ phpmyadmin
 # Ignore files
 info.php
 jukebox.iml
+test.php
 
 # Ignore log files globaly
 *.log
