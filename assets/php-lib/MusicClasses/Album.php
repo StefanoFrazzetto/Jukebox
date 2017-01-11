@@ -413,5 +413,44 @@ class Album implements JsonSerializable
         return FileUtil::$_albums_root . "$this->id/$file.jpg?" . $this->getCoverID();
     }
 
+    /**
+     * Returns an array of songs created with the legacy album system
+     * @return Song[]
+     */
+    public function getLegacySongs()
+    {
+        $db = new Database();
+
+        $result = $db->select('tracks', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+
+        //$result = $result;
+
+        $songs = json_decode($result[0]->tracks);
+
+        $_songs = [];
+
+        foreach ($songs as $song) {
+            $song = Song::importSongFromJson($song, $this->id);
+            $_songs[] = $song;
+        }
+
+        return $_songs;
+    }
+
+    /**
+     * Gets an artist from the previous artist configuration and return a new Artist object
+     * @return Artist
+     */
+    public function getLegacyArtist()
+    {
+        $db = new Database();
+
+        $result = $db->select('artist', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+
+        $artist = $result[0]->artist;
+
+        return Artist::softCreateArtist($artist);
+    }
+
     //</editor-fold>
 }

@@ -11,6 +11,7 @@ require_once __DIR__ . '/../../php/Database.php';
 class Song implements JsonSerializable
 {
     const SONGS_TABLE = 'songs';
+    const SONG_ARTISTS_TABLE = 'song_artists';
 
     /**
      * @var int
@@ -44,7 +45,7 @@ class Song implements JsonSerializable
     private $url;
 
     /**
-     * @var int lenght of the track in seconds
+     * @var int length of the track in seconds
      */
     private $length;
     /**
@@ -112,6 +113,31 @@ class Song implements JsonSerializable
     }
 
     /**
+     * Creates a song object out of a legacy song json
+     * @param $json object json
+     * @param $album_id int
+     * @return Song
+     */
+    public static function importSongFromJson($json, $album_id)
+    {
+        $song = new Song();
+
+        $song->setTitle($json->title);
+
+        $song->setTrackNo($json->track_no);
+
+        $song->setCd($json->cd);
+
+        $song->setUrl($json->url);
+
+        $song->length = $json->length;
+
+        $song->setAlbumId($album_id);
+
+        return $song;
+    }
+
+    /**
      * Returns a Song from database, null if not found
      * @param $id int
      * @return Song | null
@@ -152,7 +178,7 @@ class Song implements JsonSerializable
 
             $song->title = $db_object->title;
 
-            $song->length = $db_object->lenght;
+            $song->length = $db_object->length;
 
             $song->url = $db_object->url;
 
@@ -308,14 +334,6 @@ class Song implements JsonSerializable
     /**
      * @return int
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return int
-     */
     public function getAlbumId()
     {
         return $this->album_id;
@@ -383,5 +401,24 @@ class Song implements JsonSerializable
     public function getArtists()
     {
         return $this->artists;
+    }
+
+    /**
+     * Adds an artist to the song
+     * @param $id int the artist id
+     */
+    public function addArtist($id)
+    {
+        $db = new Database();
+
+        $db->insert(self::SONG_ARTISTS_TABLE, ['song_id' => $this->getId(), 'artist_id' => $id]);
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }
