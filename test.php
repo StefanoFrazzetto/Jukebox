@@ -1,7 +1,9 @@
 <?php
 
-require_once "assets/php-lib/Git.php";
+require_once "assets/php-lib/ImageFetcher.php";
 
-$git = new Git();
+header('Content-Type: text/json');
 
-print_r($git::getChanges());
+$image = new ImageFetcher("Metallica", "Master of puppets");
+
+print_r($image->getAll());
