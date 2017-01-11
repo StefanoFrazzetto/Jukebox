@@ -521,8 +521,6 @@ menuSection.slider.toggle = function () {
 };
 //endregion
 
-$.getScript('/assets/js/storageSorter.js');
-
 $(document).ready(function () {
     var height = remoteControls.outerHeight();
     margin = parseInt(remoteControls.css('padding-left'));

@@ -61,59 +61,57 @@ function slideClose() {
 }
 
 $(document).ready(function () {
-    $.getScript('/assets/js/storageSorter.js', function () {
-        search_input.blur(function () {
-            slideClose();
-        });
+    search_input.blur(function () {
+        slideClose();
+    });
 
-        searchbox_icon.click(function () {
-            slideToggle();
-        });
+    searchbox_icon.click(function () {
+        slideToggle();
+    });
 
-        artist_icon.click(function (e) {
-            changeSearchField('artist', artist_icon);
-            e.preventDefault();
-        });
+    artist_icon.click(function (e) {
+        changeSearchField('artist', artist_icon);
+        e.preventDefault();
+    });
 
-        album_icon.click(function (e) {
-            changeSearchField('title', album_icon);
-            e.preventDefault();
-        });
+    album_icon.click(function (e) {
+        changeSearchField('title', album_icon);
+        e.preventDefault();
+    });
 
-        song_icon.click(function (e) {
-            e.preventDefault();
-            changeSearchField('tracks', song_icon);
-            return false;
-        });
+    song_icon.click(function (e) {
+        e.preventDefault();
+        changeSearchField('tracks', song_icon);
+        return false;
+    });
 
-        searchbox.submit(function (event) {
-            event.preventDefault();
+    searchbox.submit(function (event) {
+        event.preventDefault();
 
-            var search_query = search_input.val();
-            search(search_query);
-            slideClose();
-        });
+        var search_query = search_input.val();
+        search(search_query);
+        slideClose();
+    });
 
-        sort_by_menu.click(function () {
-            $('#sorter').find('.by.active').removeClass('active');
-            $(this).addClass('active');
-            sort_by = $(this).attr('data-value');
+    sort_by_menu.click(function () {
+        $('#sorter').find('.by.active').removeClass('active');
+        $(this).addClass('active');
+        sort_by = $(this).attr('data-value');
 
-            getItSorted(sort_by);
+        getItSorted(sort_by);
 
-            page = 1;
-            paginate();
-            sorter.toggle(animation_short);
-        });
+        page = 1;
+        paginate();
+        sorter.toggle(animation_short);
+    });
 
-        searchbox_icon_bis.click(function () {
-            searchbox.submit();
-        });
+    searchbox_icon_bis.click(function () {
+        searchbox.submit();
+    });
 
-        sort_by_btn.click(function (e) {
-            e.preventDefault();
-            sorter.toggle();
-        });
+    sort_by_btn.click(function (e) {
+        e.preventDefault();
+        sorter.toggle();
     });
 });
 
