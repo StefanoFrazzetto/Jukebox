@@ -128,6 +128,7 @@ if (file_exists($outputFile)) {
     </div>
 </div>
 
+<!--suppress JSUnusedLocalSymbols -->
 <script type="text/javascript">
     var album_id =  <?php echo $albumID;?>;
     var folderSize =  <?php echo $album->getAlbumFolderSize();?>;
