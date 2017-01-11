@@ -94,6 +94,16 @@ function backupStorage() {
     is_storage_partial = true;
 }
 
+// SAFE GETTERS
+
+function getArtistName(id) {
+    if (typeof artists_storage[id] === "undefined") {
+        return "[NO ARTIST]";
+    }
+    else
+        return artists_storage[id].name;
+}
+
 // SORTING
 
 function artistSortingFunction(a, b) {
