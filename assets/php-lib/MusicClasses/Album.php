@@ -353,6 +353,10 @@ class Album implements JsonSerializable
         $this->title = $title;
     }
 
+    /**
+     * Return an array of participating artists IDs
+     * @return int []
+     */
     public function getArtists()
     {
         $raws = Artist::getArtistIdsInAlbum($this->getId());
@@ -393,6 +397,23 @@ class Album implements JsonSerializable
     public function getCoverPath()
     {
         return FileUtil::$_albums_root . "/$this->id/cover.jpg";
+    }
+
+    /**
+     * Returns an array of contributing artists
+     * @return string[]
+     */
+    public function getArtistsName()
+    {
+        $raws = Artist::getArtistIdsInAlbum($this->getId());
+
+        $arr = []; // I'm a pirate!
+
+        foreach ($raws as $raw) {
+            $arr[] = Artist::getArtist(intval($raw[0]))->getName();
+        }
+
+        return $arr;
     }
 
     public function getCoverUrl($thumb = false)
