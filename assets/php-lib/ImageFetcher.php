@@ -24,31 +24,44 @@ class ImageFetcher
     {
         $this->artist = str_replace(" ", "+", $artist);
         $this->album = str_replace(" ", "+", $album);
-        $this->_search_query = $this->artist . " " . $this->album;
+        $this->_search_query = $this->artist . "+" . $this->album;
     }
 
     public function getAll()
     {
-        $images["youtube"] = $this->getYoutube($this->_search_query);
-        $images["covershut"] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 4);
-        $images["seekacover"] = $this->getFrom("http://www.seekacover.com/cd/$this->_search_query", 2);
-        $images["allmusic"] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 2);
-        $images["google"] = $this->getFrom("https://www.google.co.uk/search?q=$this->_search_query&tbm=isch&tbs=isz:l", 10);
-        $images["discogs"] = $this->getFrom("https://www.discogs.com/search/?q=$this->_search_query&type=all", 2);
+//        $images[] = $this->getYoutube($this->_search_query);
+        $images["covershut"] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 10);
+//        $images[] = $this->getFrom("http://www.seekacover.com/cd/$this->_search_query", 2);
+        $images["allmusic"] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 4);
+//        $images[] = $this->getFrom("https://www.google.co.uk/search?q=$this->_search_query&tbm=isch&tbs=isz:l", 10);
+        $images["discogs"] = $this->getFrom("https://www.discogs.com/search/?q=$this->_search_query&type=all", 4);
         $images["slothradio"] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$$this->album", 2);
 
-        return json_encode($this->removeNonWorkingImages($images));
+        $images_array = [];
+
+        foreach ($images as $website) {
+            $images_array = array_merge($images_array, $website);
+        }
+
+        $this->removeUselessImages($images_array);
+
+        return json_encode($images_array);
     }
 
-    private function removeNonWorkingImages($urls)
+    /**
+     * Removes all the duplicates and the data:image from the images array.
+     *
+     * @param $images_array - the array containing the images URLs.
+     */
+    private function removeUselessImages(&$images_array)
     {
-        foreach ($urls as $key => $temp_url) {
-            if (strpos($temp_url, "data:image") !== FALSE) {
-                unset($urls[$key]);
+        foreach ($images_array as $key => $url) {
+            if (strpos($url, "data:image") !== false) {
+                unset($images_array[$key]);
             }
         }
 
-        return $urls;
+        $images_array = array_values(array_unique($images_array));
     }
 
     private function getStringBetween($string, $start, $end)
@@ -74,9 +87,7 @@ class ImageFetcher
             $imageurls = null;
         }
 
-        if (!$imageurls == null) {
-            return $imageurls;
-        }
+        return $imageurls == null ? null : $imageurls;// yes
     }
 
     private function getFrom($url, $no = 2)
