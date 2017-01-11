@@ -20,6 +20,26 @@ class Git
     }
 
     /**
+     * Returns an array containing the result associated with the flag used.
+     * The default flag is "-r", so the result will contain only the remote branches.
+     * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
+     *
+     * @param string $flag - the flag and/or additional parameters to pass (default is "-r").
+     * @return array - the array containing the remote branches.
+     */
+    public static function branch($flag = "-r")
+    {
+        $cmd = shell_exec("git branch $flag");
+        $branches = explode("\n", trim($cmd));
+
+        if ($flag != "") {
+            $branches = array_slice($branches, 1);
+        }
+
+        return $branches;
+    }
+
+    /**
      * Changes the current branch to $branch_name.
      *
      * @param string $branch_name
@@ -39,26 +59,6 @@ class Git
             return false;
         }
 
-    }
-
-    /**
-     * Returns an array containing the result associated with the flag used.
-     * The default flag is "-r", so the result will contain only the remote branches.
-     * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
-     *
-     * @param string $flag - the flag and/or additional parameters to pass (default is "-r").
-     * @return array - the array containing the remote branches.
-     */
-    public static function branch($flag = "-r")
-    {
-        $cmd = shell_exec("git branch $flag");
-        $branches = explode("\n", trim($cmd));
-
-        if ($flag != "") {
-            $branches = array_slice($branches, 1);
-        }
-
-        return $branches;
     }
 
     /**
@@ -90,13 +90,20 @@ class Git
      * Pulls the latest changes from the current repository.
      *
      * @param string $branch - the branch where the changes will be pulled from.
+     * @param bool $force - if set to true, forces the pull to the chosen branch.
      * @return bool - true if no error occurs, false otherwise.
      */
-    public function pull($branch = "")
+    public function pull($branch = "", $force = false)
     {
         $branch = $branch == "" ? $this->_current_branch : $branch;
 
-        $res = shell_exec("git pull origin $branch");
+        if (!$force) {
+            $cmd = "git pull origin $branch";
+        } else {
+            $cmd = "git fetch --all && git reset --hard origin/$branch";
+        }
+
+        $res = shell_exec($cmd);
         if (strpos($res, "done") !== false || strpos($res, "up-to-date") !== false) {
             return true;
         } else {
@@ -104,19 +111,19 @@ class Git
         }
     }
 
-    /**
-     * Pushes the changes to the branch.
-     *
-     * @param string $branch - the branch where the changes will be pushed.
-     * @return bool - true on success, false otherwise.
-     */
-    private function push($branch = "")
-    {
-        if ($branch != "") {
-            //return shell_exec("git push $branch");
-        } else {
-            return false;
-        }
-    }
+//    /**
+//     * Pushes the changes to the branch.
+//     *
+//     * @param string $branch - the branch where the changes will be pushed.
+//     * @return bool - true on success, false otherwise.
+//     */
+//    private function push($branch = "")
+//    {
+//        if ($branch != "") {
+//            //return shell_exec("git push $branch");
+//        } else {
+//            return false;
+//        }
+//    }
 
 }
