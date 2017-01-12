@@ -199,6 +199,9 @@ class Song implements JsonSerializable
 
         $db_objects = $db->select('*', Song::SONGS_TABLE, "WHERE `album_id` = $id");
 
+        if (!is_array($db_objects))
+            $db_objects = [];
+
         $songs = [];
 
         foreach ($db_objects as $db_object) {

@@ -81,6 +81,9 @@ class Artist implements JsonSerializable
             WHERE songs.album_id = $id"
         );
 
+        if (!is_array($db_object))
+            $db_object = [];
+
         return $db_object;
     }
 

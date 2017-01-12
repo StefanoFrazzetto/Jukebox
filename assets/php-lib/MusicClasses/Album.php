@@ -484,7 +484,13 @@ class Album implements JsonSerializable
      */
     public function getCdCount()
     {
-        return end($this->getTracks())->getCd();
+        $tracks = $this->getTracks();
+
+        if (count($tracks) == 0) {
+            return 0;
+        }
+
+        return end($tracks)->getCd();
     }
 
     /**
