@@ -168,17 +168,17 @@ class Song implements JsonSerializable
 
             $song->created = true;
 
-            $song->id = $db_object->id;
+            $song->id = intval($db_object->id);
 
-            $song->album_id = $db_object->album_id;
+            $song->album_id = intval($db_object->album_id);
 
-            $song->cd = $db_object->cd;
+            $song->cd = intval($db_object->cd);
 
-            $song->track_no = $db_object->track_no;
+            $song->track_no = intval($db_object->track_no);
 
             $song->title = $db_object->title;
 
-            $song->length = $db_object->length;
+            $song->length = intval($db_object->length);
 
             $song->url = $db_object->url;
 
