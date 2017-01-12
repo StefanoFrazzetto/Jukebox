@@ -107,8 +107,8 @@ function getArtistName(id) {
 // SORTING
 
 function artistSortingFunction(a, b) {
-    var x = artists_storage[a.artists[0]].name.toLowerCase();
-    var y = artists_storage[b.artists[0]].name.toLowerCase();
+    var x = getArtistName(a.artists[0]).toLowerCase();
+    var y = getArtistName(b.artists[0]).toLowerCase();
     var gne = x < y ? -1 : x > y ? 1 : 0;
 
     if (gne == 0) {
@@ -131,8 +131,8 @@ function sortByTitle() {
         var gne = x < y ? -1 : x > y ? 1 : 0;
 
         if (gne == 0) {
-            x = artists_storage[a.artists[0]].name.toLowerCase();
-            y = artists_storage[b.artists[0]].name.toLowerCase();
+            x = getArtistName(a.artists[0]).toLowerCase();
+            y = getArtistName(b.artists[0]).toLowerCase();
             return x < y ? -1 : x > y ? 1 : 0;
         }
 
