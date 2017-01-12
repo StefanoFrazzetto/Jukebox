@@ -6,6 +6,10 @@ $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 $album = Album::getAlbum($albumID);
 
+if ($album == null) {
+    exit("No such album.");
+}
+
 $artists_ids = $album->getArtists();
 
 $artists = [];
@@ -67,7 +71,7 @@ if (file_exists($outputFile)) {
                     $CDMap[$CD][] = $key;
                 }
                 ?>
-                <tr class="trackRow" data-track-no="<?php echo $track->getTrackNo() ?>"
+                <tr class="trackRow" data-track-no="<?php echo $key + 1; ?>"
                     data-album="<?php echo $albumID ?>">
                     <td class="num">
                         <?php echo $key + 1; ?>
