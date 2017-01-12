@@ -1,20 +1,20 @@
 <?php
 
 ini_set("log_errors", 1);
-ini_set("error_log", "php-error.log");
+ini_set("error_log", "../../../logs/album_finalize.log");
 
 session_start();
 
 $remove_from_cdparanoia_folder = "../../modals/rip/scripts/remove_ripped.sh";
-require '../../php-lib/dbconnect.php';
-require '../../php-lib/file-functions.php';
+require_once '../../php-lib/MusicClasses/Album.php';
+require_once '../../php-lib/file-functions.php';
 
 // tmp_folder from ripper
 if (isset($_SESSION['tmp_folder'])) {
     $tmp_folder = $_SESSION['tmp_folder'];
 }
 
-$album = $_SESSION['albumTitle'];
+$title = $_SESSION['albumTitle'];
 $artist = $_SESSION['albumArtist'];
 
 $tracks = $_SESSION['tracks'];
@@ -24,39 +24,49 @@ $json_tracks = str_replace('\'', '\\\'', json_encode($tracks));
 
 $tracks_no = count($tracks);
 
-$result = $mysqli->query("INSERT INTO albums (title,artist,tracks_no,tracks) VALUES('$album','$artist','$tracks_no','$json_tracks')");
-if (mysqli_error($mysqli)) {
-    echo -2;
-    die;
-} else {
-    $result = $mysqli->query("SELECT LAST_INSERT_ID()");
+//$result = $mysqli->query("INSERT INTO albums (title,artist,tracks_no,tracks) VALUES('$album','$artist','$tracks_no','$json_tracks')");
 
-    $id = $result->fetch_assoc();
+$album = new Album();
 
-    $id = $id['LAST_INSERT_ID()'];
+$album->setTitle($title);
 
-    if ($id !== FALSE) {
+$album->save();
 
+if ($album->getId() != null) {
+    $id = $album->getId();
 
-        unset($_SESSION['covers'][$picked_cover]);
+    // Artist
+    $_artist = Artist::softCreateArtist($artist);
 
-        foreach ($_SESSION['covers'] as $cover) {
-            if ($cover != "cover.jpg")
-                unlink($tmp_folder . $cover);
-        }
+    // tracks
+    foreach ($tracks as $track) {
+        $song = Song::importSongFromJson((object)$track, $id);
 
-        session_destroy();
-
-        $cmd = 'mv "' . $tmp_folder . '" "../../../jukebox/' . $id . '"';
-        exec($cmd);
-
-        exec($remove_from_cdparanoia_folder);
-
-        //rename("tmp_uploads", "../../jukebox/$id");
-        echo $id;
-        exit;
+//        error_log(json_encode($song));
+//        error_log(json_encode($track));
+        $song->save();
+        $song->addArtist($_artist->getId());
     }
 
-    echo '-1';
-    die();
+    // Handle files
+    unset($_SESSION['covers'][$picked_cover]);
+
+    foreach ($_SESSION['covers'] as $cover) {
+        if ($cover != "cover.jpg")
+            unlink($tmp_folder . $cover);
+    }
+
+    session_destroy();
+
+    $cmd = 'mv "' . $tmp_folder . '" "../../../jukebox/' . $id . '"';
+    exec($cmd);
+
+    exec($remove_from_cdparanoia_folder);
+
+    //rename("tmp_uploads", "../../jukebox/$id");
+    echo $id;
+    exit;
 }
+
+echo '-1';
+die();
