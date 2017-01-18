@@ -6,6 +6,8 @@
  * Time: 10:02
  */
 
+$start = microtime(true);
+
 require_once '../php-lib/MusicClasses/Album.php';
 require_once '../php-lib/MusicClasses/Artist.php';
 require_once '../php-lib/MusicClasses/Song.php';
@@ -20,7 +22,9 @@ $storages = [
     "albums" => Album::getAllAlbums(),
     "radios" => Radio::getAllRadios(),
     "genres" => json_decode($genres),
-    "placeholder" => "/assets/img/album-placeholder.png"
+    "placeholder" => "/assets/img/album-placeholder.png",
 ];
+
+$storages['time'] = microtime(true) - $start;
 
 echo json_encode($storages);
