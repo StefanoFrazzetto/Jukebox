@@ -104,6 +104,19 @@ function getArtistName(id) {
         return artists_storage[id].name;
 }
 
+function makeArtistsString(artists) {
+    if (typeof artists != "object")
+        return '';
+
+    var artists_names = [];
+
+    artists.forEach(function (art) {
+        artists_names.push(getArtistName(art));
+    });
+
+    return artists_names.join(', ');
+}
+
 // SORTING
 
 function artistSortingFunction(a, b) {

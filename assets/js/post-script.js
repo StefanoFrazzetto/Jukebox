@@ -126,15 +126,7 @@ function makeAlbumHtmlFromObject(object) {
     artist.addClass("albumArtist");
     title.addClass("albumTitle");
 
-    var artists_string = '';
-
-    object.artists.forEach(function (artist) {
-        artists_string += getArtistName(artist) + ', ';
-    });
-
-    artists_string = artists_string.replace(/,\s$/gm, '');
-
-    artist.html(artists_string);
+    artist.html(makeArtistsString(object.artists));
     title.html(object.title);
 
     details.append(artist);
