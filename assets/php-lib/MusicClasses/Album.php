@@ -18,7 +18,8 @@ class Album implements JsonSerializable
      */
     const ALBUMS_TABLE = 'albums';
 
-    const LAST_PLAYED_FILE = __DIR__ . '/../../config/lastid';
+//    const LAST_PLAYED_FILE = __DIR__ . '/../../config/lastid';
+    const LAST_PLAYED_FILE = '/var/www/html/assets/config/lastid';
 
     /**
      * @var int database id
@@ -84,7 +85,11 @@ class Album implements JsonSerializable
             $album->setHits($db_object->hits);
             $album->setAddedOn($db_object->added_on);
             $album->setLastPlayed($db_object->last_played);
-            $album->setGenre($db_object->genre);
+            if (isset($db_object->genre)) {
+                $album->setGenre($db_object->genre);
+            } else {
+                $album->genre = null;
+            }
 
             return $album;
         } catch (Exception $e) {

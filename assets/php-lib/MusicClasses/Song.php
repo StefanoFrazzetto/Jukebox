@@ -130,12 +130,23 @@ class Song implements JsonSerializable
 
         $song->setUrl($json->url);
 
-        $song->length = $json->length;
+        $song->setLength($json->length);
 
         $song->setAlbumId($album_id);
 
         return $song;
     }
+
+    /**
+     * @param int $length
+     */
+    public function setLength($length)
+    {
+        $this->length = intval($length);
+    }
+
+
+    // HERE TO BE DRAGONS
 
     /**
      * Returns a Song from database, null if not found
@@ -153,9 +164,6 @@ class Song implements JsonSerializable
 
         return self::makeSongFromDatabaseObject($db_object[0]);
     }
-
-
-    // HERE TO BE DRAGONS
 
     /**
      * @param $db_object object
@@ -312,7 +320,7 @@ class Song implements JsonSerializable
                 return false;
             }
 
-            $this->id = $database->getLastInsertedID();
+            $this->id = intval($database->getLastInsertedID());
             $this->created = true;
         }
 
@@ -347,7 +355,7 @@ class Song implements JsonSerializable
      */
     public function setAlbumId($album_id)
     {
-        $this->album_id = $album_id;
+        $this->album_id = intval($album_id);
     }
 
     /**
@@ -363,7 +371,7 @@ class Song implements JsonSerializable
      */
     public function setCd($cd)
     {
-        $this->cd = $cd;
+        $this->cd = intval($cd);
     }
 
     /**
@@ -379,7 +387,7 @@ class Song implements JsonSerializable
      */
     public function setTrackNo($track_no)
     {
-        $this->track_no = $track_no;
+        $this->track_no = intval($track_no);
     }
 
     /**

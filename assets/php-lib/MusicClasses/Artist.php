@@ -95,9 +95,10 @@ class Artist implements JsonSerializable
 
         $artists = [];
 
-        foreach ($db_object as $artist) {
-            $artists[] = self::makeArtistFromDatabaseObject($artist);
-        }
+        if (is_array($db_object))
+            foreach ($db_object as $artist) {
+                $artists[] = self::makeArtistFromDatabaseObject($artist);
+            }
 
         return $artists;
     }
