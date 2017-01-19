@@ -6,6 +6,7 @@
  * Time: 18:29
  */
 
+require_once '../../php-lib/Git.php';
 ?>
 
 <div class="modalHeader">Update</div>
@@ -56,13 +57,11 @@
     <label for="branch">Branch: </label>
     <select id="branch">
         <?php
-        $cmd = shell_exec("git branch -r");
+        $git = new Git();
 
-        $branches = explode("\n", $cmd);
+        $branches = Git::branch();
 
-        $branches = array_slice($branches, 1);
-
-        $current_branch = trim(`git rev-parse --symbolic-full-name --abbrev-ref HEAD`);
+        $current_branch = $git->getCurrentBranch();
 
         foreach ($branches as $branch) {
             $branch = trim($branch);
@@ -76,6 +75,8 @@
         ?>
     </select>
     Current Branch: <?php echo "origin/$current_branch"; ?>
+
+    <button class="right" id="branch_button">Okay</button>
 </div>
 <script>
     var updateTried = false;
@@ -113,8 +114,10 @@
         var updating = $('#updating');
         updating.show();
 
-        $.ajax('/assets/cmd/exec.php?cmd=git_force_pull')
-            .done(function () {
+        $.getJSON('/assets/API/git.php?git=pull')
+            .done(function (done) {
+                console.log(done);
+                // TODO better status handling
                 updateTried = true;
                 checkForUpdates();
             })
@@ -147,6 +150,30 @@
     $('.check-update-btn').click(function () {
         checkForUpdates();
     });
+
+    function changeBranch(branch_name) {
+        $.getJSON('/assets/API/git.php?git=checkout&branch=' + branch_name)
+            .done(function (data) {
+                if (data.status === 'success') {
+                    alert("Checked out to " + branch_name + " successfully!");
+                } else {
+                    error("Failed to checkout branch " + branch_name);
+                }
+            })
+            .fail(function () {
+                error("Failed to checkout branch " + branch_name);
+            });
+    }
+
+    $('#branch').change(function () {
+        var branch = $(this).val();
+        changeBranch(branch);
+    });
+
+    $('#branch_button').click(function () {
+        changeBranch($('#branch').val())
+    });
+
 
     loadChangeList();
     checkForUpdates();
