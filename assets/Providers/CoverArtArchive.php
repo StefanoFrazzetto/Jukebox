@@ -3,23 +3,41 @@
 /**
  * Class CoverArtArchive retrieves a music album cover and thumbnails using its release ID.
  *
- * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
+ * @author Stefano Frazzetto <s.frazzetto22@gmail.com>
  * @version 1.0.0
  * @see https://musicbrainz.org/doc/Cover_Art_Archive/API
- * @licence GNU AGPL v3 - https://www.gnu.org/licenses/agpl-3.0.txt
+ * @licence https://www.gnu.org/licenses/agpl-3.0.txt GNU AGPL v3
  */
 class CoverArtArchive
 {
+    /**
+     * @var string $release_id the album release ID
+     */
     private $release_id;
 
+    /**
+     * @var array $raw_array the raw json from CoverArtArchive
+     */
     private $raw_array;
+
+    /**
+     * @var array $covers the array containing the covers
+     */
     private $covers;
+
+    /**
+     * @var  array $small_thumbnails the array containing the small thumbnails
+     */
     private $small_thumbnails;
+
+    /**
+     * @var array $large_thumbnails the array containing the large thumbnails
+     */
     private $large_thumbnails;
 
     /**
      * CoverArtArchive constructor.
-     * @param $release_id - the album release ID.
+     * @param string $release_id - the album release ID.
      */
     public function __construct($release_id)
     {
