@@ -16,11 +16,11 @@ class Git
     function __construct()
     {
         $cmd = "git branch | sed -n '/\\* /s///p'";
-        $branch = shell_exec(trim($cmd));
+        $branch = trim(shell_exec($cmd));
         if (strpos($branch, "detached") !== false) {
             $this->forcePull();
         }
-        $branch = shell_exec(trim($cmd));
+        $branch = trim(shell_exec($cmd));
         $this->_current_branch = $branch;
     }
 
@@ -29,16 +29,18 @@ class Git
      * The default flag is "-r", so the result will contain only the remote branches.
      * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
      *
-     * @param string $flag - the flag and/or additional parameters to pass (default returns the current branch).
+     * @param string $flag - the flag and/or additional parameters to pass (default returns the local branches).
      * @return array|string - the array containing the branches or the string equal to the current branch.
      */
     public static function branch($flag = "")
     {
         $branches = shell_exec("git branch $flag");
+        $branches = explode("\n", trim($branches));
 
-        if ($flag != "") {
-            $branches = explode("\n", trim($branches));
-            $branches = array_slice($branches, 1);
+        foreach ($branches as $key => $branch) {
+            if (strpos($branch, "detached") !== false) {
+                unset($branches[$key]);
+            }
         }
 
         return $branches;
