@@ -15,7 +15,7 @@ class Git
     /** Constructor */
     function __construct()
     {
-        $branch = $this->branch("");
+        $branch = $this->branch();
         $this->_current_branch = preg_replace("/[^A-Za-z0-9 ]/", '', $branch);
     }
 
@@ -27,10 +27,10 @@ class Git
      * @param string $flag - the flag and/or additional parameters to pass (default is "-r").
      * @return array - the array containing the remote branches.
      */
-    public static function branch($flag = "-r")
+    public static function branch($flag = null)
     {
         $cmd = shell_exec("git branch $flag");
-        $branches = explode("\n", trim($cmd));
+        $branches = explode("\n  ", trim($cmd));
 
         if ($flag != "") {
             $branches = array_slice($branches, 1);
@@ -52,7 +52,7 @@ class Git
             throw new InvalidArgumentException("You have to pass the target branch name.");
         }
 
-        $res = shell_exec("git checkout $branch_name");
+        $res = shell_exec("git checkout $branch_name --force");
         if (strpos($res, "error") !== false) {
             return true;
         } else {

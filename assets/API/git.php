@@ -15,16 +15,26 @@ $git = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
 $return = ["status" => "error"];
 
 switch ($git) {
-    case 'change_branch':
+    case 'checkout':
         $branch = filter_input(INPUT_GET, 'branch', FILTER_SANITIZE_STRING);
 
         if ($branch === false || $branch === null) {
             $branch = 'origin/master';
         }
 
-        //(new Git())->setBranch($branch);
+        Git::checkout($branch);
 
         $return['status'] = 'success';
+        break;
+    case 'pull':
+
+        (new Git())->pull(null, true);
+
+        $return['status'] = 'success';
+        break;
+    case 'branch':
+        $return['status'] = 'success';
+        $return['data'] = Git::branch();
         break;
     default:
         $return['message'] = 'Invalid git command';
