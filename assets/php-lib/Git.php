@@ -4,7 +4,7 @@
  * Class Git.php
  *
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
- * @version 1.0.0
+ * @version 1.1.0
  * @licence GNU AGPL v3 - https://www.gnu.org/licences/agpl-3.0.txt
  */
 class Git
@@ -15,8 +15,13 @@ class Git
     /** Constructor */
     function __construct()
     {
-        $branch = $this->branch();
-        $this->_current_branch = preg_replace("/[^A-Za-z0-9 ]/", '', $branch);
+        $cmd = "git branch | sed -n '/\\* /s///p'";
+        $branch = shell_exec(trim($cmd));
+        if (strpos($branch, "detached") !== false) {
+            $this->forcePull();
+        }
+        $branch = shell_exec(trim($cmd));
+        $this->_current_branch = $branch;
     }
 
     /**
@@ -24,15 +29,15 @@ class Git
      * The default flag is "-r", so the result will contain only the remote branches.
      * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
      *
-     * @param string $flag - the flag and/or additional parameters to pass (default is "-r").
-     * @return array - the array containing the remote branches.
+     * @param string $flag - the flag and/or additional parameters to pass (default returns the current branch).
+     * @return array|string - the array containing the branches or the string equal to the current branch.
      */
-    public static function branch($flag = null)
+    public static function branch($flag = "")
     {
-        $cmd = shell_exec("git branch $flag");
-        $branches = explode("\n  ", trim($cmd));
+        $branches = shell_exec("git branch $flag");
 
         if ($flag != "") {
+            $branches = explode("\n", trim($branches));
             $branches = array_slice($branches, 1);
         }
 
@@ -40,7 +45,18 @@ class Git
     }
 
     /**
-     * Changes the current branch to $branch_name.
+     * Forces the pull from the specified branch (default is origin/master).
+     *
+     * @param string $branch - the branch to force pull
+     */
+    private function forcePull($branch = "origin/master")
+    {
+        exec("git fetch --all");
+        exec("git reset --hard $branch");
+    }
+
+    /**
+     * Changes the current branch to $branch_name forcing the checkout.
      *
      * @param string $branch_name
      * @return boolean - true on success, false otherwise.
