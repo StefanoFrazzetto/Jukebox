@@ -40,6 +40,8 @@ class Git
         foreach ($branches as $key => $branch) {
             if (strpos($branch, "detached") !== false) {
                 unset($branches[$key]);
+            } else {
+                $branches[$key] = preg_replace("/\\W+/", '', $branch);
             }
         }
 
