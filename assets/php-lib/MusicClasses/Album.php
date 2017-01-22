@@ -369,7 +369,7 @@ class Album implements JsonSerializable
         $arr = []; // I'm a pirate!
 
         foreach ($raws as $raw) {
-            $arr[] = intval($raw[0]);
+            $arr[] = intval($raw->artist_id);
         }
 
         return $arr;
@@ -415,7 +415,7 @@ class Album implements JsonSerializable
         $arr = []; // I'm a pirate!
 
         foreach ($raws as $raw) {
-            $arr[] = Artist::getArtist(intval($raw[0]))->getName();
+            $arr[] = Artist::getArtist(intval($raw->artist_id))->getName();
         }
 
         return $arr;
