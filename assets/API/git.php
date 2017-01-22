@@ -37,7 +37,7 @@ switch ($git) {
         break;
     case 'branch':
         $return['status'] = 'success';
-        $return['data'] = Git::branch();
+        $return['data'] = Git::branch("-r");
         break;
     case 'current_branch':
         $return['status'] = 'success';
