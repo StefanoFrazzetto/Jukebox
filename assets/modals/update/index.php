@@ -59,7 +59,7 @@ require_once '../../php-lib/Git.php';
         <?php
         $git = new Git();
 
-        $branches = Git::branch();
+        $branches = Git::branch("-r");
 
         $current_branch = $git->getCurrentBranch();
 
