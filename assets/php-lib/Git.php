@@ -25,6 +25,17 @@ class Git
     }
 
     /**
+     * Forces the pull from the specified branch (default is origin/master).
+     *
+     * @param string $branch - the branch to force pull
+     */
+    private function forcePull($branch = "origin/master")
+    {
+        exec("git fetch --all");
+        exec("git reset --hard $branch");
+    }
+
+    /**
      * Returns an array containing the result associated with the flag used.
      * The default flag is "-r", so the result will contain only the remote branches.
      * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
@@ -46,17 +57,6 @@ class Git
         }
 
         return $branches;
-    }
-
-    /**
-     * Forces the pull from the specified branch (default is origin/master).
-     *
-     * @param string $branch - the branch to force pull
-     */
-    private function forcePull($branch = "origin/master")
-    {
-        exec("git fetch --all");
-        exec("git reset --hard $branch");
     }
 
     /**
@@ -97,16 +97,6 @@ class Git
     }
 
     /**
-     * Returns the current branch.
-     *
-     * @return string - the current branch.
-     */
-    public function getCurrentBranch()
-    {
-        return $this->_current_branch;
-    }
-
-    /**
      * Pulls the latest changes from the current repository.
      *
      * @param string $branch - the branch where the changes will be pulled from.
@@ -131,19 +121,36 @@ class Git
         }
     }
 
-//    /**
-//     * Pushes the changes to the branch.
-//     *
-//     * @param string $branch - the branch where the changes will be pushed.
-//     * @return bool - true on success, false otherwise.
-//     */
-//    private function push($branch = "")
-//    {
-//        if ($branch != "") {
-//            //return shell_exec("git push $branch");
-//        } else {
-//            return false;
-//        }
-//    }
+    /**
+     * Checks if the current branch
+     *
+     * @return bool TRUE if is up to date and FALSE if an update is required
+     * @throws Exception if cmd returns unexpected values
+     */
+    public function isUpToDate()
+    {
+        $branch = $this->getCurrentBranch();
+
+        $result = trim(shell_exec("[ \$(git rev-parse HEAD) = \$(git ls-remote origin $branch | cut -f1) ] && echo up to date || echo not up to date"));
+
+        switch ($result) {
+            case "up to date":
+                return true;
+            case "not up to date":
+                return false;
+            default:
+                throw new Exception("Invalid input returned by git cmd '$result'");
+        }
+    }
+
+    /**
+     * Returns the current branch.
+     *
+     * @return string - the current branch.
+     */
+    public function getCurrentBranch()
+    {
+        return $this->_current_branch;
+    }
 
 }
