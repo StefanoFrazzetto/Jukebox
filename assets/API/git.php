@@ -24,7 +24,10 @@ switch ($git) {
 
         Git::checkout($branch);
 
-        $return['status'] = 'success';
+        if ((new Git())->getCurrentBranch() == $branch)
+            $return['status'] = 'success';
+        else
+            $return['status'] = 'error';
         break;
     case 'pull':
 
@@ -35,6 +38,10 @@ switch ($git) {
     case 'branch':
         $return['status'] = 'success';
         $return['data'] = Git::branch();
+        break;
+    case 'current_branch':
+        $return['status'] = 'success';
+        $return['data'] = (new Git())->getCurrentBranch();
         break;
     default:
         $return['message'] = 'Invalid git command';

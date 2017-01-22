@@ -67,14 +67,14 @@ require_once '../../php-lib/Git.php';
             $branch = trim($branch);
 
             if ($branch != '') {
-                $selected = ($branch == "origin/$current_branch") ? ' selected' : '';
+                $selected = ($branch == "$current_branch") ? ' selected' : '';
 
                 echo "<option$selected value='$branch'>$branch</option>";
             }
         }
         ?>
     </select>
-    Current Branch: <?php echo "origin/$current_branch"; ?>
+    Current Branch: <?php echo "$current_branch"; ?>
 
     <button class="right" id="branch_button">Okay</button>
 </div>
@@ -116,10 +116,13 @@ require_once '../../php-lib/Git.php';
 
         $.getJSON('/assets/API/git.php?git=pull')
             .done(function (done) {
-                console.log(done);
-                // TODO better status handling
-                updateTried = true;
-                checkForUpdates();
+                if (done.status == "succes") {
+                    updateTried = true;
+                    checkForUpdates();
+                } else {
+                    error("Failed to update");
+                }
+
             })
             .fail(function () {
                 error("Failed to contact the update server.")
