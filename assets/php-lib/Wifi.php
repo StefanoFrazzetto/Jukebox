@@ -163,7 +163,7 @@ class Wifi
                     $match_value = "WPA2";
                 } elseif (self::has($match_value, 'WPA')) {
                     $match_value = "WPA";
-                } elseif ($networks[$network_index]['encryption'] == "open") {
+                } elseif (isset($networks[$network_index]['encryption']) && $networks[$network_index]['encryption'] == "open") {
                     continue;
                 } else {
                     $match_value = "WEP";
