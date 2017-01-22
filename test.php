@@ -1,9 +1,9 @@
 <?php
 
-require_once "assets/php-lib/ImageFetcher.php";
+require_once "assets/php-lib/Network.php";
 
-header('Content-Type: text/json');
+//header('Content-Type: text/json');
 
-$image = new ImageFetcher("Metallica", "Master of puppets");
+$class = new Network();
 
-print_r($image->getAll());
+print_r($class->isConnected());
