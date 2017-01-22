@@ -37,22 +37,26 @@ class Git
 
     /**
      * Returns an array containing the result associated with the flag used.
-     * The default flag is "-r", so the result will contain only the remote branches.
+     * There is no default flag, so the default result will contain only the local arrays.
      * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
      *
      * @param string $flag - the flag and/or additional parameters to pass (default returns the local branches).
-     * @return array|string - the array containing the branches or the string equal to the current branch.
+     * @return array - the array containing the local or remote branches.
      */
     public static function branch($flag = "")
     {
         $branches = shell_exec("git branch $flag");
         $branches = explode("\n", trim($branches));
 
+        if ($flag != "") {
+            array_shift($branches);
+        }
+
         foreach ($branches as $key => $branch) {
             if (strpos($branch, "detached") !== false) {
                 unset($branches[$key]);
             } else {
-                $branches[$key] = preg_replace("/\\W+/", '', $branch);
+                $branches[$key] = preg_replace("/\\W+/", '', str_replace("origin/", '', $branch));
             }
         }
 
