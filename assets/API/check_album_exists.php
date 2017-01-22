@@ -10,6 +10,6 @@ require_once '../php-lib/MusicClasses/Album.php';
 
 $in_title = filter_input(INPUT_GET, 'title', FILTER_SANITIZE_STRING);
 
-$albums = Album::findAlbumByTitle($albumID);
+$albums = Album::findAlbumByTitle($in_title);
 
 echo json_encode($albums);
