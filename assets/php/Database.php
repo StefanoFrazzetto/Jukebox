@@ -41,6 +41,109 @@ class Database
     // Magic method clone is empty to prevent duplication of connection
 
     /**
+     * Drops the main database and recreates it. WARNING: all data will be LOST.
+     */
+    public static function resetDatabase()
+    {
+        $db = new Database();
+
+        $db->dropDatabase();
+        $db->createDatabase();
+
+        $db = new Database();
+
+        $sql_folder = __DIR__ . '/../../installation/';
+
+        $db->executeFile($sql_folder . 'zwytytws_albums.sql');
+        $db->executeFile($sql_folder . 'themes.sql');
+    }
+
+    // Get connection
+
+    /**
+     * Drops a database the database. Removes the default db if none specified.
+     * @param string $db database name to drop
+     *
+     * @return array|bool result
+     */
+    public function dropDatabase($db = '')
+    {
+        if ($db == '')
+            $db = $this->_database;
+
+        return $this->rawQuery("DROP DATABASE $db");
+    }
+
+    /**
+     * Execute a raw query on the database.
+     *
+     * @param string $query
+     * @return array | boolean
+     */
+    public function rawQuery($query = "")
+    {
+        if ($query == "") {
+            return false;
+        }
+
+        try {
+            $stmt = $this->getConnection()->prepare($query);
+            $stmt->execute();
+
+            if ($stmt === false) {
+                return false;
+            }
+
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function getConnection()
+    {
+        return $this->_connection;
+    }
+
+    /**
+     * Crates a new database. If no database name is specified, the default database will be created.
+     *
+     * @param string $db the name of the database to create
+     * @return array|bool
+     */
+    public function createDatabase($db = '')
+    {
+        if ($db == '')
+            $db = $this->_database;
+
+        return $this->rawQuery("CREATE DATABASE $db");
+    }
+
+    /**
+     * Runs a .sql file.
+     *
+     * @param $file string the sql file to run
+     * @return array|bool query result
+     * @throws Exception if the file is absent
+     */
+    public function executeFile($file)
+    {
+        if (empty($file))
+            throw new Exception("No filename specified");
+
+        if (!file_exists($file))
+            throw new Exception("File '$file' not found");
+
+        $sql = file_get_contents($file);
+
+        $this->rawQuery($sql);
+
+        error_log(json_encode($this->_connection->errorInfo()));
+
+        return true;
+    }
+
+    /**
      * Run an insert query.
      *
      * @param $table
@@ -67,8 +170,6 @@ class Database
 
         return $stmt->execute();
     }
-
-    // Get connection
 
     /**
      * Returns the last inserted ID
@@ -239,11 +340,6 @@ class Database
         }
     }
 
-    public function getConnection()
-    {
-        return $this->_connection;
-    }
-
     /**
      * Drop one or more tables.
      *
@@ -270,94 +366,6 @@ class Database
         } catch (PDOException $e) {
             return false;
         }
-    }
-
-    /**
-     * Drops the main database and recreates it. WARNING: all data will be LOST.
-     */
-    public function resetDatabase()
-    {
-        $this->dropDatabase();
-        $this->createDatabase();
-
-        $sql_folder = '/installation/';
-
-        $this->executeFile($sql_folder . 'zwytytws_albums.sql');
-        $this->executeFile($sql_folder . 'themes.sql');
-    }
-
-    /**
-     * Drops a database the database. Removes the default db if none specified.
-     * @param string $db database name to drop
-     *
-     * @return array|bool result
-     */
-    public function dropDatabase($db = '')
-    {
-        if ($db == '')
-            $db = $this->_database;
-
-        return $this->rawQuery("DROP DATABASE $db");
-    }
-
-    /**
-     * Execute a raw query on the database.
-     *
-     * @param string $query
-     * @return array | boolean
-     */
-    public function rawQuery($query = "")
-    {
-        if ($query == "") {
-            return false;
-        }
-
-        try {
-            $stmt = $this->getConnection()->prepare($query);
-            $stmt->execute();
-
-            if ($stmt === false) {
-                return false;
-            }
-
-            return $stmt->fetchAll(PDO::FETCH_OBJ);
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
-
-    /**
-     * Crates a new database. If no database name is specified, the default database will be created.
-     *
-     * @param string $db the name of the database to create
-     * @return array|bool
-     */
-    public function createDatabase($db = '')
-    {
-        if ($db == '')
-            $db = $this->_database;
-
-        return $this->rawQuery("CREATE DATABASE $db");
-    }
-
-    /**
-     * Runs a .sql file.
-     *
-     * @param $file string the sql file to run
-     * @return array|bool query result
-     * @throws Exception if the file is absent
-     */
-    public function executeFile($file)
-    {
-        if (!empty($file))
-            throw new Exception("No filename specified");
-
-        if (!file_exists($file))
-            throw new Exception("File '$file' not found");
-
-        $sql = file_get_contents($file);
-
-        return $this->rawQuery($sql);
     }
 
     private function __clone()

@@ -21,7 +21,7 @@ if (isset($_GET['operation'])) {
             break;
 
         case "factory_reset":
-            $Database->resetDatabase();
+            $Database::resetDatabase();
             FileUtil::emptyDirectory($jukebox_folder);
             FileUtil::emptyDirectory($config_folder);
             $res = FileUtil::isDirEmpty($jukebox_folder) && FileUtil::isDirEmpty($config_folder);
