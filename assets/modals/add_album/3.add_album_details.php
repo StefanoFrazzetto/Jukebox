@@ -5,22 +5,26 @@ function getConsecutiveCombinations($array)
 {
     $length = count($array);
     $results = [];
-    foreach ($array as $key => $item) {
-        $this_train = '';
-        for ($i = $key; $i < $length; $i++) {
-            $this_train .= $array[$i] . ' ';
-            $results[] = trim($this_train);
+    if (is_array($array))
+        foreach ($array as $key => $item) {
+            $this_train = '';
+            for ($i = $key; $i < $length; $i++) {
+                $this_train .= $array[$i] . ' ';
+                $results[] = trim($this_train);
+            }
         }
-    }
     return $results;
 }
 
-if (!$album_count = count($_SESSION['possible_albums']) OR !$artist_count = count($_SESSION['possible_artist'])) { // if there are no album or artist get from id3 it will try to get some from the filenames
+$album_count = isset($_SESSION['possible_albums']) ? count($_SESSION['possible_albums']) : 0;
+$artist_count = isset($_SESSION['possible_artist']) ? count($_SESSION['possible_artist']) : 0;
+
+if (!$album_count OR !$artist_count) { // if there are no album or artist get from id3 it will try to get some from the filenames
     require '../../php-lib/uploader_utilities/isThisPatternEverywhere.php';
     $tracks = $_SESSION['tracks'];
     $urls = array_column($tracks, 'url');
     $name_slices = explode('-', preg_replace('/(\.[^.]*$)/', '', $urls[0]));
-    $found_slices;
+    $found_slices = [];
 
     foreach ($name_slices as $name_slice) {
         if (isThisPatternEverywhere('/' . $name_slice . '/', $urls)) {
@@ -49,11 +53,13 @@ if (!$album_count = count($_SESSION['possible_albums']) OR !$artist_count = coun
 ?>
 <div class="modalHeader">Album Details</div>
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 350px;">
-
     <?php
+    $title_value = '';
+    $artist_value = '';
+
     if (isset($_SESSION['albumTitle'])) {
         $title_value = $_SESSION['albumTitle'];
-    } else if (count($_SESSION['possible_albums']) == 1) {
+    } else if (isset($_SESSION['possible_albums']) && count($_SESSION['possible_albums']) > 1) {
         $title_value = $_SESSION['possible_albums'][0];
     } else {
 
@@ -61,13 +67,13 @@ if (!$album_count = count($_SESSION['possible_albums']) OR !$artist_count = coun
 
     if (isset($_SESSION['albumArtist'])) {
         $artist_value = $_SESSION['albumArtist'];
-    } else if (count($_SESSION['possible_artist']) > 1) {
+    } else if (isset($_SESSION['possible_artist']) && count($_SESSION['possible_artist']) > 1) {
         $artist_value = "Various Artists";
-    } else if (count($_SESSION['possible_artist']) == 1) {
+    } else if (isset($_SESSION['possible_artist']) && count($_SESSION['possible_artist']) == 1) {
         $artist_value = $_SESSION['possible_artist'][0];
     }
 
-    if (count($_SESSION['possible_artist']) > 1) {
+    if (isset($_SESSION['possible_artist']) && count($_SESSION['possible_artist']) > 1) {
         if (!in_array("Various Artists", $_SESSION['possible_artist'])) {
             $_SESSION['possible_artist'][] = "Various Artists";
         }
@@ -84,9 +90,10 @@ if (!$album_count = count($_SESSION['possible_albums']) OR !$artist_count = coun
         <br/>
         <div id="possible_artists">
             <?php
-            foreach ($_SESSION['possible_artist'] as $possibile_artist) {
-                echo '<div class="box-btn">', $possibile_artist, '</div>';
-            }
+            if (isset($_SESSION['possible_artist']) && is_array($_SESSION['possible_artist']))
+                foreach ($_SESSION['possible_artist'] as $possible_artist) {
+                    echo '<div class="box-btn">', $possible_artist, '</div>';
+                }
             ?>
         </div>
         <hr/>
@@ -100,9 +107,10 @@ if (!$album_count = count($_SESSION['possible_albums']) OR !$artist_count = coun
         <div id="titleWarning"></div>
         <div id="possible_albums">
             <?php
-            foreach ($_SESSION['possible_albums'] as $possibile_album) {
-                echo '<div class="box-btn">', $possibile_album, '</div>';
-            }
+            if (isset($_SESSION['possible_albums']) && is_array($_SESSION['possible_albums']))
+                foreach ($_SESSION['possible_albums'] as $possibile_album) {
+                    echo '<div class="box-btn">', $possibile_album, '</div>';
+                }
             ?>
         </div>
     </form>
@@ -138,8 +146,6 @@ if (!$album_count = count($_SESSION['possible_albums']) OR !$artist_count = coun
         var title = albumTitleField.val();
 
         $.getJSON('assets/API/check_album_exists.php?title=' + title).done(function (response) {
-            console.log(response);
-
             if (Object.keys(response).length > 0) {
                 $('#titleWarning').html('Warning, there is another album with a similar name: <br> "' + response[0].title + '" <br> <img height= "80" src="/jukebox/' + response[0].id + '/cover.jpg?' + response[0].cover + '"/>');
             } else {
