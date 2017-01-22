@@ -43,6 +43,10 @@ switch ($git) {
         $return['status'] = 'success';
         $return['data'] = (new Git())->getCurrentBranch();
         break;
+    case 'up_to_date':
+        $return['status'] = 'success';
+        $return['data'] = (new Git())->isUpToDate();
+        break;
     default:
         $return['message'] = 'Invalid git command';
 }

@@ -85,20 +85,22 @@ require_once '../../php-lib/Git.php';
         $('#up-to-date, #not-up-to-date, #error').hide();
         $('#loader').show();
 
-        $.ajax('/assets/cmd/exec.php?cmd=needs_update')
+        $.getJSON('/assets/API/git.php?git=up_to_date')
             .done(function (data) {
-                if (data == "up to date\n") {
-                    $('#up-to-date').show();
-                    updateTried = false;
-                } else if (data == "not up to date\n") {
-                    if (updateTried) {
-                        error("Failed to update");
-                        return;
+                if (data.status == "success") {
+                    if (data.data) { // up to date
+                        $('#up-to-date').show();
+                        updateTried = false;
+                    } else { // not up to date
+                        if (updateTried)
+                            error("Failed to update #2");
+                        else
+                            $('#not-up-to-date').show();
                     }
-                    $('#not-up-to-date').show();
                 } else {
                     error("Oh, snap! The update checker gave a bad output.");
                 }
+
             })
             .fail(function () {
                 error("Failed to contact the update checker.");
@@ -116,11 +118,11 @@ require_once '../../php-lib/Git.php';
 
         $.getJSON('/assets/API/git.php?git=pull')
             .done(function (done) {
-                if (done.status == "succes") {
+                if (done.status == "success") {
                     updateTried = true;
                     checkForUpdates();
                 } else {
-                    error("Failed to update");
+                    error("Failed to update #1");
                 }
 
             })
