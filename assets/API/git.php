@@ -47,6 +47,10 @@ switch ($git) {
         $return['status'] = 'success';
         $return['data'] = (new Git())->isUpToDate();
         break;
+    case 'log':
+        $return['status'] = 'success';
+        $return['data'] = Git::log(20);
+        break;
     default:
         $return['message'] = 'Invalid git command';
 }
