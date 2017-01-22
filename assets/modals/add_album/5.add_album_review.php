@@ -57,10 +57,10 @@ session_start();
     $('#submit').click(function () {
         $('#status').html('Please wait...');
 
-        $.ajax('assets/php/album_creation/add_album_finalize.php').done(function (data) {
+        $.ajax('/assets/php/album_creation/add_album_finalize.php').done(function (data) {
             data = parseInt(data);
 
-            if (data > -1 || isNumber(data)) {
+            if (data > -1) {
                 closeModal();
 
                 new Alert({
