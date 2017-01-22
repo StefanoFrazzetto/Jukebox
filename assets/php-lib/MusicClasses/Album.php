@@ -64,9 +64,10 @@ class Album implements JsonSerializable
 
         $albums = [];
 
-        foreach ($db_object as $album) {
-            $albums[] = self::makeAlbumFromDatabaseObject($album);
-        }
+        if (is_array($db_object))
+            foreach ($db_object as $album) {
+                $albums[] = self::makeAlbumFromDatabaseObject($album);
+            }
 
         return $albums;
     }
