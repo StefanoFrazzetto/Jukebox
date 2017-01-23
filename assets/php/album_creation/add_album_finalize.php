@@ -18,7 +18,6 @@ $title = $_SESSION['albumTitle'];
 $artist = $_SESSION['albumArtist'];
 
 $tracks = $_SESSION['tracks'];
-session_write_close();
 
 $json_tracks = str_replace('\'', '\\\'', json_encode($tracks));
 
@@ -49,11 +48,13 @@ if ($album->getId() != null) {
     }
 
     // Handle files
-    unset($_SESSION['covers'][$picked_cover]);
+    //unset($_SESSION['covers'][$picked_cover]);
 
-    foreach ($_SESSION['covers'] as $cover) {
-        if ($cover != "cover.jpg")
-            unlink($tmp_folder . $cover);
+    if (isset($_SESSION['covers']) && is_array($_SESSION['covers'])) {
+        foreach ($_SESSION['covers'] as $cover) {
+            if ($cover != "cover.jpg")
+                unlink($tmp_folder . $cover);
+        }
     }
 
     session_destroy();
