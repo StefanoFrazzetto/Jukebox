@@ -4,7 +4,7 @@ ini_set("log_errors", 1);
 
 
 require '../../php-lib/Cover.php';
-require_once '../../php/FileUtil.php';
+require_once '../../php-lib/FileUtil.php';
 
 
 $input = INPUT_POST;

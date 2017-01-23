@@ -6,7 +6,7 @@
  * Time: 17:22
  */
 
-require "../../../php/FileUtil.php";
+require "../../../php-lib/FileUtil.php";
 
 header('Content-Type: application/json');
 

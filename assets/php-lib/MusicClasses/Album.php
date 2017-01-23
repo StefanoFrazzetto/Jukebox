@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../../php/Database.php';
+require_once __DIR__ . '/../../php-lib/Database.php';
 require_once __DIR__ . '/Song.php';
 require_once __DIR__ . '/../../php-lib/MusicClasses/Artist.php';
-require_once __DIR__ . '/../../php/FileUtil.php';
+require_once __DIR__ . '/../../php-lib/FileUtil.php';
 
 /**
  * Created by PhpStorm.

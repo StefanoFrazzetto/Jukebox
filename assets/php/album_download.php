@@ -1,6 +1,6 @@
 <?php
 
-require_once '../php-lib/zipper.php';
+require_once '../php-lib/Zipper.php';
 require_once '../php-lib/MusicClasses/Album.php';
 
 $outputDIR = '/var/www/html/downloads/';

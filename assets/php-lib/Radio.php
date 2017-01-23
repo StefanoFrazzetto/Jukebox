@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . '/../php/Database.php';
+include_once __DIR__ . '/../php-lib/Database.php';
 
 class Radio implements JsonSerializable
 {

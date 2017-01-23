@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Database.php';
-require_once 'FileUtil.php';
+require_once '../php-lib/Database.php';
+require_once '../php-lib/FileUtil.php';
 require_once '../php-lib/Cover.php';
 
 class EditAlbum {

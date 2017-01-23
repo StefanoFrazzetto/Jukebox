@@ -1,7 +1,7 @@
 <?php
 
-require_once "../php/Database.php";
-require_once "../php/FileUtil.php";
+require_once "../php-lib/Database.php";
+require_once "../php-lib/FileUtil.php";
 require_once "../php-lib/file-functions.php";
 
 $Database = new Database();

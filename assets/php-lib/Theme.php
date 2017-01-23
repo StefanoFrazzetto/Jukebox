@@ -6,7 +6,7 @@
  * Date: 23-Nov-16
  * Time: 19:05
  */
-require __DIR__ . '/../php/Database.php';
+require __DIR__ . '/../php-lib/Database.php';
 
 class Theme implements JsonSerializable
 {

@@ -3,8 +3,8 @@
 session_start();
 
 require_once "../CommandExecuter.php";
-require_once "../Database.php";
-require_once "../FileUtil.php";
+require_once "../../php-lib/Database.php";
+require_once "../../php-lib/FileUtil.php";
 require_once "Burner.php";
 require_once "DiscWriter.php";
 require_once "MiscFunctions.php";

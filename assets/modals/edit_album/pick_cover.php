@@ -1,5 +1,5 @@
 <?php
-include '../../php/Database.php';
+include '../../php-lib/Database.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
