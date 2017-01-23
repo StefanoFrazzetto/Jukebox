@@ -54,12 +54,13 @@ require_once '../../php-lib/Git.php';
 
 </div>
 <div class="modalFooter">
-    <label for="branch">Branch: </label>
-    <select id="branch">
+    <button class="right" id="rebase_button">Rebase</button>
+    <button class="right" id="delete_button">Delete</button>
+    <select id="branch" title="Select a branch and perform an action with the buttons" class="right">
         <?php
         $git = new Git();
 
-        $branches = Git::branch("-r");
+        $branches = Git::branch("-a");
 
         $current_branch = $git->getCurrentBranch();
 
@@ -74,8 +75,7 @@ require_once '../../php-lib/Git.php';
         }
         ?>
     </select>
-    Current Branch: <?php echo "$current_branch"; ?>
 
-    <button class="right" id="branch_button">Okay</button>
+    Current Branch: <b><?php echo "$current_branch"; ?></b>
 </div>
 <script src="/assets/modals/update/scripts.js"></script>

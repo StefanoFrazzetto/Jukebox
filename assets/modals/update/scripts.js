@@ -72,12 +72,18 @@ function loadChangeList() {
 
 function error(error) {
     $('#errorMessage').html(error);
+    $('#up-to-date').hide();
+    $('#not-up-to-date').hide();
     $('#error').show();
 }
 
 $('.check-update-btn').click(function () {
     checkForUpdates();
 });
+
+function getSelectedBranch() {
+    return $('#branch').val();
+}
 
 function changeBranch(branch_name) {
     $.getJSON('/assets/API/git.php?git=checkout&branch=' + branch_name)
@@ -90,17 +96,31 @@ function changeBranch(branch_name) {
             }
         })
         .fail(function () {
-            error("Failed to checkout branch " + branch_name);
+            error("Failed to contact the git server while checking out " + branch_name);
         });
 }
 
-$('#branch').change(function () {
-    var branch = $(this).val();
-    changeBranch(branch);
+function deleteBranch(branch_name) {
+    $.getJSON('/assets/API/git.php?git=delete&branch=' + branch_name)
+        .done(function (data) {
+            if (data.status === 'success') {
+                alert("Deleted " + branch_name + " successfully!");
+                $("#branch").find("option:contains('" + branch_name + "')").remove();
+            } else {
+                error(data.message);
+            }
+        })
+        .fail(function () {
+            error("Failed to contact the git server while deleting " + branch_name);
+        });
+}
+
+$('#rebase_button').click(function () {
+    changeBranch(getSelectedBranch());
 });
 
-$('#branch_button').click(function () {
-    changeBranch($('#branch').val())
+$('#delete_button').click(function () {
+    deleteBranch(getSelectedBranch());
 });
 
 

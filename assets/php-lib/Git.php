@@ -59,8 +59,6 @@ class Git
                 if (isset($matched[0]) && !in_array($matched[0], $branches_parsed)) {
                     $branches_parsed[] = $matched[0];
                 }
-
-                echo $matched[0];
             }
         }
 

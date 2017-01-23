@@ -14,38 +14,55 @@ $git = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
 
 $return = ["status" => "error"];
 
+$g = new Git();
+
 switch ($git) {
     case 'checkout':
         $branch = filter_input(INPUT_GET, 'branch', FILTER_SANITIZE_STRING);
 
         if ($branch === false || $branch === null) {
-            $branch = 'origin/master';
+            $branch = 'master';
         }
 
         Git::checkout($branch);
 
-        if ((new Git())->getCurrentBranch() == $branch)
+        if ($actual_branch = $g->getCurrentBranch() == $branch)
             $return['status'] = 'success';
-        else
+        else {
             $return['status'] = 'error';
+            $return['message'] = "Attempted to change branch, but failed still on '$actual_branch'";
+        }
+
+        break;
+    case 'delete':
+        $branch = filter_input(INPUT_GET, 'branch', FILTER_SANITIZE_STRING);
+        $g->delete($branch);
+
+        $branches = Git::branch();
+
+        if (in_array($branch, $branches)) {
+            $return['status'] = 'error';
+            $return['message'] = 'Attempted to delete the branch, but it\'s still there';
+        } else {
+            $return['status'] = 'success';
+        }
+
         break;
     case 'pull':
-
-        (new Git())->pull(null, true);
-
+        $g->pull(null, true);
         $return['status'] = 'success';
         break;
     case 'branch':
         $return['status'] = 'success';
-        $return['data'] = Git::branch("-r");
+        $return['data'] = Git::branch("-a");
         break;
     case 'current_branch':
         $return['status'] = 'success';
-        $return['data'] = (new Git())->getCurrentBranch();
+        $return['data'] = $g->getCurrentBranch();
         break;
     case 'up_to_date':
         $return['status'] = 'success';
-        $return['data'] = (new Git())->isUpToDate();
+        $return['data'] = $g->isUpToDate();
         break;
     case 'log':
         $return['status'] = 'success';
