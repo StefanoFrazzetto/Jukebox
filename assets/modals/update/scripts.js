@@ -105,7 +105,10 @@ function deleteBranch(branch_name) {
         .done(function (data) {
             if (data.status === 'success') {
                 alert("Deleted " + branch_name + " successfully!");
-                $("#branch").find("option:contains('" + branch_name + "')").remove();
+                //noinspection JSValidateTypes
+                $("#branch").children().filter(function () {
+                    return $(this).text() === branch_name;
+                }).remove();
             } else {
                 error(data.message);
             }
