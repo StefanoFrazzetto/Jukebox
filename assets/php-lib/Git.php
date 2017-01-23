@@ -48,19 +48,23 @@ class Git
         $branches = shell_exec("git branch $flag");
         $branches = explode("\n", trim($branches));
 
-        if ($flag != "") {
-            array_shift($branches);
-        }
+        $branches_parsed = [];
 
         foreach ($branches as $key => $branch) {
             if (strpos($branch, "detached") !== false) {
                 unset($branches[$key]);
             } else {
-                $branches[$key] = preg_replace("/\\W+/", '', str_replace("origin/", '', $branch));
+                preg_match("/\\w+$/", $branch, $matched);
+
+                if (isset($matched[0]) && !in_array($matched[0], $branches_parsed)) {
+                    $branches_parsed[] = $matched[0];
+                }
+
+                echo $matched[0];
             }
         }
 
-        return $branches;
+        return $branches_parsed;
     }
 
     /**
