@@ -6,9 +6,6 @@ var deltaTime;
 var latency;
 var clockTimerHandle;
 
-var albums_storage = [];
-var radios_storage = [];
-
 var remoteControls = $('#remote-controls');
 var playlistSection = $('#playlist-section');
 var menuSection = $('#menu-section');
@@ -42,7 +39,7 @@ function albumChangedEvent() {
             var data = albums_storage[playerStatus.album_id];
 
             cover.attr('src', '/jukebox/' + playerStatus.album_id + '/cover.jpg');
-            $('#artist').html(data.artist);
+            $('#artist').html(makeArtistsString(data.artists));
             $('#title').html(data.title);
 
             populatePlaylist(data);
@@ -144,10 +141,20 @@ function handleSearch() {
         return;
     }
 
+    var artists = [];
+
+    artists_storage.forEach(function (artist) {
+            if (artist.name.toLowerCase().indexOf(value) !== -1) {
+                console.log(artist);
+                artists.push(artist.id);
+            }
+        }
+    );
+
     var result = [];
 
     albums_storage.forEach(function (album) {
-            if (album.title.toLowerCase().indexOf(value) !== -1 || album.artist.toLowerCase().indexOf(value) !== -1) {
+        if (album.title.toLowerCase().indexOf(value) !== -1 || (intersect(album.artists, artists)).length > 0) {
                 result.push(album);
             }
         }
@@ -202,7 +209,7 @@ function handleSearch() {
         var artist = $('<div>');
 
         if (!is_radio)
-            artist.html(album.artist);
+            artist.html(makeArtistsString(album.artists));
         else
             artist.text("Radio Station");
 
@@ -265,61 +272,61 @@ function getDeltaTime(callback) {
     oReq.send();
 }
 
-function loadAlbumStorage(callback) {
-    var address = '/assets/php/get_all_album.json.php';
-
-    $.getJSON(address)
-        .done(function (data) {
-            albums_storage = [];
-
-            try {
-                if (data != null)
-                    data.forEach(function (data) {
-                        albums_storage[data.id] = data;
-                    });
-            } catch (e) {
-                return;
-            }
-
-            console.log("Loaded", data.length, "albums.");
-
-            if (typeof callback !== "undefined")
-                callback();
-
-        })
-        .fail(function () {
-            error("An error occurred while loading the albums.");
-        });
-}
-
-function loadRadioStorage(callback) {
-    var address = '/assets/php/get_all_radios.json.php';
-
-    $.getJSON(address)
-        .done(function (data) {
-            radios_storage = [];
-
-            try {
-                if (data != null)
-                    data.forEach(function (data) {
-                        radios_storage[data.id] = data;
-                    });
-            } catch (e) {
-
-            }
-
-            console.log("Loaded", data.length, "radios.");
-
-            if (typeof callback !== "undefined")
-                callback();
-        })
-        .fail(function () {
-            error("An error occurred while loading the radios.");
-        });
-}
+// function loadAlbumStorage(callback) {
+//     var address = '/assets/php/get_all_album.json.php';
+//
+//     $.getJSON(address)
+//         .done(function (data) {
+//             albums_storage = [];
+//
+//             try {
+//                 if (data != null)
+//                     data.forEach(function (data) {
+//                         albums_storage[data.id] = data;
+//                     });
+//             } catch (e) {
+//                 return;
+//             }
+//
+//             console.log("Loaded", data.length, "albums.");
+//
+//             if (typeof callback !== "undefined")
+//                 callback();
+//
+//         })
+//         .fail(function () {
+//             error("An error occurred while loading the albums.");
+//         });
+// }
+//
+// function loadRadioStorage(callback) {
+//     var address = '/assets/php/get_all_radios.json.php';
+//
+//     $.getJSON(address)
+//         .done(function (data) {
+//             radios_storage = [];
+//
+//             try {
+//                 if (data != null)
+//                     data.forEach(function (data) {
+//                         radios_storage[data.id] = data;
+//                     });
+//             } catch (e) {
+//
+//             }
+//
+//             console.log("Loaded", data.length, "radios.");
+//
+//             if (typeof callback !== "undefined")
+//                 callback();
+//         })
+//         .fail(function () {
+//             error("An error occurred while loading the radios.");
+//         });
+// }
 
 function loadAlbumPlaylist(id, callback) {
-    var address = '/assets/php/get_playlist.php?id=' + id;
+    var address = '/assets/API/playlist.php?id=' + id;
 
     $.getJSON(address)
         .done(function (data) {
@@ -345,7 +352,7 @@ function getAlbumDetails(id, callback) {
         return;
 
     if (typeof albums_storage[id] == 'undefined') {
-        loadAlbumStorage(function () {
+        load_storages(function () {
             loadAlbumPlaylist(id, callback);
         });
     } else {
@@ -521,8 +528,6 @@ menuSection.slider.toggle = function () {
 };
 //endregion
 
-$.getScript('/assets/js/storageSorter.js');
-
 $(document).ready(function () {
     var height = remoteControls.outerHeight();
     margin = parseInt(remoteControls.css('padding-left'));
@@ -565,17 +570,18 @@ $(document).ready(function () {
         sendEvent("set_volume", {value: 0});
     });
 
-    loadAlbumStorage();
-    loadRadioStorage();
+    $.getScript('/assets/js/storage.js', function () {
+        load_storages(function () {
+            getDeltaTime(function (delta) {
+                deltaTime = delta;
 
-    getDeltaTime(function (delta) {
-        deltaTime = delta;
+                //noinspection JSUnresolvedFunction
+                var evtSource = new EventSource(getRemoteServerUrl(), {withCredentials: true});
 
-        //noinspection JSUnresolvedFunction
-        var evtSource = new EventSource(getRemoteServerUrl(), {withCredentials: true});
-
-        evtSource.addEventListener("status", function (lol) {
-            updateRemoteStatus($.parseJSON(lol.data));
+                evtSource.addEventListener("status", function (lol) {
+                    updateRemoteStatus($.parseJSON(lol.data));
+                });
+            });
         });
     });
 });

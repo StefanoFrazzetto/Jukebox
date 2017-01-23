@@ -11,6 +11,7 @@ require_once __DIR__ . '/../../php/Database.php';
 class Song implements JsonSerializable
 {
     const SONGS_TABLE = 'songs';
+    const SONG_ARTISTS_TABLE = 'song_artists';
 
     /**
      * @var int
@@ -44,7 +45,7 @@ class Song implements JsonSerializable
     private $url;
 
     /**
-     * @var int lenght of the track in seconds
+     * @var int length of the track in seconds
      */
     private $length;
     /**
@@ -112,6 +113,42 @@ class Song implements JsonSerializable
     }
 
     /**
+     * Creates a song object out of a legacy song json
+     * @param $json object json
+     * @param $album_id int
+     * @return Song
+     */
+    public static function importSongFromJson($json, $album_id)
+    {
+        $song = new Song();
+
+        $song->setTitle($json->title);
+
+        $song->setTrackNo($json->track_no);
+
+        $song->setCd($json->cd);
+
+        $song->setUrl($json->url);
+
+        $song->setLength($json->length);
+
+        $song->setAlbumId($album_id);
+
+        return $song;
+    }
+
+    /**
+     * @param int $length
+     */
+    public function setLength($length)
+    {
+        $this->length = intval($length);
+    }
+
+
+    // HERE TO BE DRAGONS
+
+    /**
      * Returns a Song from database, null if not found
      * @param $id int
      * @return Song | null
@@ -128,9 +165,6 @@ class Song implements JsonSerializable
         return self::makeSongFromDatabaseObject($db_object[0]);
     }
 
-
-    // HERE TO BE DRAGONS
-
     /**
      * @param $db_object object
      * @return Song|null
@@ -142,17 +176,17 @@ class Song implements JsonSerializable
 
             $song->created = true;
 
-            $song->id = $db_object->id;
+            $song->id = intval($db_object->id);
 
-            $song->album_id = $db_object->album_id;
+            $song->album_id = intval($db_object->album_id);
 
-            $song->cd = $db_object->cd;
+            $song->cd = intval($db_object->cd);
 
-            $song->track_no = $db_object->track_no;
+            $song->track_no = intval($db_object->track_no);
 
             $song->title = $db_object->title;
 
-            $song->length = $db_object->lenght;
+            $song->length = intval($db_object->length);
 
             $song->url = $db_object->url;
 
@@ -173,8 +207,8 @@ class Song implements JsonSerializable
 
         $db_objects = $db->select('*', Song::SONGS_TABLE, "WHERE `album_id` = $id");
 
-        if (count($db_objects) === 0)
-            return null;
+        if (!is_array($db_objects))
+            $db_objects = [];
 
         $songs = [];
 
@@ -286,7 +320,7 @@ class Song implements JsonSerializable
                 return false;
             }
 
-            $this->id = $database->getLastInsertedID();
+            $this->id = intval($database->getLastInsertedID());
             $this->created = true;
         }
 
@@ -311,14 +345,6 @@ class Song implements JsonSerializable
     /**
      * @return int
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return int
-     */
     public function getAlbumId()
     {
         return $this->album_id;
@@ -329,7 +355,7 @@ class Song implements JsonSerializable
      */
     public function setAlbumId($album_id)
     {
-        $this->album_id = $album_id;
+        $this->album_id = intval($album_id);
     }
 
     /**
@@ -345,7 +371,7 @@ class Song implements JsonSerializable
      */
     public function setCd($cd)
     {
-        $this->cd = $cd;
+        $this->cd = intval($cd);
     }
 
     /**
@@ -361,7 +387,7 @@ class Song implements JsonSerializable
      */
     public function setTrackNo($track_no)
     {
-        $this->track_no = $track_no;
+        $this->track_no = intval($track_no);
     }
 
     /**
@@ -386,5 +412,42 @@ class Song implements JsonSerializable
     public function getArtists()
     {
         return $this->artists;
+    }
+
+    /**
+     * Adds an artist to the song
+     * @param $id int the artist id
+     */
+    public function addArtist($id)
+    {
+        $db = new Database();
+
+        $db->insert(self::SONG_ARTISTS_TABLE, ['song_id' => $this->getId(), 'artist_id' => $id]);
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string a player friendly time expressed in mm:ss
+     */
+    public function getTimeString()
+    {
+        $addZeros = function ($digit) {
+            if ($digit < 10) {
+                $digit = '0' . $digit;
+            }
+            return $digit;
+        };
+
+        $minutes = floor($this->length / 60);
+        $seconds = $this->length - $minutes * 60;
+
+        return $addZeros($minutes) . ':' . $addZeros($seconds);
     }
 }

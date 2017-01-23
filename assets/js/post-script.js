@@ -32,12 +32,7 @@ var page = 1;
 //noinspection JSUnusedGlobalSymbols
 var answer_to_life_universe_and_everything = 42; //That's probably why something still works.
 
-
 var imageSelector;
-
-var albums_storage = [];
-var album_store_secondary;
-var is_storage_partial = false;
 
 function initImageSelectorObject() {
     imageSelector = {
@@ -65,19 +60,6 @@ function initImageSelectorObject() {
 
 initImageSelectorObject();
 
-function restoreStorage() {
-    if (is_storage_partial) {
-        albums_storage = album_store_secondary;
-        is_storage_partial = false;
-    }
-}
-
-function backupStorage() {
-    restoreStorage();
-    album_store_secondary = albums_storage.slice(0); // clones database
-    is_storage_partial = true;
-}
-
 function paginate() {
     var lastPage = Math.ceil(albums_storage.length / show);
 
@@ -104,6 +86,9 @@ function paginate() {
     loader.html("");
     var i = -1;
     albums_storage.forEach(function (data) {
+        if (typeof data === 'undefined')
+            return;
+
         i++;
 
         if (i >= show * (page - 1) && i < show * page) {
@@ -111,91 +96,27 @@ function paginate() {
             loader.append(html);
         }
     });
-
-    $(".album:not(.filler)").click(function () {
-        var detected_id = $(this).attr('id');
-        openModalPage('assets/modals/album_details.php?id=' + detected_id);
-    });
-
-    $(".album .moar").click(function (e) {
-        var detected_id = $(this).parent().attr('id');
-        changeAlbum(detected_id);
-        e.stopPropagation();
-    });
 }
 
 function reload() {
-    var address = '/assets/php/get_all_album.json.php';
-
-    $.getJSON(address)
-        .done(function (data) {
-            albums_storage = [];
-
-            try {
-                if (data != null)
-                    data.forEach(function (data, index) {
-                        albums_storage[index] = data;
-                    });
-            } catch (e) {
-
-            }
-
-            paginate();
-
-            console.log("loaded", memorySizeOf(albums_storage), "of albums storage.");
-        })
-        .fail(function () {
-            error("An error occurred while loading the albums.");
-        });
-}
-
-// TODO remove this in production
-function memorySizeOf(obj) {
-    var bytes = 0;
-
-    function sizeOf(obj) {
-        if (obj !== null && obj !== undefined) {
-            switch (typeof obj) {
-                case 'number':
-                    bytes += 8;
-                    break;
-                case 'string':
-                    bytes += obj.length * 2;
-                    break;
-                case 'boolean':
-                    bytes += 4;
-                    break;
-                case 'object':
-                    var objClass = Object.prototype.toString.call(obj).slice(8, -1);
-                    if (objClass === 'Object' || objClass === 'Array') {
-                        for (var key in obj) {
-                            if (!obj.hasOwnProperty(key)) continue;
-                            sizeOf(obj[key]);
-                        }
-                    } else bytes += obj.toString().length * 2;
-                    break;
-            }
-        }
-        return bytes;
-    }
-
-    function formatByteSize(bytes) {
-        if (bytes < 1024) return bytes + " bytes";
-        else if (bytes < 1048576) return (bytes / 1024).toFixed(3) + " KiB";
-        else if (bytes < 1073741824) return (bytes / 1048576).toFixed(3) + " MiB";
-        else return (bytes / 1073741824).toFixed(3) + " GiB";
-    }
-
-    return formatByteSize(sizeOf(obj));
+    load_storages(function () {
+        paginate();
+    });
 }
 
 function makeAlbumHtmlFromObject(object) {
     var album_container = $("<div class='album'>");
+    var play = $("<div class=\"moar\"><i class=\"fa fa-play\"></i></div>");
+
     album_container.attr("id", object.id);
-    album_container.append("<div class=\"moar\"><i class=\"fa fa-play\"></i></div>");
+    album_container.append(play);
 
     var img = $("<img>");
-    img.attr("src", "jukebox/" + object.id + "/thumb.jpg");
+
+    if (object.cover != null)
+        img.attr("src", "jukebox/" + object.id + "/thumb.jpg?" + object.cover);
+    else
+        img.attr("src", cover_placeholder);
 
     var details = $("<div class='albumDetails'>");
 
@@ -205,7 +126,7 @@ function makeAlbumHtmlFromObject(object) {
     artist.addClass("albumArtist");
     title.addClass("albumTitle");
 
-    artist.html(object.artist);
+    artist.html(makeArtistsString(object.artists));
     title.html(object.title);
 
     details.append(artist);
@@ -214,6 +135,18 @@ function makeAlbumHtmlFromObject(object) {
     album_container.append(img);
     album_container.append(details);
     album_container.fadeOut(0);
+
+    // NO COMMENT
+
+    play.click(function (e) {
+        changeAlbum(object.id, 0);
+        e.stopPropagation();
+        e.preventDefault();
+    });
+
+    album_container.click(function () {
+        openModalPage('assets/modals/album_details?id=' + object.id);
+    });
 
     img.on("load", function () {
         album_container.fadeIn(animation_short);
@@ -225,17 +158,6 @@ function makeAlbumHtmlFromObject(object) {
     });
 
     return album_container;
-
-    /*
-     <div class="album" id="21">
-     <div class="moar"><i class="fa fa-play"></i></div>
-     <img src="jukebox/21/thumb.jpg">
-     <div class="albumDetails">
-     <p class="albumArtist">Alanis Morissette</p>
-     <p class="albumTitle">Jagged Little pill</p>
-     </div>
-     </div>
-     */
 }
 
 function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here I guess
@@ -264,15 +186,23 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
 function alphabet(value) {
     restoreStorage();
 
-    var results = [];
+    var artists = []; // Lists the artists ids beginning with the chosen letter
 
-    albums_storage.forEach(function (element, index) {
+    artists_storage.forEach(function (element) {
         if (value != 0) {
-            if (element.artist.charAt(0).toLowerCase() == value.toLowerCase()) {
-                results[index] = element;
+            if (element.name.charAt(0).toLowerCase() == value.toLowerCase()) {
+                artists.push(element.id);
             }
         }
-        else if ((/[^a-zA-Z]/.test(element.artist.charAt(0))))
+
+        else if ((/[^a-zA-Z]/.test(element.name.charAt(0))))
+            artists.push(element.id);
+    });
+
+    var results = []; // List of albums with the given artists
+
+    albums_storage.forEach(function (element, index) {
+        if ((intersect(element.artists, artists)).length > 0)
             results[index] = element;
     });
 
@@ -295,6 +225,8 @@ function alphabet(value) {
 function search(value) {
     restoreStorage();
 
+    var t0 = performance.now();
+
     var results = [];
 
     if (search_field == "tracks") {
@@ -303,13 +235,33 @@ function search(value) {
         return;
     }
 
-    albums_storage.forEach(function (element, index) {
-        if (element[search_field].toLowerCase().includes(value.toLowerCase()))
-            results[index] = element;
-    });
+    if (search_field == "artist") {
+        var artists = [];
+
+        artists_storage.forEach(function (artist) {
+            if (artist.name.toLowerCase().includes(value.toLowerCase()))
+                artists.push(artist.id);
+        });
+
+        albums_storage.forEach(function (album, id) {
+            if (intersect(album.artists, artists).length > 0)
+                results[id] = album;
+        });
+
+    } else {
+        albums_storage.forEach(function (element, index) {
+            if (element[search_field].toLowerCase().includes(value.toLowerCase()))
+                results[index] = element;
+        });
+    }
+
+
     results = results.filter(function (n) {
         return n != undefined
     });
+
+    var t1 = performance.now();
+    console.log('Took', (t1 - t0).toFixed(4), 'milliseconds to perform search.');
 
     if (results.length == 0) {
         error("No albums found with '" + value + "' in " + search_field + ".");
@@ -381,7 +333,7 @@ home_btn.click(function () {
 });
 
 add_btn.click(function () {
-    $.ajax('assets/php/prepare_upload.php');
+    $.ajax('assets/php/album_creation/prepare_upload.php');
     openModalPage('assets/modals/add_album/1.upload_album.php');
 });
 
@@ -419,7 +371,7 @@ $('#albumCover').click(function () {
         return;
     }
     if (typeof(album_id) !== 'undefined')
-        openModalPage('assets/modals/album_details.php?id=' + album_id);
+        openModalPage('assets/modals/album_details?id=' + album_id);
 });
 
 //alert(show); //Just for debugging
@@ -428,7 +380,9 @@ previous.hide(); // This will hide the previous button, since we are at page 1 f
 //Smart stuff
 $(document).ready(function () {
     getHowManyAlbumsToShow(); //Pretty much self self explanatory
-    reload(); //We now load the remote script via ajax
+    $.getScript('/assets/js/storage.js', function () {
+        reload(); //We now load the remote script via ajax
+    });
 });
 
 $(document).mouseup(function (e) {

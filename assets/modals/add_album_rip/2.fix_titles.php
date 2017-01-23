@@ -8,7 +8,7 @@ setSessionTracks();
 <div class="modalHeader">Titles Enhance<?php if(isset($_SESSION['cd_title'])) echo ": ". $_SESSION['cd_title']; ?></div>
 
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
-	<form action="assets/php/fix_title.php" id="fixTitleForm">
+    <form action="assets/php/album_creation/fix_title.php" id="fixTitleForm">
 		<table class="cooltable">
 			<tr>
 				<th>New Title</th>

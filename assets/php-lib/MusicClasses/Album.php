@@ -18,7 +18,8 @@ class Album implements JsonSerializable
      */
     const ALBUMS_TABLE = 'albums';
 
-    const LAST_PLAYED_FILE = __DIR__ . '/../../config/lastid';
+//    const LAST_PLAYED_FILE = __DIR__ . '/../../config/lastid';
+    const LAST_PLAYED_FILE = '/var/www/html/assets/config/lastid';
 
     /**
      * @var int database id
@@ -63,9 +64,10 @@ class Album implements JsonSerializable
 
         $albums = [];
 
-        foreach ($db_object as $album) {
-            $albums[] = self::makeAlbumFromDatabaseObject($album);
-        }
+        if (is_array($db_object))
+            foreach ($db_object as $album) {
+                $albums[] = self::makeAlbumFromDatabaseObject($album);
+            }
 
         return $albums;
     }
@@ -84,7 +86,11 @@ class Album implements JsonSerializable
             $album->setHits($db_object->hits);
             $album->setAddedOn($db_object->added_on);
             $album->setLastPlayed($db_object->last_played);
-            $album->setGenre($db_object->genre);
+            if (isset($db_object->genre)) {
+                $album->setGenre($db_object->genre);
+            } else {
+                $album->genre = null;
+            }
 
             return $album;
         } catch (Exception $e) {
@@ -138,6 +144,27 @@ class Album implements JsonSerializable
             return null;
 
         return self::makeAlbumFromDatabaseObject($db_object[0]);
+    }
+
+    /**
+     * Returns an array of albums that matches the given title
+     * @param $title string title of the album
+     * @return Album[]
+     */
+    public static function findAlbumByTitle($title)
+    {
+        $db = new Database();
+
+        $db_objects = $db->select('*', self::ALBUMS_TABLE, "WHERE `title` LIKE '$title'");
+
+        $albums = [];
+
+        if (is_array($db_objects))
+            foreach ($db_objects as $db_object) {
+                $albums[] = self::makeAlbumFromDatabaseObject($db_object);
+            }
+
+        return $albums;
     }
 
     /**
@@ -199,8 +226,6 @@ class Album implements JsonSerializable
         return $this->last_played;
     }
 
-    //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
-
     /**
      * @return int the last played count
      */
@@ -225,6 +250,16 @@ class Album implements JsonSerializable
         return $last;
     }
 
+    //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
+
+    /**
+     * @return string absolute unix path to cover thumb file
+     */
+    public function getThumbPath()
+    {
+        return FileUtil::$_albums_root . "/$this->id/cover.jpg";
+    }
+
     /**
      * Returns the number of tracks in the album
      * @return int the count of tracks
@@ -234,22 +269,6 @@ class Album implements JsonSerializable
         $db = new Database();
 
         return $db->count(Song::SONGS_TABLE, "album_id = $this->id");
-    }
-
-    /**
-     * @return Song[] | null the songs in an album
-     */
-    public function getTracks()
-    {
-        return Song::getSongsInAlbum($this->getId());
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -314,7 +333,15 @@ class Album implements JsonSerializable
 
     public function serializableArray()
     {
-        return ["id" => $this->getId(), "title" => $this->getTitle(), "artists" => $this->getArtists(), "hits" => $this->getHits(), "last_played" => $this->getLastPlayed()];
+        return ["id" => $this->getId(), "title" => $this->getTitle(), "artists" => $this->getArtists(), "hits" => $this->getHits(), "last_played" => $this->getLastPlayed(), "cover" => $this->getCoverID()];
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -333,6 +360,10 @@ class Album implements JsonSerializable
         $this->title = $title;
     }
 
+    /**
+     * Return an array of participating artists IDs
+     * @return int []
+     */
     public function getArtists()
     {
         $raws = Artist::getArtistIdsInAlbum($this->getId());
@@ -340,7 +371,7 @@ class Album implements JsonSerializable
         $arr = []; // I'm a pirate!
 
         foreach ($raws as $raw) {
-            $arr[] = intval($raw[0]);
+            $arr[] = intval($raw->artist_id);
         }
 
         return $arr;
@@ -352,6 +383,129 @@ class Album implements JsonSerializable
     public function getHits()
     {
         return $this->hits;
+    }
+
+    /**
+     * Returns the timestamp of the last time the cover was edited.
+     *
+     * @return int|null
+     */
+    public function getCoverID()
+    {
+        if (!file_exists($this->getCoverPath()))
+            return null;
+
+        return filemtime($this->getCoverPath());
+    }
+
+    /**
+     * @return string absolute unix path to cover file.
+     */
+    public function getCoverPath()
+    {
+        return FileUtil::$_albums_root . "/$this->id/cover.jpg";
+    }
+
+    /**
+     * Returns an array of contributing artists
+     * @return string[]
+     */
+    public function getArtistsName()
+    {
+        $raws = Artist::getArtistIdsInAlbum($this->getId());
+
+        $arr = []; // I'm a pirate!
+
+        foreach ($raws as $raw) {
+            $arr[] = Artist::getArtist(intval($raw->artist_id))->getName();
+        }
+
+        return $arr;
+    }
+
+    public function getCoverUrl($thumb = false)
+    {
+        if (!file_exists($this->getCoverPath()))
+            return '/assets/img/album-placeholder.png';
+
+        $file = $thumb ? 'thumb' : 'cover';
+
+        return "/jukebox/$this->id/$file.jpg?" . $this->getCoverID();
+    }
+
+    /**
+     * Returns an array of songs created with the legacy album system
+     * @return Song[]
+     */
+    public function getLegacySongs()
+    {
+        $db = new Database();
+
+        $result = $db->select('tracks', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+
+        //$result = $result;
+
+        $songs = json_decode($result[0]->tracks);
+
+        $_songs = [];
+
+        foreach ($songs as $song) {
+            $song = Song::importSongFromJson($song, $this->id);
+            $_songs[] = $song;
+        }
+
+        return $_songs;
+    }
+
+    /**
+     * The size in MB of the album folder (tracks and covers)
+     * @return float|null
+     */
+    public function getAlbumFolderSize()
+    {
+        return FileUtil::getDirectorySize($this->getId());
+    }
+
+    public function getAlbumPath()
+    {
+        return FileUtil::$_albums_root . $this->getId() . '/';
+    }
+
+    /**
+     * Gets an artist from the previous artist configuration and return a new Artist object
+     * @return Artist
+     */
+    public function getLegacyArtist()
+    {
+        $db = new Database();
+
+        $result = $db->select('artist', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+
+        $artist = $result[0]->artist;
+
+        return Artist::softCreateArtist($artist);
+    }
+
+    /**
+     * @return int the number of CDs in the album
+     */
+    public function getCdCount()
+    {
+        $tracks = $this->getTracks();
+
+        if (count($tracks) == 0) {
+            return 0;
+        }
+
+        return end($tracks)->getCd();
+    }
+
+    /**
+     * @return Song[] | null the songs in an album
+     */
+    public function getTracks()
+    {
+        return Song::getSongsInAlbum($this->getId());
     }
 
     //</editor-fold>

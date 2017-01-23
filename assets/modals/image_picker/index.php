@@ -2,7 +2,7 @@
 <div class="modalBody" data-mcs-theme="dark">
 
     <div id="fromTheWeb" style="width: 75%; float: left">
-        <form id="coverPickerForm" action="assets/php/add_cover.php">
+        <form id="coverPickerForm" action="/assets/php/album_creation/add_cover.php">
             <input type="hidden" name="coverFrom" id="coverFrom"/>
             <input type="hidden" name="uploadedCover" id="uploadedCover"/>
             <input type="hidden" name="coverURL" id="coverURL"/>
@@ -35,7 +35,8 @@
             <p>Or upload a file</p>
             <p>(*.jpg, *.png, *.gif)</p>
         </div>
-        <form action="assets/php/image_upload.php" enctype="multipart/form-data" class="dropzone" id="image_picker_dropzone">
+        <form action="assets/php/image_upload.php" enctype="multipart/form-data" class="dropzone"
+              id="image_picker_dropzone">
             <div class="fallback">
                 <input name="name" type="file" multiple/>
             </div>

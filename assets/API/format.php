@@ -1,7 +1,7 @@
 <?php
 
-require_once "Database.php";
-require_once "FileUtil.php";
+require_once "../php/Database.php";
+require_once "../php/FileUtil.php";
 require_once "../php-lib/file-functions.php";
 
 $Database = new Database();
@@ -21,10 +21,10 @@ if (isset($_GET['operation'])) {
             break;
 
         case "factory_reset":
-            $db_res = $Database->drop("all");
+            $Database::resetDatabase();
             FileUtil::emptyDirectory($jukebox_folder);
             FileUtil::emptyDirectory($config_folder);
-            $res = FileUtil::isDirEmpty($jukebox_folder) && FileUtil::isDirEmpty($config_folder) && $db_res;
+            $res = FileUtil::isDirEmpty($jukebox_folder) && FileUtil::isDirEmpty($config_folder);
             echo $res ? "The Jukebox has been reset to the factory settings." : $fail;
             break;
 

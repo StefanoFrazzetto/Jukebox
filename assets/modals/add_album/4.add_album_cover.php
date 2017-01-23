@@ -59,7 +59,7 @@ session_start();
 
 <div class="modalHeader">Cover Picker</div>
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 350px;">
-    <form id="coverPickerForm" action="assets/php/add_cover.php">
+    <form id="coverPickerForm" action="assets/php/album_creation/add_cover.php">
         <input type="hidden" name="coverFrom" id="coverFrom" />
         <input type="hidden" name="uploadedCover" id="uploadedCover" />
         <input type="hidden" name="coverURL" id="coverURL" />
@@ -118,7 +118,7 @@ session_start();
 
     function getCoverFromURL(){
         $.ajax({
-            url: 'assets/php/add_cover.php',
+            url: 'assets/php/album_creation/add_cover.php',
             type: 'POST',
             data: {coverFrom: 1, coverURL: imageURL},
             cache: false,
@@ -137,7 +137,7 @@ session_start();
 
     function getCoverFromLocalStorage(){
         $.ajax({
-            url: 'assets/php/add_cover.php',
+            url: 'assets/php/album_creation/add_cover.php',
             type: 'POST',
             data: {coverFrom: 0, uploadedCover: uploadedCover},
             cache: false,

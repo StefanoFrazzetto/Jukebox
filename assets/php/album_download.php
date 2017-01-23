@@ -1,7 +1,7 @@
 <?php
 
 require_once '../php-lib/zipper.php';
-require_once '../php-lib/dbconnect.php';
+require_once '../php-lib/MusicClasses/Album.php';
 
 $outputDIR = '/var/www/html/downloads/';
 $zipCheck = $outputDIR . 'zipCheck';
@@ -9,26 +9,25 @@ $zipCheck = $outputDIR . 'zipCheck';
 
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-if ((time() - file_get_contents($zipCheck)) > 300 && file_exists($zipCheck))
-{
+if ((time() - file_get_contents($zipCheck)) > 300 && file_exists($zipCheck)) {
     unlink($zipCheck);
 }
 
 if (!file_exists($zipCheck)) {
 
-    $results = $mysqli->query("SELECT * FROM $albums WHERE id = $albumID LIMIT 1");
-    $result = $results->fetch_object();
+    $album = Album::getAlbum($albumID);
 
-    $title = $result->title;
-    $artist = $result->artist;
-    $tracks = json_decode($result->tracks);
+    $title = $album->getTitle();
+    $artists = $album->getArtistsName();
 
-    $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', ' ', $artist) . ' - ' . preg_replace('/[^A-Za-z0-9\-]/', ' ', $title);
+    $tracks = $album->getTracks();
+
+    $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', ' ', implode($artists, '-')) . ' - ' . preg_replace('/[^A-Za-z0-9\-]/', ' ', $title);
     $outputFile = $outputDIR . $outputFileName . '.zip';
 
     file_put_contents($zipCheck, time());
 
-    if (end($tracks)->cd != $tracks[0]->cd) {
+    if (end($tracks)->getCd() != $tracks[0]->getCd()) {
         $differentCDs = true;
         $CD = -1; //Del
     } else {
@@ -38,14 +37,14 @@ if (!file_exists($zipCheck)) {
     foreach ($tracks as $key => $track) {
 
         if ($differentCDs) {
-            if ($track->cd != $CD) {
-                $CD = $track->cd;
+            if ($track->getCd() != $CD) {
+                $CD = $track->getCd();
                 //echo $CD;
             }
-            $albumMap[$CD][] = $track->url;
+            $albumMap[$CD][] = $track->getUrl();
         } else {
-            $CD = $track->cd;
-            $albumMap[$CD][] = $track->url;
+            $CD = $track->getCd();
+            $albumMap[$CD][] = $track->getUrl();
         }
     }
 

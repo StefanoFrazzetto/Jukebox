@@ -58,7 +58,7 @@ session_start();
 		submit_btn.click(function(event) {
 			$('#status').text('Please wait...');
 			$.ajax({
-				url: "assets/php/add_album_finalize.php",
+                url: "assets/php/album_creation/add_album_finalize.php",
 				type: "POST",
 				data: {tmp_folder: tmp_folder},
 				cache: false
@@ -67,7 +67,7 @@ session_start();
 					$('#status').text('The new album has been added successfully.');
 
 					$('#openNewAlbum').removeClass('hidden').click(function(){
-						openModalPage('assets/modals/album_details.php?id=' + data);    
+                        openModalPage('assets/modals/album_details?id=' + data);
 					});
 
 					submit_btn.addClass('hidden');

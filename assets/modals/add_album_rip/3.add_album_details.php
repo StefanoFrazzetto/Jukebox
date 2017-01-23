@@ -13,7 +13,7 @@ if(isset($_SESSION['cd_title'])){
 ?>
 <div class="modalHeader">Add new album<?php if(isset($_SESSION['cd_title'])) echo ": ". $_SESSION['cd_title']; ?></div>
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 350px;">
-	<form id="addAlbumForm" class="text-center" action="assets/php/add_album_details.php">
+    <form id="addAlbumForm" class="text-center" action="/assets/php/album_creation/add_album_details.php">
 
 		<h3>Artist</h3>
 			<label>
@@ -64,7 +64,7 @@ if(isset($_SESSION['cd_title'])){
 	albumTitleField.change(function() {
 		var title = $(this).val();
 
-		$.getJSON('assets/php/check_album_exists.php?title=' + title).done(function(response) {
+        $.getJSON('assets/API/check_album_exists.php?title=' + title).done(function (response) {
 			if (response[0] != 0) {
 				$('#titleWarning').html('Warning, there is another album with a similar name: <br> "' + response.title + '" <br> <img height= "80" src="' + response.cover_url + '"/>');
 			} else {

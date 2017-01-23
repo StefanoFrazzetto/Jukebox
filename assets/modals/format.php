@@ -79,7 +79,7 @@
 
 	$('#confirm_hdd_database').click(function() {
 		$.ajax({
-			url: "assets/php/format.php?operation=format_hdd_database"
+            url: "assets/API/format.php?operation=format_hdd_database"
 		}).done(function(data){
 			init();
 			$('#format_end').html("<p>" + data + "</p>");
@@ -89,7 +89,7 @@
 
 	$('#format_factory').click(function() {
 		$.ajax({
-			url: "assets/php/format.php?operation=factory_reset"
+            url: "assets/API/format.php?operation=factory_reset"
 		}).done(function(data){
 			init();
 			$('#format_end').html("<p>" + data + "</p>");

@@ -81,6 +81,9 @@ class Artist implements JsonSerializable
             WHERE songs.album_id = $id"
         );
 
+        if (!is_array($db_object))
+            $db_object = [];
+
         return $db_object;
     }
 
@@ -92,33 +95,52 @@ class Artist implements JsonSerializable
 
         $artists = [];
 
-        foreach ($db_object as $artist) {
-            $artists[] = self::makeArtistFromDatabaseObject($artist);
-        }
+        if (is_array($db_object))
+            foreach ($db_object as $artist) {
+                $artists[] = self::makeArtistFromDatabaseObject($artist);
+            }
 
         return $artists;
     }
 
     /**
-     * Deletes an artist from database
-     * @return bool
+     * Looks for an artist in the database returns the first match if found, creates one otherwise.
+     * @param $name
+     * @return Artist
      */
-    public function delete()
+    public static function softCreateArtist($name)
     {
-        $this->created = false;
-        return self::deleteArtist($this->id);
+        $search = self::findArtistByTitle($name);
+
+        if (count($search))
+            return $search[0];
+
+        $artist = new Artist($name);
+
+        $artist->save();
+
+        return $artist;
     }
 
     /**
-     * Deletes an artist form database
-     * @param $id int
-     * @return bool status of the db
+     * Returns an array of artists that matches the given name
+     * @param $name string name of the artist
+     * @return Artist[]
      */
-    public static function deleteArtist($id)
+    public static function findArtistByTitle($name)
     {
         $db = new Database();
 
-        return $db->delete(Artist::ARTIST_TABLE, "`id` = $id");
+        $db_objects = $db->select('*', self::ARTIST_TABLE, "WHERE `name` LIKE '$name'");
+
+        $artists = [];
+
+        if (is_array($db_objects))
+            foreach ($db_objects as $db_object) {
+                $artists[] = self::makeArtistFromDatabaseObject($db_object);
+            }
+
+        return $artists;
     }
 
     /**
@@ -143,6 +165,28 @@ class Artist implements JsonSerializable
         }
 
         return true;
+    }
+
+    /**
+     * Deletes an artist from database
+     * @return bool
+     */
+    public function delete()
+    {
+        $this->created = false;
+        return self::deleteArtist($this->id);
+    }
+
+    /**
+     * Deletes an artist form database
+     * @param $id int
+     * @return bool status of the db
+     */
+    public static function deleteArtist($id)
+    {
+        $db = new Database();
+
+        return $db->delete(Artist::ARTIST_TABLE, "`id` = $id");
     }
 
     /**

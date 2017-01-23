@@ -17,13 +17,10 @@ var stop_btn = $('#stop');
 var next_btn = $('#fwd');
 var prev_btn = $('#bwd');
 
-
 var seekDiv = $('#seek');
 var songTitle = $('#songTitle');
 var albumTitle = $('#albumTitle');
 var albumCover = $('#albumCover');
-
-var albumDetailsCache = [];
 
 // INIT //
 var playing = false;
@@ -47,16 +44,8 @@ prev_btn.click(function () {
     pprevious();
 });
 
-/*player.onplaying = function () {
- alert("The video is now playing");
- };*/
-
-/*player.onpause = function () {
- playing = false;
- };*/
-
 player.onwaiting = function () {
-    seekDiv.text('loading...');
+    seekDiv.html('loading&hellip;');
 };
 
 player.onended = function () {
@@ -208,13 +197,27 @@ function highlightCurrentTrack() {
 }
 
 function getPlaylistSong(number) {
+    if (typeof album_id === 'undefined')
+        return error("[album_id] is undefined inside getPlaylistSong()");
+
     number = parseInt(number);
     playlist_number = number;
-    track_no = playlist[number].no;
 
-    if (playlist[number].album != album_id) {
-        album_id = playlist[number].album;
-        getAlbumsDetails(album_id);
+    if (typeof playlist[number] == 'undefined') { // Small failsafe
+        error("Track [" + number + "] missing from the local database.");
+        return;
+    }
+
+    track_no = playlist[number].track_no;
+
+    if (playlist[number].album_id != album_id) {
+
+        var _album_id = playlist[number].album_id;
+
+        if (typeof _album_id != 'undefined') // SE QUALCUNO LO LEVA GLI STACCO LO SCACCO
+            album_id = _album_id;
+
+        showAlbumsDetails(album_id);
     }
 
     pgetSong(playlist[number].url);
@@ -233,6 +236,7 @@ function pgetSong(url) {
 }
 
 function getAlbumPlaylist(album_id, song) {
+
     getPlaylist(album_id, function (data) {
         playlist = data;
 
@@ -250,7 +254,7 @@ function getAlbumPlaylist(album_id, song) {
 }
 
 function getPlaylist(_album_id, callback) {
-    var url_request = "assets/php/get_playlist.php?id=" + _album_id;
+    var url_request = "/assets/API/playlist.php?id=" + _album_id;
 
     $.getJSON(url_request, function (data) {
         callback(data);
@@ -263,7 +267,8 @@ function updatePlaylist() {
     var items = '';
 
     $.each(playlist, function (key, val) {
-        items = items + ("<tr><td data-album='" + val.album + "' data-track-no='" + val.no + "' id='track_" + key + "'>" + val.title + "</td></tr>");
+        if (typeof val != 'undefined')
+            items = items + ("<tr><td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' id='track_" + key + "'>" + val.title + "</td></tr>");
     });
     playlistTable.html(items);
 
@@ -288,37 +293,55 @@ function updatePlaylist() {
     highlightCurrentTrack();
 }
 
-function getAlbumsDetails(id) {
-    getAlbumDetails(id, function (data) {
-        if (Object.keys(data).length == 0) {
-            playerError();
-            return;
-        }
-        albumTitle.html(data.title);
-        changeCover(data.cover);
-    });
+function showAlbumsDetails(id) {
+    if (typeof id === 'undefined')
+        return;
+
+    if (typeof albums_storage[id] === 'undefined') {
+        error("Album [" + id + "] missing from local DB. Report to @Vittorio.");
+        return;
+    }
+
+    var data = albums_storage[id];
+
+    albumTitle.html(data.title);
+
+    if (data.cover != null)
+        changeCover("/jukebox/" + id + "/cover.jpg?" + data.cover);
+    else
+        changeCover(cover_placeholder);
 }
 
 function getAlbumDetails(id, callback) {
-    if (typeof albumDetailsCache[id] == 'undefined') {
-        var url_request = "assets/php/get_album_details.php?id=" + id;
-        $.getJSON(url_request, callback).done(function (data) {
-            albumDetailsCache[id] = data;
-        });
+    if (typeof albums_storage[id] == 'undefined') {
+        // var url_request = "assets/php/get_album_details.php?id=" + id;
+        // $.getJSON(url_request, callback).done(function (data) {
+        //     albumDetailsCache[id] = data;
+        // });
+        error("Unable to find this album (" + id + "). Report this to @Vittorio.");
     } else {
-        var data = albumDetailsCache[id];
+        var data = albums_storage[id];
+
         callback(data);
     }
 }
 
 function changeAlbum(id, song) {
+    if (typeof id == 'undefined')
+        return;
+
+    if (typeof song == 'undefined')
+        song = 0;
+
     album_id = id;
     isRadio = false;
     isReady = true;
 
+    showAlbumsDetails(id);
+
     getAlbumPlaylist(id, song);
-    getAlbumsDetails(id);
-    pstop();
+
+    // pstop();
 }
 
 function deleteAlbum(id) {
@@ -329,7 +352,7 @@ function deleteAlbum(id) {
             {
                 text: "Yes, delete it",
                 callback: function () {
-                    $.ajax('assets/php/delete_album.php?id=' + id).done(function () {
+                    $.ajax('assets/API/delete_album.php?id=' + id).done(function () {
                         if (id == album_id) {
                             resetPlayer();
                         }
@@ -346,13 +369,13 @@ function deleteAlbum(id) {
 
 function deleteRadio(id) {
     if (confirm("Are you sure?")) {
-        $.ajax('assets/php/delete_radio.php?id=' + id).done(function (response) {
-            if (response == "success") {
+        $.getJSON('assets/API/delete_radio.php?id=' + id).done(function (response) {
+            if (response.status == "success") {
                 $('.aRadio[data-id="' + id + '"]').remove();
             }
             else {
-                error("Error while deleting Radio. " + response + ".");
-                console.log(response);
+                error("Error while deleting Radio. " + response.message + ".");
+                console.log(response.message);
             }
             //reload();
         });
@@ -409,37 +432,6 @@ function playerError() {
     albumTitle.text('');
     hideCover();
 }
-
-// function BTConnect(mac) {
-//     var stoptime = player.currentTime;
-//     var playerstatus = playing;
-//
-//     play_pause();
-//
-//     var connect = "assets/php/BTConnect.php?mac=" + mac;
-//     document.getElementById(mac).style.backgroundColor = 'orange';
-//
-//     $.ajax({
-//         type: "GET",
-//         url: connect,
-//         success: function (data) {
-//             if (data == "Connected") {
-//                 document.getElementById(mac).style.backgroundColor = 'green';
-//                 if (playerstatus) {
-//                     pplay();
-//                 }
-//                 player.currentTime = stoptime;
-//             } else {
-//                 document.getElementById(mac).style.backgroundColor = 'red';
-//                 if (playerstatus) {
-//                     pplay();
-//                 }
-//                 player.currentTime = stoptime;
-//             }
-//         }
-//     });
-//
-// }
 
 function playRadio(url_object, name) {
     isReady = true;

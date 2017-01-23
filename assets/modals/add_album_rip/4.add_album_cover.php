@@ -59,7 +59,7 @@ session_start();
 
 <div class="modalHeader">Cover Picker</div>
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 500px;">
-    <form id="coverPickerForm" action="assets/php/add_cover.php">
+    <form id="coverPickerForm" action="assets/php/album_creation/add_cover.php">
         <input type="hidden" name="coverFrom" id="coverFrom" />
         <input type="hidden" name="uploadedCover" id="uploadedCover" />
         <input type="hidden" name="coverURL" id="coverURL" />
@@ -103,12 +103,12 @@ session_start();
 
     function getCoverFromURL(){
         $.ajax({
-            url: 'assets/php/add_cover.php',
+            url: 'assets/php/album_creation/add_cover.php',
             type: 'POST',
             data: {coverFrom: 1, coverURL: imageURL, savePath: savePath},
             cache: false,
             success: function () {
-                console.log("Cover saved.")
+                console.log("Cover saved.");;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 $.post(addAlbumForm.attr('action'), addAlbumForm.serialize()).done(function(data) {
                     if (data === '0') {
                         openModalPage('assets/modals/add_album_rip/5.add_album_review.php');

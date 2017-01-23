@@ -57,10 +57,10 @@ session_start();
     $('#submit').click(function () {
         $('#status').html('Please wait...');
 
-        $.ajax('assets/php/add_album_finalize.php').done(function (data) {
+        $.ajax('/assets/php/album_creation/add_album_finalize.php').done(function (data) {
             data = parseInt(data);
 
-            if (data > -1 || isNumber(data)) {
+            if (data > -1) {
                 closeModal();
 
                 new Alert({
@@ -71,7 +71,7 @@ session_start();
                         {
                             text: "Open Album",
                             callback: function () {
-                                openModalPage('assets/modals/album_details.php?id=' + data);
+                                openModalPage('assets/modals/album_details?id=' + data);
                             }
                         }
                     ]
