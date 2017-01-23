@@ -76,18 +76,6 @@ class DiscWriter
         return $this->disc_size;
     }
 
-    private function checkBlank()
-    {
-        $cmd = shell_exec("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
-        $disc_check = shell_exec("wodim -v dev=/dev/sr0 -toc 2>&1");
-
-        if ($cmd < 10 && substr_count($disc_check, "Cannot load media") == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * Checks if a disc is blank.
      * Returns true if the disc is blank, false otherwise.
@@ -96,7 +84,7 @@ class DiscWriter
      */
     public function checkDiscBlank()
     {
-        $command = CommandExecuter::raw(CommandExecuter::$scripts_folder . "CdCheck.sh");
+        $command = CommandExecutor::raw(CommandExecutor::$scripts_folder . "CdCheck.sh");
 
         if (strpos($command, '<<No disc in drive>>') !== false) {
             return false;
@@ -109,6 +97,18 @@ class DiscWriter
         }
 
         return false;
+    }
+
+    private function checkBlank()
+    {
+        $cmd = shell_exec("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
+        $disc_check = shell_exec("wodim -v dev=/dev/sr0 -toc 2>&1");
+
+        if ($cmd < 10 && substr_count($disc_check, "Cannot load media") == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

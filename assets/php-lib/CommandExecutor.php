@@ -1,6 +1,7 @@
 <?php
 
-abstract class CommandExecuter {
+abstract class CommandExecutor
+{
 
 	public static $scripts_folder = '/var/www/html/assets/cmd/';
 

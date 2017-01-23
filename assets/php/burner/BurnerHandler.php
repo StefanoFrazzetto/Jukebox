@@ -66,7 +66,7 @@ class BurnerHandler {
 					$tracks = TracksHandler::getTracksJSON();
 					if(count($tracks) > 0) {
 						unset($tracks);
-						CommandExecuter::removeDir(self::$_burner_folder);
+                        CommandExecutor::removeDir(self::$_burner_folder);
 					}
 
 					//Start the burning process.
@@ -94,16 +94,16 @@ class BurnerHandler {
      * @return string
      */
 	private static function checkStatus() {
-		if(CommandExecuter::isProcessRunning("lame")){
+        if (CommandExecutor::isProcessRunning("lame")) {
 			$status = self::$_status_decoding;
 
-		} elseif (CommandExecuter::isProcessRunning("normalize-audio")) {
+        } elseif (CommandExecutor::isProcessRunning("normalize-audio")) {
 			$status = self::$_status_normalizing;
 
-		} elseif (CommandExecuter::isProcessRunning("mkisofs") || CommandExecuter::isProcessRunning("genisoimage")) {
+        } elseif (CommandExecutor::isProcessRunning("mkisofs") || CommandExecutor::isProcessRunning("genisoimage")) {
 			$status = self::$_status_burning;
 
-        } elseif (CommandExecuter::isProcessRunning("wodim")) {
+        } elseif (CommandExecutor::isProcessRunning("wodim")) {
 			$status = self::$_status_burning;
 
 		} else {

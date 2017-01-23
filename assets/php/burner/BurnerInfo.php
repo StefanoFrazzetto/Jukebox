@@ -24,11 +24,8 @@ class BurnerInfo
     protected static $_status_normalizing = "Normalizing";
     protected static $_status_burning = "Burning";
     protected static $_status_complete = "Complete";
-
-	protected $output_format;
-
 	protected static $_steps = 5;
-
+    protected $output_format;
 	protected $status;
 	protected $message;
 
@@ -70,12 +67,6 @@ class BurnerInfo
 		return $this->status;
 	}
 
-	public function getMessage() {
-		return $this->message;
-	}
-
-	/* ********************************************* */
-
 	protected function setStatus() {
 		if(!(file_exists(self::$_burner_status))) {
 			$this->status = self::$_status_idle;
@@ -86,21 +77,11 @@ class BurnerInfo
 		}
 	}
 
-    /**
-     * $partial_progress = tracks processed / total tracks.
-     *
-     * @param $base_percentage
-     */
-	protected function setPercentage($base_percentage) {
-		$progress = $this->partial_progress * (100/self::$_steps);
+    /* ********************************************* */
 
-		$final = $base_percentage + floor($progress);
-
-		if($final > 100) {
-			$final = 100;
-		}
-
-		$this->percentage = $final;
+    public function getMessage()
+    {
+        return $this->message;
 	}
 
 	protected function setMessage() {
@@ -152,7 +133,7 @@ class BurnerInfo
                     $message = "Ready. Insert the NEXT DISC.";
 				}
 				break;
-			
+
 			default:
 				$message = "Error. File: BurnerInfo.php";
 		}
@@ -161,6 +142,24 @@ class BurnerInfo
 		$this->nextCD = $nextCD;
 
 	}
+
+    /**
+     * $partial_progress = tracks processed / total tracks.
+     *
+     * @param $base_percentage
+     */
+    protected function setPercentage($base_percentage)
+    {
+        $progress = $this->partial_progress * (100 / self::$_steps);
+
+        $final = $base_percentage + floor($progress);
+
+        if ($final > 100) {
+            $final = 100;
+        }
+
+        $this->percentage = $final;
+    }
 
 	/* ********************************************* */
 
@@ -205,37 +204,38 @@ class BurnerInfo
 		$this->partial_progress = $this->percentage($json['partial'], $json['total']);
 	}
 
+    protected function percentage($par, $tot)
+    {
+        if ($tot == 0 || $tot == null) {
+            return 0;
+        }
+
+        return $par / $tot;
+    }
+
+    /* ********************************************* */
+
 	protected function burning() {
         $file_content = file_get_contents(self::$_burn_output);
-		
+
 		$tracks_count = substr_count($file_content, "Track");
 		$total = FileUtil::countFiles(BurnerHandler::$_burner_folder, "mp3");
 
     	$this->partial_progress = $this->percentage($tracks_count, $total);
 	}
 
-	/* ********************************************* */
-
-	protected function percentage($par, $tot) {
-	    if ($tot == 0 || $tot == null) {
-	        return 0;
-        }
-
-	    return $par/$tot;
-    }
-
 	protected function checkProcesses() {
-		if(CommandExecuter::isProcessRunning("lame")){
+        if (CommandExecutor::isProcessRunning("lame")) {
 			$output['status'] = self::$_status_decoding;
 
-		} elseif (CommandExecuter::isProcessRunning("mkisofs") || CommandExecuter::isProcessRunning("genisoimage")) {
+        } elseif (CommandExecutor::isProcessRunning("mkisofs") || CommandExecutor::isProcessRunning("genisoimage")) {
 
 			$output['status'] = self::$_status_iso;
 
-		} elseif (CommandExecuter::isProcessRunning("normalize-audio")) {
+        } elseif (CommandExecutor::isProcessRunning("normalize-audio")) {
 			$output['status'] = self::$_status_normalizing;
 
-        } elseif (CommandExecuter::isProcessRunning("wodim")) {
+        } elseif (CommandExecutor::isProcessRunning("wodim")) {
 			$output['status'] = self::$_status_burning;
 
 			$output['message'] = "Please wait. Your DISC will be ejected once the process will be complete.";
