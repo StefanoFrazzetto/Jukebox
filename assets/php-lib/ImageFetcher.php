@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Class ImageFetcher.php
+ * Class ImageFetcher retrieves albums images, covers, thumbnails from multiple source.
+ * Non-working images are automatically removed.
  *
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
  * @version 1.0.0
@@ -30,11 +31,11 @@ class ImageFetcher
     public function getAll()
     {
 //        $images[] = $this->getYoutube($this->_search_query);
-        $images["covershut"] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 10);
+        $images["covershut"] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 15);
 //        $images[] = $this->getFrom("http://www.seekacover.com/cd/$this->_search_query", 2);
         $images["allmusic"] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 4);
 //        $images[] = $this->getFrom("https://www.google.co.uk/search?q=$this->_search_query&tbm=isch&tbs=isz:l", 10);
-        $images["discogs"] = $this->getFrom("https://www.discogs.com/search/?q=$this->_search_query&type=all", 4);
+//        $images["discogs"] = $this->getFrom("https://www.discogs.com/search/?q=$this->_search_query&type=all", 10);
         $images["slothradio"] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$$this->album", 2);
 
         $images_array = [];
@@ -45,7 +46,7 @@ class ImageFetcher
 
         $this->removeUselessImages($images_array);
 
-        return json_encode($images_array);
+        return $images_array;
     }
 
     /**
@@ -56,7 +57,7 @@ class ImageFetcher
     private function removeUselessImages(&$images_array)
     {
         foreach ($images_array as $key => $url) {
-            if (strpos($url, "data:image") !== false) {
+            if (preg_match('(data:image|paypal)', $url) === 1 || preg_match('(png|jpg)', $url) == 0) {
                 unset($images_array[$key]);
             }
         }
@@ -74,20 +75,6 @@ class ImageFetcher
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
-    }
-
-    private function getYoutube($query)
-    {
-        $html = file_get_contents("https://www.youtube.com/results?search_query=$query");
-
-        $imgurl = self::getStringBetween($html, "//i.ytimg.com/p/", "sddefault.jpg");
-        if (!$imgurl == "") {
-            $imageurls = "//i.ytimg.com/p/" . $imgurl . "sddefault.jpg";
-        } else {
-            $imageurls = null;
-        }
-
-        return $imageurls == null ? null : $imageurls;// yes
     }
 
     private function getFrom($url, $no = 2)
