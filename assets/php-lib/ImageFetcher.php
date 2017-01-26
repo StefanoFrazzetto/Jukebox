@@ -65,18 +65,6 @@ class ImageFetcher
         $images_array = array_values(array_unique($images_array));
     }
 
-    private function getStringBetween($string, $start, $end)
-    {
-        $string = " " . $string;
-        $ini = strpos($string, $start);
-
-        if ($ini == 0)
-            return "";
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-        return substr($string, $ini, $len);
-    }
-
     private function getFrom($url, $no = 2)
     {
         $html = file_get_contents($url);
