@@ -16,9 +16,6 @@
  */
 class Config
 {
-    /** The directory containing the configuration files */
-    const CONFIG_DIR = "../config/";
-
     /** The json configuration file */
     private $dynamic_conf_file;
 
@@ -30,11 +27,13 @@ class Config
 
     public function __construct()
     {
+        $config_dir = $_SERVER["DOCUMENT_ROOT"] . "/assets/config/";
+
         // Loads the static configuration file
-        $this->static_conf = include(self::CONFIG_DIR . "config.php");
+        $this->static_conf = include($config_dir . "config.php");
 
         // Loads the dynamic configuration file
-        $this->dynamic_conf_file = self::CONFIG_DIR . "config.json";
+        $this->dynamic_conf_file = $config_dir . "config.json";
         if (!file_exists($this->dynamic_conf_file)) {
             file_put_contents($this->dynamic_conf_file, null);
         }
