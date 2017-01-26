@@ -164,8 +164,8 @@ session_start();
             $('#covers > p').css('display', 'block');
 
             $.ajax({
-                url: 'assets/php-lib/image_sources/fetch.php',
-                method: 'POST',
+                url: 'assets/API/image_fetch.php',
+                method: 'GET',
                 data: { artist: artist, album: album },
                 dataType: 'json',
                 success: function(data) {

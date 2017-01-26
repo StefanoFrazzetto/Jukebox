@@ -108,7 +108,7 @@ session_start();
             data: {coverFrom: 1, coverURL: imageURL, savePath: savePath},
             cache: false,
             success: function () {
-                console.log("Cover saved.");;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                console.log("Cover saved.");
                 $.post(addAlbumForm.attr('action'), addAlbumForm.serialize()).done(function(data) {
                     if (data === '0') {
                         openModalPage('assets/modals/add_album_rip/5.add_album_review.php');
@@ -130,8 +130,8 @@ session_start();
             $('#covers > p').css('display', 'block');
 
             $.ajax({
-                url: 'assets/php-lib/image_sources/fetch.php',
-                method: 'POST',
+                url: 'assets/API/image_fetch.php',
+                method: 'GET',
                 data: { artist: artist, album: album },
                 dataType: 'json',
                 success: function(data) {
