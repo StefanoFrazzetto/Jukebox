@@ -1,5 +1,7 @@
 <?php
 
+require_once "Config.php";
+
 /**
  *    Mysql database class
  */
@@ -9,10 +11,11 @@ class Database
     public static $_table_radio_stations = "radio_stations";
     private static $_instance; //The single instance
     private $_connection;
-    private $_host = "localhost";
-    private $_username = "root";
-    private $_password = "password1000";
-    private $_database = "zwytytws_albums";
+
+    private $_host;
+    private $_database;
+    private $_username;
+    private $_password;
 
     /*
     *	Get an instance of the Database
@@ -21,6 +24,12 @@ class Database
 
     public function __construct()
     {
+        $config = new Config();
+        $this->_host = $config->get("database")["host"];
+        $this->_database = $config->get("database")["name"];
+        $this->_username = $config->get("database")["user"];
+        $this->_password = $config->get("database")["password"];
+
         try {
             $this->_connection = new PDO("mysql:host=$this->_host;dbname=$this->_database;charset=utf8mb4", $this->_username, $this->_password);
         } catch (PDOException $e) {
@@ -54,7 +63,7 @@ class Database
 
         $sql_folder = __DIR__ . '/../../installation/';
 
-        $db->executeFile($sql_folder . 'zwytytws_albums.sql');
+        $db->executeFile($sql_folder . 'base_schema.sql');
         $db->executeFile($sql_folder . 'themes.sql');
     }
 
