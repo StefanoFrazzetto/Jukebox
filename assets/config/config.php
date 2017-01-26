@@ -6,7 +6,7 @@ return [
      * |----------------------------------------------
      * | Application Name
      * |----------------------------------------------
-     * |The name that will be shown in the page title.
+     * | The name that will be shown in the page title.
      */
     'name' => "Jukebox",
 
@@ -14,23 +14,15 @@ return [
      * |----------------------------------------------
      * | Application FQDN
      * |----------------------------------------------
-     * |The FQDN of this jukebox.
+     * | The FQDN of this jukebox.
      */
     'fqdn' => 'Jukebox',
 
     /**
      * |----------------------------------------------
-     * | Assets absolute path
-     * |----------------------------------------------
-     * |The path to the assets directory.
-     */
-    'assets_path' => $_SERVER['DOCUMENT_ROOT'] . '/assets',
-
-    /**
-     * |----------------------------------------------
      * | Application URL
      * |----------------------------------------------
-     * |The URL used to access the application.
+     * | The URL used to access the application.
      */
     'url' => 'http://localhost',
 
@@ -38,15 +30,31 @@ return [
      * |----------------------------------------------
      * | Application Debug Mode
      * |----------------------------------------------
-     * |The application debug mode.
+     * | The application debug mode.
      */
     'debug' => true,
 
     /**
      * |----------------------------------------------
-     * | Burner path
+     * | Paths
      * |----------------------------------------------
-     * |The path where all the burner files are stored.
+     * | Paths to the most important directories.
      */
-    'burner_path' => $_SERVER['DOCUMENT_ROOT'] . '/assets/php/burner/'
+    'paths' => [
+        'assets' => $_SERVER['DOCUMENT_ROOT'] . '/assets',
+        'burner' => $_SERVER['DOCUMENT_ROOT'] . '/assets/php/burner/'
+    ],
+
+    /**
+     * |----------------------------------------------
+     * | Default database configuration
+     * |----------------------------------------------
+     * | Database configuration variables.
+     */
+    'database' => [
+        'host' => "localhost",
+        'name' => "jukebox",
+        'user' => "root",
+        'password' => "password1000",
+    ],
 ];
