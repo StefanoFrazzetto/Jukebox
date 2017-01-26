@@ -4,9 +4,12 @@ function readRow($table, $row)
 {
     //^[[:alnum:]]+:\W(.*)$
     $pattern = '/\n' . $row . ':\W(.*)\n/';
-    if (preg_match($pattern, $table, $matches) === 1)
+    preg_match($pattern, $table, $matches);
+
+    if (isset($matches[1]))
         return $matches[1];
-    return FALSE;
+    else
+        return false;
 }
 
 function preg_remove($pattern, &$string)
