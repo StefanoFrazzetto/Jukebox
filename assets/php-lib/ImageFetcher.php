@@ -69,6 +69,11 @@ class ImageFetcher
     {
         $html = file_get_contents($url);
 
+        // Return false on failure
+        if (!$html) {
+            return null;
+        }
+
         $dom = new DOMDocument();
         @$dom->loadHTML($html);
 
@@ -91,7 +96,7 @@ class ImageFetcher
         if (!empty($imageurls)) {
             return $imageurls;
         } else {
-            return NULL;
+            return null;
         }
     }
 
