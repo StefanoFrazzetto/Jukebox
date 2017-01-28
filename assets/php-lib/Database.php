@@ -3,25 +3,51 @@
 require_once "Config.php";
 
 /**
- *    Mysql database class
+ *  Database class provides the basic methods to access the database
  */
 class Database
 {
+    /**
+     * @var string $_table_albums The default table containing the albums
+     */
     public static $_table_albums = "albums";
+    /**
+     * @var string $_table_radio_stations The default table containing the radio station
+     */
     public static $_table_radio_stations = "radio_stations";
-    private static $_instance; //The single instance
+
+    /**
+     * @var Database $_instance The single database instance
+     */
+    private static $_instance;
+
+    /**
+     * @var PDO $_connection The database connection
+     */
     private $_connection;
 
+    /**
+     * @var string $_host The database host
+     */
     private $_host;
+    /**
+     * @var string $_database The database name
+     */
     private $_database;
+    /**
+     * @var string $_username The database username
+     */
     private $_username;
+    /**
+     * @var string $_password The database password
+     */
     private $_password;
 
-    /*
-    *	Get an instance of the Database
-    *	@return Instance
-    */
-
+    /**
+     * Database constructor creates the database instance using the dynamic configurations file.
+     * If the file does not contain the database configuration, it will try to use the static (default)
+     * database as fallback.
+     */
     public function __construct()
     {
         $config = new Config();
@@ -37,8 +63,9 @@ class Database
         }
     }
 
-    // Constructor
-
+    /**
+     * @return Database The current database instance. If there is no instance, a new one is returned instead.
+     */
     public static function getInstance()
     {
         if (!self::$_instance) { // If no instance then make one
@@ -46,8 +73,6 @@ class Database
         }
         return self::$_instance;
     }
-
-    // Magic method clone is empty to prevent duplication of connection
 
     /**
      * Drops the main database and recreates it. WARNING: all data will be LOST.
@@ -67,8 +92,6 @@ class Database
         $db->executeFile($sql_folder . 'themes.sql');
     }
 
-    // Get connection
-
     /**
      * Drops a database the database. Removes the default db if none specified.
      * @param string $db database name to drop
@@ -86,14 +109,14 @@ class Database
     /**
      * Execute a raw query on the database.
      *
-     * @param string $query
-     * @return array | boolean
+     * @param string $query - the query to be executed
+     * @return array|boolean An <b>array</b> containing the objects from the query or
+     * <b>false</b> if the query was unsuccessful.
      */
-    public function rawQuery($query = "")
+    public function rawQuery($query)
     {
-        if ($query == "") {
+        if (!isset($query))
             return false;
-        }
 
         try {
             $stmt = $this->getConnection()->prepare($query);
@@ -109,6 +132,9 @@ class Database
         }
     }
 
+    /**
+     * @return PDO The database connection.
+     */
     public function getConnection()
     {
         return $this->_connection;
@@ -201,6 +227,8 @@ class Database
      */
     public function select($columns = "*", $table = "albums", $query = "WHERE 1")
     {
+        $start = microtime();
+
         if (is_array($columns)) {
             $columns = implode(', ', $columns);
         }
@@ -220,6 +248,10 @@ class Database
         if ($row_count == 0) {
             return null;
         }
+
+        $total = microtime() - $start;
+        $string = "[" . date("D M j G:i:s") . "] Database hit: SELECT. Time taken: $total microseconds";
+        file_put_contents("/var/www/html/logs/database.log", $string);
 
         return $rows;
     }
@@ -255,9 +287,6 @@ class Database
         foreach ($array as $key => $value)
             $stmt->bindValue(":$key", $value);
 
-        // DEBUG
-        // $stmt->debugDumpParams();
-
         return $stmt->execute();
     }
 
@@ -292,12 +321,6 @@ class Database
 
         $stmt = $this->_connection;
         $stmt = $stmt->prepare($sql);
-
-//        foreach ($array as $key => $value)
-//            $stmt->bindValue(":$key", $value);
-
-        // DEBUG
-        // $stmt->debugDumpParams();
 
         return $stmt->execute();
     }
@@ -377,6 +400,7 @@ class Database
         }
     }
 
+    /** Magic method clone is empty to prevent duplication of connection */
     private function __clone()
     {
     }
