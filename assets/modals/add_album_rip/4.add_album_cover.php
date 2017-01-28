@@ -141,7 +141,7 @@ session_start();
                     $('#loading-img').css('display', 'none');
 
                     // If the array is not empty
-                    if(data.length === 0) {
+                    if (data == null || data.length === 0) {
                         $('#covers').html("No images found. Check your connection.");
                     } else {
                         // Append the cover to #covers
