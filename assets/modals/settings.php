@@ -49,6 +49,7 @@ function getSpeakerStatus()
         <button onclick="openModalPage('assets/modals/update');">Update</button>
         <button onclick="openModalPage('assets/modals/theme');">Theme</button>
         <button onclick="location.reload();">Refresh</button>
+        <button onclick="location.reload();"><a href="/assets/test_player/">Mixer</a></button>
         <button class="nuclear" onclick="openModalPage('assets/modals/format.php');">Factory Reset</button>
     </div>
 

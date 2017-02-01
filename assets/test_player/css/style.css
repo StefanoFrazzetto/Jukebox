@@ -1,0 +1,67 @@
+html, body {
+    font-size: 12px;
+    font-family: "Open Sans", sans-serif;
+    background: #EEE;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: #999;
+}
+
+audio {
+    display: block;
+}
+
+.eq {
+    margin: 32px;
+}
+
+#eq {
+    overflow-x: auto;
+}
+
+audio {
+    display: inline-block;
+    width: 500px;
+}
+
+div.controls label {
+    display: inline-block;
+    text-align: center;
+    width: 60px;
+    padding: 10px 0 !important;
+}
+
+div.controls label, div.controls input {
+    vertical-align: middle;
+    padding: 0;
+    margin: 0;
+}
+
+div.controls input {
+    width: 60px;
+    height: 300px;
+    -webkit-appearance: slider-vertical;
+    writing-mode: bt-lr; /* IE */
+    display: block
+}
+
+#eq_controls input {
+    vertical-align: middle;
+    width: 25px;
+    height: 25px;
+}
+
+#eq_controls {
+    text-align: left;
+    width: 500px;
+    margin: auto;
+}
+
+canvas {
+    display: block;
+    margin: auto;
+    border: 1px solid #d7d7d7;
+}
