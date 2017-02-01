@@ -22,7 +22,6 @@ var box_size = 172;
 //var width = container.width();
 
 //This should set the request
-var request = 'type=all';
 var sort_by = '1';
 var search_field = 'artist';
 
@@ -61,7 +60,7 @@ function initImageSelectorObject() {
 initImageSelectorObject();
 
 function paginate() {
-    var lastPage = Math.ceil(albums_storage.length / show);
+    var lastPage = Math.ceil(albums_storage.filter(Object).length / show);
 
     if (page < 1) {
         page = 1;
