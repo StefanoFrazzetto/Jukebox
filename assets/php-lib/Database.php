@@ -171,11 +171,7 @@ class Database
 
         $sql = file_get_contents($file);
 
-        $this->rawQuery($sql);
-
-        error_log(json_encode($this->_connection->errorInfo()));
-
-        return true;
+        return $this->rawQuery($sql);
     }
 
     /**
