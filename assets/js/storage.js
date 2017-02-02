@@ -3,13 +3,11 @@
  */
 
 var albums_storage = [];
+var albums_storage_filtered = [];
 var radios_storage = [];
 var artists_storage = [];
 
 var cover_placeholder;
-
-var album_store_secondary;
-var is_storage_partial = false;
 
 function load_storages(callback) {
     function pack(what) {
@@ -26,6 +24,7 @@ function load_storages(callback) {
         .done(function (data) {
             artists_storage = pack(data.artists);
             albums_storage = pack(data.albums);
+            albums_storage_filtered = albums_storage;
             radios_storage = pack(data.radios);
 
             cover_placeholder = data.placeholder;
@@ -79,19 +78,6 @@ function load_storages(callback) {
 
         return formatByteSize(sizeOf(obj));
     }
-}
-
-function restoreStorage() {
-    if (is_storage_partial) {
-        albums_storage = album_store_secondary;
-        is_storage_partial = false;
-    }
-}
-
-function backupStorage() {
-    restoreStorage();
-    album_store_secondary = albums_storage.slice(0); // clones database
-    is_storage_partial = true;
 }
 
 // SAFE GETTERS

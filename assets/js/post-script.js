@@ -60,7 +60,7 @@ function initImageSelectorObject() {
 initImageSelectorObject();
 
 function paginate() {
-    var lastPage = Math.ceil(albums_storage.filter(Object).length / show);
+    var lastPage = Math.ceil(albums_storage_filtered.filter(Object).length / show);
 
     if (page < 1) {
         page = 1;
@@ -84,7 +84,7 @@ function paginate() {
 
     loader.html("");
     var i = -1;
-    albums_storage.forEach(function (data) {
+    albums_storage_filtered.forEach(function (data) {
         if (typeof data === 'undefined')
             return;
 
@@ -183,8 +183,6 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
 }
 
 function alphabet(value) {
-    restoreStorage();
-
     var artists = []; // Lists the artists ids beginning with the chosen letter
 
     artists_storage.forEach(function (element) {
@@ -214,16 +212,13 @@ function alphabet(value) {
         return;
     }
 
-    backupStorage();
-    albums_storage = results;
+    albums_storage_filtered = results;
 
     page = 1;
     paginate();
 }
 
 function search(value) {
-    restoreStorage();
-
     var t0 = performance.now();
 
     var results = [];
@@ -267,9 +262,7 @@ function search(value) {
         return;
     }
 
-    backupStorage();
-
-    albums_storage = results;
+    albums_storage_filtered = results;
 
     page = 1;
     paginate();
@@ -317,7 +310,7 @@ menu_btn.click(function () {
 });
 
 home_btn.click(function () {
-    restoreStorage();
+    albums_storage_filtered = albums_storage;
 
     sort_by = '1';
     search_field = 'title';
