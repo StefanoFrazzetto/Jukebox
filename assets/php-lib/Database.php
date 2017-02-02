@@ -17,6 +17,21 @@ class Database
     public static $_table_radio_stations = "radio_stations";
 
     /**
+     * @var string $_table_artist The default table containing the artists
+     */
+    public static $_table_artist = "artists";
+
+    /**
+     * @var string $_table_songs The default table containing the songs
+     */
+    public static $_table_songs = "songs";
+
+    /**
+     * @var string $_table_song_artists The default table containing the artists for each song
+     */
+    public static $_table_song_artists = "song_artists";
+
+    /**
      * @var Database $_instance The single database instance
      */
     private static $_instance;
@@ -369,31 +384,40 @@ class Database
     }
 
     /**
-     * Drop one or more tables.
+     * Truncate one or more tables.
      *
-     * @param string $tables
+     * @param string | string[] $tables the table to truncate or the array
      * @return bool
      */
-    public function drop($tables = "")
+    public function truncate($tables)
     {
 
-        switch ($tables) {
-            case "albums":
-                $sql = "TRUNCATE TABLE " . self::$_table_albums;
-                break;
-            case "radio_stations":
-                $sql = "TRUNCATE TABLE " . self::$_table_radio_stations;
-                break;
-            default:
-                $sql = "TRUNCATE TABLE " . self::$_table_albums . "; TRUNCATE TABLE " . self::$_table_radio_stations;
+        if (empty($tables))
+            throw new InvalidArgumentException('No table specified');
+
+        if ($tables === 'all') {
+            $tables = [self::$_table_albums, self::$_table_artist, self::$_table_songs, self::$_table_song_artists, self::$_table_radio_stations];
         }
 
-        try {
-            $stmt = $this->getConnection()->prepare($sql);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            return false;
+        if (is_array($tables)) {
+            foreach ($tables as $table) {
+                if (!$this->truncate($table))
+                    return false;
+            }
+
+            return true;
+        } else if (is_string($tables)) {
+            $sql = "TRUNCATE TABLE $tables";
+
+            try {
+                $stmt = $this->getConnection()->prepare($sql);
+                return $stmt->execute();
+            } catch (PDOException $e) {
+                return false;
+            }
         }
+
+        throw new InvalidArgumentException('Either a string or an array of string must be provided as parameter');
     }
 
     /** Magic method clone is empty to prevent duplication of connection */

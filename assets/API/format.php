@@ -14,7 +14,7 @@ if (isset($_GET['operation'])) {
 
     switch ($_GET['operation']) {
         case "format_hdd_database":
-            $db_res = $Database->drop("all");
+            $db_res = $Database->truncate("all");
             FileUtil::emptyDirectory($jukebox_folder);
             $success = "The albums and the radio stations have been successfully removed.";
             echo FileUtil::isDirEmpty($jukebox_folder) && $db_res ? $success : $fail;
