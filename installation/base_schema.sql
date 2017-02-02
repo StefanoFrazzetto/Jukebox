@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `songs` (
   `album_id` INT(10) UNSIGNED        NOT NULL,
   `cd`       TINYINT(255) UNSIGNED   NOT NULL DEFAULT 1,
   `track_no` TINYINT(255) UNSIGNED   NOT NULL,
-  `length`   TINYINT(255) UNSIGNED   NOT NULL,
+  `length`   SMALLINT UNSIGNED       NOT NULL,
   `title`    VARCHAR(255)
              CHARACTER SET utf8
              COLLATE utf8_unicode_ci NOT NULL,
