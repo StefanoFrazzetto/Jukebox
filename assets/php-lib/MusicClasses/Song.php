@@ -124,7 +124,9 @@ class Song implements JsonSerializable
 
         $song->setTitle($json->title);
 
-        $song->setTrackNo($json->track_no);
+        if (isset($json->track_no)) {
+            $song->setTrackNo($json->track_no);
+        }
 
         $song->setCd($json->cd);
 
