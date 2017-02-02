@@ -24,7 +24,7 @@ function load_storages(callback) {
         .done(function (data) {
             artists_storage = pack(data.artists);
             albums_storage = pack(data.albums);
-            albums_storage_filtered = albums_storage;
+            albums_storage_filtered = albums_storage.slice();
             radios_storage = pack(data.radios);
 
             cover_placeholder = data.placeholder;
@@ -120,11 +120,11 @@ function artistSortingFunction(a, b) {
 }
 
 function sortByArtist() {
-    albums_storage.sort(artistSortingFunction);
+    albums_storage_filtered.sort(artistSortingFunction);
 }
 
 function sortByTitle() {
-    albums_storage.sort(function (a, b) {
+    albums_storage_filtered.sort(function (a, b) {
         var x = a.title.toLowerCase();
         var y = b.title.toLowerCase();
         var gne = x < y ? -1 : x > y ? 1 : 0;
@@ -140,7 +140,7 @@ function sortByTitle() {
 }
 
 function sortByHits() {
-    albums_storage.sort(function (a, b) {
+    albums_storage_filtered.sort(function (a, b) {
         var gne = b.hits - a.hits;
 
         if (gne == 0) {
@@ -152,13 +152,13 @@ function sortByHits() {
 }
 
 function sortByLastPlayed() {
-    albums_storage.sort(function (a, b) {
+    albums_storage_filtered.sort(function (a, b) {
         return b.last_played - a.last_played;
     });
 }
 
 function sortByLastAdded() {
-    albums_storage.sort(function (a, b) {
+    albums_storage_filtered.sort(function (a, b) {
         return b.id - a.id;
     });
 }

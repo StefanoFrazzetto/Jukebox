@@ -310,7 +310,7 @@ menu_btn.click(function () {
 });
 
 home_btn.click(function () {
-    albums_storage_filtered = albums_storage;
+    albums_storage_filtered = albums_storage.slice();
 
     sort_by = '1';
     search_field = 'title';
