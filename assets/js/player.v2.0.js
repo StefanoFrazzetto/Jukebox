@@ -27,6 +27,10 @@ function Player() {
         this.visualiser = null;
     }
 }
+
+Player.prototype.setVolume = function (value) {
+    this.outputNode.gain.value = value;
+};
 //endregion
 
 //region EQ
