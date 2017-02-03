@@ -1,6 +1,6 @@
 <div class="modalHeader">Album Uploader</div>
 <div class="modalBody center">
-    <form action="/assets/php/upload.php" id="dropzone" class="dropzone">
+    <form action="/assets/API/upload_file.php" id="dropzone" class="dropzone">
         <div class="fallback">
             <input name="file" type="file" multiple/>
         </div>

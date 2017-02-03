@@ -18,7 +18,8 @@
     var selector = $('#uploaderSelector');
     var uploaderSelectorNext = $('#uploaderSelectorNext');
 
-    uploader = new Uploader();
+    if (typeof  uploader === "undefined")
+        uploader = new Uploader();
 
     uploader.uploadMethods.forEach(function (method, key) {
         var methodHtml = $("<div class='selector'></div>");

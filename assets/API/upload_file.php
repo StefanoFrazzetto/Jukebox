@@ -16,6 +16,6 @@ try {
     } else {
         echo Uploader::createStatus('error', 'it was not possible to upload the file');
     }
-} catch (UploadException | Exception $e) {
+} catch (Exception $e) {
     echo Uploader::createStatus('error', $e->getMessage());
 }

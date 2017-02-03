@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . "Config.php";
-require_once __DIR__ . "StringUtils.php";
+require_once __DIR__ . "/Config.php";
+require_once __DIR__ . "/StringUtils.php";
 require_once __DIR__ . "/Exception/UploadException.php";
 
 /**
@@ -9,17 +9,14 @@ require_once __DIR__ . "/Exception/UploadException.php";
  */
 class Uploader
 {
-    /** @var string The uploader temp directory */
-    private $tmp_path;
-
     /** @const string The status file name */
     const STATUS_FILE = "uploader_status.json";
-
     /** @const array The array of allowed music extensions */
     const ALLOWED_MUSIC_EXTENSIONS = ['mp3'];
-
     /** @const array The array of allowed covers extensions */
     const ALLOWED_COVER_EXTENSIONS = ['jpg', 'png', 'jpeg'];
+    /** @var string The uploader temp directory */
+    private $tmp_path;
 
     public function __construct()
     {
