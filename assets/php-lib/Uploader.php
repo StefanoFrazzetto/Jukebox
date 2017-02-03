@@ -67,7 +67,7 @@ class Uploader
      * Uploads a file into the specified directory.
      *
      * @param string $uploadFolderID The destination directory
-     * @return bool true if the operation succeeds, false otherwise
+     * @return bool true if the operation succeeds, false otherwise.
      * @throws UploadException if the file was not uploaded or if the
      * extension of the file is not allowed.
      */
@@ -77,6 +77,7 @@ class Uploader
             throw new InvalidArgumentException("The upload folder ID must not be empty.");
         }
 
+        // Check if the file was uploaded
         if (!isset($_FILES['file']) || $_FILES['file']['error'] != 0) {
             throw new UploadException($_FILES['file']['error']);
         }
@@ -84,6 +85,7 @@ class Uploader
         $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
         $file_extension = strtolower($file_extension);
 
+        // Check allowed extensions
         $allowed_extensions = array_merge(self::ALLOWED_COVER_EXTENSIONS, self::ALLOWED_MUSIC_EXTENSIONS);
         if (!in_array($file_extension, $allowed_extensions)) {
             throw new UploadException(UPLOAD_ERR_EXTENSION);
@@ -91,12 +93,19 @@ class Uploader
 
         $file_name = StringUtils::cleanString($_FILES['file']['name']);
         $source_file = $_FILES['file']['tmp_name'];
-        $destination_file = self::getPath() . $uploadFolderID . $file_name;
+
+        // Check if the destination directory exists
+        $destination_path = self::getPath() . $uploadFolderID;
+        if (!is_dir($destination_path)) {
+            mkdir($destination_path);
+        }
+
+        $destination_file = $destination_path . $file_name;
 
         return move_uploaded_file($source_file, $destination_file);
     }
 
-    public static function returnStatus($status, $message = "")
+    public static function createStatus($status, $message = "")
     {
         $status['status'] = $status;
 
@@ -104,7 +113,7 @@ class Uploader
             $status['message'] = $message;
         }
 
-        return $status;
+        return json_encode($status);
     }
 
     public function getID3($folder)
