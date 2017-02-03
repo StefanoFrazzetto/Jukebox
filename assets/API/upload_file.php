@@ -1,8 +1,14 @@
 <?php
 
+session_start();
+
 require_once "../php-lib/Uploader.php";
 
 $upload_id = filter_input(INPUT_GET, 'upload_id');
+
+if ($upload_id == null) {
+    $upload_id = session_id();
+}
 
 try {
     if (Uploader::upload($upload_id)) {
