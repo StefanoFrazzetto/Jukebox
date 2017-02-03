@@ -4,7 +4,7 @@
  * Created by Stefano
  * Date: 31/10/2016
  */
-abstract class Utility
+abstract class StringUtils
 {
     public static function cleanString($string)
     {
