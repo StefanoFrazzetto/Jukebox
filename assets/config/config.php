@@ -42,7 +42,8 @@ return [
      */
     'paths' => [
         'assets' => $_SERVER['DOCUMENT_ROOT'] . '/assets',
-        'burner' => $_SERVER['DOCUMENT_ROOT'] . '/assets/php/burner/'
+        'burner' => $_SERVER['DOCUMENT_ROOT'] . '/assets/php/burner/',
+        'uploader' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/uploader/'
     ],
 
     /**
