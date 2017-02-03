@@ -137,6 +137,30 @@ hr {
   }
 }
 
+.selector {
+  @extend %ui_element;
+
+  cursor: pointer;
+
+  min-width: 120px;
+
+  box-sizing: border-box;
+
+  padding: 10px;
+  margin: 10px;
+
+  display: inline-block;
+
+  i {
+    margin-top: 20px;
+  }
+
+  &.active {
+    color: $highlight_color;
+    text-shadow: 0 0 8px $highlight_color;
+  }
+}
+
 // TODO REMOVE THIS
 
 form.dropzone {
