@@ -1,5 +1,3 @@
-<link href="assets/css/dropzone.css" rel="stylesheet"/>
-
 <div class="modalHeader">Music Upload</div>
 
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 315px;">
