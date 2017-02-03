@@ -94,23 +94,23 @@ class Uploader
         // Check if the destination directory exists
         $destination_path = self::getPath() . $uploadFolderID;
         if (!is_dir($destination_path)) {
-            mkdir($destination_path);
+            mkdir($destination_path, 0777, true);
         }
 
-        $destination_file = $destination_path . $file_name;
+        $destination_file = $destination_path . '/' . $file_name;
 
         return move_uploaded_file($source_file, $destination_file);
     }
 
     public static function createStatus($status, $message = "")
     {
-        $status['status'] = $status;
+        $return['status'] = $status;
 
         if (!empty($message)) {
-            $status['message'] = $message;
+            $return['message'] = $message;
         }
 
-        return json_encode($status);
+        return json_encode($return);
     }
 
     public function getID3($folder)
