@@ -147,7 +147,7 @@ class TracksHandler {
 
             // Updated on 31/10/2016
             // Some files were incorrectly parsed due to special chars
-            $track['title'] = sprintf("%02d", $playlist_index) . "-" . Utility::cleanString($track['title']);
+            $track['title'] = sprintf("%02d", $playlist_index) . "-" . StringUtils::cleanString($track['title']);
 			
 			
 			$playlist_index++;
