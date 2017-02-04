@@ -42,16 +42,25 @@ return [
      */
     'paths' => [
         'assets' => $_SERVER['DOCUMENT_ROOT'] . '/assets',
-        'burner' => $_SERVER['DOCUMENT_ROOT'] . '/assets/php/burner/',
-        'ripper' => [
-            'logs' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/ripper/logs/',
-            'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/ripper/output/'
-        ],
         'scripts' => [
             'path' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/',
             'disc' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/disc/'
         ],
         'uploader' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/uploader/'
+    ],
+
+    'disc' => [
+        'scripts' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/disc/',
+        'burner' => [
+            'logs' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/burner/logs/',
+            'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/burner/output/',
+            'status' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/burner/logs/'
+        ],
+        'ripper' => [
+            'logs' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/logs/',
+            'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/output/',
+            'status' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/logs/'
+        ]
     ],
 
     /**
