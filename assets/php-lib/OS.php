@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/Config.php";
+
 /**
  * Class OS is used to access the OS commands without invoking shell_exec
  * directly. The class provides methods to access the system's processes,
@@ -16,11 +18,20 @@ abstract class OS
     public static function isProcessRunning($process_name)
     {
         if (self::execute("pidof -x $process_name") != "") {
-        	return true;
-	    } else {
-	        return false;
-		}
-	}
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return string The scripts directory path.
+     */
+    public static function getScriptsPath()
+    {
+        $config = new Config();
+        return $config->get("paths")["scripts"]["path"];
+    }
 
     /**
      * Executes a command and returns its output.
@@ -37,7 +48,7 @@ abstract class OS
             $arguments = escapeshellarg($arguments);
         }
 
-        return shell_exec("$command $arguments");
+        return trim(shell_exec("$command $arguments"));
     }
 
     /**
