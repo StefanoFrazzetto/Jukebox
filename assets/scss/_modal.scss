@@ -70,6 +70,11 @@ $width: 850px;
     width: $width -  20px;
     max-height: 300px;
     overflow: hidden;
+
+    & > hr {
+      margin: 15px -10px;
+      width: initial;
+    }
   }
 
   .modalFooter {
