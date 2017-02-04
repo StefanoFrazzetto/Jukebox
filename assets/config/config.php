@@ -48,6 +48,7 @@ return [
             'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/ripper/output/'
         ],
         'scripts' => [
+            'path' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/',
             'disc' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/disc/'
         ],
         'uploader' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/uploader/'
