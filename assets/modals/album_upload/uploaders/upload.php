@@ -6,13 +6,12 @@
         </div>
     </form>
     <hr/>
-    <div id="uploadProgressBar" class="progressBar">
+    <div id="uploadProgressBar" class="progressBar" style="margin: inherit">
         <div id="progress" class="progress"></div>
     </div>
 </div>
 <div class="modalFooter">
     <button id="btnBack">Back</button>
-
     <button class="right disabled" id="btnNext">Next</button>
 </div>
 
@@ -37,13 +36,18 @@
     });
 
     $(function () {
+        Dropzone.options.dropzone = {
+            acceptedFiles: '.mp3,.jpg,.jpeg,.png,.gif,.wav',
+            parallelUploads: 6
+        };
+
         var myDropzone = new Dropzone("#dropzone");
 
-        myDropzone.on("totaluploadprogress", function (uploadprogress, asd, asdasd) {
+        myDropzone.on("totaluploadprogress", function (uploadprogress, total, current) {
 
-            uploadprogress = (asdasd + uploadedBytes) / (asd + uploadedBytes) * 100;
+            var _uploadprogress = (current + uploadedBytes) / (total + uploadedBytes) * 100;
 
-            $('#progress').width(uploadprogress + "%");
+            $('#progress').width(_uploadprogress + "%");
         });
 
         myDropzone.on("success", function (file) {
