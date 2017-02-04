@@ -5,6 +5,9 @@ class Cover
     const COVER_SIZE = 300;
     const THUMB_SIZE = 162;
 
+    /** @const array The array of allowed covers extensions */
+    const ALLOWED_COVER_EXTENSIONS = ['jpg', 'png', 'jpeg', 'gif'];
+
     private $image; // A resource type containing the image
 
     function __construct($url)

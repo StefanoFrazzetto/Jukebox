@@ -3,6 +3,7 @@
 require_once __DIR__ . "/Config.php";
 require_once __DIR__ . "/StringUtils.php";
 require_once __DIR__ . "/Exception/UploadException.php";
+require_once __DIR__ . "/Cover.php";
 
 /**
  * Class Uploader is used to handle the upload of albums into the jukebox.
@@ -13,8 +14,6 @@ class Uploader
     const STATUS_FILE = "uploader_status.json";
     /** @const array The array of allowed music extensions */
     const ALLOWED_MUSIC_EXTENSIONS = ['mp3'];
-    /** @const array The array of allowed covers extensions */
-    const ALLOWED_COVER_EXTENSIONS = ['jpg', 'png', 'jpeg'];
     /** @var string The uploader temp directory */
     private $tmp_path;
 
@@ -74,8 +73,12 @@ class Uploader
             throw new InvalidArgumentException("The upload folder ID must not be empty.");
         }
 
+        if (!isset($_FILES['file'])) {
+            throw new UploadException(UPLOAD_ERR_NO_FILE);
+        }
+
         // Check if the file was uploaded
-        if (!isset($_FILES['file']) || $_FILES['file']['error'] != 0) {
+        if ($_FILES['file']['error'] != 0) {
             throw new UploadException($_FILES['file']['error']);
         }
 
@@ -83,7 +86,7 @@ class Uploader
         $file_extension = strtolower($file_extension);
 
         // Check allowed extensions
-        $allowed_extensions = array_merge(self::ALLOWED_COVER_EXTENSIONS, self::ALLOWED_MUSIC_EXTENSIONS);
+        $allowed_extensions = array_merge(Cover::ALLOWED_COVER_EXTENSIONS, self::ALLOWED_MUSIC_EXTENSIONS);
         if (!in_array($file_extension, $allowed_extensions)) {
             throw new UploadException(UPLOAD_ERR_EXTENSION);
         }
@@ -107,12 +110,12 @@ class Uploader
         $return['status'] = $status;
 
         if ($status == "error") {
+            if (empty($message)) {
+                $message = 'Unknown error.';
+            }
+
             $return['error'] = $message;
             http_response_code(400);
-        }
-
-        if (!empty($message)) {
-            $return['message'] = $message;
         }
 
         return json_encode($return);
