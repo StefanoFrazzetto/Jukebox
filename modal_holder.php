@@ -14,7 +14,7 @@
 <body>
 <div id="container">
     <div id="modal">
-        <img src="assets/img/icons/close.png" class="closeModal" onclick="closeModal()"/>
+        <img src="assets/img/icons/close.png" class="closeModal" onclick="modal.close()"/>
         <div class="ajaxloader">
             <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>
         </div>
@@ -31,7 +31,7 @@
 <script type="text/javascript" src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="assets/js/alerts.js"></script>
 <script type="text/javascript">
-    openModalPage('assets/modals/album_upload/1-Intro.php');
+    modal.openPage('assets/modals/album_upload/1-Intro.php');
 </script>
 
 </body>

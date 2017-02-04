@@ -120,7 +120,7 @@ $('#wifiTable').on('remove', function () {
 
 $('.connectbtn').click(function () {
     stopScan();
-    closeModal();
+    modal.close();
 });
 
 

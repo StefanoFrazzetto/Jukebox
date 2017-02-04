@@ -357,7 +357,7 @@ function deleteAlbum(id) {
                             resetPlayer();
                         }
 
-                        closeModal();
+                        modal.close();
                         reload();
                     });
                 }

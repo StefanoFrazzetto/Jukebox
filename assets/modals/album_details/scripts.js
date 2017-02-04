@@ -29,7 +29,7 @@ $('#burner_single_album').click(function () {
         input_content_values = [album_id];
     }
 
-    openModalPage('assets/modals/burner.php');
+    modal.openPage('assets/modals/burner.php');
 });
 
 var album_details = $('#albumDetails');

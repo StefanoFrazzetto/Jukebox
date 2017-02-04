@@ -15,9 +15,9 @@ session_start();
 
 <script type="text/javascript">
 	$('#start_rip').on('click', function(){
-		$('#message').html('Please wait. The process will start soon.')
+        $('#message').html('Please wait. The process will start soon.');;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		$('#start_rip').remove();
-		openModalPage('assets/modals/rip/rip_modal.php');
+        modal.openPage('assets/modals/rip/rip_modal.php');
 	});
 
 	$.ajax({

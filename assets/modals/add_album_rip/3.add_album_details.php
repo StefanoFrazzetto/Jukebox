@@ -36,7 +36,7 @@ if(isset($_SESSION['cd_title'])){
 </div>
 <div class="modalFooter">
 	<div class="box-btn pull-right" id="submit">Next</div>
-	<div class="box-btn" onclick="openModalPage('assets/modals/add_album_rip/2.fix_titles.php');">Back</div>
+    <div class="box-btn" onclick="modal.openPage('assets/modals/add_album_rip/2.fix_titles.php');">Back</div>
 </div>
 
 
@@ -76,7 +76,7 @@ if(isset($_SESSION['cd_title'])){
 	submit_btn.click(function() {
 		$.post(addAlbumForm.attr('action'), addAlbumForm.serialize()).done(function(data) {
 			if (data === '0') {
-				openModalPage('assets/modals/add_album_rip/4.add_album_cover.php');
+                modal.openPage('assets/modals/add_album_rip/4.add_album_cover.php');
 			} else {
 				alert('error code: ' + data);
 			}

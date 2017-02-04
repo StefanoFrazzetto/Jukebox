@@ -17,12 +17,12 @@
 
     if (isset($_SESSION['CD']) && $_SESSION['CD'] > 1) {
         ?>
-        <div class="box-btn pull-right" onclick="openModalPage('assets/modals/add_album/2.fix_titles.php');">Cancel
+        <div class="box-btn pull-right" onclick="modal.openPage('assets/modals/add_album/2.fix_titles.php');">Cancel
         </div>
     <?php } ?>
 
     <div class="box-btn pull-right" id="nextBtn" style="display: none"
-         onclick="openModalPage('assets/modals/add_album/2.fix_titles.php');">Next
+         onclick="modal.openPage('assets/modals/add_album/2.fix_titles.php');">Next
     </div>
 </div>
 

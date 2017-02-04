@@ -118,7 +118,7 @@ if (!$album_count OR !$artist_count) { // if there are no album or artist get fr
 </div>
 <div class="modalFooter">
     <div class="box-btn pull-right" id="submit">Next</div>
-    <div class="box-btn" onclick="openModalPage('assets/modals/add_album/2.fix_titles.php');">Back</div>
+    <div class="box-btn" onclick="modal.openPage('assets/modals/add_album/2.fix_titles.php');">Back</div>
 </div>
 
 
@@ -165,7 +165,7 @@ if (!$album_count OR !$artist_count) { // if there are no album or artist get fr
     submit_btn.click(function () {
         $.post(addAlbumForm.attr('action'), addAlbumForm.serialize()).done(function (data) {
             if (data === '0') {
-                openModalPage('assets/modals/add_album/4.add_album_cover.php');
+                modal.openPage('assets/modals/add_album/4.add_album_cover.php');
             } else {
                 alert('error code: ' + data);
             }

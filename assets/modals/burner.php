@@ -185,12 +185,12 @@
 
     $('#burner_step1-reset').click(function () {
         setBurnerVariables(null, null, null);
-        closeModal();
+        modal.close();
     });
 
     $('#burner_addto_compilation').click(function () {
         burner_compilation = true;
-        closeModal();
+        modal.close();
     });
 
     /* ***************************************************** */

@@ -26,7 +26,7 @@ $current_theme = Theme::getAppliedTheme();
         </ul>
     </div>
     <div class="col-right">
-        <button onclick="openModalPage('/assets/modals/theme/add_theme.php')">Create theme</button>
+        <button onclick="modal.openPage('/assets/modals/theme/add_theme.php')">Create theme</button>
     </div>
 </div>
 <script>

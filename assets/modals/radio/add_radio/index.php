@@ -7,7 +7,7 @@
         <p/>
         <input type="text" class="larger" id="radiourl" placeholder="URL"/>
         <p/>
-        <button onclick="openModalPage('/assets/modals/radio/index.php')">Cancel</button>
+        <button onclick="modal.openPage('/assets/modals/radio/index.php')">Cancel</button>
         <button onclick="testRadio()">Test</button>
         <button onclick="secondRadioPage();">Next</button>
     </center>

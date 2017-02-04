@@ -111,7 +111,7 @@
             .done(function (data) {
                 if (data == "success") {
                     alert("Theme saved successfully.");
-                    openModalPage('/assets/modals/theme/index.php')
+                    modal.openPage('/assets/modals/theme/index.php')
                 } else {
                     error(data);
                 }

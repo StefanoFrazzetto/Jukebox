@@ -8,7 +8,7 @@ $radios = Radio::getAllRadios();
 <div class="modalHeader">Radio Stations</div>
 
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
-    <div class="aRadio plus cover-container" onclick="openModalPage('/assets/modals/radio/add_radio/index.php')">
+    <div class="aRadio plus cover-container" onclick="modal.openPage('/assets/modals/radio/add_radio/index.php')">
         <div>+</div>
         <span>Add new radio</span>
     </div>
@@ -41,7 +41,7 @@ $radios = Radio::getAllRadios();
 
     $(".aRadio:not(.plus) .edit").click(function (e) {
         var id = $(this).parent().attr('data-id');
-        openModalPage("/assets/modals/radio/edit_radio?id=" + id);
+        modal.openPage("/assets/modals/radio/edit_radio?id=" + id);
         e.stopPropagation();
     });
 

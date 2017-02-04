@@ -44,15 +44,15 @@ function initImageSelectorObject() {
         defaultAlbum: '',
 
         open: function () {
-            openModalPage('assets/modals/image_picker/');
+            modal.openPage('assets/modals/image_picker/');
         },
 
         back: function () {
-            openModalPage(this.from)
+            modal.openPage(this.from)
         },
 
         done: function () {
-            openModalPage(this.to);
+            modal.openPage(this.to);
         }
     }
 }
@@ -144,7 +144,7 @@ function makeAlbumHtmlFromObject(object) {
     });
 
     album_container.click(function () {
-        openModalPage('assets/modals/album_details?id=' + object.id);
+        modal.openPage('assets/modals/album_details?id=' + object.id);
     });
 
     img.on("load", function () {
@@ -326,7 +326,7 @@ home_btn.click(function () {
 
 add_btn.click(function () {
     $.ajax('assets/php/album_creation/prepare_upload.php');
-    openModalPage('assets/modals/add_album/1.upload_album.php');
+    modal.openPage('assets/modals/add_album/1.upload_album.php');
 });
 
 buttonsLetter.click(function (event) { // Previous button click event
@@ -359,11 +359,11 @@ pwr_btn.click(function () {
 
 $('#albumCover').click(function () {
     if (isRadio) {
-        openModalPage('/assets/modals/radio');
+        modal.openPage('/assets/modals/radio');
         return;
     }
     if (typeof(album_id) !== 'undefined')
-        openModalPage('assets/modals/album_details?id=' + album_id);
+        modal.openPage('assets/modals/album_details?id=' + album_id);
 });
 
 //alert(show); //Just for debugging

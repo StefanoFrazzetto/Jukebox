@@ -59,7 +59,7 @@ function editRadioSubmit(goback) {
 }
 
 function backToRadios() {
-    openModalPage("/assets/modals/radio");
+    modal.openPage("/assets/modals/radio");
 }
 
 editRadioSaveBtn.click(function () {

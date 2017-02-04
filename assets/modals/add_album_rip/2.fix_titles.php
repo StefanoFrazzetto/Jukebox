@@ -39,7 +39,7 @@ setSessionTracks();
 <div class="modalFooter">
 	<div class="box-btn pull-right" id="submit">Next</div>
 	<div class="box-btn" id="abort_process">ABORT</div>
-	<div class="box-btn" onclick="openModalPage('assets/modals/rip/rip_pre.php');">Previous</div>
+    <div class="box-btn" onclick="modal.openPage('assets/modals/rip/rip_pre.php');">Previous</div>
 	<div class="box-btn center" id="nextCD">Add CD</div>
 </div>
 <script>
@@ -47,19 +47,19 @@ setSessionTracks();
 	var submit_btn = $('#submit');
 
 	$('#abort_process').on('click', function(){
-        openModalPage('assets/modals/rip/abort.php');
+        modal.openPage('assets/modals/rip/abort.php');
     });
 
 	$('#nextCD').click(function() {
 		$.ajax('assets/php/set_next_cd_upload.php');
 		$.ajax('assets/php/empty_cdparanoia_folder.php');
-		openModalPage("assets/modals/rip/rip_pre.php");
+        modal.openPage("assets/modals/rip/rip_pre.php");
 	});
 
 	submit_btn.click(function(event) {
 		$.post(addAlbumForm.attr('action'), addAlbumForm.serialize()).done(function(data) {
 			if (data === '0') {
-				openModalPage('assets/modals/add_album_rip/3.add_album_details.php');
+                modal.openPage('assets/modals/add_album_rip/3.add_album_details.php');
 			} else {
 				alert('error code: ' + data);
 			}

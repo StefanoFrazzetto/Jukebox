@@ -29,18 +29,18 @@
             <div id="mask">
                 <div id="dropdownModal">
                     <div id="power" class="crcbtn"></div>
-                    <div id="settings" class="crcbtn" onclick="openModalPage('assets/modals/settings.php')"></div>
+                    <div id="settings" class="crcbtn" onclick="modal.openPage('assets/modals/settings.php')"></div>
                     <div id="network_settings" class="crcbtn"
-                         onclick="openModalPage('assets/modals/bluetooth.php')"></div>
-                    <div id="qr" class="crcbtn" onclick="openModalPage('assets/modals/qrcode.php')"></div>
+                         onclick="modal.openPage('assets/modals/bluetooth.php')"></div>
+                    <div id="qr" class="crcbtn" onclick="modal.openPage('assets/modals/qrcode.php')"></div>
                     <div id="trash" class="crcbtn" onclick="deleteAlbum(album_id);"></div>
                     <div id="add" class="crcbtn"></div>
                     <div id="shuffle" class="crcbtn"></div>
-                    <div id="wifi" class="crcbtn" onclick="openModalPage('assets/modals/network_settings')"></div>
-                    <div id="ripper" class="crcbtn" onclick="openModalPage('assets/modals/rip/rip_pre.php')"></div>
-                    <div id="eq_button" class="crcbtn" onclick="openModalPage('assets/modals/eq/index.php')"></div>
-                    <div id="radio" class="crcbtn" onclick="openModalPage('assets/modals/radio/index.php')"></div>
-                    <div id="burn" class="crcbtn" onclick="openModalPage('assets/modals/burner.php')"></div>
+                    <div id="wifi" class="crcbtn" onclick="modal.openPage('assets/modals/network_settings')"></div>
+                    <div id="ripper" class="crcbtn" onclick="modal.openPage('assets/modals/rip/rip_pre.php')"></div>
+                    <div id="eq_button" class="crcbtn" onclick="modal.openPage('assets/modals/eq/index.php')"></div>
+                    <div id="radio" class="crcbtn" onclick="modal.openPage('assets/modals/radio/index.php')"></div>
+                    <div id="burn" class="crcbtn" onclick="modal.openPage('assets/modals/burner.php')"></div>
                 </div>
 
                 <div id="marquee">
@@ -62,7 +62,7 @@
                 <div id="play"></div>
                 <div id="fwd" class="crcbtn"></div>
                 <div id="menu-btn" class="crcbtn"></div>
-                <div id="playlist" class="crcbtn" onclick="openModalPage('assets/modals/playlist.php')"></div>
+                <div id="playlist" class="crcbtn" onclick="modal.openPage('assets/modals/playlist.php')"></div>
 
             </div>
 
@@ -188,7 +188,7 @@
         </div>
     </div>
     <div id="modal">
-        <img src="assets/img/icons/close.png" class="closeModal" onclick="closeModal()"/>
+        <img src="assets/img/icons/close.png" class="closeModal" onclick="modal.close()"/>
         <div class="ajaxloader">
             <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>
         </div>

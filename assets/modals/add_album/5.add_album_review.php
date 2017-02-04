@@ -49,7 +49,7 @@ session_start();
     <div class="box-btn pull-right hidden" id="openNewAlbum">Open Album</div>
     <span id="status" class=""></span>
     <div class="box-btn" id="last-modal-previous-btn"
-         onclick="openModalPage('assets/modals/add_album/4.add_album_cover.php');">Previous
+         onclick="modal.openPage('assets/modals/add_album/4.add_album_cover.php');">Previous
     </div>
 </div>
 
@@ -61,7 +61,7 @@ session_start();
             data = parseInt(data);
 
             if (data > -1) {
-                closeModal();
+                modal.close();
 
                 new Alert({
                     message: "The new album has been uploaded successfully!",
@@ -71,7 +71,7 @@ session_start();
                         {
                             text: "Open Album",
                             callback: function () {
-                                openModalPage('assets/modals/album_details?id=' + data);
+                                modal.openPage('assets/modals/album_details?id=' + data);
                             }
                         }
                     ]

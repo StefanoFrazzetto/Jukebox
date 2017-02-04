@@ -29,7 +29,7 @@
     $('#abort_process').on('click', function(){
         $('#ripper_status_message').html('Aborting...');
         stopTracker();
-        openModalPage('assets/modals/rip/abort.php');
+        modal.openPage('assets/modals/rip/abort.php');
     });
 
 
@@ -59,7 +59,7 @@
                     $('#ripper_status').html('Almost ready');
                     $('#ripper_status_message').hide();
                     $('.progressBar').hide();
-                    openModalPage('assets/modals/add_album_rip/2.fix_titles.php');
+                    modal.openPage('assets/modals/add_album_rip/2.fix_titles.php');
                     stopTracker();
 
                 }

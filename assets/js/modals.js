@@ -1,116 +1,119 @@
-var modal = $('#modal');
-var modalLoader = $('#modalAjaxLoader');
-var ajaxloadergif = $('#modal .ajaxloader');
+var modalElement = $('#modal');
 
-var watchDogHandler;
+var modal = {
+    modalElement: modalElement,
+    modalLoaderElement: $('#modalAjaxLoader'),
+    loaderGifElement: modalElement.find('.ajaxloader'),
+    watchDogHandler: null,
+    last_top: null,
+    handleScanner: null, // Used to kill wifi scanner task
+    jqxhr: null,
+    autoPositioned: false,
+    onModalClosed: null,
 
-var last_top = null;
+    abortRequest: function () {
+        if (typeof jqxhr !== 'undefined')
+            jqxhr.abort();
+    },
 
-var handleScanner = null; // Used to kill wifi scanner task
+    autoPosition: function () {
+        var top = ($(document).height() - modal.height()) / 2;
 
-var jqxhr;
+        top = Math.floor(top);
 
-function openModal(callback) {
-    modal.show(animation_medium, function () {
+        this.last_top = top;
 
-        // # Autopositioning
+        modal.css('top', top + "px");
 
-        // var top = ($(document).height() - modal.height()) / 2;
+        clearInterval(this.watchDogHandler);
 
-        // top = Math.floor(top);
+        this.watchDogHandler = setInterval(this.watchDog, 500);
+    },
 
-        // last_top = top;
+    watchDog: function () {
+        var top = ($(document).height() - this.modalElement.height()) / 2;
 
-        // modal.css('top', top + "px");
+        top = Math.floor(top);
 
-        // # Watchdog
+        if (top != this.last_top) {
+            this.last_top = top;
 
-        // clearInterval(watchDogHandler);
+            //modal.css('top', top + "px");
 
-        // watchDogHandler = setInterval(watchDog, 500);
+            this.modalElement.dequeue().animate({
+                top: top + "px"
+            }, animation_medium);
 
-
-        if (typeof callback !== 'undefined') {
-            callback();
         }
-    });
-}
 
-function abortRequest(){
-    if (typeof jqxhr !== 'undefined')
-        jqxhr.abort();
-}
+        console.log("WOOFF!");
+    },
 
-function closeModal() {
-    abortRequest();
+    close: function () {
+        var _this = this;
 
-    modal.hide(animation_medium, function () {
-        modalLoader.html('');
-        ajaxloadergif.show();
-    });
-    //clearInterval(watchDogHandler);
+        _this.abortRequest();
 
-    clearInterval(handleScanner);
-}
+        _this.modalElement.hide(animation_medium, function () {
+            _this.modalLoaderElement.html('');
+            _this.loaderGifElement.show();
 
-function openModalPage(page) {
-    clearInterval(handleScanner);
-    ajaxloadergif.show();
-    modalLoader.html('');
+            clearInterval(this.handleScanner);
 
-    openModal(function () {
+            if (_this.onModalClosed != null) {
+                _this.onModalClosed();
+                _this.onModalClosed = null;
+            }
+        });
 
-        abortRequest();
+    },
 
-        jqxhr = $.ajax(page)
-            .done(function (done) {
-                modalLoader.hide();
-                modalLoader.fadeOut(0);
-                modalLoader.html(done);
-                modalLoader.show();
+    openPage: function (page) {
+        clearInterval(this.handleScanner);
+        this.loaderGifElement.show();
+        this.modalLoaderElement.html('');
 
-                modalLoader.dequeue().fadeIn(animation_medium, function () {
+        var _this = this;
 
-                    $('#modalBody').mCustomScrollbar({
-                        theme: "dark"
+        this.modalElement.show(animation_medium, function () {
+            _this.abortRequest();
+
+            if (_this.autoPositioned) {
+                _this.autoPosition();
+            }
+
+            _this.jqxhr = $.ajax(page)
+                .done(function (done) {
+                    _this.modalLoaderElement.hide();
+                    _this.modalLoaderElement.fadeOut(0);
+                    _this.modalLoaderElement.html(done);
+                    _this.modalLoaderElement.show();
+
+                    _this.modalLoaderElement.dequeue().fadeIn(animation_medium, function () {
+
+                        $('#modalBody').mCustomScrollbar({
+                            theme: "dark"
+                        });
+
+                        try {
+                            if (typeof bindForms !== "undefined")
+                                bindForms();
+                        } catch (err) {
+                            console.warn('Failed to bind forms in the modal');
+                        }
                     });
 
-                    try {
-                        bindForms();
-                    } catch (err) {
+                    _this.loaderGifElement.fadeOut(animation_medium, function () {
+                        _this.loaderGifElement.hide();
+                    });
 
-                    }
+
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    _this.modalLoaderElement.html('<div class="modalHeader">Error!</div><div class="modalBody"><strong>' + errorThrown + '<strong></div>');
+                    // openModal();
                 });
-
-                ajaxloadergif.fadeOut(animation_medium, function () {
-                    ajaxloadergif.hide();
-                });
-
-
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                modalLoader.html('<div class="modalHeader">ERROR!</div><div class="modalBody"><strong>' + errorThrown + '<strong></div>');
-                // openModal();
-            });
-    });
-
-}
-
-function watchDog() {
-    var top = ($(document).height() - modal.height()) / 2;
-
-    top = Math.floor(top);
-
-    if (top != last_top) {
-        last_top = top;
-
-        //modal.css('top', top + "px");
-
-        modal.dequeue().animate({
-            top: top + "px"
-        }, animation_medium);
+        });
 
     }
-
-    console.log("WOOFF!");
-}
+};

@@ -16,7 +16,9 @@ $tracks = json_decode($album_details->tracks);
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
     <div style="position: relative; width: 250px; display: inline-block;">
         <img id="album_cover_img" src="jukebox/<?php echo $id; ?>/cover.jpg" style="width: 100%;">
-        <div style="position: absolute; right: 10px; bottom: 10px; cursor: pointer;" onclick="openModalPage('assets/modals/edit_album/pick_cover.php?id='+id)"><i class="fa fa-pencil fa-2x"></i></div>
+        <div style="position: absolute; right: 10px; bottom: 10px; cursor: pointer;"
+             onclick="modal.openPage('assets/modals/edit_album/pick_cover.php?id='+id)"><i
+                    class="fa fa-pencil fa-2x"></i></div>
     </div>
 
     <form id="edit-album-form" class="half-wide right" style="position: relative;">

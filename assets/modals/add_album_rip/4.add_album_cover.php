@@ -83,7 +83,7 @@ session_start();
 </div>
 <div class="modalFooter">
     <div class="box-btn pull-right" id="submit">Next</div>
-    <div class="box-btn" onclick="openModalPage('assets/modals/add_album_rip/3.add_album_details.php');">Previous</div>
+    <div class="box-btn" onclick="modal.openPage('assets/modals/add_album_rip/3.add_album_details.php');">Previous</div>
 </div>
 
 <script>
@@ -111,7 +111,7 @@ session_start();
                 console.log("Cover saved.");
                 $.post(addAlbumForm.attr('action'), addAlbumForm.serialize()).done(function(data) {
                     if (data === '0') {
-                        openModalPage('assets/modals/add_album_rip/5.add_album_review.php');
+                        modal.openPage('assets/modals/add_album_rip/5.add_album_review.php');
                     } else {
                         alert('error code: ' + data);
                     }
@@ -171,7 +171,7 @@ session_start();
 
             $.post(addAlbumForm.attr('action'), addAlbumForm.serialize()).done(function(data) {
                 if (data === '0') {
-                    openModalPage('assets/modals/add_album_rip/5.add_album_review.php');
+                    modal.openPage('assets/modals/add_album_rip/5.add_album_review.php');
                 } else {
                     alert('error code: ' + data);
                 }

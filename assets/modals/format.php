@@ -74,7 +74,7 @@
 	});
 
 	$('#exit_reset').click(function(){
-		closeModal();
+        modal.close();
 	});
 
 	$('#confirm_hdd_database').click(function() {

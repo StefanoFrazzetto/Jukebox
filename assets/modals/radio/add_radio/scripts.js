@@ -26,7 +26,7 @@ function addNewRadio() {
             console.error(x, xx, xxx);
         })
         .always(function () {
-            openModalPage('/assets/modals/radio/');
+            modal.openPage('/assets/modals/radio/');
         });
 
 }
@@ -99,7 +99,7 @@ function secondRadioPage() {
             })
             .fail(function (z, zz, zzz) {
                 //alert('something went wrong \n' + z + zz + zzz);
-                //openModalPage('/assets/modals/radio/');
+                //modal.openPage('/assets/modals/radio/');
                 console.log(z, zz, zzz);
                 console.log(url)
             })

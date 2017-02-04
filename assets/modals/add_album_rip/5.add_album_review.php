@@ -45,7 +45,8 @@ session_start();
 		<div class="box-btn pull-right" id="submit">Done</div>
 		<div class="box-btn pull-right hidden" id="openNewAlbum">Open Album</div>
 		<span id="status"></span>
-		<div class="box-btn" onclick="openModalPage('assets/modals/add_album_rip/4.add_album_cover.php');">Previous</div>
+        <div class="box-btn" onclick="modal.openPage('assets/modals/add_album_rip/4.add_album_cover.php');">Previous
+        </div>
 	</div>
 
 
@@ -67,7 +68,7 @@ session_start();
 					$('#status').text('The new album has been added successfully.');
 
 					$('#openNewAlbum').removeClass('hidden').click(function(){
-                        openModalPage('assets/modals/album_details?id=' + data);
+                        modal.openPage('assets/modals/album_details?id=' + data);
 					});
 
 					submit_btn.addClass('hidden');

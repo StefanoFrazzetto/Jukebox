@@ -101,7 +101,7 @@ $error = false;
     ?>
 </div>
 <div class="modalFooter">
-    <div class="box-btn" onclick="openModalPage('assets/modals/add_album/1.upload_album.php');">Previous</div>
+    <div class="box-btn" onclick="modal.openPage('assets/modals/add_album/1.upload_album.php');">Previous</div>
     <?php if (!$error) { ?>
         <div class="box-btn center" id="nextCD">Add CD2</div>
         <div class="box-btn pull-right" id="submit">Next</div>
@@ -114,14 +114,14 @@ $error = false;
 
     $('#nextCD').click(function () {
         $.ajax('assets/php/set_next_cd_upload.php');
-        openModalPage('assets/modals/add_album/1.upload_album.php');
+        modal.openPage('assets/modals/add_album/1.upload_album.php');
     });
 
     submit_btn.click(function (event) {
         $.post(addAlbumForm.attr('action'), addAlbumForm.serialize())
             .done(function (data) {
                 if (data === '0') {
-                    openModalPage('assets/modals/add_album/3.add_album_details.php');
+                    modal.openPage('assets/modals/add_album/3.add_album_details.php');
                 } else {
                     error('error code: ' + data);
                 }
