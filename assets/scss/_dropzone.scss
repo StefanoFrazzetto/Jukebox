@@ -19,6 +19,8 @@
 // SOFTWARE.
 @import "colors";
 
+$error_color: rgb(190, 38, 38);
+
 @mixin keyframes($name) {
   @-webkit-keyframes #{$name} {
     @content;
@@ -301,6 +303,10 @@
       }
     }
 
+    .dz-error-mark svg path {
+      fill: $error_color;
+    }
+
     &.dz-processing .dz-progress {
       opacity: 1;
       @include prefix((transition: all 0.2s linear));
@@ -365,7 +371,6 @@
 
     .dz-error-message {
       $width: $image-size + 20px;
-      $color: rgb(190, 38, 38);
 
       pointer-events: none;
       z-index: 1000;
@@ -378,8 +383,8 @@
       top: $image-size + 10px;
       left: -10px;
       width: $width;
-      background: $color;
-      background: linear-gradient(to bottom, $color, darken($color, 5%));
+      background: $error_color;
+      background: linear-gradient(to bottom, $error_color, darken($error_color, 5%));
       padding: 0.5em 1.2em;
       color: $text_color;
 
@@ -393,7 +398,7 @@
         height: 0;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-bottom: 6px solid $color;
+        border-bottom: 6px solid $error_color;
       }
     }
 
