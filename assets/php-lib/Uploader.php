@@ -106,6 +106,11 @@ class Uploader
     {
         $return['status'] = $status;
 
+        if ($status == "error") {
+            $return['error'] = $message;
+            http_response_code(400);
+        }
+
         if (!empty($message)) {
             $return['message'] = $message;
         }
