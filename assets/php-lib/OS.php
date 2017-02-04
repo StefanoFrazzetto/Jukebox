@@ -46,6 +46,8 @@ abstract class OS
      *
      * @param string $command The command to execute
      * @param string $arguments The arguments to pass along with the command
+     * @param bool $background Flag to set whether the task should run in
+     * background or not.
      * @return void
      */
     public static function executeWithoutOutput($command, $arguments = "", $background = false)
