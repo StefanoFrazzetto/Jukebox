@@ -26,8 +26,8 @@ class DiscWriter
 
         $this->disc_id = $this->getTrimmedCmd("discid $this->device_path");
 
-        $Config = new Config();
-        $this->scripts_path = $Config->get("burner_path") . "scripts/";
+        $config = new Config();
+        $this->scripts_path = $config->get("scripts")['disc'];
     }
 
     /**
@@ -139,6 +139,11 @@ class DiscWriter
 
         shell_exec($this->scripts_path . "burner-handler.sh > /tmp/burner-errors.log 2>&1 &");
 
+    }
+
+    public function ripDisc($output_dir, $logs_path)
+    {
+        exec("sudo $this->scripts_path . rip.sh $this->device_path $output_dir >> $logs_path . cdparanoia.log 2>&1 &");
     }
 
 }
