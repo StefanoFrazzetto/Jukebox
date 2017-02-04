@@ -1,13 +1,10 @@
 #!/bin/bash
 
-output_dir=$1
+device=$1
+output_dir=$2
 target=/var/www/html/jukebox/cdparanoia/
 
 rm -rfv "$target*"
-
-device=$2
-
-#echo "Device: " $device
 
 if [ "$device" == "" ]; then
 	exit
@@ -15,7 +12,7 @@ fi;
 
 mkdir -p "$target"
 
-total=$(cdparanoia -sQ -d /dev/$device |& grep -P -c "^\s+\d+\." | grep -E '[0-9]')
+total=$(cdparanoia -sQ -d "$device" |& grep -P -c "^\s+\d+\." | grep -E '[0-9]')
 #echo "Ripping the CD"
 cdparanoia -vB -X -d /dev/${device} 1:- "$target" &> /dev/null &
 #echo "Waiting for the process to complete"
