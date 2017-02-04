@@ -43,6 +43,13 @@ return [
     'paths' => [
         'assets' => $_SERVER['DOCUMENT_ROOT'] . '/assets',
         'burner' => $_SERVER['DOCUMENT_ROOT'] . '/assets/php/burner/',
+        'ripper' => [
+            'logs' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/ripper/logs/',
+            'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/ripper/output/'
+        ],
+        'scripts' => [
+            'disc' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/disc/'
+        ],
         'uploader' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/uploader/'
     ],
 
