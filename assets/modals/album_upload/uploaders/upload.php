@@ -1,10 +1,12 @@
 <div class="modalHeader">Album Uploader</div>
 <div class="modalBody center">
-    <form action="/assets/API/upload_file.php" id="dropzone" class="dropzone">
-        <div class="fallback">
-            <input name="file" type="file" multiple/>
-        </div>
-    </form>
+    <div class="mCustomScrollbar" style="max-height: 180px; overflow: hidden">
+        <form action="/assets/API/upload_file.php" id="dropzone" class="dropzone">
+            <div class="fallback">
+                <input name="file" type="file" multiple/>
+            </div>
+        </form>
+    </div>
     <hr/>
     <div id="uploadProgressBar" class="progressBar" style="margin: inherit">
         <div id="progress" class="progress"></div>
