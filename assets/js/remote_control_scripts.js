@@ -55,7 +55,7 @@ function albumChangedEvent() {
         div.html('');
 
         data.songs.forEach(function (song, index) {
-            var asd = $("<tr><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
+            var asd = $("<tr data-track-id='" + song.id + "'><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
 
             asd.click(function (e) {
                 sendEvent('play_song', {song_no: index});
@@ -90,9 +90,9 @@ function trackChangedEvent() {
 
     var div = $('#playlist-section').find('tbody');
 
-    div.find('.active').removeClass('active');
+    div.children('.active').removeClass('active');
 
-    div.children().eq(playerStatus.track_no).addClass("active");
+    div.children('[data-track-id="' + playerStatus.track_id + '"]').addClass("active");
 }
 
 function radioChangeEvent() {

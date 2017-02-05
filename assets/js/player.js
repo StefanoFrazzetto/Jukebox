@@ -511,6 +511,7 @@ function getPlayerStatus() {
         return {
             album_id: parseInt(album_id),
             track_no: parseInt(track_no),
+            track_id: parseInt(track_id),
             playing: playing,
             repeat: repeat,
             shuffle: shuffle,
