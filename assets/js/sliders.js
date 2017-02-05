@@ -13,7 +13,7 @@ sliderv.slider({
     animate: "fast",
     orientation: "vertical",
     min: 0,
-    start: function (event, ui) {
+    start: function () {
         tooltip.fadeIn('fast');
     },
     slide: function (event, ui) { //When the slider is sliding
@@ -21,7 +21,7 @@ sliderv.slider({
         tooltip.css('top', 170 - value / 100 * 170 - 7).text(ui.value);  //Adjust the tooltip accordingly
         setVolume(ui.value);
     },
-    stop: function (event, ui) {
+    stop: function () {
         tooltip.fadeOut('fast');
     },
     change: function (event, ui) {
@@ -56,7 +56,7 @@ slider.slider({
         else {
             volume.css('background-position', '0 -75px');
         }
-        ;
+
         pseek(ui.value);
     },
     change: function (event, ui) {
