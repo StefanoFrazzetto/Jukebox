@@ -4,9 +4,9 @@ var modal = {
     modalElement: modalElement,
     modalLoaderElement: $('#modalAjaxLoader'),
     loaderGifElement: modalElement.find('.ajaxloader'),
-    watchDogHandler: null,
+    watchDogHandler: -1,
     last_top: null,
-    handleScanner: null, // Used to kill wifi scanner task
+    handleScanner: -1, // Used to kill wifi scanner task
     jqxhr: null,
     autoPositioned: false,
     onModalClosed: null,
@@ -58,7 +58,7 @@ var modal = {
             _this.modalLoaderElement.html('');
             _this.loaderGifElement.show();
 
-            clearInterval(this.handleScanner);
+            clearInterval(_this.handleScanner);
 
             if (_this.onModalClosed != null) {
                 _this.onModalClosed();
