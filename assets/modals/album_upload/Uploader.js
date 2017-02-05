@@ -5,6 +5,11 @@
 function Uploader() {
     this.stage = 0;
     this.uploadMethod = 0;
+
+    this.title = null;
+    this.titles = [];
+
+    this.tracks = [];
 }
 
 Uploader.prototype.nextPage = function () {
@@ -20,21 +25,21 @@ Uploader.prototype.changePage = function (page) {
 
     switch (page) {
         case 0: // Intro
-            openModalPage('/assets/modals/album_upload/1-Intro.php');
+            modal.openPage('/assets/modals/album_upload/1-Intro.php');
             break;
         case 1: // Upload
             switch (this.uploadMethod) {
                 case 0: // Upload local files
-                    openModalPage('/assets/modals/album_upload/uploaders/upload.php');
+                    modal.openPage('/assets/modals/album_upload/uploaders/upload.php');
                     break;
                 case 1: // Rip a cd in the jukebox
-                    openModalPage('/assets/modals/album_upload/uploaders/rip.php');
+                    modal.openPage('/assets/modals/album_upload/uploaders/rip.php');
                     break;
                 case 2: // Browse USB drive plugged in the jukebox
-                    openModalPage('/assets/modals/album_upload/uploaders/usb.php');
+                    modal.openPage('/assets/modals/album_upload/uploaders/usb.php');
                     break;
                 case 3: // Import from jukebox
-                    openModalPage('/assets/modals/album_upload/uploaders/jukebox.php');
+                    modal.openPage('/assets/modals/album_upload/uploaders/jukebox.php');
                     break;
                 default: // Error
                     var msg1 = "Uploader method not defined";
@@ -44,6 +49,22 @@ Uploader.prototype.changePage = function (page) {
             }
             break;
         case 2: // Edit names
+            $.getJSON('/assets/modals/album_upload/sample_data.json')
+                .done(function (data) {
+                    uploader.title = data.title;
+
+                    uploader.titles = data.titles;
+
+                    uploader.tracks = data.tracks;
+
+                    console.log(data);
+
+                    modal.openPage('/assets/modals/album_upload/2-Metadata.php');
+                })
+                .fail(function (a, b) {
+                    error(b);
+                });
+
             break;
         case 3: // Add cover
             break;
