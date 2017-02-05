@@ -22,22 +22,10 @@
                 <th>File Name</th>
             </tr>
             </thead>
-            <tbody id="metaDataSongsTableBody">
-            <!--            <tr>-->
-            <!--                <th colspan="4">CD 1</th>-->
-            <!--            </tr>-->
-            <!---->
-            <!--            <tr>-->
-            <!--                <td>1</td>-->
-            <!--                <td>-->
-            <!--                    <input type="text" name="track0" value="Tell It to My Heart" title="Track Title"></td>-->
-            <!--                <td>Tell It to My Heart</td>-->
-            <!--                <td>01.kelly-llorenna-tell-it-to-my-heart.mp3</td>-->
-            <!--            </tr>-->
-
-            </tbody>
+            <tbody id="metaDataSongsTableBody"></tbody>
         </table>
     </div>
+
 </div>
 <div class="modalFooter">
     <button id="btnBack">Back</button>
@@ -93,6 +81,4 @@
     if (uploader.title !== null) {
         metaDataAlbumTitle.val(uploader.title);
     }
-
-
 </script>
