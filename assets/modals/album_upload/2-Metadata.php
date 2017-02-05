@@ -63,10 +63,14 @@
         cd.forEach(function (track, no) {
             var tr = $("<tr>");
 
-            var td1 = $("<td>" + no + "</td>");
-            var td2 = $("<td>" + track.title + "</td>");
+            var td1 = $("<td>" + (no + 1) + "</td>");
+            var td2 = $("<td><input type='text' class='full-wide' value='" + track.title + "'/></td>");
             var td3 = $("<td>" + track.artist + "</td>");
             var td4 = $("<td>" + track.url + "</td>");
+
+            td2.find('input').change(function () {
+                track.title = $(this).val();
+            });
 
             tr.append(td1);
             tr.append(td2);
