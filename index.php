@@ -1,12 +1,12 @@
+<?php
+require_once 'assets/php-lib/ICanHaz.php';
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>&lt;JUKEBOX&gt;</title>
-    <!--suppress HtmlUnknownTarget -->
-    <link href="assets/css/main.css?<?php echo uniqid() ?>" rel="stylesheet" type="text/css"/>
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/css/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
+    <?php ICanHaz::css(['assets/css/main.css', 'assets/css/font-awesome.min.css', 'assets/css/jquery.mCustomScrollbar.min.css'], true); ?>
     <link href="assets/img/icons/vinyl1.png" rel="icon" type="image/png">
     <meta name="theme-color" content="#2a2a2a">
     <meta charset="UTF-8">
@@ -23,7 +23,6 @@
             <div id="volumeOverlay">
                 <div id="slider-vertical" class="progressBar thin"></div>
                 <span class="tooltip"></span>
-                <!-- Tooltip -->
             </div>
 
             <div id="mask">
@@ -196,32 +195,38 @@
     </div>
 </div>
 
-<script type="text/javascript" src="assets/js/vars.js"></script>
-<script type="text/javascript" src="assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="assets/js/sliders.js"></script>
-<script type="text/javascript" src="assets/js/player.js"></script>
-<script type="text/javascript" src="assets/js/searchbar.js"></script>
-<script type="text/javascript" src="assets/js/modals.js"></script>
-<script type="text/javascript" src="assets/js/post-script.js"></script>
-<script type="text/javascript" src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script type="text/javascript" src="assets/js/alerts.js"></script>
+
 <?php
-$whitelist = array(
-    '127.0.0.1',
-    '::1'
-);
+function isJukebox()
+{
+    return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
+}
+
+$scripts = [
+    'assets/js/vars.js',
+    'assets/js/jquery.min.js',
+    'assets/js/jquery-ui.min.js',
+    'assets/js/sliders.js',
+    'assets/js/player.js',
+    'assets/js/searchbar.js',
+    'assets/js/modals.js',
+    'assets/js/jquery.mCustomScrollbar.concat.min.js',
+    'assets/js/alerts.js',
+    'assets/js/post-script.js'
+];
+
+if (isJukebox())    // Things that wil be done only by the local jukebox client
+    $scripts = array_merge($scripts, ['assets/js/remote_listener.js', 'assets/js/vars_jb.js']);
+else                // Things that will be done only from external clients
+    $scripts[] = 'assets/js/eq.js';
 
 
-if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) { // Things that wil be done only by the local jukebox client
+ICanHaz::js($scripts, true);
+
+if (isJukebox())
     include 'assets/modals/keyboard.php';
-    ?>
-    <script type="text/javascript" src="assets/js/remote_listener.js"></script>
-    <script type="text/javascript" src="assets/js/vars_jb.js"></script>
-<?php
-} else { // Things that will be done only from external clients ?>
-    <script src="assets/js/eq.js"></script>
-<?php } ?>
+
+?>
 
 </body>
 
