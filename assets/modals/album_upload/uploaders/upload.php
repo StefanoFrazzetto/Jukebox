@@ -1,6 +1,6 @@
 <div class="modalHeader">Album Uploader</div>
 <div class="modalBody center">
-    <div class="mCustomScrollbar" style="max-height: 180px; overflow: hidden">
+    <div class="mCustomScrollbar" style="max-height: 200px; overflow: hidden">
         <form action="/assets/API/upload_file.php" id="dropzone" class="dropzone">
             <div class="fallback">
                 <input name="file" type="file" multiple/>
@@ -19,13 +19,18 @@
 
 <script src="/assets/js/dropzone.js"></script>
 <script>
+    var btnNext = $('#btnNext');
+
     $('#btnBack').click(function () {
         uploader.previousPage();
     });
 
-    $('#btnNext').click(function () {
+    btnNext.click(function () {
         uploader.nextPage();
     });
+
+    if (uploader.tracks.length)
+        btnNext.removeClass('disabled');
 
     Dropzone.autoDiscover = false;
     var uploadedBytes = 0;
@@ -57,11 +62,11 @@
         });
 
         myDropzone.on("queuecomplete", function () {
-            $('#btnNext').removeClass('disabled');
+            btnNext.removeClass('disabled');
         });
 
         myDropzone.on("sending", function () {
-            $('#btnNext').addClass('disabled');
+            btnNext.addClass('disabled');
         });
     });
 </script>

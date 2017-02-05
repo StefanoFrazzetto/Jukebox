@@ -55,7 +55,20 @@ Uploader.prototype.changePage = function (page) {
 
                     uploader.titles = data.titles;
 
-                    uploader.tracks = data.tracks;
+                    uploader.tracks = mapCD(data.tracks);
+
+                    function mapCD(CD) {
+                        var arr = [];
+
+                        for (var x in CD) {
+                            //noinspection JSUnfilteredForInLoop
+                            var cd_no = parseInt(x.replace(/^CD/, ''));
+                            //noinspection JSUnfilteredForInLoop
+                            arr[cd_no] = CD[x];
+                        }
+
+                        return arr;
+                    }
 
                     modal.openPage('/assets/modals/album_upload/2-Metadata.php');
                 })

@@ -59,10 +59,7 @@
         uploader.nextPage();
     });
 
-
-    var cds = mapCD(uploader.tracks);
-
-    cds.forEach(function (cd) {
+    uploader.tracks.forEach(function (cd) {
         cd.forEach(function (track, no) {
             var tr = $("<tr>");
 
@@ -93,13 +90,5 @@
         metaDataAlbumTitle.val(uploader.title);
     }
 
-    function mapCD(CD) {
-        var arr = [];
 
-        for (var x in CD) {
-            arr.push(CD[x]);
-        }
-
-        return arr;
-    }
 </script>
