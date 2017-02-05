@@ -1,13 +1,13 @@
+<?php
+require_once 'assets/php-lib/ICanHaz.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Jukebox Remote</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <!--suppress HtmlUnknownTarget -->
-    <link href="assets/css/main_remote.css?<?php echo uniqid() ?>" rel="stylesheet" type="text/css"/>
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css"/>
+    <?php ICanHaz::css(['assets/css/main_remote.css', 'assets/css/font-awesome.min.css', 'assets/css/jquery.mCustomScrollbar.min.css'], true); ?>
     <link rel="icon" type="image/png" href="assets/img/icons/vinyl1.png">
     <meta name="theme-color" content="#2a2a2a">
 </head>
@@ -91,10 +91,7 @@
     </div>
 </div>
 
+<?php ICanHaz::js(['assets/js/jquery.min.js', 'assets/js/jquery-ui.min.js', 'assets/js/remote_client.js', 'assets/js/remote_control_scripts.js'], true); ?>
 
-<script type="text/javascript" src="assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="assets/js/remote_client.js?<?php echo uniqid() ?>"></script>
-<script type="text/javascript" src="assets/js/remote_control_scripts.js?<?php echo uniqid() ?>"></script>
 </body>
 </html>
