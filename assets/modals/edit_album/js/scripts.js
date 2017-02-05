@@ -173,7 +173,11 @@ if (imageSelector.imageUrl != null) {
 
         album_cover_img.attr('src', src);
 
-        reload();
+        console.log("injecting new cover in the album database and refreshing the list");
+
+        albums_storage[album_id].cover = new Date().getTime();
+
+        paginate();
     });
 }
 

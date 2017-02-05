@@ -1,18 +1,14 @@
 <?php
-include '../../php-lib/Database.php';
+include '../../php-lib/MusicClasses/Album.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-if (!isset($id))
-    $id = 2;
+$album = Album::getAlbum($id);
 
-$database = new Database();
+$tracks = $album->getTracks();
 
-$album_details = $database->select('*', 'albums', 'WHERE `id` = ' . $id)[0]; // colonna tabella query
-
-$tracks = json_decode($album_details->tracks);
 ?>
-<div class="modalHeader">Edit Album - <?php echo $album_details->title ?></div>
+<div class="modalHeader">Edit Album - <?php echo $album->getTitle() ?></div>
 <div class="modalBody" data-mcs-theme="dark" style="position: relative">
     <div style="position: absolute; width: 300px; height: 300px; display: inline-block; overflow: hidden">
         <img id="album_cover_img" class="cover" src="jukebox/<?php echo $id; ?>/cover.jpg" style="width: 100%;">
@@ -24,8 +20,8 @@ $tracks = json_decode($album_details->tracks);
          style="position: relative; margin-left: 350px; width: 480px; height: 300px;">
         <form id="edit-album-form">
             <label for="album-artist">Artist</label>
-            <input type="text" name="album-artist" id="album-artist" class="right large"
-                   value="<?php echo $album_details->artist ?>"/>
+            <input type="text" name="album-artist" readonly="readonly" id="album-artist" class="right large"
+                   value="<?php echo implode($album->getArtistsName()) ?>"/>
 
             <br/>
             <!-- GOD FORGIVE ME FOR MY HTML SINS -->
@@ -33,13 +29,12 @@ $tracks = json_decode($album_details->tracks);
 
             <label for="album-title">Title</label>
             <input type="text" name="album-title" id="album-title" class="right large"
-                   value="<?php echo $album_details->title ?>"/>
+                   value="<?php echo $album->getTitle() ?>"/>
 
 
             <input type="hidden" name="album-id" id="album-id" value="<?php echo $id ?>"/>
             <input type="hidden" name="album-tracks" id="album-tracks"
-                   value="<?php echo base64_encode($album_details->tracks) ?>"/>
-
+                   value="<?php echo base64_encode(json_encode($tracks)) ?>"/>
 
             <input type="submit" name="submit" value="Save" class="invisible"/>
         </form>
@@ -59,13 +54,15 @@ $tracks = json_decode($album_details->tracks);
 
             // var_dump($tracks);
             foreach ($tracks as $key => $track) {
-                if ($track->cd != $cd_no) {
-                    $cd_no = $track->cd;
+                if ($track->getCd() != $cd_no) {
+                    $cd_no = $track->getCd();
 
                     print_cd_header($cd_no);
                 }
 
-                echo "<li data-id='$key' class='track'><span class='title'><i class=\"fa fa-bars handle\"></i> $track->title</span> <span class='right'><i class='fa fa-pencil edit'></i> <i class='fa fa-trash delete'></i></span></li>";
+                $title = $track->getTitle();
+
+                echo "<li data-id='$key' class='track'><span class='title'><i class=\"fa fa-bars handle\"></i> $title</span> <span class='right'><i class='fa fa-pencil edit'></i> <i class='fa fa-trash delete'></i></span></li>";
             }
 
             ?>
