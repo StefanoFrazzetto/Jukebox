@@ -1,0 +1,34 @@
+{
+  "title": "Selected Album Title",
+  "titles": [
+    "Album Title 1",
+    "Album Title 2",
+    "Album Title 3"
+  ],
+  "tracks": {
+    "CD1": [
+      {
+        "title": "Dialisi Estratta",
+        "url": "dialisi_estratta.mp3",
+        "artist": "Main Artist"
+      },
+      {
+        "title": "Eufonia",
+        "url": "eufonia.mp3",
+        "artist": "Main Artist"
+      },
+      {
+        "title": "Metacognizione Apotropaica",
+        "url": "metacognizione_apotropaica.mp3",
+        "artist": "Main Artist",
+        "contributing_artist": "Contributing Artist"
+      }
+    ]
+  },
+  "cover": null,
+  "covers": [
+    "cover1.jpg",
+    "cover2.jpg",
+    "coverN.jpg"
+  ]
+}
