@@ -57,8 +57,6 @@ Uploader.prototype.changePage = function (page) {
 
                     uploader.tracks = data.tracks;
 
-                    console.log(data);
-
                     modal.openPage('/assets/modals/album_upload/2-Metadata.php');
                 })
                 .fail(function (a, b) {
