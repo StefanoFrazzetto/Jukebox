@@ -11,7 +11,7 @@ $tracks = $album->getTracks();
 <div class="modalHeader">Edit Album - <?php echo $album->getTitle() ?></div>
 <div class="modalBody" data-mcs-theme="dark" style="position: relative">
     <div style="position: absolute; width: 300px; height: 300px; display: inline-block; overflow: hidden">
-        <img id="album_cover_img" class="cover" src="jukebox/<?php echo $id; ?>/cover.jpg" style="width: 100%;">
+        <img id="album_cover_img" class="cover" src="<?php echo $album->getCoverUrl() ?>" style="width: 100%;">
         <div class="badge badge-bottom badge-bigger" onclick="openPickCoverModal()"><i class="fa fa-pencil fa-2x"></i>
         </div>
     </div>
