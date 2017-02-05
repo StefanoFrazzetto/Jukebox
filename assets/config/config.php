@@ -51,15 +51,14 @@ return [
 
     'disc' => [
         'scripts' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/disc/',
+        'status_file' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/status.json',
         'burner' => [
             'logs' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/burner/logs/',
             'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/burner/output/',
-            'status' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/burner/logs/'
         ],
         'ripper' => [
             'logs' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/logs/',
             'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/output/',
-            'status' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/logs/'
         ]
     ],
 
