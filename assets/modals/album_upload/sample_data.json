@@ -10,17 +10,17 @@
       {
         "title": "Dialisi Estratta",
         "url": "dialisi_estratta.mp3",
-        "artist": "Main Artist"
+        "main_artist": "Main Artist"
       },
       {
         "title": "Eufonia",
         "url": "eufonia.mp3",
-        "artist": "Main Artist"
+        "main_artist": "Main Artist"
       },
       {
         "title": "Metacognizione Apotropaica",
         "url": "metacognizione_apotropaica.mp3",
-        "artist": "Main Artist",
+        "main_artist": "Main Artist",
         "contributing_artist": "Contributing Artist"
       }
     ]

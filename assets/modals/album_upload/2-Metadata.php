@@ -65,7 +65,7 @@
 
             var td1 = $("<td>" + (no + 1) + "</td>");
             var td2 = $("<td><input type='text' class='full-wide' value='" + track.title + "'/></td>");
-            var td3 = $("<td>" + track.artist + "</td>");
+            var td3 = $("<td>" + track.main_artist + "</td>");
             var td4 = $("<td>" + track.url + "</td>");
 
             td2.find('input').change(function () {
