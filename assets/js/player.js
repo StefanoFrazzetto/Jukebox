@@ -3,6 +3,7 @@ var initialized = false;
 var playlist = [],
     playlist_number = 0,
     track_no = 0,
+    track_id,
     album_id, repeat = false,
     shuffle = false,
     default_volume = 10,
@@ -188,12 +189,15 @@ function pprevious() {
 }
 
 function highlightCurrentTrack() {
+    if (typeof track_id === "undefined")
+        return;
+
+    var track_to_highlight = '[data-track-id="' + track_id + '"]';
+
     $('.playing').removeClass('playing');
-    var selector = '[data-album="' + album_id + '"][data-track-no="' + track_no + '"]';
+    $(track_to_highlight).addClass('playing');
 
-    $(selector).addClass('playing');
-
-    $("#playlistOverlay").mCustomScrollbar("scrollTo", "#playlistOverlay " + selector);
+    $("#playlistOverlay").mCustomScrollbar("scrollTo", "#playlistOverlay " + track_to_highlight);
 }
 
 function getPlaylistSong(number) {
@@ -208,6 +212,7 @@ function getPlaylistSong(number) {
         return;
     }
 
+    track_id = playlist[number].id;
     track_no = playlist[number].track_no;
 
     if (playlist[number].album_id != album_id) {
@@ -268,7 +273,12 @@ function updatePlaylist() {
 
     $.each(playlist, function (key, val) {
         if (typeof val != 'undefined')
-            items = items + ("<tr><td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' id='track_" + key + "'>" + val.title + "</td></tr>");
+            items = items + (
+                    "<tr>" +
+                    "<td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' " +
+                    "id='track_" + key + "' data-track-id='" + val.id + "'>" + val.title + "</td>" +
+                    "</tr>"
+                );
     });
     playlistTable.html(items);
 

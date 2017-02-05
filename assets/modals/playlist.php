@@ -6,7 +6,7 @@
         box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.40);
         border-radius: 5px;
     }
-    
+
     .removeTrackFromPlaylist {
         color: white;
         cursor: pointer;
@@ -19,7 +19,7 @@
         text-align: center;
         line-height: 21px;
     }
-    
+
     th .addTrackToPlaylist {
         float: none;
     }
@@ -65,6 +65,8 @@
 </div>
 
 <script>
+    var playlistDetails = $('#playlistDetails');
+
     function toHHMMSS(num) {
         var sec_num = parseInt(num, 10); // don't forget the second param
         var hours = Math.floor(sec_num / 3600);
@@ -90,27 +92,27 @@
     }
 
     function updateBigPlaylist() {
-        $('#playlistDetails .trackRow').remove();
+        playlistDetails.find('.trackRow').remove();
 
-        playlist.forEach(function(song, key) {
+        playlist.forEach(function (song, key) {
             if (typeof song.length != 'undefined') {
                 var time = toHHMMSS(song.length);
             } else {
                 var time = 'n/a';
             }
 
-            getAlbumDetails(parseInt(song.album), function(data) {
+            getAlbumDetails(parseInt(song.album), function (data) {
                 var tr = $(
-                    '<tr data-no="' + key + '" data-album="' + song.album + '">' +
+                    '<tr data-track-id="' + song.id + '" data-no="' + key + '" data-album="' + song.album + '">' +
                     '<td>' + song.title + '</td> ' +
                     '<td>' + data.artist + '</td>' +
                     '<td>' + data.title + '</td>' +
-                    '<td><img class="album_thumb" src="'+data.cover+'"/></td>' +
+                    '<td><img class="album_thumb" src="' + data.cover + '"/></td>' +
                     '<td><i class="fa fa-trash removeTrackFromPlaylist"></i></td>' +
                     '<td class="duration">' + time + '</td> </tr>'
-                    )
-                .addClass('trackRow')
-                .attr('data-track-no', key);
+                )
+                    .addClass('trackRow')
+                    .attr('data-track-no', key);
                 tr.appendTo('#playlistDetails');
             });
 
@@ -118,14 +120,14 @@
         });
 
 
-        $('#playlistDetails .trackRow').click(function() {
+        playlistDetails.find('.trackRow').click(function () {
             var _trackNo = $(this).attr('data-no');
             //changeAlbum(_albumID, _trackNo);
 
             getPlaylistSong(_trackNo);
         });
 
-        $('#playlistDetails .trackRow .removeTrackFromPlaylist').click(function(e) {
+        playlistDetails.find('.trackRow .removeTrackFromPlaylist').click(function (e) {
             var _albumID = $(this).closest('table').attr('data-album');
             var _trackNo = $(this).parent().parent().attr('data-track-no');
 
@@ -137,7 +139,7 @@
             e.preventDefault();
         });
 
-        $('#playlistDetails .CDth .addTrackToPlaylist').click(function(e) {
+        playlistDetails.find('.CDth .addTrackToPlaylist').click(function (e) {
             var _albumID = $(this).closest('table').attr('data-album');
             var _CD = $(this).parent().attr('data-cd');
 

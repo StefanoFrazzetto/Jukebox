@@ -71,7 +71,9 @@ if (file_exists($outputFile)) {
                     $CDMap[$CD][] = $key;
                 }
                 ?>
-                <tr class="trackRow" data-track-no="<?php echo $key + 1; ?>"
+                <tr class="trackRow"
+                    data-track-id="<?php echo $track->getId() ?>"
+                    data-track-no="<?php echo $key + 1; ?>"
                     data-album="<?php echo $albumID ?>">
                     <td class="num">
                         <?php echo $key + 1; ?>

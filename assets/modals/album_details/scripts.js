@@ -59,6 +59,7 @@ album_details.find('.CDth .addTrackToPlaylist').click(function (e) {
 $(document).ready(function () {
     $('#pre-download').hide();
     $('#download').hide();
+    highlightCurrentTrack();
 });
 
 function updateProgress(timeRequired, nowTimestamp, folderSize) {
