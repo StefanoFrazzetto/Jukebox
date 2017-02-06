@@ -166,6 +166,7 @@ Player.prototype.playSong = function (song) {
         return;
     }
 
+    this.isRadio = false;
     this.playUrl(song.getUrl());
 };
 
@@ -183,6 +184,15 @@ Player.prototype.playSongAtIndex = function (index) {
     this.currentTrackNumber = index;
 
     this.playSong(this.tracks[index]);
+};
+
+Player.prototype.playRadio = function (radio) {
+    this.reset();
+    this.isRadio = true;
+
+    var url = 'http://' + window.location.hostname + ':4242/?address=' + radio.url.host + '&request=' + radio.url.path + '&port=' + radio.url.port;
+
+    this.playUrl(url);
 };
 //endregion Tracks Handling
 
