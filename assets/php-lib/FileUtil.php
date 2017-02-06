@@ -1,13 +1,13 @@
 <?php
 
-// require_once 'autoload.php';
+require_once __DIR__ . '/StringUtils.php';
+require_once __DIR__ . '/OS.php';
 
 /**
- * Created by Stefano Frazzetto - 08 Jun 2016
- * https://github.com/stefanofrazzetto
- * Last update: 15 Jul 2016
+ * FileUtil contains methods to access, create, modifiy, and delete
+ * files and directories.
  *
- * NOTE : ABSTRACTION NEEDED FOR $SCRIPTS
+ * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
  */
 abstract class FileUtil
 {
@@ -25,12 +25,21 @@ abstract class FileUtil
         }
     }
 
-    public static function emptyDirectory($pathToDirectory)
+    /**
+     * Removes the content of the directory recursively.
+     *
+     * @param string $dir_path the directory to empty
+     * @return bool true if it was possible to empty the directory, false
+     * otherwise.
+     */
+    public static function emptyDirectory($dir_path)
     {
-        $res1 = shell_exec("rm -rf $pathToDirectory/*");
-        //$res2 = shell_exec("rm -rf $pathToDirectory/.[!.]*");
+        $hidden_files = OS::execute("find $dir_path -name ._\\* -print0 | xargs -0 rm -f");
+        $files_and_directories = OS::execute("rm -rf $dir_path/*");
 
-        return $res1;
+        $res = StringUtils::contains($hidden_files, 'error') && StringUtils::contains($files_and_directories, 'error');
+
+        return $res;
     }
 
     public static function renameFile($path, $file_name, $new_name)
