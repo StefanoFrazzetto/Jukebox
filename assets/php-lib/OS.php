@@ -1,6 +1,7 @@
 <?php
 
-require_once __DIR__ . "/Config.php";
+require_once __DIR__ . '/Config.php';
+require_once __DIR__ . '/Process.php';
 
 /**
  * Class OS is used to access the OS commands without invoking shell_exec
@@ -74,8 +75,7 @@ abstract class OS
      * @param string $arguments The arguments to be set in the environment
      * @param boolean $background The command/script is executed in background if this
      * flag is set to true. The default is false.
-     * @return string|null Null if the task was executed in background, otherwise a string
-     * containing the output produced by the command/script.
+     * @return int The process id of the command/script.
      */
     public static function executeWithEnv($command, $arguments = "", $background = false)
     {
@@ -89,11 +89,10 @@ abstract class OS
         }
 
         if ($background) {
-            return self::execute($command);
+            return self::executeBackgroundCommand($command);
         }
 
-        self::executeBackgroundTasks($command);
-        return null;
+        return self::execute($command);
     }
 
     /**
@@ -113,7 +112,7 @@ abstract class OS
         }
 
         if ($background) {
-            self::executeBackgroundTasks("command");
+            self::executeBackgroundCommand("command");
         } else {
             exec("$command $arguments");
         }
@@ -126,16 +125,15 @@ abstract class OS
      * and/or stderr should be stored.
      *
      * @param string $command The command to be executed
-     * @param string $stdio The full path to the location where
-     * <b>stdio</b> should be redirected
-     * @param string $stderr The full path to the location where
-     * <b>stderr</b> should be redirected
-     * @return void
+     * @param string $output The full path to the location file where
+     * the output should be redirected.
+     *
+     * @return int The process id of the command/script.
      */
-    public static function executeBackgroundTasks($command, $stdio = "/dev/null", $stderr = "/dev/null")
+    public static function executeBackgroundCommand($command, $output = "/dev/null")
     {
-        exec("$command > $stdio 2>$stderr &");
-        return;
+        $process = new Process($command, $output);
+        return $process->getPid();
     }
 
 }
