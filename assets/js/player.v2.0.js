@@ -1,9 +1,10 @@
 'use strict';
 
-//region Player
+//region PLAYER
 function Player() {
     this.audioApiSupported = true;
 
+    //region Web Audio API
     if (!window.AudioContext) {
         if (!window.webkitAudioContext) {
             console.warn("No audio API found");
@@ -26,14 +27,171 @@ function Player() {
 
         this.visualiser = null;
     }
+    //endregion Web Audio API
+
+    //region Playlist
+    this.playlist = [];
+    this.playlist_no = null;
+    //endregion
+
+    //region Play Modes
+    this.shuffle = false;
+    this.repeat = false;
+    this.isRadio = false;
+    //endregion
+
+    //region Events
+    // TODO implement event calls
+    this.onTrackChange = null;
+    this.onAlbumChange = null;
+    this.onChange = null;
+    //endregion
 }
 
+//region Playback
+Player.prototype.play = function () {
+    this.mediaElement.play();
+};
+
+Player.prototype.pause = function () {
+    this.mediaElement.pause();
+};
+
+Player.prototype.stop = function () {
+    this.mediaElement.pause();
+    this.mediaElement.currentTime = 0;
+};
+
+Player.prototype.playPause = function () {
+    if (this.mediaElement.paused)
+        this.play();
+    else
+        this.pause();
+};
+
+Player.prototype.next = function () {
+    if (this.repeat === 2) { // Play same song again
+        this.seek(0);
+        this.play();
+        return;
+    }
+
+    var index = this.playlist_no + 1;
+    if (index > this.playlist.length - 1) {
+        if (this.repeat) { // Start album over
+            this.playSongAtIndex(0);
+        } else { // Start over and stop
+            // this.playSongAtIndex(0);
+            // this.stop();
+        }
+    } else {
+        this.playSongAtIndex(index);
+    }
+};
+
+Player.prototype.seek = function (time) {
+    this.mediaElement.currentTime = time;
+};
+
 Player.prototype.setVolume = function (value) {
-    this.outputNode.gain.value = value;
+    value = parseFloat(value);
+
+    if (value < 0)
+        value = 0;
+
+    if (value > 1)
+        value = 1;
+
+    return this.mediaElement.volume = value;
+};
+
+Player.prototype.getVolume = function () {
+    return this.mediaElement.volume;
 };
 //endregion
 
-//region EQ
+//region Tracks Handling
+Player.getAlbumPath = function (album_id) {
+    return '/jukebox/' + album_id + '/';
+};
+
+Player.prototype.getAlbumPlaylist = function (album_id, callback) {
+    this.getJSON('/assets/API/playlist.php?id=' + album_id,
+        callback, function (status) {
+            console.error(status);
+        });
+};
+
+Player.prototype.changeAlbum = function (album_id) {
+    var _player = this;
+    this.getAlbumPlaylist(album_id, function (data) {
+        data.forEach(function (js_song) {
+            var song = new Song();
+
+            song.read(js_song);
+
+            _player.playlist.push(song);
+        });
+
+        _player.playSongAtIndex(0)
+    })
+};
+
+Player.prototype.playUrl = function (url) {
+    this.mediaElement.src = url;
+    this.play();
+};
+
+Player.prototype.playSong = function (song) {
+    if (!song instanceof Song) {
+        console.warn("Not a song passed to Player.playSong()");
+        return;
+    }
+
+    this.playUrl(song.getUrl());
+};
+
+Player.prototype.playSongAtIndex = function (index) {
+    if (index < 0) {
+        console.warn("Index less than zero passed to Player.playSongAtIndex()");
+        return;
+    }
+
+    if (index > this.playlist.length - 1) {
+        console.warn("Index was out of playlist bound at Player.playSongAtIndex()");
+        return;
+    }
+
+    this.playlist_no = index;
+
+    this.playSong(this.playlist[index]);
+};
+
+Player.prototype.getJSON = function (url, successHandler, errorHandler) {
+    var xhr = typeof XMLHttpRequest != 'undefined'
+        ? new XMLHttpRequest()
+        : new ActiveXObject('Microsoft.XMLHTTP');
+    xhr.open('get', url, true);
+    xhr.onreadystatechange = function () {
+        var status;
+        var data;
+        // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
+        if (xhr.readyState == 4) { // `DONE`
+            status = xhr.status;
+            if (status == 200) {
+                data = JSON.parse(xhr.responseText);
+                successHandler && successHandler(data);
+            } else {
+                errorHandler && errorHandler(status);
+            }
+        }
+    };
+    xhr.send();
+};
+//endregion Tracks Handling
+//endregion Player
+
+//region EQUALISER
 function EQ(context, input, output) {
     this.context = context;
 
@@ -166,7 +324,6 @@ EQ.prototype.setBands = function (bands) {
 
 EQ.prototype.changeBands = function (index) {
     this.setBands(this.getBands(index));
-    console.log(this.getBands(index));
 };
 
 EQ.prototype.drawEQ = function (container) {
@@ -266,9 +423,9 @@ EQ.prototype.drawEQ = function (container) {
 
     container.appendChild(controls);
 };
-//endregion
+//endregion Equaliser
 
-//region Visualiser
+//region VISUALISER
 function Visualiser(context, input, canvas) {
     // AUDIO APIs
     this.context = context;
@@ -365,11 +522,9 @@ function Visualiser(context, input, canvas) {
                 var h = Math.floor(waveHeight + value * V.barHeightMultiplier);
 
                 V.canvasContext.fillRect(x, y, w, h);
-                //  console.log([i,value])
             }
 
             V.canvasContext.fillRect(array.length * (waveWidth + V.wavePadding), 0, 1, waveHeight);
-            //endregion
 
         } catch (e) {
             console.error(e);
@@ -377,4 +532,30 @@ function Visualiser(context, input, canvas) {
     };
 }
 
-//endregion
+//endregion Visualiser
+
+//region SONG
+function Song() {
+    this.id = null;
+    this.album_id = null;
+    this.cd = null;
+    this.track_no = null;
+    this.title = null;
+    this.url = null;
+    this.length = null;
+}
+
+Song.prototype.read = function (data) {
+    this.id = data.id;
+    this.album_id = data.album_id;
+    this.cd = data.cd;
+    this.track_no = data.track_no;
+    this.title = data.title;
+    this.url = data.url;
+    this.length = data.length;
+};
+
+Song.prototype.getUrl = function () {
+    return '/jukebox/' + this.album_id + '/' + this.url;
+};
+//endregion SONG
