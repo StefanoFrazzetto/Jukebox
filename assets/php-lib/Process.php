@@ -2,7 +2,7 @@
 
 /* An easy way to keep in track of external processes.
 * Ever wanted to execute a process in php, but you still wanted to have somewhat controll of the process ? Well.. This is a way of doing it.
- * 
+ *
 * @compability: Linux only. (Windows does not work).
 * @author: Peec
 */
@@ -11,8 +11,9 @@ class Process
 {
     private $pid;
     private $command;
+    private $output_file;
 
-    public function __construct($cl = false)
+    public function __construct($cl = false, $output_file = "/dev/null")
     {
         if ($cl != false) {
             $this->command = $cl;
@@ -22,7 +23,7 @@ class Process
 
     private function runCom()
     {
-        $command = 'nohup ' . $this->command . ' > /dev/null 2>&1 & echo $!';
+        $command = 'nohup ' . $this->command . " > $this->output_file 2>&1 & echo \$!";
         exec($command, $op);
         $this->pid = (int)$op[0];
     }
