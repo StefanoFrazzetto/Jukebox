@@ -47,7 +47,7 @@ abstract class Disc extends DiscStatus
         $this->device_path = "/dev/$device_name";
 
         if ($this->getStatus() == self::STATUS_IDLE) {
-            self::__init();
+            $this->__init();
         }
     }
 
