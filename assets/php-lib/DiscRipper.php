@@ -10,12 +10,8 @@ class DiscRipper extends Disc
 
     protected $destination_dir;
 
-    public function __construct($destination_dir)
+    public function __construct($destination_dir = "")
     {
-        if (empty($destination_dir)) {
-            throw new InvalidArgumentException('The destination directory must be not be empty.');
-        }
-
         parent::__construct();
 
         $this->destination_dir = $destination_dir;
@@ -59,6 +55,10 @@ class DiscRipper extends Disc
 
     public function rip()
     {
+        if (empty($this->destination_dir)) {
+            throw new Exception('You must set an output directory first.');
+        }
+
         if ($this->getStatus() != self::STATUS_IDLE || $this->getStatus() != self::STATUS_COMPLETE) {
             return false;
         }
