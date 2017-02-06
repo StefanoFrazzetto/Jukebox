@@ -25,15 +25,6 @@ abstract class OS
     }
 
     /**
-     * @return string The scripts directory path.
-     */
-    public static function getScriptsPath()
-    {
-        $config = new Config();
-        return $config->get("paths")["scripts"]["path"];
-    }
-
-    /**
      * Executes a command and returns its output.
      * The argument(s) can be passed as string or array.
      *
@@ -41,14 +32,68 @@ abstract class OS
      * @param string|array $arguments The argument(s) to pass
      * @return string A string containing the output of the command.
      */
-    public static function execute($command, $arguments = "")
+    public static function execute($command, $arguments = '')
     {
         if (!empty($arguments)) {
-            $arguments = is_array($arguments) ? implode(" ", $arguments) : $arguments;
+            $arguments = is_array($arguments) ? implode(' ', $arguments) : $arguments;
             $arguments = escapeshellarg($arguments);
         }
 
         return trim(shell_exec("$command $arguments"));
+    }
+
+    /**
+     * Get the devices of the same type.
+     *
+     * @param string $type The type of device to look for.
+     * @return string A string containing all the devices of the searched type.
+     */
+    public static function getDevicesByType($type)
+    {
+        if (empty($type)) {
+            throw new InvalidArgumentException('You need to provide the device type');
+        }
+
+        return self::execute("lsblk | grep $type | cut -d' ' -f1");
+    }
+
+    /**
+     * @return string The scripts directory path.
+     */
+    public static function getScriptsPath()
+    {
+        $config = new Config();
+        return $config->get("paths")["scripts"];
+    }
+
+    /**
+     * Executes a command using the env passed as an array.
+     * The arguments must be passed as an associative array.
+     *
+     * @param string $command The command or script to execute
+     * @param string $arguments The arguments to be set in the environment
+     * @param boolean $background The command/script is executed in background if this
+     * flag is set to true. The default is false.
+     * @return string|null Null if the task was executed in background, otherwise a string
+     * containing the output produced by the command/script.
+     */
+    public static function executeWithEnv($command, $arguments = "", $background = false)
+    {
+        if (empty($arguments) || !is_array($arguments)) {
+            throw new InvalidArgumentException("The second argument must be an associative array");
+        }
+
+        foreach ($arguments as $key => $argument) {
+            $setting = "$key=" . escapeshellarg($argument);
+            putenv($setting);
+        }
+
+        if ($background) {
+            return self::execute($command);
+        }
+
+        self::executeBackgroundTasks($command);
+        return null;
     }
 
     /**
@@ -59,7 +104,6 @@ abstract class OS
      * @param string $arguments The arguments to pass along with the command
      * @param bool $background Flag to set whether the task should run in
      * background or not.
-     * @return void
      */
     public static function executeWithoutOutput($command, $arguments = "", $background = false)
     {
@@ -69,12 +113,10 @@ abstract class OS
         }
 
         if ($background) {
-            self::runBackgroundCommand("command");
+            self::executeBackgroundTasks("command");
         } else {
             exec("$command $arguments");
         }
-
-        return;
     }
 
     /**
@@ -90,7 +132,7 @@ abstract class OS
      * <b>stderr</b> should be redirected
      * @return void
      */
-    public static function runBackgroundCommand($command, $stdio = "/dev/null", $stderr = "/dev/null")
+    public static function executeBackgroundTasks($command, $stdio = "/dev/null", $stderr = "/dev/null")
     {
         exec("$command > $stdio 2>$stderr &");
         return;
