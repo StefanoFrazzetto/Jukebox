@@ -1,56 +1,64 @@
 #!/bin/bash
 
-DEVICE="$device"
-LOGS_PATH="$logs_path"
-RIPPING_PATH="$ripping_path"
-ENCODING_PATH="$encoding_path"
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "This dir: $THIS_DIR"
 
-if [ "$DEVICE" == "" ]; then
-    echo "You need to provide the device path."
-	exit
-fi;
+source ${THIS_DIR}/../functions.sh
+source ${THIS_DIR}/disc_statuses.sh
 
-## Remove then create the logs directory
-rm -rf "$LOGS_PATH"
-mkdir -p "$LOGS_PATH"
+MANUAL_MODE="$1"
+if [ -z "$MANUAL_MODE" ]; then
+    DEVICE="$device"
+    CDPARANOIA_LOG_PATH="$cdparanoia_log_path"
+    LAME_LOG_PATH="$lame_log_path"
+    RIPPING_DIR="$ripping_dir"
+    ENCODING_DIR="$encoding_dir"
+else
+    DEVICE=/dev/sr0
+    CDPARANOIA_LOG_PATH=/var/www/html/jukebox/ripper/logs/cdparanoia.log
+    LAME_LOG_PATH=/var/www/html/jukebox/ripper/logs/lame.log
+    RIPPING_DIR=/var/www/html/jukebox/ripper/ripped
+    ENCODING_DIR=/var/www/html/jukebox/ripper/encoded
 
-## Remove then create the directory where the ripped files will be saved
-rm -rf "$RIPPING_PATH"
-mkdir -p "$RIPPING_PATH"
+    rm -rf "$RIPPING_DIR"
+    mkdir -p "$RIPPING_DIR"
+
+    rm -rf "$ENCODING_DIR"
+    mkdir -p "$ENCODING_DIR"
+
+    mkdir -p "$(dirname "$CDPARANOIA_LOG_PATH")"
+    mkdir -p "$(dirname "$LAME_LOG_PATH")"
+fi
 
 ## START THE RIPPING PROCESS
-
+#
 # -v --verbose
 #   Be absurdly verbose about the auto-sensing and reading process. Good for setup and debugging.
-
+#
 # -B --batch
 #   Cdda2wav-style batch output flag; cdparanoia will split the output into multiple files at track boundaries.
 #   Output file  names  are prepended with 'track#.'
-
+#
 # -X --abort-on-skip
 #   If  the read skips due to imperfect data, a scratch, or whatever, abort reading this track.
 #   If output is to a file, delete the partially completed file.
-
+#
 # -d --force-cdrom-device device
 #   Force the interface backend to read from device rather than the first readable CDROM drive it finds.
 #   This can be  used  to  specify devices of any valid interface type (ATAPI, SCSI, or proprietary).
-
+#
 # 1:-
 #   Encode the entire disc from the first track.
 
-cdparanoia -vB -X -d ${DEVICE} 1:- ${RIPPING_PATH}/ -l ${LOGS_PATH}/cdparanoia.log 2>/dev/null
+cdparanoia -vB -X -d ${DEVICE} 1:- ${RIPPING_DIR}/ >> ${CDPARANOIA_LOG_PATH} 2>&1
 
 
 ## GET THE RIPPER TRACKS
-TRACKS=$(find ${RIPPING_PATH}/ -type f -name "*.wav")
-
-## Remove then create the directory where the encoded files will be saved
-rm -rf "$ENCODING_PATH"
-mkdir -p "$ENCODING_PATH"
+TRACKS=$(find ${RIPPING_DIR}/ -type f -name "*.wav")
 
 ## ENCODE TRACK BY TRACK
 for track in ${TRACKS};
 do
 	track_name=$(basename "$track" | cut -f1 -d".")
-	lame --vbr-new --silent "$track" ${ENCODING_PATH}/${track_name}.mp3 >> ${LOGS_PATH}/lame.log 2>/dev/null
+	lame --vbr-new --silent "$track" ${ENCODING_DIR}/${track_name}.mp3 >> ${LAME_LOG_PATH} 2>&1
 done
