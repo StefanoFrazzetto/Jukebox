@@ -16,7 +16,6 @@ class DiscRipper extends Disc
 
         $this->destination_dir = $destination_dir;
         $paths = $this->config['ripper'];
-        $this->logs_dir = $paths['logs'];
         $this->input_dir = $paths['input'];
         $this->cdparanoia_log_path = $paths['cdparanoia_log'];
         $this->lame_log_path = $paths['lame_log'];
@@ -27,7 +26,8 @@ class DiscRipper extends Disc
      */
     protected function __init()
     {
-        $this->total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path |& grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
+        $this->getDiscID();
+        $this->getTotalTracks();
     }
 
     /**
@@ -50,6 +50,9 @@ class DiscRipper extends Disc
      */
     public function getTotalTracks()
     {
+        if (empty($this->total_tracks)) {
+            $this->total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path |& grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
+        }
         return intval($this->total_tracks);
     }
 
