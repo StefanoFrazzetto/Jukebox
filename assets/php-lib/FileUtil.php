@@ -48,11 +48,11 @@ abstract class FileUtil
         return shell_exec($cmd);
     }
 
-    public static function removeDirectory($pathToDirectory)
+    public static function removeDirectory($dir_path)
     {
-        $cmd = "rm -rf $pathToDirectory";
-        return shell_exec($cmd);
+        return OS::execute("rm -rf $dir_path");
     }
+
 
     public static function removeFile($pathToFile)
     {
