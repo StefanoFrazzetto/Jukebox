@@ -1,10 +1,25 @@
 #!/bin/bash
 
+# Set this script directory
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source ${THIS_DIR}/../functions.sh
+source ${THIS_DIR}/disc_statuses.sh
+
 DEVICE="$device"
 CDPARANOIA_LOG_PATH="$cdparanoia_log_path"
 LAME_LOG_PATH="$lame_log_path"
 RIPPING_DIR="$ripping_dir"
 ENCODING_DIR="$encoding_dir"
+
+rmDir "$RIPPING_DIR"
+mkdir -p "$RIPPING_DIR"
+
+rmdir "$ENCODING_DIR"
+mkdir -p "$ENCODING_DIR"
+
+mkdir -p "$(dirname "$CDPARANOIA_LOG_PATH")"
+mkdir -p "$(dirname "$LAME_LOG_PATH")"
 
 ## START THE RIPPING PROCESS
 #
