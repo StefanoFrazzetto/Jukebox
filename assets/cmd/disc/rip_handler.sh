@@ -1,34 +1,10 @@
 #!/bin/bash
 
-THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo "This dir: $THIS_DIR"
-
-source ${THIS_DIR}/../functions.sh
-source ${THIS_DIR}/disc_statuses.sh
-
-MANUAL_MODE="$1"
-if [ -z "$MANUAL_MODE" ]; then
-    DEVICE="$device"
-    CDPARANOIA_LOG_PATH="$cdparanoia_log_path"
-    LAME_LOG_PATH="$lame_log_path"
-    RIPPING_DIR="$ripping_dir"
-    ENCODING_DIR="$encoding_dir"
-else
-    DEVICE=/dev/sr0
-    CDPARANOIA_LOG_PATH=/var/www/html/jukebox/ripper/logs/cdparanoia.log
-    LAME_LOG_PATH=/var/www/html/jukebox/ripper/logs/lame.log
-    RIPPING_DIR=/var/www/html/jukebox/ripper/ripped
-    ENCODING_DIR=/var/www/html/jukebox/ripper/encoded
-
-    rm -rf "$RIPPING_DIR"
-    mkdir -p "$RIPPING_DIR"
-
-    rm -rf "$ENCODING_DIR"
-    mkdir -p "$ENCODING_DIR"
-
-    mkdir -p "$(dirname "$CDPARANOIA_LOG_PATH")"
-    mkdir -p "$(dirname "$LAME_LOG_PATH")"
-fi
+DEVICE="$device"
+CDPARANOIA_LOG_PATH="$cdparanoia_log_path"
+LAME_LOG_PATH="$lame_log_path"
+RIPPING_DIR="$ripping_dir"
+ENCODING_DIR="$encoding_dir"
 
 ## START THE RIPPING PROCESS
 #
