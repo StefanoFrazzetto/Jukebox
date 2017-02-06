@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/Process.php';
+
 abstract class DiscStatus
 {
     const STATUS_IDLE = 'idle';
@@ -8,15 +10,7 @@ abstract class DiscStatus
     const STATUS_ENCODING = 'encoding';
     const STATUS_NORMALIZING = 'normalizing';
     const STATUS_CREATING_IMAGE = 'creating_image';
-    const STATUS_FINISHED = 'complete';
-
-//    const MESSAGE_IDLE = 'ready';
-//    const MESSAGE_BURNING = 'burning your tracks';
-//    const MESSAGE_RIPPING = 'ripping your disc';
-//    const MESSAGE_ENCODING = 'encoding the tracks';
-//    const MESSAGE_NORMALIZING = 'normalizing';
-//    const MESSAGE_CREATING_IMAGE = '';
-//    const MESSAGE_FINISHED = '';
+    const STATUS_COMPLETE = 'complete';
 
     /** @var array The configuration variables for the disc device */
     protected $config;
@@ -33,6 +27,9 @@ abstract class DiscStatus
     /** @var boolean The flag indicating if another disc is needed */
     protected $next_cd;
 
+    /** @var  string The path to the file containing the device status */
+    protected $status_file;
+
     /**
      * DiscStatus constructor loads the configuration parameter and looks
      * for the disc device status. If the file containing the current status,
@@ -43,15 +40,52 @@ abstract class DiscStatus
     {
         $config = new Config();
         $this->config = $config->get('disc');
-        $status_file = $this->config['status_file'];
+        $this->status_file = $this->config['status_file'];
 
-        if (!file_exists($status_file)) {
-            $info['status'] = $this->getStatusByProcess();
+        if (file_exists($this->status_file)) {
+            $status = $this->getStatusFromStatusFile();
         } else {
-            $info['status'] = json_decode(file_get_contents($status_file), true);
+            $status = $this->getStatusByProcess();
         }
 
-        $this->setInfo($info['status']);
+        $this->setInfo($status);
+    }
+
+    /**
+     * Return the current status of the disc device.
+     *
+     * If a process id related to ripping or burning exists,
+     * the specific status associated with the current operation is
+     * returned, otherwise it means that the process is complete.
+     *
+     * @return string The disc status.
+     */
+    private function getStatusFromStatusFile()
+    {
+        $file_content = file_get_contents($this->status_file);
+        $content = json_decode($file_content, true);
+
+        $pid = intval($content['pid']);
+        $process = new Process();
+        $process->setPid($pid);
+
+        // If the process is running, get the specific status
+        if ($process->status()) {
+            $status = $content['status'];
+            return $status;
+        }
+
+        return self::STATUS_COMPLETE;
+    }
+
+    protected function setProcessStatusPID($status, $pid)
+    {
+        $info['status'] = $status;
+        $info['pid'] = $pid;
+
+        $content = json_encode($info);
+
+        return file_put_contents($this->status_file, $content) !== false;
     }
 
     /**
@@ -168,7 +202,7 @@ abstract class DiscStatus
                 self::setPercentage(75);
                 break;
 
-            case self::STATUS_FINISHED:
+            case self::STATUS_COMPLETE:
                 $this->message = "your disc is ready";
                 self::setPercentage(100);
 

@@ -24,7 +24,7 @@ class DiscBurner extends Disc
         putenv("output_format=$output_format");
         putenv("output_log_dir=" . $output_log_dir);
 
-        shell_exec($this->scripts_path . "burner-handler.sh > /tmp/burner-errors.log 2>&1 &");
+        shell_exec($this->scripts_dir . "burner-handler.sh > /tmp/burner-errors.log 2>&1 &");
 
     }
 

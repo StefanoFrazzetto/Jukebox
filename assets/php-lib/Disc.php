@@ -7,7 +7,7 @@ require_once __DIR__ . '/OS.php';
 /**
  * Class DiscWriter handles the disc writer operations...
  *
- * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
+ * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
  * @version 1.0.0
  */
 abstract class Disc extends DiscStatus
@@ -25,30 +25,30 @@ abstract class Disc extends DiscStatus
     protected $disc_size;
 
     /** @var  string The path to the directory containing the scripts */
-    protected $scripts_path;
+    protected $scripts_dir;
 
-    /**
-     * @var  string The path to the directory that stores the log files for
-     * every operation related to the disc device
-     */
-    protected $logs_path;
+    /** @var  string The path to the directory where the logs are saved. */
+    protected $logs_dir;
 
-    /**
-     * @var string The path to the directory where the output files for the
-     * specific operation will be stored
-     */
-    protected $output_path;
+    /** @var string The path to the directory where the input files are saved. */
+    protected $input_dir;
+
+    /** @var string The path to the directory where the output files are saved. */
+    protected $output_dir;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->scripts_path = $this->config['scripts'];
+        $this->scripts_dir = $this->config['scripts'];
+        $this->logs_dir = $this->config['logs'];
 
-        $device_name = OS::execute("lsblk | grep rom | cut -d' ' -f1");
+        $device_name = OS::getDevicesByType("rom");
         $this->device_path = "/dev/$device_name";
 
-        self::__init();
+        if ($this->getStatus() == self::STATUS_IDLE) {
+            self::__init();
+        }
     }
 
     protected abstract function __init();
