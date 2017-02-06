@@ -1,10 +1,13 @@
+<?php
+require_once '../php-lib/ICanHaz.php'
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Web Audio Api Equalizer</title>
     <link rel="icon" href="/assets/img/icons/vinyl1.png"/>
-    <link rel="stylesheet" href="css/style.css"/>
+    <?php ICanHaz::css('css/style.css'); ?>
 </head>
 
 <body>
@@ -22,8 +25,7 @@
 </audio>
 <canvas id="canvas" width="500"></canvas>
 <!--<canvas id="canvas" width="354" height="94"></canvas>-->
-
-<script src="/assets/js/player.v2.0.js"></script>
+<?php ICanHaz::js('../js/player.v2.0.js', '../js/storage.js'); ?>
 <script>
     //region Instances
     var player = new Player();
