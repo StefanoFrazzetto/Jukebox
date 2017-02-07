@@ -48,7 +48,7 @@ return [
 
     'disc' => [
         'logs' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/logs/',
-        'path' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/',
+        'parent_dir' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/',
         'scripts' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/disc/',
         'status_file' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/status.json',
         'burner' => [
@@ -58,9 +58,10 @@ return [
         ],
         'ripper' => [
             'cdparanoia_log' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/logs/ripper/cdparanoia.log',
+            'handler' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/disc/rip_handler.sh',
             'lame_log' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/logs/ripper/lame.log',
             'input' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/input/',
-            'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/disc/ripper/output/'
+            'output' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/uploader/'
         ]
     ],
 
