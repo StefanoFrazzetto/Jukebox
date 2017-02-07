@@ -19,27 +19,27 @@ function handleSSE(name, handler) {
 }
 
 handleSSE('play', function () {
-    pplay();
+    player.play();
 });
 
 handleSSE('pause', function () {
-    ppause();
+    player.play();
 });
 
 handleSSE('play/pause', function () {
-    play_pause();
+    player.playPause();
 });
 
 handleSSE('next', function () {
-    pnext();
+    player.next();
 });
 
 handleSSE('previous', function () {
-    pprevious();
+    player.previous();
 });
 
 handleSSE('stop', function () {
-    pstop();
+    player.stop();
 });
 
 handleSSE('refresh', function () {
@@ -47,30 +47,29 @@ handleSSE('refresh', function () {
 });
 
 handleSSE('play_album', function (data) {
-    changeAlbum(parseInt(data.album_id));
-    pplay();
+    player.playAlbum(parseInt(data.album_id));
 });
 
 handleSSE('play_song', function (data) {
-    getPlaylistSong(parseInt(data.song_no));
-    pplay();
+    player.playSongAtIndex(parseInt(data.song_no));
 });
 
-handleSSE('play_radio', function (data) {
-    playRadio(JSON.stringify(data.radio_url), data.radio_name);
+handleSSE('play_radio', function () {
+    alert("Hey, this needs to be fixed!");
+    //player.playRadio(JSON.stringify(data.radio_url), data.radio_name);
 });
 
 handleSSE('set_volume', function (value) {
     var volume = parseFloat(value.value);
 
     if (volume != null)
-        setVolume(volume);
+        player.setVolume(volume);
 });
 
 function sendPlayerStatus() {
     var oReq = new XMLHttpRequest();
     oReq.open("POST", url);
-    oReq.send(JSON.stringify(getPlayerStatus()));
+    oReq.send(JSON.stringify(player.export()));
 }
 
 player.addEventListener('play', updateStatusHandler, false);
