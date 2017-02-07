@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/FileUtil.php';
 require_once __DIR__ . '/Process.php';
 
 abstract class DiscStatus
@@ -71,8 +72,10 @@ abstract class DiscStatus
 
         // If the process is running, get the specific status
         if ($process->status()) {
-            $status = $content['status'];
-            return $status;
+            return $content['status'];
+        } else {
+            // Remove the status file
+            unlink($this->status_file);
         }
 
         return self::STATUS_COMPLETE;
@@ -83,9 +86,14 @@ abstract class DiscStatus
         $info['status'] = $status;
         $info['pid'] = $pid;
 
-        $content = json_encode($info);
+        // Create the directory if it does not exist
+        $dir = dirname($this->status_file);
+        if (!file_exists($dir)) {
+            $dircr = mkdir($dir, 0777, true);
+            echo "Trying to create dir: " . var_dump($dircr);
+        }
 
-        return file_put_contents($this->status_file, $content) !== false;
+        return FileUtil::createFile($this->status_file, $info, false, true);
     }
 
     /**

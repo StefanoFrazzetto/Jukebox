@@ -24,22 +24,29 @@ abstract class Disc extends DiscStatus
     /** @var  float This disc size */
     protected $disc_size;
 
-    /** @var  string The path to the directory containing the scripts */
+    /** @var  string The directory containing the scripts */
     protected $scripts_dir;
 
-    /** @var  string The path to the directory where the logs are saved. */
+    /** @var  string The directory where the logs are saved. */
     protected $logs_dir;
 
-    /** @var string The path to the directory where the input files are saved. */
+    /** @var string The directory where the input files are saved. */
     protected $input_dir;
 
-    /** @var string The path to the directory where the output files are saved. */
+    /** @var string The directory where the output files are saved. */
     protected $output_dir;
+
+    /** @var  string The directory where the ready to use files are saved. */
+    protected $destination_dir;
+
+    /** @var  string The directory containing the disc ripper/burner sub directories */
+    protected $parent_dir;
 
     public function __construct()
     {
         parent::__construct();
 
+        $this->parent_dir = $this->config['parent_dir'];
         $this->scripts_dir = $this->config['scripts'];
         $this->logs_dir = $this->config['logs'];
 

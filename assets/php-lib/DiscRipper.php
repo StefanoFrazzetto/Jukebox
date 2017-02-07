@@ -8,14 +8,19 @@ class DiscRipper extends Disc
 
     protected $lame_log_path;
 
-    protected $destination_dir;
+    protected $handler;
 
     public function __construct($destination_dir = "")
     {
         parent::__construct();
 
-        $this->destination_dir = $destination_dir;
         $paths = $this->config['ripper'];
+
+        if (!empty($destination_dir)) {
+            $this->output_dir = $paths['output'] . "$destination_dir";
+        }
+
+        $this->handler = $paths['handler'];
         $this->input_dir = $paths['input'];
         $this->cdparanoia_log_path = $paths['cdparanoia_log'];
         $this->lame_log_path = $paths['lame_log'];
@@ -26,7 +31,7 @@ class DiscRipper extends Disc
      */
     protected function __init()
     {
-        $this->getDiscID();
+//        $this->getDiscID();
         $this->getTotalTracks();
     }
 
@@ -51,18 +56,24 @@ class DiscRipper extends Disc
     public function getTotalTracks()
     {
         if (empty($this->total_tracks)) {
-            $this->total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path |& grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
+            $this->total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path 2>&1 | grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
         }
         return intval($this->total_tracks);
     }
 
+    /**
+     * Rip a cd
+     *
+     * @return bool
+     * @throws Exception
+     */
     public function rip()
     {
-        if (empty($this->destination_dir)) {
+        if (empty($this->output_dir)) {
             throw new Exception('You must set an output directory first.');
         }
 
-        if ($this->getStatus() != self::STATUS_IDLE || $this->getStatus() != self::STATUS_COMPLETE) {
+        if ($this->getStatus() != self::STATUS_IDLE && $this->getStatus() != self::STATUS_COMPLETE) {
             return false;
         }
 
@@ -71,11 +82,19 @@ class DiscRipper extends Disc
             'cdparanoia_log_path' => $this->cdparanoia_log_path,
             'lame_log_path' => $this->lame_log_path,
             'ripping_dir' => $this->input_dir,
-            'encoding_dir' => $this->destination_dir
+            'encoding_dir' => $this->output_dir
         ];
 
-        $pid = OS::executeWithEnv("$this->scripts_dir . rip_handler.sh", $arguments, true);
-        $this->setProcessStatusPID(self::STATUS_RIPPING, $pid);
-        return true;
+        FileUtil::removeDirectory($this->parent_dir);
+        mkdir(dirname($this->cdparanoia_log_path), 0755, true);
+        mkdir($this->input_dir, 0755, true);
+        mkdir($this->output_dir, 0755, true);
+
+        $pid = OS::executeWithEnv($this->handler, $arguments, true);
+
+        // If it returns false, it means that it was not possible to create the file,
+        // therefore the directory was not created, therefore the script did not create
+        // the necessary folders.
+        return $this->setProcessStatusPID(self::STATUS_RIPPING, $pid) && $pid != 0;
     }
 }
