@@ -185,6 +185,44 @@ function getItSorted(method) {
     }
 }
 
+function deleteAlbum(id) {
+    new Alert({
+        message: "Are you sure you want to delete this album?",
+        title: "Confirm",
+        buttons: [
+            {
+                text: "Yes, delete it",
+                callback: function () {
+                    $.ajax('assets/API/delete_album.php?id=' + id).done(function () {
+                        if (id == album_id) {
+                            resetPlayer();
+                        }
+
+                        modal.close();
+                        reload();
+                    });
+                }
+            },
+            "No, keep it"
+        ]
+    }).show();
+}
+
+function deleteRadio(id) {
+    if (confirm("Are you sure?")) {
+        $.getJSON('assets/API/delete_radio.php?id=' + id).done(function (response) {
+            if (response.status == "success") {
+                $('.aRadio[data-id="' + id + '"]').remove();
+            }
+            else {
+                error("Error while deleting Radio. " + response.message + ".");
+                console.log(response.message);
+            }
+            //reload();
+        });
+    }
+}
+
 // Array Intersect
 function intersect(a, b) {
     var t;
