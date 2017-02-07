@@ -169,7 +169,7 @@ Player.prototype.playAlbum = function (albumId, songNumber) {
     var _player = this;
     this.getAlbumPlaylist(albumId, function (songs) {
 
-        player.tracks = songs;
+        _player.addSongsToPlaylist(songs);
 
         _player.playSongAtIndex(songNumber)
     })
@@ -184,16 +184,6 @@ Player.prototype.playSong = function (song) {
     if (!song instanceof Song) {
         console.warn("Not a song passed to Player.playSong()");
         return;
-    }
-
-    var currentSong = this.getCurrentSong();
-
-    if (typeof currentSong == "undefined" || currentSong.id != song.id) {
-        this.callback(this.onTrackChange);
-
-        if (typeof currentSong == "undefined" || currentSong.album_id != song.album_id) {
-            this.callback(this.onAlbumChange)
-        }
     }
 
     this.isRadio = false;
@@ -211,9 +201,21 @@ Player.prototype.playSongAtIndex = function (index) {
         return;
     }
 
+    var currentSong = this.getCurrentSong();
+
     this.currentTrackNumber = index;
 
-    this.playSong(this.tracks[index]);
+    var song = this.getCurrentSong();
+
+    this.playSong(song);
+
+    if (typeof currentSong == "undefined" || currentSong.id != song.id) {
+        this.callback(this.onTrackChange);
+
+        if (typeof currentSong == "undefined" || currentSong.album_id != song.album_id) {
+            this.callback(this.onAlbumChange)
+        }
+    }
 };
 
 Player.prototype.playRadio = function (radio) {
@@ -313,7 +315,7 @@ Player.prototype.getCurrentTime = function () {
 };
 
 Player.prototype.getCurrentSong = function () {
-    return this.tracks[this.track_no];
+    return this.tracks[this.currentTrackNumber];
 };
 
 Player.prototype.getCurrentSongDuration = function () {
@@ -638,9 +640,9 @@ function Visualiser(context, input, canvas) {
     // Parameters
     this.barsCount = 50;
     this.wavePadding = 2;
-    this.barHeightMultiplier = 0.5; //3
-    this.smoothingTimeConstant = 0.7;
-    this.shownSpectrum = 1;
+    this.barHeightMultiplier = 0.3;     // 0.3
+    this.smoothingTimeConstant = 0.7;   // 0.7
+    this.shownSpectrum = 0.7;           // 0.7
     this.reflectEQ = false;
 
     // -------------
@@ -682,7 +684,7 @@ function Visualiser(context, input, canvas) {
             var barSetWidth = V.barsCount * (waveWidth + V.wavePadding) - V.wavePadding;
 
             var xOffset = (V.canvas.width - barSetWidth) / 2;
-            var yOffset = 5;
+            var yOffset = 2;
 
             var array = new Uint8Array(length);
             V.analyser.getByteFrequencyData(array);

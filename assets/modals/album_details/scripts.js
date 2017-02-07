@@ -37,13 +37,13 @@ var album_details = $('#albumDetails');
 album_details.find('.trackRow').click(function () {
     var _albumID = parseInt($(this).closest('table').attr('data-album'));
     var _trackNo = parseInt($(this).attr('data-track-no')) - 1;
-    changeAlbum(_albumID, _trackNo);
+    player.playAlbum(_albumID, _trackNo);
 });
 
 album_details.find('.trackRow .addTrackToPlaylist').click(function (e) {
     var _albumID = parseInt($(this).closest('table').attr('data-album'));
     var _trackNo = parseInt($(this).attr('data-track-no')) - 1;
-    addAlbumSongToPlaylist(_albumID, _trackNo);
+    player.addAlbumSongToPlaylist(_albumID, _trackNo);
 
     e.stopPropagation();
 });
@@ -51,7 +51,7 @@ album_details.find('.trackRow .addTrackToPlaylist').click(function (e) {
 album_details.find('.CDth .addTrackToPlaylist').click(function (e) {
     var _albumID = $(this).closest('table').attr('data-album');
     var _CD = $(this).parent().attr('data-cd');
-    addAlbumCDToPlaylist(_albumID, _CD);
+    player.addAlbumCdToPlaylist(_albumID, _CD);
 
     e.stopPropagation();
 });
@@ -59,7 +59,7 @@ album_details.find('.CDth .addTrackToPlaylist').click(function (e) {
 $(document).ready(function () {
     $('#pre-download').hide();
     $('#download').hide();
-    highlightCurrentTrack();
+    player.callback(player.onTrackChange);
 });
 
 function updateProgress(timeRequired, nowTimestamp, folderSize) {

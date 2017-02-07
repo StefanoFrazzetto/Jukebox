@@ -1,7 +1,7 @@
 //Store frequently elements in variables
 var slider = $('#slider'),
-        tooltip = $('.tooltip'),
-        sliderv = $('#slider-vertical');
+    tooltip = $('.tooltip'),
+    sliderv = $('#slider-vertical');
 
 //Hide the Tooltip at first
 tooltip.hide();
@@ -19,17 +19,16 @@ sliderv.slider({
     slide: function (event, ui) { //When the slider is sliding
         var value = sliderv.slider('value');
         tooltip.css('top', 170 - value / 100 * 170 - 7).text(ui.value);  //Adjust the tooltip accordingly
-        setVolume(ui.value);
+        player.setVolume(ui.value / 100);
     },
     stop: function () {
         tooltip.fadeOut('fast');
     },
     change: function (event, ui) {
         //var value = slider.slider('value'),
-        setVolume(ui.value);
+        player.setVolume(ui.value);
     }
 });
-
 
 
 // SEEKBAR //
@@ -42,7 +41,7 @@ slider.slider({
     //Slider Event
     slide: function (event, ui) { //When the slider is sliding
         var value = slider.slider('value'),
-                volume = $('.volume');
+            volume = $('.volume');
 
         if (value <= 5) {
             volume.css('background-position', '0 0');
@@ -57,12 +56,12 @@ slider.slider({
             volume.css('background-position', '0 -75px');
         }
 
-        pseek(ui.value);
+        player.seek(ui.value / 100 * player.getCurrentSongDuration());
     },
     change: function (event, ui) {
         //var value = slider.slider('value'),
         if (event.eventPhase === 3) {
-            pseek(ui.value);
+            player.seek(ui.value / 100 * player.getCurrentSongDuration());
         }
     }
 });

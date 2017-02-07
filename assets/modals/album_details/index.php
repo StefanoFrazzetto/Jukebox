@@ -104,7 +104,7 @@ if (file_exists($outputFile)) {
 </div>
 
 <div class="modalFooter" id="details-footer">
-    <div class="box-btn" onclick="changeAlbum(<?php echo $albumID ?>)">Play</div>
+    <div class="box-btn" onclick="player.playAlbum(<?php echo $albumID ?>)">Play</div>
     <div class="box-btn" onclick="modal.openPage('assets/modals/edit_album/?id=<?php echo $albumID ?>')">Edit</div>
     <div class="box-btn" onclick="deleteAlbum(<?php echo $albumID ?>)">Delete</div>
     <div class="box-btn" id="download-btn">Download</div>

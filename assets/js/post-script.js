@@ -138,7 +138,7 @@ function makeAlbumHtmlFromObject(object) {
     // NO COMMENT
 
     play.click(function (e) {
-        changeAlbum(object.id, 0);
+        player.playAlbum(object.id);
         e.stopPropagation();
         e.preventDefault();
     });
@@ -358,7 +358,7 @@ pwr_btn.click(function () {
 });
 
 $('#albumCover').click(function () {
-    if (isRadio) {
+    if (player.isRadio) {
         modal.openPage('/assets/modals/radio');
         return;
     }

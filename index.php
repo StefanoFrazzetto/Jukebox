@@ -207,6 +207,7 @@ $scripts = [
     'assets/js/jquery.min.js',
     'assets/js/jquery-ui.min.js',
     'assets/js/sliders.js',
+    'assets/js/player.v2.0.js',
     'assets/js/player.js',
     'assets/js/searchbar.js',
     'assets/js/modals.js',
@@ -217,8 +218,6 @@ $scripts = [
 
 if (isJukebox())    // Things that wil be done only by the local jukebox client
     $scripts = array_merge($scripts, ['assets/js/remote_listener.js', 'assets/js/vars_jb.js']);
-else                // Things that will be done only from external clients
-    $scripts[] = 'assets/js/eq.js';
 
 
 ICanHaz::js($scripts, true);
