@@ -1,7 +1,7 @@
 <?php
 
 require_once '../php-lib/Database.php';
-require_once '../php-lib/FileUtil.php';
+require_once '../php-lib/FileUtils.php';
 require_once '../php-lib/Cover.php';
 
 class EditAlbum {
@@ -56,8 +56,8 @@ class EditAlbum {
 	// The tracks column will be "overridden", so no need to delete them manually from the DB.
 	protected function removeTracks($album_id, $tracks) {
 		foreach ($tracks as $track) {
-			$track_path = FileUtil::$_albums_root . '/' . $album_id . '/' . $track['url'];
-			FileUtil::removeFile($track_path);
+            $track_path = FileUtils::$_albums_root . '/' . $album_id . '/' . $track['url'];
+            FileUtils::removeFile($track_path);
 		}
 	}
 

@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../../php-lib/Database.php';
 require_once __DIR__ . '/Song.php';
 require_once __DIR__ . '/../../php-lib/MusicClasses/Artist.php';
-require_once __DIR__ . '/../../php-lib/FileUtil.php';
+require_once __DIR__ . '/../../php-lib/FileUtils.php';
 
 /**
  * Created by PhpStorm.
@@ -257,7 +257,7 @@ class Album implements JsonSerializable
      */
     public function getThumbPath()
     {
-        return FileUtil::$_albums_root . "/$this->id/cover.jpg";
+        return FileUtils::$_albums_root . "/$this->id/cover.jpg";
     }
 
     /**
@@ -314,7 +314,7 @@ class Album implements JsonSerializable
     {
         $database = new Database();
 
-        FileUtil::removeDirectory(FileUtil::$_albums_root . "/$id");
+        FileUtils::removeDirectory(FileUtils::$_albums_root . "/$id");
 
         return $database->delete(self::ALBUMS_TABLE, "`id` = $id");
     }
@@ -403,7 +403,7 @@ class Album implements JsonSerializable
      */
     public function getCoverPath()
     {
-        return FileUtil::$_albums_root . "/$this->id/cover.jpg";
+        return FileUtils::$_albums_root . "/$this->id/cover.jpg";
     }
 
     /**
@@ -463,12 +463,12 @@ class Album implements JsonSerializable
      */
     public function getAlbumFolderSize()
     {
-        return FileUtil::getDirectorySize($this->getId());
+        return FileUtils::getDirectorySize($this->getId());
     }
 
     public function getAlbumPath()
     {
-        return FileUtil::$_albums_root . $this->getId() . '/';
+        return FileUtils::$_albums_root . $this->getId() . '/';
     }
 
     /**

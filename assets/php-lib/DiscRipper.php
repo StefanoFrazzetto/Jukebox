@@ -85,7 +85,7 @@ class DiscRipper extends Disc
             'encoding_dir' => $this->output_dir
         ];
 
-        FileUtil::removeDirectory($this->parent_dir);
+        FileUtils::removeDirectory($this->parent_dir);
         mkdir(dirname($this->cdparanoia_log_path), 0755, true);
         mkdir($this->input_dir, 0755, true);
         mkdir($this->output_dir, 0755, true);

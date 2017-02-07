@@ -6,7 +6,7 @@
  * Time: 17:22
  */
 
-require "../../../php-lib/FileUtil.php";
+require "../../../php-lib/FileUtils.php";
 
 header('Content-Type: application/json');
 
@@ -17,7 +17,7 @@ $covers_path = '/jukebox/radio-covers/';
 $absolute_path = '/var/www/html' . $covers_path;
 
 try {
-    FileUtil::deleteOldFiles($absolute_path, 86400);
+    FileUtils::deleteOldFiles($absolute_path, 86400);
 
     $file = file_get_contents($url);
     $ext = $ext = pathinfo($url, PATHINFO_EXTENSION);

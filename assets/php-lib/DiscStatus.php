@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/FileUtil.php';
+require_once __DIR__ . '/FileUtils.php';
 require_once __DIR__ . '/Process.php';
 
 abstract class DiscStatus
@@ -93,7 +93,7 @@ abstract class DiscStatus
             echo "Trying to create dir: " . var_dump($dircr);
         }
 
-        return FileUtil::createFile($this->status_file, $info, false, true);
+        return FileUtils::createFile($this->status_file, $info, false, true);
     }
 
     /**

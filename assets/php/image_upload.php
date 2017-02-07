@@ -1,6 +1,6 @@
 <?php
 
-require_once "../php-lib/FileUtil.php";
+require_once "../php-lib/FileUtils.php";
 
 $target_dir = "/tmp/uploads/";
 $file = $_FILES['file'];

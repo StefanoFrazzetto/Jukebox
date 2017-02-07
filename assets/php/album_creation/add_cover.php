@@ -4,13 +4,13 @@ ini_set("log_errors", 1);
 
 
 require '../../php-lib/Cover.php';
-require_once '../../php-lib/FileUtil.php';
+require_once '../../php-lib/FileUtils.php';
 
 
 $input = INPUT_POST;
 $mode = filter_input(INPUT_POST, 'coverFrom', FILTER_SANITIZE_NUMBER_INT);
 
-$tmp_folder = FileUtil::$_temp_uploads;
+$tmp_folder = FileUtils::$_temp_uploads;
 
 switch ($mode) {
     case 0:
