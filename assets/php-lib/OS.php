@@ -18,15 +18,11 @@ abstract class OS
      */
     public static function isProcessRunning($process_name)
     {
-        if (self::execute("pidof -x $process_name") != "") {
-            return true;
-        } else {
-            return false;
-        }
+        return self::execute("pidof -x $process_name") == "";
     }
 
     /**
-     * Executes a command and returns its output.
+     * Execute a command and returns its output.
      * The argument(s) can be passed as string or array.
      *
      * @param string $command The command to execute
@@ -41,6 +37,26 @@ abstract class OS
         }
 
         return trim(shell_exec("$command $arguments"));
+    }
+
+    /**
+     * Execute a command and return if it was successful or not.
+     *
+     * @param string $command The command or script to execute.
+     * @param string|array $arguments The argument(s) to pass along with the command.
+     * @return bool true if the command/script has been executed successfully,
+     * false otherwise.
+     */
+    public static function executeWithResult($command, $arguments = '')
+    {
+        if (!empty($arguments)) {
+            $arguments = is_array($arguments) ? implode(' ', $arguments) : $arguments;
+            $arguments = escapeshellarg($arguments);
+        }
+
+        exec("bash $command $arguments", $out, $res);
+
+        return $res == 0;
     }
 
     /**
@@ -83,8 +99,10 @@ abstract class OS
             throw new InvalidArgumentException("The second argument must be an associative array");
         }
 
+        file_put_contents("/tmp/bestemmie-debug.log", '');
         foreach ($arguments as $key => $argument) {
-            $setting = "$key=" . escapeshellarg($argument);
+            $setting = "$key=$argument";
+            file_put_contents("/tmp/bestemmie-debug.log", $setting, FILE_APPEND);
             putenv($setting);
         }
 
@@ -114,7 +132,7 @@ abstract class OS
         if ($background) {
             self::executeBackgroundCommand("command");
         } else {
-            exec("$command $arguments");
+            exec("bash $command $arguments");
         }
     }
 
