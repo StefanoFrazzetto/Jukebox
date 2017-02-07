@@ -304,7 +304,52 @@ Player.prototype.callback = function (callback) {
     if (typeof callback == "function")
         callback();
 };
+
+Player.prototype.export = function () {
+
+    if (this.isRadio)
+        return {
+            isRadio: this.isRadio,
+            playing: this.isPlaying(),
+            volume: this.getVolume(),
+            currentTime: this.getCurrentTime(),
+            timestamp: new Date().getTime()
+        };
+    else
+        return {
+            album_id: parseInt(this.getCurrentSong().album_id),
+            track_no: parseInt(this.track_no),
+            track_id: parseInt(this.getCurrentSong().id),
+            playing: this.isPlaying(),
+            repeat: this.repeat,
+            shuffle: this.shuffle,
+            currentTime: this.getCurrentTime(),
+            duration: this.getCurrentSongDuration(),
+            volume: this.getVolume(),
+            isRadio: this.isRadio,
+            timestamp: new Date().getTime()
+        }
+
+};
 //endregion Utils
+
+//region Getters
+Player.prototype.isPlaying = function () {
+    return !this.mediaElement.paused;
+};
+
+Player.prototype.getCurrentTime = function () {
+    return this.mediaElement.currentTime;
+};
+
+Player.prototype.getCurrentSong = function () {
+    return this.tracks[this.track_no];
+};
+
+Player.prototype.getCurrentSongDuration = function () {
+    return this.mediaElement.duration;
+};
+//endregion Getters
 
 //endregion Player
 
