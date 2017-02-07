@@ -30,8 +30,8 @@ function Player() {
     //endregion Web Audio API
 
     //region Playlist
-    this.playlist = [];
-    this.playlist_no = null;
+    this.tracks = [];
+    this.currentTrackNumber = null;
     //endregion
 
     //region Play Modes
@@ -44,13 +44,27 @@ function Player() {
     // TODO implement event calls
     this.onTrackChange = null;
     this.onAlbumChange = null;
+    this.onPlaylistChange = null;
     this.onChange = null;
-    //endregion
+    this.onWaiting = null;
+    this.onError = null;
+    this.onStalled = null;
+    this.onTimeUpdate = null;
+
+    var self = this;
+
+    this.mediaElement.onended = function () {
+        self.next();
+    };
+    //endregion Events
 }
 
 //region Playback
 Player.prototype.play = function () {
-    this.mediaElement.play();
+    if (this.tracks != null && this.tracks.length != 0 && this.currentTrackNumber == null)
+        this.playSongAtIndex(0);
+    else
+        this.mediaElement.play();
 };
 
 Player.prototype.pause = function () {
@@ -76,8 +90,8 @@ Player.prototype.next = function () {
         return;
     }
 
-    var index = this.playlist_no + 1;
-    if (index > this.playlist.length - 1) {
+    var index = this.currentTrackNumber + 1;
+    if (index > this.tracks.length - 1) {
         if (this.repeat) { // Start album over
             this.playSongAtIndex(0);
         } else { // Start over and stop
@@ -108,32 +122,36 @@ Player.prototype.setVolume = function (value) {
 Player.prototype.getVolume = function () {
     return this.mediaElement.volume;
 };
-//endregion
+
+Player.prototype.reset = function () {
+    this.stop();
+    this.currentTrackNumber = null;
+    this.tracks = [];
+    this.isRadio = false;
+};
+//endregion Playback
 
 //region Tracks Handling
-Player.getAlbumPath = function (album_id) {
-    return '/jukebox/' + album_id + '/';
-};
-
-Player.prototype.getAlbumPlaylist = function (album_id, callback) {
-    this.getJSON('/assets/API/playlist.php?id=' + album_id,
-        callback, function (status) {
-            console.error(status);
+Player.prototype.getAlbumPlaylist = function (albumId, callback) {
+    this.getJSON('/assets/API/playlist.php?id=' + albumId,
+        function (songs) {
+            callback(Song.readMany(songs));
+        },
+        function (data) {
+            console.error(data);
         });
 };
 
-Player.prototype.changeAlbum = function (album_id) {
+Player.prototype.playAlbum = function (albumId, songNumber) {
+    if (typeof songNumber == "undefined")
+        songNumber = 0;
+
     var _player = this;
-    this.getAlbumPlaylist(album_id, function (data) {
-        data.forEach(function (js_song) {
-            var song = new Song();
+    this.getAlbumPlaylist(albumId, function (songs) {
 
-            song.read(js_song);
+        player.tracks = songs;
 
-            _player.playlist.push(song);
-        });
-
-        _player.playSongAtIndex(0)
+        _player.playSongAtIndex(songNumber)
     })
 };
 
@@ -148,6 +166,7 @@ Player.prototype.playSong = function (song) {
         return;
     }
 
+    this.isRadio = false;
     this.playUrl(song.getUrl());
 };
 
@@ -157,14 +176,106 @@ Player.prototype.playSongAtIndex = function (index) {
         return;
     }
 
-    if (index > this.playlist.length - 1) {
+    if (index > this.tracks.length - 1) {
         console.warn("Index was out of playlist bound at Player.playSongAtIndex()");
         return;
     }
 
-    this.playlist_no = index;
+    this.currentTrackNumber = index;
 
-    this.playSong(this.playlist[index]);
+    this.playSong(this.tracks[index]);
+};
+
+Player.prototype.playRadio = function (radio) {
+    this.reset();
+    this.isRadio = true;
+
+    var url = 'http://' + window.location.hostname + ':4242/?address=' + radio.url.host + '&request=' + radio.url.path + '&port=' + radio.url.port;
+
+    this.playUrl(url);
+};
+//endregion Tracks Handling
+
+//region Playlist Handling
+Player.prototype.addSongToPlaylist = function (song) {
+    if (!song instanceof Song)
+        return;
+
+    this.tracks.push(song);
+
+    this.callback(this.onPlaylistChange);
+};
+
+Player.prototype.addSongsToPlaylist = function (songs) {
+    if (typeof songs !== "object") {
+        console.warn("Non-object passed to Player.addSongsToPlaylist()");
+        return;
+    }
+
+    this.tracks = this.tracks.concat(songs);
+
+    this.callback(this.onPlaylistChange);
+};
+
+Player.prototype.removeSongFromPlaylistAtIndex = function (trackNumber) {
+    this.tracks.splice(trackNumber, 1);
+    this.callback(this.onPlaylistChange);
+};
+
+Player.prototype.removeAllTracksFromPlaylist = function () {
+    this.reset();
+};
+
+Player.prototype.addAlbumToPlaylist = function (albumId) {
+    var self = this;
+
+    this.getAlbumPlaylist(albumId, function (data) {
+        self.addSongsToPlaylist(data);
+    });
+};
+
+Player.prototype.addAlbumSongToPlaylist = function (albumId, trackNumber) {
+    var self = this;
+
+    this.getAlbumPlaylist(albumId, function (songs) {
+        if (typeof songs[trackNumber] != "undefined")
+            self.addSongToPlaylist(songs[trackNumber]);
+    });
+};
+
+Player.prototype.addAlbumSongsToPlaylist = function (albumId, trackNumbers) {
+    var self = this;
+
+    if (typeof albumId != "number")
+        return;
+
+    if (typeof trackNumbers != "object")
+        return;
+
+    this.getAlbumPlaylist(albumId, function (songs) {
+        trackNumbers.forEach(function (trackNumber) {
+            if (songs[trackNumber])
+                self.addSongToPlaylist(songs[trackNumber]);
+        })
+    });
+};
+
+Player.prototype.addAlbumCdToPlaylist = function (albumId, cdNumber) {
+    var self = this;
+    this.getAlbumPlaylist(albumId, function (songs) {
+        // Gets the songs that has the correct cd property
+        songs = songs.filter(function (song) {
+            return song.cd == cdNumber;
+        });
+
+        self.addSongsToPlaylist(songs);
+    });
+};
+//endregion Playlist Handling
+
+//region Utils
+Player.getAlbumPath = function (albumId) {
+    return '/jukebox/' + albumId + '/';
 };
 
 Player.prototype.getJSON = function (url, successHandler, errorHandler) {
@@ -188,7 +299,13 @@ Player.prototype.getJSON = function (url, successHandler, errorHandler) {
     };
     xhr.send();
 };
-//endregion Tracks Handling
+
+Player.prototype.callback = function (callback) {
+    if (typeof callback == "function")
+        callback();
+};
+//endregion Utils
+
 //endregion Player
 
 //region EQUALISER
@@ -557,5 +674,21 @@ Song.prototype.read = function (data) {
 
 Song.prototype.getUrl = function () {
     return '/jukebox/' + this.album_id + '/' + this.url;
+};
+
+Song.readMany = function (rawSongs) {
+    var songs = [];
+
+    rawSongs.forEach(function (rawSong) {
+        songs.push(Song.read(rawSong));
+    });
+
+    return songs;
+};
+
+Song.read = function (rawSong) {
+    var song = new Song();
+    song.read(rawSong);
+    return song;
 };
 //endregion SONG

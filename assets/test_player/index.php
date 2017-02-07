@@ -25,7 +25,7 @@ require_once '../php-lib/ICanHaz.php'
 </audio>
 <canvas id="canvas" width="500"></canvas>
 <!--<canvas id="canvas" width="354" height="94"></canvas>-->
-<?php ICanHaz::js(['../js/player.v2.0.js', '../js/storage.js']); ?>
+<?php ICanHaz::js(['../js/jquery.min.js', '../js/player.v2.0.js', '../js/storage.js']); ?>
 <script>
     //region Instances
     var player = new Player();
@@ -37,6 +37,8 @@ require_once '../php-lib/ICanHaz.php'
     player.visualiser = new Visualiser(player.context, player.outputNode, document.getElementById("canvas"));
 
     player.visualiser.reflectEQ = true;
+
+    load_storages();
     //endregion
 </script>
 
