@@ -41,20 +41,33 @@ function Player() {
     //endregion
 
     //region Events
-    // TODO implement event calls
     this.onTrackChange = null;
     this.onAlbumChange = null;
     this.onPlaylistChange = null;
-    this.onChange = null;
+    this.onEnded = null;
     this.onWaiting = null;
     this.onError = null;
     this.onStalled = null;
     this.onTimeUpdate = null;
+    this.onChange = null;
 
     var self = this;
 
     this.mediaElement.onended = function () {
         self.next();
+        self.callback(self.onEnded);
+    };
+
+    this.mediaElement.onerror = function () {
+        self.callback(self.onError);
+    };
+
+    this.mediaElement.onstalled = function () {
+        self.callback(self.onStalled);
+    };
+
+    this.mediaElement.ontimeupdate = function () {
+        self.callback(self.onTimeUpdate, false);
     };
     //endregion Events
 }
@@ -166,6 +179,16 @@ Player.prototype.playSong = function (song) {
         return;
     }
 
+    var currentSong = this.getCurrentSong();
+
+    if (typeof currentSong == "undefined" || currentSong.id != song.id) {
+        this.callback(this.onTrackChange);
+
+        if (typeof currentSong == "undefined" || currentSong.album_id != song.album_id) {
+            this.callback(this.onAlbumChange)
+        }
+    }
+
     this.isRadio = false;
     this.playUrl(song.getUrl());
 };
@@ -273,6 +296,24 @@ Player.prototype.addAlbumCdToPlaylist = function (albumId, cdNumber) {
 };
 //endregion Playlist Handling
 
+//region Getters
+Player.prototype.isPlaying = function () {
+    return !this.mediaElement.paused;
+};
+
+Player.prototype.getCurrentTime = function () {
+    return this.mediaElement.currentTime;
+};
+
+Player.prototype.getCurrentSong = function () {
+    return this.tracks[this.track_no];
+};
+
+Player.prototype.getCurrentSongDuration = function () {
+    return this.mediaElement.duration;
+};
+//endregion Getters
+
 //region Utils
 Player.getAlbumPath = function (albumId) {
     return '/jukebox/' + albumId + '/';
@@ -300,9 +341,14 @@ Player.prototype.getJSON = function (url, successHandler, errorHandler) {
     xhr.send();
 };
 
-Player.prototype.callback = function (callback) {
+Player.prototype.callback = function (callback, doesTriggerOnChange) {
     if (typeof callback == "function")
         callback();
+    if (typeof doesTriggerOnChange == "undefined")
+        doesTriggerOnChange = false;
+
+    if (doesTriggerOnChange)
+        this.callback(this.onChange, false);
 };
 
 Player.prototype.export = function () {
@@ -332,24 +378,6 @@ Player.prototype.export = function () {
 
 };
 //endregion Utils
-
-//region Getters
-Player.prototype.isPlaying = function () {
-    return !this.mediaElement.paused;
-};
-
-Player.prototype.getCurrentTime = function () {
-    return this.mediaElement.currentTime;
-};
-
-Player.prototype.getCurrentSong = function () {
-    return this.tracks[this.track_no];
-};
-
-Player.prototype.getCurrentSongDuration = function () {
-    return this.mediaElement.duration;
-};
-//endregion Getters
 
 //endregion Player
 
