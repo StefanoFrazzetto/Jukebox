@@ -76,7 +76,7 @@ abstract class ICanHaz
                 if (!$hard) {
                     self::versionify($file);
 
-                    echo $taggify($file);
+                    echo $taggify(str_replace($_SERVER['DOCUMENT_ROOT'], '', $file));
                 } else {
                     $content = file_get_contents($file);
 
@@ -127,8 +127,9 @@ abstract class ICanHaz
      *
      * @param $files array|string
      * @return array|string
+     * @throws Exception if the file is not found
      */
-    private static function normalise($files)
+    public static function normalise($files)
     {
         if (!is_array($files)) {
             if (is_string($files)) {
@@ -136,6 +137,17 @@ abstract class ICanHaz
             } else {
                 throw new InvalidArgumentException("The file argument should be either a string or an array");
             }
+        }
+
+        foreach ($files as &$file) {
+            if ($file[0] === '/')
+                $file = $_SERVER['DOCUMENT_ROOT'] . $file;
+
+            if (!file_exists($file)) {
+                throw new Exception("File $file not found.");
+            }
+
+            $file = realpath($file);
         }
 
         return $files;
