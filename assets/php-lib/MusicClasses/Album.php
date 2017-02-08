@@ -1,10 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../../Config';
-require_once __DIR__ . '/../../php-lib/Database.php';
+require_once __DIR__ . '/../Config.php';
+require_once __DIR__ . '/../Database.php';
 require_once __DIR__ . '/Song.php';
-require_once __DIR__ . '/../../php-lib/MusicClasses/Artist.php';
-require_once __DIR__ . '/../../php-lib/FileUtils.php';
+require_once __DIR__ . '/Artist.php';
+require_once __DIR__ . '/../FileUtils.php';
 
 /**
  * Created by PhpStorm.
