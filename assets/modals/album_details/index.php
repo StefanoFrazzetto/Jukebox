@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../php-lib/MusicClasses/Album.php';
+require_once '../../php-lib/ICanHaz.php';
 
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
@@ -139,6 +140,8 @@ if (file_exists($outputFile)) {
     var album_id =  <?php echo $albumID;?>;
     var folderSize =  <?php echo $album->getAlbumFolderSize();?>;
 </script>
-<link rel="stylesheet" href="/assets/modals/album_details/style.css"/>
-<script src="/assets/js/progressbar.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="/assets/modals/album_details/scripts.js"></script>
+
+<?php
+ICanHaz::css('/assets/modals/album_details/style.css');
+ICanHaz::js(['/assets/js/progressbar.min.js', 'scripts.js'], true);
+?>
