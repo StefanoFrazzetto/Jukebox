@@ -27,6 +27,15 @@ class DiscRipper extends Disc
     }
 
     /**
+     * Initializes the attributes needed by the DiscWriter.
+     */
+    protected function __init()
+    {
+//        $this->getDiscID();
+        $this->getTotalTracks();
+    }
+
+    /**
      * Return the discid for this CD/DVD.
      *
      * @return string The discid of this CD/DVD.
@@ -37,6 +46,19 @@ class DiscRipper extends Disc
             $this->disc_id = OS::execute("discid $this->device_path");
         }
         return $this->disc_id;
+    }
+
+    /**
+     * Return the number of tracks on the CD/DVD.
+     *
+     * @return int The number of tracks on the CD/DVD.
+     */
+    public function getTotalTracks()
+    {
+        if (empty($this->total_tracks)) {
+            $this->total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path 2>&1 | grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
+        }
+        return intval($this->total_tracks);
     }
 
     /**
@@ -63,7 +85,7 @@ class DiscRipper extends Disc
             'encoding_dir' => $this->output_dir
         ];
 
-        FileUtils::remove($this->parent_dir);
+        FileUtils::remove($this->parent_dir, true);
         mkdir(dirname($this->cdparanoia_log_path), 0755, true);
         mkdir($this->input_dir, 0755, true);
         mkdir($this->output_dir, 0755, true);
@@ -74,27 +96,5 @@ class DiscRipper extends Disc
         // therefore the directory was not created, therefore the script did not create
         // the necessary folders.
         return $this->setProcessStatusPID(self::STATUS_RIPPING, $pid) && $pid != 0;
-    }
-
-    /**
-     * Initializes the attributes needed by the DiscWriter.
-     */
-    protected function __init()
-    {
-//        $this->getDiscID();
-        $this->getTotalTracks();
-    }
-
-    /**
-     * Return the number of tracks on the CD/DVD.
-     *
-     * @return int The number of tracks on the CD/DVD.
-     */
-    public function getTotalTracks()
-    {
-        if (empty($this->total_tracks)) {
-            $this->total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path 2>&1 | grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
-        }
-        return intval($this->total_tracks);
     }
 }
