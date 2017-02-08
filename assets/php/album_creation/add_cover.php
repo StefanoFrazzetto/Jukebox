@@ -3,6 +3,7 @@
 ini_set("log_errors", 1);
 
 
+require_once __DIR__ . '/../../Config';
 require '../../php-lib/Cover.php';
 require_once '../../php-lib/FileUtils.php';
 
@@ -10,7 +11,7 @@ require_once '../../php-lib/FileUtils.php';
 $input = INPUT_POST;
 $mode = filter_input(INPUT_POST, 'coverFrom', FILTER_SANITIZE_NUMBER_INT);
 
-$tmp_folder = FileUtils::$_temp_uploads;
+$tmp_folder = Config::getPath('tmp_uploads');
 
 switch ($mode) {
     case 0:

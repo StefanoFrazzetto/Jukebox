@@ -41,6 +41,8 @@ return [
      * | Paths to the most important directories.
      */
     'paths' => [
+        'albums_root' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/',
+        'tmp_uploads' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/uploader/',
         'assets' => $_SERVER['DOCUMENT_ROOT'] . '/assets',
         'scripts' => $_SERVER['DOCUMENT_ROOT'] . '/assets/cmd/',
         'uploader' => $_SERVER['DOCUMENT_ROOT'] . '/jukebox/uploader/'

@@ -42,6 +42,28 @@ class Config
     }
 
     /**
+     * Return one or more paths from the configuration file.
+     *
+     * If the first parameter is not specified, an array of paths is returned.
+     *
+     * @param string $path The path to get from the config file.
+     * @return mixed|null If a path is passed, the specified path is returned
+     * if it does exist, otherwise null is returned. If no parameter is passed,
+     * the array of paths is returned instead.
+     */
+    public static function getPath($path = "")
+    {
+        $config = new Config();
+        $paths = $config->get('paths');
+
+        if (empty($paths)) {
+            return $paths;
+        }
+
+        return isset($paths[$path]) ? $paths[$path] : null;
+    }
+
+    /**
      * Returns the config key passed as parameter. If exists, the dynamic value will be returned,
      * otherwise the static configuration value will be returned. In case the value is not found
      * in any configuration file, null will be returned.
