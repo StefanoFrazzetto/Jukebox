@@ -54,7 +54,7 @@ abstract class OS
             $arguments = escapeshellarg($arguments);
         }
 
-        exec("bash $command $arguments", $out, $res);
+        exec("$command $arguments", $out, $res);
 
         return $res == 0;
     }
