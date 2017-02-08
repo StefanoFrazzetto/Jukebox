@@ -2,9 +2,9 @@
 
 require_once __DIR__ . '/../Config.php';
 require_once __DIR__ . '/../Database.php';
+require_once __DIR__ . '/../FileUtils.php';
 require_once __DIR__ . '/Song.php';
 require_once __DIR__ . '/Artist.php';
-require_once __DIR__ . '/../FileUtils.php';
 
 /**
  * Created by PhpStorm.

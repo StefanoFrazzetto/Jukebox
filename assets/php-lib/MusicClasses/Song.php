@@ -1,6 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../php-lib/Database.php';
+require_once __DIR__ . '/../Database.php';
+require_once __DIR__ . '/Artist.php';
 
 /**
  * Created by PhpStorm.
@@ -340,8 +341,44 @@ class Song implements JsonSerializable
     {
         return [
             'id' => $this->id, 'album_id' => $this->album_id, 'cd' => $this->cd, 'track_no' => $this->track_no,
-            'title' => $this->title, 'url' => $this->url, 'length' => $this->length
+            'title' => $this->title, 'artists' => $this->getArtistsIds(), 'url' => $this->url, 'length' => $this->length
         ];
+    }
+
+    /**
+     * Return an arrays with the artists IDs of the song.
+     * @return array
+     */
+    public function getArtistsIds()
+    {
+        $db = new Database();
+        $results = $db->select('artist_id', self::SONG_ARTISTS_TABLE, "WHERE song_id = $this->id");
+
+        if (!is_array($results))
+            return [];
+
+        $return = [];
+
+        foreach ($results as $result) {
+            $return[] = intval($result->artist_id);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return Artist[]
+     */
+    public function getArtists()
+    {
+        $ids = $this->getArtistsIds();
+
+        $artists = [];
+        foreach ($ids as $id) {
+            $artists[] = Artist::getArtist($id);
+        }
+
+        return $artists;
     }
 
     /**
@@ -406,14 +443,6 @@ class Song implements JsonSerializable
     public function setTitle($title)
     {
         $this->title = $title;
-    }
-
-    /**
-     * @return Artist[]
-     */
-    public function getArtists()
-    {
-        return $this->artists;
     }
 
     /**
