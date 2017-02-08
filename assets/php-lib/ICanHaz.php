@@ -84,6 +84,7 @@ abstract class ICanHaz
                 }
             } else {
                 $merged_content[] = file_get_contents($file);
+                $merged_content[] = "\n/** $file **/\n";
 
                 if (!$hard) {
                     $times[] = filemtime($file);
