@@ -5,6 +5,7 @@ CDPARANOIA_LOG_PATH="$cdparanoia_log_path"
 LAME_LOG_PATH="$lame_log_path"
 RIPPING_DIR="$ripping_dir"
 ENCODING_DIR="$encoding_dir"
+FINAL_DIR="$final_dir"
 
 ## START THE RIPPING PROCESS
 #
@@ -38,3 +39,6 @@ do
 	track_name=$(basename "$track" | cut -f1 -d".")
 	lame --vbr-new --silent "$track" ${ENCODING_DIR}/${track_name}.mp3 >> ${LAME_LOG_PATH} 2>&1
 done
+
+## MOVE THE TRACKS TO THEIR FINAL DIRECTORY
+mv ${ENCODING_DIR}/"*.mp3" ${FINAL_DIR}
