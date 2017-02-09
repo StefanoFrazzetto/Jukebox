@@ -18,7 +18,7 @@ abstract class OS
      */
     public static function isProcessRunning($process_name)
     {
-        return self::execute("pidof -x $process_name") == "";
+        return self::execute("pidof -x $process_name") != "";
     }
 
     /**
