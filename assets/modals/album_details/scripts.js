@@ -42,7 +42,8 @@ album_details.find('.trackRow').click(function () {
 
 album_details.find('.trackRow .addTrackToPlaylist').click(function (e) {
     var _albumID = parseInt($(this).closest('table').attr('data-album'));
-    var _trackNo = parseInt($(this).attr('data-track-no')) - 1;
+    var _trackNo = parseInt($(this).closest('.trackRow').attr('data-track-no')) - 1;
+
     player.addAlbumSongToPlaylist(_albumID, _trackNo);
 
     e.stopPropagation();

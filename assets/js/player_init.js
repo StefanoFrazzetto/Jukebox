@@ -60,8 +60,6 @@ function initPlayer() {
     player.onAlbumChange = function () {
         if (typeof player.getCurrentSong() != "undefined" && player.getCurrentSong() != null)
             showAlbumsDetails(player.getCurrentSong().album_id);
-
-        console.log('album changed');
     };
 
     player.onRadioChange = function () {

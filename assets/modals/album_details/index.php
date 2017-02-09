@@ -47,7 +47,7 @@ if (file_exists($outputFile)) {
 <div class="modalBody" id="details" data-mcs-theme="dark">
     <img id="album_cover_img" src="<?php echo $album->getCoverUrl() ?>"/>
 
-    <table class="mCustomScrollbar songsTable" id="albumDetails" data-album="<?php echo $albumID ?>">
+    <table class="mCustomScrollbar songsTable" id="albumDetails" data-album="<?php echo $album->getId() ?>">
         <tr class="th">
             <th>#</th>
             <th class="playlist_title">Title</th>
@@ -111,7 +111,7 @@ if (file_exists($outputFile)) {
     <div class="box-btn" id="download-btn">Download</div>
     <div class="box-btn" id="burner_single_album">Burn Album</div>
     <!-- <div class="box-btn" id="burner_addto_compilation">Add to burning compilation</div> -->
-    <div class="box-btn" onclick="addAlbumToPlaylist(<?php echo $albumID ?>)">Add to Playlist</div>
+    <div class="box-btn" onclick="player.addAlbumToPlaylist(<?php echo $albumID ?>)">Add to Playlist</div>
 </div>
 
 <!-- PRE-DOWNLOAD -->

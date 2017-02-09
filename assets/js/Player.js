@@ -209,6 +209,8 @@ Player.prototype.playSong = function (song) {
 };
 
 Player.prototype.playSongAtIndex = function (index) {
+    index = parseInt(index);
+
     if (index < 0) {
         console.warn("Index less than zero passed to Player.playSongAtIndex()");
         return;
@@ -292,6 +294,8 @@ Player.prototype.addAlbumSongToPlaylist = function (albumId, trackNumber) {
     this.getAlbumPlaylist(albumId, function (songs) {
         if (typeof songs[trackNumber] != "undefined")
             self.addSongToPlaylist(songs[trackNumber]);
+        else
+            console.warn("Track " + trackNumber + " not found in album " + albumId);
     });
 };
 
