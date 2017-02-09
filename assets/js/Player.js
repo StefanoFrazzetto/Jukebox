@@ -170,17 +170,26 @@ Player.prototype.getAlbumPlaylist = function (albumId, callback) {
 };
 
 Player.prototype.playAlbum = function (albumId, songNumber) {
+    var _player = this;
+
     if (typeof songNumber == "undefined")
         songNumber = 0;
 
-    var _player = this;
+    if (_player.getCurrentAlbumId() === albumId) {
+        _player.playSongAtIndex(songNumber);
+        return;
+    }
+
     this.getAlbumPlaylist(albumId, function (songs) {
 
         _player.tracks = [];
 
         _player.addSongsToPlaylist(songs);
 
-        _player.playSongAtIndex(songNumber)
+        _player.playSongAtIndex(songNumber);
+
+        _player.callback(_player.onAlbumChange);
+        _player.callback(_player.onTrackChange);
     })
 };
 
@@ -211,20 +220,20 @@ Player.prototype.playSongAtIndex = function (index) {
         return;
     }
 
-    var currentSong = this.getCurrentSong();
+    var oldSong = this.getCurrentSong();
 
     this.currentTrackNumber = index;
 
-    var song = this.getCurrentSong();
+    var newSong = this.getCurrentSong();
 
-    this.playSong(song);
+    this.playSong(newSong);
 
-    if (typeof currentSong == "undefined" || currentSong.id != song.id) {
+    if (typeof oldSong == "undefined" || oldSong.id != newSong.id) {
         this.callback(this.onTrackChange);
+    }
 
-        if (typeof currentSong == "undefined" || currentSong.album_id != song.album_id) {
-            this.callback(this.onAlbumChange)
-        }
+    if (typeof oldSong != "undefined" && oldSong.album_id != newSong.album_id) {
+        this.callback(this.onAlbumChange)
     }
 };
 
@@ -332,6 +341,15 @@ Player.prototype.getCurrentSong = function () {
 
 Player.prototype.getCurrentSongDuration = function () {
     return this.mediaElement.duration;
+};
+
+Player.prototype.getCurrentAlbumId = function () {
+    var song = this.getCurrentSong();
+
+    if (song)
+        return song.album_id;
+    else
+        return null;
 };
 //endregion Getters
 
