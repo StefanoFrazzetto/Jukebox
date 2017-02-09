@@ -207,7 +207,7 @@ $scripts = [
     'assets/js/jquery.min.js',
     'assets/js/jquery-ui.min.js',
     'assets/js/sliders.js',
-    'assets/js/Player2.0.js',
+    'assets/js/Player.js',
     'assets/js/player_init.js',
     'assets/js/searchbar.js',
     'assets/js/modals.js',
