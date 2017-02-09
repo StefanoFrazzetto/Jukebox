@@ -150,6 +150,28 @@ abstract class FileUtils
         return OS::executeWithResult($cmd, $path);
     }
 
+    public static function getDirectories($path)
+    {
+        if (empty($path)) {
+            throw new InvalidArgumentException('You must pass a valid path.');
+        }
+
+        if (!file_exists($path)) {
+            return null;
+        }
+
+        $iterator = new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS);
+        $dirs = [];
+
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                $dirs[] = $item->getFilename();
+            }
+        }
+
+        return $dirs;
+    }
+
     /**
      * Get a JSON file as an associative array.
      *
@@ -179,11 +201,13 @@ abstract class FileUtils
      */
     public static function countFiles($directory, $ext = "")
     {
+        $directory = rtrim($directory, '/');
+
         if (empty($ext)) {
-            $ext = '*';
+            $ext = "*";
         }
 
-        return count(glob($directory . '/*.' . $ext, GLOB_NOSORT));
+        return count(glob($directory . "/*.$ext", GLOB_NOSORT));
     }
 
     /**
