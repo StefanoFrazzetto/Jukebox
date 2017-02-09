@@ -169,6 +169,8 @@ Player.prototype.playAlbum = function (albumId, songNumber) {
     var _player = this;
     this.getAlbumPlaylist(albumId, function (songs) {
 
+        _player.tracks = [];
+
         _player.addSongsToPlaylist(songs);
 
         _player.playSongAtIndex(songNumber)
