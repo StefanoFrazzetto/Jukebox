@@ -125,11 +125,13 @@ class Uploader
     {
         $id = uniqid("", true);
         // Check if the folder already exists
-        if (file_exists(Config::getPath('uploader') . "$id")) {
+        $dir = Config::getPath('uploader') . "$id";
+        if (file_exists($dir)) {
 
             return self::getNewUploaderID();
         }
 
+        mkdir($dir, 0755, true);
         return $id;
     }
 
