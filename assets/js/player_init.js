@@ -32,6 +32,8 @@ function initPlayer() {
     prev_btn.click(function () {
         player.previous();
     });
+
+    sliderv.slider('value', player.getVolume() * 100);
 // endregion Clicks
 
     //region Event Bindings

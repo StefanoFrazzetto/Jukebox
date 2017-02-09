@@ -181,7 +181,6 @@ Player.prototype.playAlbum = function (albumId, songNumber) {
     }
 
     this.getAlbumPlaylist(albumId, function (songs) {
-
         _player.tracks = [];
 
         _player.addSongsToPlaylist(songs);
