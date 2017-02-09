@@ -121,6 +121,26 @@ class Uploader
         return json_encode($return);
     }
 
+    public static function getNewUploaderID()
+    {
+        $id = uniqid("", true);
+        // Check if the folder already exists
+        if (file_exists(Config::getPath('uploader') . "$id")) {
+
+            return self::getNewUploaderID();
+        }
+
+        return $id;
+    }
+
+    public static function getUploadsInProgress()
+    {
+        $upload_path = Config::getPath('uploader');
+        $directories = FileUtils::getDirectories($upload_path);
+
+        return $directories;
+    }
+
     public function getID3($folder)
     {
         // TODO
