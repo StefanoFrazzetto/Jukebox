@@ -103,16 +103,16 @@ function reload() {
     });
 }
 
-function makeAlbumHtmlFromObject(object) {
+function makeAlbumHtmlFromObject(album) {
     var album_container = $("<div class='album'>");
     var play = $("<div class=\"moar\"><i class=\"fa fa-play\"></i></div>");
 
-    album_container.attr("id", object.id);
+    album_container.attr("id", album.id);
     album_container.append(play);
 
     var img = $("<img>");
 
-    img.attr("src", object.getCoverUrl());
+    img.attr("src", album.getCoverUrl());
 
     var details = $("<div class='albumDetails'>");
 
@@ -122,8 +122,8 @@ function makeAlbumHtmlFromObject(object) {
     artist.addClass("albumArtist");
     title.addClass("albumTitle");
 
-    artist.html(object.getArtistsNames());
-    title.html(object.title);
+    artist.html(album.getArtistsNames());
+    title.html(album.title);
 
     details.append(artist);
     details.append(title);
@@ -132,16 +132,14 @@ function makeAlbumHtmlFromObject(object) {
     album_container.append(details);
     album_container.fadeOut(0);
 
-    // NO COMMENT
-
     play.click(function (e) {
-        player.playAlbum(object.id);
         e.stopPropagation();
         e.preventDefault();
+        album.play();
     });
 
     album_container.click(function () {
-        modal.openPage('assets/modals/album_details?id=' + object.id);
+        modal.openPage('assets/modals/album_details?id=' + album.id);
     });
 
     img.on("load", function () {
