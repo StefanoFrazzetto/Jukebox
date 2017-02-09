@@ -10,8 +10,36 @@ require_once __DIR__ . '/OS.php';
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
  * @version 1.0.0
  */
-abstract class Disc extends DiscStatus
+abstract class Disc
 {
+    const STATUS_IDLE = 'idle';
+    const STATUS_BURNING = 'burning';
+    const STATUS_RIPPING = 'ripping';
+    const STATUS_ENCODING = 'encoding';
+    const STATUS_NORMALIZING = 'normalizing';
+    const STATUS_CREATING_IMAGE = 'creating_image';
+    const STATUS_COMPLETE = 'complete';
+    const STATUS_NO_DISC = 'no_disc';
+    const STATUS_BUSY = 'busy';
+
+    /** @var array The configuration variables for the disc device */
+    protected $config;
+
+    /** @var  string The path to the file containing the device status */
+    protected $status_file;
+
+    /** @var string The current status */
+    protected $status;
+
+    /** @var string The message relative to the device status */
+    protected $message = "";
+
+    /** @var int The percentage relative to the current operation */
+    protected $percentage = 0;
+
+    /** @var bool Indicates if the process is complete or not */
+    protected $complete = false;
+
     /** @var string The rom device path, i.e.: /dev/sr0 */
     protected $device_path;
 
@@ -42,9 +70,14 @@ abstract class Disc extends DiscStatus
     /** @var  string The directory containing the disc ripper/burner sub directories */
     protected $parent_dir;
 
+    /** @var  int The process id */
+    protected $pid;
+
     public function __construct()
     {
-        parent::__construct();
+        $config = new Config();
+        $this->config = $config->get('disc');
+        $this->status_file = $this->config['status_file'];
 
         $this->parent_dir = $this->config['parent_dir'];
         $this->scripts_dir = $this->config['scripts'];
@@ -53,13 +86,23 @@ abstract class Disc extends DiscStatus
         $device_name = OS::getDevicesByType("rom");
         $this->device_path = "/dev/$device_name";
 
+
+        if (!file_exists($this->status_file)) {
+            $this->status = self::STATUS_IDLE;
+        } else {
+            // Set status, message, and percentage.
+            $this->setCurrentStatus();
+        }
+
         if ($this->getStatus() == self::STATUS_IDLE) {
             $this->__init();
         }
     }
 
-    protected abstract function __init();
+    abstract protected function __init();
 
+
+    abstract protected function updateStatus();
 
     /**
      * Returns the device path.
@@ -72,7 +115,7 @@ abstract class Disc extends DiscStatus
     }
 
     /**
-     * TODO:
+     * TODO
      * Returns the disc size in ?.
      *
      * @return int - the disc size
@@ -87,6 +130,7 @@ abstract class Disc extends DiscStatus
     }
 
     /**
+     * TODO
      * Checks if a disc is blank.
      * Returns true if the disc is blank, false otherwise.
      *
@@ -103,6 +147,10 @@ abstract class Disc extends DiscStatus
         return false;
     }
 
+    /**
+     * TODO
+     * @return bool
+     */
     protected function checkBlank()
     {
         $cmd = OS::execute("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
@@ -113,6 +161,118 @@ abstract class Disc extends DiscStatus
         } else {
             return false;
         }
+    }
+
+    protected function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    protected function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    protected function setPercentage($percentage)
+    {
+        $this->percentage = $percentage;
+    }
+
+    protected function getStatusFileContent()
+    {
+        $file_content = file_get_contents($this->status_file);
+        return json_decode($file_content, true);
+    }
+
+    protected function setStatusMessagePercentage($status, $message, $percentage)
+    {
+        $this->setStatus($status);
+        $this->setMessage($message);
+        $this->setPercentage($percentage);
+    }
+
+    /**
+     * Return the current status of the disc device.
+     *
+     * If a process id related to ripping or burning exists,
+     * the specific status associated with the current operation is
+     * returned, otherwise it means that the process is complete.
+     */
+    protected function setCurrentStatus()
+    {
+        if (!file_exists($this->status_file)) {
+            $this->status = self::STATUS_IDLE;
+        }
+
+        $content = self::getStatusFileContent();
+
+        $pid = intval($content['pid']);
+        $process = new Process();
+        $process->setPid($pid);
+
+        // If the process is running, get the specific status
+        // calculate percentage, and set a message.
+
+        if (!$process->status()) {
+            // Process complete
+            $this->setStatusMessagePercentage(self::STATUS_COMPLETE, 'process complete', 100);
+            return;
+        }
+
+        $this->updateStatus();
+    }
+
+    protected function createStatusFile($parameters = "")
+    {
+        $info = [];
+        if (!empty($parameters) && is_array($parameters)) {
+            foreach ($parameters as $key => $value) {
+                $info[$key] = $value;
+            }
+        }
+
+        // Create the directory if it does not exist
+        $dir = dirname($this->status_file);
+        if (!file_exists($dir)) {
+            $dircr = mkdir($dir, 0777, true);
+            if (!$dircr) {
+                return false;
+            }
+        }
+
+        return FileUtils::createFile($this->status_file, $info, false, true);
+    }
+
+    /**
+     * Returns the current status of the disc device
+     *
+     * @return string The status of the device.
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Returns the message relative to the process that is
+     * being executed by the disc device.
+     *
+     * @return string The message relative to the process, if any.
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Returns the percentage relative to the process that is
+     * being executed by the disc device.
+     *
+     * @return string The percentage relative to the process, if any.
+     */
+    public function getPercentage()
+    {
+        return $this->percentage;
     }
 
 
