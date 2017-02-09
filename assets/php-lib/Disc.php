@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/Config.php';
-require_once __DIR__ . '/DiscStatus.php';
 require_once __DIR__ . '/OS.php';
 
 /**
