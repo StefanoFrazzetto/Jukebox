@@ -19,36 +19,43 @@
 
 <script src="/assets/js/dropzone.js"></script>
 <script>
-    var btnNext = $('#btnNext');
-
-    $('#btnBack').click(function () {
-        uploader.previousPage();
-    });
-
-    btnNext.click(function () {
-        uploader.nextPage();
-    });
-
-    if (uploader.tracks.length)
-        btnNext.removeClass('disabled');
-
     Dropzone.autoDiscover = false;
-    var uploadedBytes = 0;
-    var dropzone = $("#dropzone");
 
-    dropzone.on("remove", function () {
-        //console.log('it has been destroyed');
-        dropzone.dropzone.reset();
-        dropzone.dropzone.destroy();
-    });
 
     $(function () {
+
+        var btnNext = $('#btnNext');
+        var btnBack = $('#btnBack');
+
+        btnBack.click(function () {
+            uploader.previousPage();
+        });
+
+        btnNext.click(function () {
+            uploader.nextPage();
+        });
+
+        if (uploader.tracks.length)
+            btnNext.removeClass('disabled');
+
+        var uploadedBytes = 0;
+        var dropzone = $("#dropzone");
+
+        dropzone.on("remove", function () {
+            //console.log('it has been destroyed');
+            dropzone.dropzone.reset();
+            dropzone.dropzone.destroy();
+        });
+
         Dropzone.options.dropzone = {
             acceptedFiles: '.mp3,.jpg,.jpeg,.png,.gif,.wav',
-            parallelUploads: 6
+            parallelUploads: 6,
+            url: '/assets/API/upload_file.php?uploader_id=' + uploader.uploaderID
         };
 
         var myDropzone = new Dropzone("#dropzone");
+
+//        myDropzone.url = '/assets/API/upload_file.php?uploader_id=' + uploader.uploaderID;
 
         myDropzone.on("totaluploadprogress", function (uploadprogress, total, current) {
 

@@ -45,7 +45,7 @@
         });
     }
 
-    uploaderSelectorNext.click(function (e) {
+    uploaderSelectorNext.click(function () {
         uploader.nextPage();
     });
 </script>
