@@ -30,7 +30,12 @@ $radios = Radio::getAllRadios();
 
 <script>
     $(".aRadio:not(.plus)").click(function () {
-        playRadio($(this).attr('data-url'), $(this).attr('data-name'));
+        var id = parseInt($(this).attr('data-id'));
+        if (typeof  radios_storage[id]) {
+            player.playRadio(radios_storage[id]);
+        } else {
+            error("Radio not found in local database");
+        }
     });
 
     $(".aRadio:not(.plus) .delete").click(function (e) {
