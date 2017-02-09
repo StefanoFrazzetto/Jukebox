@@ -203,10 +203,6 @@ class Radio implements JsonSerializable
             $parsed_address['port'] = 80;
         }
 
-        $parsed_address['cover'] = $this->getCover();
-
-        $parsed_address['id'] = $this->id;
-
         return $parsed_address;
     }
 

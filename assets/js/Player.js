@@ -32,6 +32,7 @@ function Player() {
     //region Playlist
     this.tracks = [];
     this.currentTrackNumber = null;
+    this.currentRadio = null;
     //endregion
 
     //region Play Modes
@@ -44,6 +45,7 @@ function Player() {
     this.onTrackChange = null;
     this.onAlbumChange = null;
     this.onPlaylistChange = null;
+    this.onRadioChange = null;
     this.onEnded = null;
     this.onWaiting = null;
     this.onError = null;
@@ -148,6 +150,11 @@ Player.prototype.reset = function () {
     this.currentTrackNumber = null;
     this.tracks = [];
     this.isRadio = false;
+
+    this.callback(this.onPlaylistChange);
+    this.callback(this.onTrackChange);
+    this.callback(this.onAlbumChange);
+    this.callback(this.onTimeUpdate);
 };
 //endregion Playback
 
@@ -189,6 +196,7 @@ Player.prototype.playSong = function (song) {
     }
 
     this.isRadio = false;
+    this.currentRadio = null;
     this.playUrl(song.getUrl());
 };
 
@@ -226,6 +234,8 @@ Player.prototype.playRadio = function (radio) {
 
     var url = 'http://' + window.location.hostname + ':4242/?address=' + radio.url.host + '&request=' + radio.url.path + '&port=' + radio.url.port;
 
+    this.currentRadio = radio;
+    this.callback(this.onRadioChange);
     this.playUrl(url);
 };
 //endregion Tracks Handling

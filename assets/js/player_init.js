@@ -45,6 +45,10 @@ function initPlayer() {
 
     player.onTrackChange = function () {
         highlightCurrentTrack();
+        if (player.getCurrentSong()) {
+            // TODO Add artist
+        }
+
     };
 
     player.onPlaylistChange = function () {
@@ -52,11 +56,16 @@ function initPlayer() {
     };
 
     player.onAlbumChange = function () {
-        try {
+        if (typeof player.getCurrentSong() != "undefined" && player.getCurrentSong() != null)
             showAlbumsDetails(player.getCurrentSong().album_id);
-        } catch (e) {
-            console.warn(e);
-        }
+    };
+
+    player.onRadioChange = function () {
+        if (typeof player.getCurrentSong() == "undefined" || player.getCurrentSong() == null)
+            return;
+
+        songTitle.html(player.currentRadio.name);
+        changeCover(player.currentRadio.cover);
     };
 
     player.onError = function () {
