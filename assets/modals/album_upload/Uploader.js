@@ -6,6 +6,8 @@ function Uploader() {
     this.stage = 0;
     this.uploadMethod = 0;
 
+    this.uploaderID = 0;
+
     this.title = null;
     this.titles = [];
 
@@ -22,31 +24,35 @@ Uploader.prototype.previousPage = function () {
 
 Uploader.prototype.changePage = function (page) {
     this.stage = page;
+    var self = this;
 
     switch (page) {
         case 0: // Intro
             modal.openPage('/assets/modals/album_upload/1-Intro.php');
             break;
         case 1: // Upload
-            switch (this.uploadMethod) {
-                case 0: // Upload local files
-                    modal.openPage('/assets/modals/album_upload/uploaders/upload.php');
-                    break;
-                case 1: // Rip a cd in the jukebox
-                    modal.openPage('/assets/modals/album_upload/uploaders/rip.php');
-                    break;
-                case 2: // Browse USB drive plugged in the jukebox
-                    modal.openPage('/assets/modals/album_upload/uploaders/usb.php');
-                    break;
-                case 3: // Import from jukebox
-                    modal.openPage('/assets/modals/album_upload/uploaders/jukebox.php');
-                    break;
-                default: // Error
-                    var msg1 = "Uploader method not defined";
-                    error(msg1);
-                    console.error(msg1);
-                    break;
-            }
+            self.getUploaderId(function (id) {
+                self.uploaderID = id;
+                switch (self.uploadMethod) {
+                    case 0: // Upload local files
+                        modal.openPage('/assets/modals/album_upload/uploaders/upload.php');
+                        break;
+                    case 1: // Rip a cd in the jukebox
+                        modal.openPage('/assets/modals/album_upload/uploaders/rip.php');
+                        break;
+                    case 2: // Browse USB drive plugged in the jukebox
+                        modal.openPage('/assets/modals/album_upload/uploaders/usb.php');
+                        break;
+                    case 3: // Import from jukebox
+                        modal.openPage('/assets/modals/album_upload/uploaders/jukebox.php');
+                        break;
+                    default: // Error
+                        var msg1 = "Uploader method not defined";
+                        error(msg1);
+                        console.error(msg1);
+                        break;
+                }
+            });
             break;
         case 2: // Edit names
             $.getJSON('/assets/modals/album_upload/sample_data.json')
@@ -88,6 +94,19 @@ Uploader.prototype.changePage = function (page) {
             break;
 
     }
+};
+
+Uploader.prototype.getUploaderId = function (callback) {
+    $.getJSON('/assets/API/uploader.php?action=get_new_id')
+        .done(function (data) {
+            if (data.status === "success")
+                callback(data.uploader_id);
+            else
+                error("Failed to retrieve the uploader id");
+        })
+        .fail(function (error) {
+            error("Failed to retrieve the uploader id");
+        });
 };
 
 Uploader.prototype.uploadMethods = [
