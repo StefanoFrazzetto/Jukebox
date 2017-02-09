@@ -69,7 +69,7 @@ require_once 'assets/php-lib/ICanHaz.php';
                 <table id="playlistTable"></table>
             </div>
         </div>
-        <audio id="player"></audio>
+        <audio id="player" crossorigin="anonymous"></audio>
 
         <div id="buttonsBar" class="toolbar">
 
