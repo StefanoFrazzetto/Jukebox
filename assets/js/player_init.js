@@ -46,7 +46,7 @@ function initPlayer() {
     player.onTrackChange = function () {
         highlightCurrentTrack();
         if (player.getCurrentSong()) {
-            // TODO Add artist
+            songTitle.html(player.getCurrentSong().getArtistsNames());
         }
 
     };
@@ -152,19 +152,19 @@ function initPlayer() {
         if (typeof id === 'undefined')
             return;
 
-        if (typeof albums_storage[id] === 'undefined') {
+        if (storage.getAlbum(id) == null) {
             error("Album [" + id + "] missing from local DB. Report to @Vittorio.");
             return;
         }
 
-        var data = albums_storage[id];
+        var data = storage.getAlbum(id);
 
         albumTitle.html(data.title);
 
         if (data.cover != null)
-            changeCover("/jukebox/" + id + "/cover.jpg?" + data.cover);
+            changeCover(data.getFullCoverUrl());
         else
-            changeCover(cover_placeholder);
+            changeCover(storage.cover_placeholder);
     }
 
     function playerError() {

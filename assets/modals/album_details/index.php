@@ -107,7 +107,7 @@ if (file_exists($outputFile)) {
 <div class="modalFooter" id="details-footer">
     <div class="box-btn" onclick="player.playAlbum(<?php echo $albumID ?>)">Play</div>
     <div class="box-btn" onclick="modal.openPage('assets/modals/edit_album/?id=<?php echo $albumID ?>')">Edit</div>
-    <div class="box-btn" onclick="deleteAlbum(<?php echo $albumID ?>)">Delete</div>
+    <div class="box-btn" onclick="storage.deleteAlbum(<?php echo $albumID ?>)">Delete</div>
     <div class="box-btn" id="download-btn">Download</div>
     <div class="box-btn" id="burner_single_album">Burn Album</div>
     <!-- <div class="box-btn" id="burner_addto_compilation">Add to burning compilation</div> -->

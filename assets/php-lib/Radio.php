@@ -52,7 +52,7 @@ class Radio implements JsonSerializable
             /** @noinspection PhpUndefinedFieldInspection */
             $radio->id = intval($radio_database->id);
             /** @noinspection PhpUndefinedFieldInspection */
-            $radio->coverToken = $radio_database->cover_cached_token;
+            $radio->coverToken = intval($radio_database->cover_cached_token);
 
             return $radio;
         } catch (Exception $e) {
@@ -192,7 +192,7 @@ class Radio implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return ["id" => $this->id, "name" => $this->name, "url" => $this->getParsedAddressed(), "cover" => $this->getCover(), "thumb" => $this->getCoverThumb()];
+        return ["id" => $this->id, "name" => $this->name, "url" => $this->getParsedAddressed(), "cover" => $this->getCoverToken()];
     }
 
     public function getParsedAddressed()
@@ -204,6 +204,22 @@ class Radio implements JsonSerializable
         }
 
         return $parsed_address;
+    }
+
+    public function getCoverToken()
+    {
+        $where = self::covers_path . $this->id . "/cover.jpg";
+
+        if (file_exists($where)) {
+            return $this->coverToken;
+        } else {
+            return null;
+        }
+    }
+
+    public function getCoverThumb()
+    {
+        return $this->getCover(true);
     }
 
     /**
@@ -224,10 +240,5 @@ class Radio implements JsonSerializable
         } else {
             return "/assets/img/album-placeholder.png";
         }
-    }
-
-    public function getCoverThumb()
-    {
-        return $this->getCover(true);
     }
 }

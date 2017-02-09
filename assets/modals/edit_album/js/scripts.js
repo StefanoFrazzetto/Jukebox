@@ -175,7 +175,7 @@ if (imageSelector.imageUrl != null) {
 
         console.log("injecting new cover in the album database and refreshing the list");
 
-        albums_storage[album_id].cover = new Date().getTime();
+        storage.getAlbum(album_id).cover = new Date().getTime();
 
         paginate();
     });

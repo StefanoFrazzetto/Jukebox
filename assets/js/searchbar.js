@@ -98,7 +98,7 @@ $(document).ready(function () {
         $(this).addClass('active');
         sort_by = $(this).attr('data-value');
 
-        getItSorted(sort_by);
+        storage.getItSorted(sort_by);
 
         page = 1;
         paginate();

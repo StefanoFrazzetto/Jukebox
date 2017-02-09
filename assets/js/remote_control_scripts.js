@@ -36,13 +36,13 @@ function playingStatusChangedEvent() {
 function albumChangedEvent() {
     if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id != null) {
         getAlbumDetails(playerStatus.album_id, function () {
-            var data = albums_storage[playerStatus.album_id];
+            var album = storage.getAlbum(playerStatus.album_id);
 
-            cover.attr('src', '/jukebox/' + playerStatus.album_id + '/cover.jpg');
-            $('#artist').html(makeArtistsString(data.artists));
-            $('#title').html(data.title);
+            cover.attr(album.getFullCoverUrl());
+            $('#artist').html(album.getArtistsNames());
+            $('#title').html(album.title);
 
-            populatePlaylist(data);
+            populatePlaylist(album);
             trackChangedEvent();
         });
     }
@@ -96,7 +96,7 @@ function trackChangedEvent() {
 }
 
 function radioChangeEvent() {
-    var radio = radios_storage[playerStatus.isRadio];
+    var radio = storage.getRadio(playerStatus.isRadio);
     if (radio == false)
         return;
     cover.attr('src', radio.cover);
@@ -136,14 +136,9 @@ function handleSearch() {
     if (value.length < 3)
         return;
 
-    if (typeof albums_storage === 'undefined' || albums_storage.length == 0) {
-        console.error('Album storage is empty');
-        return;
-    }
-
     var artists = [];
 
-    artists_storage.forEach(function (artist) {
+    storage.artists.forEach(function (artist) {
             if (artist.name.toLowerCase().indexOf(value) !== -1) {
                 console.log(artist);
                 artists.push(artist.id);
@@ -153,8 +148,8 @@ function handleSearch() {
 
     var result = [];
 
-    albums_storage.forEach(function (album) {
-        if (album.title.toLowerCase().indexOf(value) !== -1 || (intersect(album.artists, artists)).length > 0) {
+    storage.albums.forEach(function (album) {
+        if (album.title.toLowerCase().indexOf(value) !== -1 || (storage.intersect(album.artists, artists)).length > 0) {
                 result.push(album);
             }
         }
@@ -166,8 +161,8 @@ function handleSearch() {
         results_container.append(makeSearchResult(album))
     });
 
-    if (typeof radios_storage !== 'undefined' && radios_storage.length != 0)
-        radios_storage.forEach(function (radio) {
+    if (typeof storage.radios !== 'undefined' && storage.radios.length != 0)
+        storage.radios.forEach(function (radio) {
             if (radio.name.toLowerCase().indexOf(value) !== -1) {
                 results_container.append(makeSearchResult(radio, true));
             }
@@ -209,7 +204,7 @@ function handleSearch() {
         var artist = $('<div>');
 
         if (!is_radio)
-            artist.html(makeArtistsString(album.artists));
+            artist.html(storage.makeArtistsString(album.artists));
         else
             artist.text("Radio Station");
 
@@ -304,12 +299,12 @@ function getDeltaTime(callback) {
 //
 //     $.getJSON(address)
 //         .done(function (data) {
-//             radios_storage = [];
+//             storage.radios = [];
 //
 //             try {
 //                 if (data != null)
 //                     data.forEach(function (data) {
-//                         radios_storage[data.id] = data;
+//                         storage.radios[data.id] = data;
 //                     });
 //             } catch (e) {
 //
@@ -337,7 +332,7 @@ function loadAlbumPlaylist(id, callback) {
 
             console.log("Loaded", data.length, "songs.");
 
-            albums_storage[id].songs = data;
+            storage.getAlbum(id).songs = data;
 
             if (typeof callback !== "undefined")
                 callback();
@@ -351,15 +346,10 @@ function getAlbumDetails(id, callback) {
     if (id == null || typeof id == "undefined")
         return;
 
-    if (typeof albums_storage[id] == 'undefined') {
-        load_storages(function () {
+    if (storage.getAlbum(id) == null) {
+        storage.loadAll(function () {
             loadAlbumPlaylist(id, callback);
         });
-    } else {
-        if (typeof albums_storage[id].songs !== "undefined")
-            callback();
-        else
-            loadAlbumPlaylist(id, callback);
     }
 }
 
@@ -571,7 +561,7 @@ $(document).ready(function () {
     });
 
     $.getScript('/assets/js/storage.js', function () {
-        load_storages(function () {
+        storage.loadAll(function () {
             getDeltaTime(function (delta) {
                 deltaTime = delta;
 

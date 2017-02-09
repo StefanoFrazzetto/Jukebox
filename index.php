@@ -32,7 +32,7 @@ require_once 'assets/php-lib/ICanHaz.php';
                     <div id="network_settings" class="crcbtn"
                          onclick="modal.openPage('assets/modals/bluetooth.php')"></div>
                     <div id="qr" class="crcbtn" onclick="modal.openPage('assets/modals/qrcode.php')"></div>
-                    <div id="trash" class="crcbtn" onclick="deleteAlbum(album_id);"></div>
+                    <div id="trash" class="crcbtn" onclick="storage.deleteAlbum(album_id);"></div>
                     <div id="add" class="crcbtn"></div>
                     <div id="shuffle" class="crcbtn"></div>
                     <div id="wifi" class="crcbtn" onclick="modal.openPage('assets/modals/network_settings')"></div>

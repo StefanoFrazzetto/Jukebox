@@ -31,8 +31,8 @@ $radios = Radio::getAllRadios();
 <script>
     $(".aRadio:not(.plus)").click(function () {
         var id = parseInt($(this).attr('data-id'));
-        if (typeof  radios_storage[id]) {
-            player.playRadio(radios_storage[id]);
+        if (storage.getRadio(id)) {
+            player.playRadio(storage.getRadio(id));
         } else {
             error("Radio not found in local database");
         }
@@ -40,7 +40,7 @@ $radios = Radio::getAllRadios();
 
     $(".aRadio:not(.plus) .delete").click(function (e) {
         var id = $(this).parent().attr('data-id');
-        deleteRadio(id);
+        storage.deleteRadio(id);
         e.stopPropagation();
     });
 

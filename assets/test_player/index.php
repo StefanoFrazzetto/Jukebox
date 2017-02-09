@@ -38,7 +38,7 @@ require_once '../php-lib/ICanHaz.php'
 
     player.visualiser.reflectEQ = true;
 
-    load_storages();
+    storage.loadAll();
     //endregion
 </script>
 

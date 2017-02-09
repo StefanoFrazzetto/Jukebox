@@ -60,7 +60,7 @@ function initImageSelectorObject() {
 initImageSelectorObject();
 
 function paginate() {
-    var lastPage = Math.ceil(albums_storage_filtered.filter(Object).length / show);
+    var lastPage = Math.ceil(storage.albumsFiltered.filter(Object).length / show);
 
     if (page < 1) {
         page = 1;
@@ -84,7 +84,7 @@ function paginate() {
 
     loader.html("");
     var i = -1;
-    albums_storage_filtered.forEach(function (data) {
+    storage.albumsFiltered.forEach(function (data) {
         if (typeof data === 'undefined')
             return;
 
@@ -98,7 +98,7 @@ function paginate() {
 }
 
 function reload() {
-    load_storages(function () {
+    storage.loadAll(function () {
         paginate();
     });
 }
@@ -112,10 +112,7 @@ function makeAlbumHtmlFromObject(object) {
 
     var img = $("<img>");
 
-    if (object.cover != null)
-        img.attr("src", "jukebox/" + object.id + "/thumb.jpg?" + object.cover);
-    else
-        img.attr("src", cover_placeholder);
+    img.attr("src", object.getCoverUrl());
 
     var details = $("<div class='albumDetails'>");
 
@@ -125,7 +122,7 @@ function makeAlbumHtmlFromObject(object) {
     artist.addClass("albumArtist");
     title.addClass("albumTitle");
 
-    artist.html(makeArtistsString(object.artists));
+    artist.html(object.getArtistsNames());
     title.html(object.title);
 
     details.append(artist);
@@ -185,7 +182,7 @@ function getHowManyAlbumsToShow() { //Longest Name Ever. No comment needed here 
 function alphabet(value) {
     var artists = []; // Lists the artists ids beginning with the chosen letter
 
-    artists_storage.forEach(function (element) {
+    storage.artists.forEach(function (element) {
         if (value != 0) {
             if (element.name.charAt(0).toLowerCase() == value.toLowerCase()) {
                 artists.push(element.id);
@@ -198,8 +195,8 @@ function alphabet(value) {
 
     var results = []; // List of albums with the given artists
 
-    albums_storage.forEach(function (element, index) {
-        if ((intersect(element.artists, artists)).length > 0)
+    storage.albums.forEach(function (element, index) {
+        if ((storage.intersect(element.artists, artists)).length > 0)
             results[index] = element;
     });
 
@@ -212,7 +209,7 @@ function alphabet(value) {
         return;
     }
 
-    albums_storage_filtered = results;
+    storage.albumsFiltered = results;
 
     page = 1;
     paginate();
@@ -232,18 +229,18 @@ function search(value) {
     if (search_field == "artist") {
         var artists = [];
 
-        artists_storage.forEach(function (artist) {
+        storage.artists.forEach(function (artist) {
             if (artist.name.toLowerCase().includes(value.toLowerCase()))
                 artists.push(artist.id);
         });
 
-        albums_storage.forEach(function (album, id) {
-            if (intersect(album.artists, artists).length > 0)
+        storage.albums.forEach(function (album, id) {
+            if (storage.intersect(album.artists, artists).length > 0)
                 results[id] = album;
         });
 
     } else {
-        albums_storage.forEach(function (element, index) {
+        storage.albums.forEach(function (element, index) {
             if (element[search_field].toLowerCase().includes(value.toLowerCase()))
                 results[index] = element;
         });
@@ -262,7 +259,7 @@ function search(value) {
         return;
     }
 
-    albums_storage_filtered = results;
+    storage.albumsFiltered = results;
 
     page = 1;
     paginate();
@@ -310,7 +307,7 @@ menu_btn.click(function () {
 });
 
 home_btn.click(function () {
-    albums_storage_filtered = albums_storage.slice();
+    storage.albumsFiltered = storage.albums.slice();
 
     sort_by = '1';
     search_field = 'title';
