@@ -28,18 +28,15 @@ switch ($action) {
 
     case 'get_ripper_status':
         $ripper = new DiscRipper();
-        $return = [
-            'status' => $ripper->getStatus(),
-            'percentage' => $ripper->getPercentage(),
-            'message' => $ripper->getMessage()
-        ];
+
+        $return = Uploader::createStatus($ripper->getStatus(), $ripper->getMessage());
+        $return['percentage'] = $ripper->getPercentage();
         break;
 
     case 'start_ripping':
         try {
             $ripper = new DiscRipper($uploader_id);
             $ripper->rip();
-            $return['status'] = Uploader::STATUS_SUCCESS;
         } catch (Exception $e) {
             $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage());
         }
