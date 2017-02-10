@@ -8,33 +8,40 @@ require_once __DIR__ . '/../php-lib/Uploader.php';
 
 
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
-$uploader_id = filter_input(INPUT_GET, 'uploader_id', FILTER_SANITIZE_STRING);
+$uploader_id = filter_input(INPUT_GET, 'uploader_id', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
 
+if ($uploader_id === null) {
+    $uploader_id = Uploader::getNewUploaderID();
+}
 
-$return = ['status' => 'success'];
+// Initialize the array assuming that everything was successful
+$return = ['status' => Uploader::STATUS_SUCCESS];
 
 switch ($action) {
+    case 'upload_files':
+        try {
+            Uploader::upload($uploader_id);
+        } catch (Exception $e) {
+            $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage());
+        }
+        break;
+
     case 'get_ripper_status':
         $ripper = new DiscRipper();
         $return = [
-            'device_path' => $ripper->getDevicePath(),
             'status' => $ripper->getStatus(),
             'percentage' => $ripper->getPercentage(),
-            'message' => $ripper->getMessage(),
-            'ripped' => $ripper->getRippedTracks(),
-            'encoded' => $ripper->getEncodedTracks()
+            'message' => $ripper->getMessage()
         ];
         break;
 
     case 'start_ripping':
-        if (empty($uploader_id)) {
-            $return['status'] = 'fail';
-            $return['started'] = false;
-        }
-        $ripper = new DiscRipper($uploader_id);
-        $return['started'] = $ripper->rip();
-        if (!$return['started']) {
-            $return['status'] = 'fail';
+        try {
+            $ripper = new DiscRipper($uploader_id);
+            $ripper->rip();
+            $return['status'] = Uploader::STATUS_SUCCESS;
+        } catch (Exception $e) {
+            $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage());
         }
         break;
 
@@ -44,7 +51,9 @@ switch ($action) {
 
     case 'abort_upload':
         $path = Config::getPath('uploader');
-        $return['success'] = FileUtils::remove($path, true);
+        if (!FileUtils::remove($path, true)) {
+            $return['status'] = Uploader::STATUS_ERROR;
+        }
         break;
 
     case 'list_uploads_in_progress':
