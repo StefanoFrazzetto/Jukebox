@@ -109,7 +109,7 @@ class DiscRipper extends Disc
         mkdir(dirname($this->cdparanoia_log_path), 0755, true);
         mkdir($this->input_dir, 0755, true);
         mkdir($this->output_dir, 0755, true);
-        mkdir($this->final_dir, 0755, true);
+//        mkdir($this->final_dir, 0755, true);
 
         // Set the total tracks before starting the process.
         $process['total_tracks'] = $this->getTotalTracks();
@@ -218,9 +218,9 @@ class DiscRipper extends Disc
         $ripped = $this->getRippedTracks();
 
         // Calculate the process percentage
-        if ($ripped != 0 && $encoded != 0) {
+        if ($ripped != 0) {
             $average = floor(($ripped + $encoded) / 2);
-            $percentage = self::calculatePercentage($average, $total_tracks);
+            $percentage = $this->calculatePercentage($average, $total_tracks);
         }
 
         if ($encoded == $total_tracks) {

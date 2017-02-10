@@ -85,13 +85,7 @@ abstract class Disc
         $device_name = OS::getDevicesByType("rom");
         $this->device_path = "/dev/$device_name";
 
-
-        if (!file_exists($this->status_file)) {
-            $this->status = self::STATUS_IDLE;
-        } else {
-            // Set status, message, and percentage.
-            $this->setCurrentStatus();
-        }
+        $this->setCurrentStatus();
 
         if ($this->getStatus() == self::STATUS_IDLE) {
             $this->__init();
@@ -201,6 +195,7 @@ abstract class Disc
     {
         if (!file_exists($this->status_file)) {
             $this->status = self::STATUS_IDLE;
+            return;
         }
 
         $content = self::getStatusFileContent();
