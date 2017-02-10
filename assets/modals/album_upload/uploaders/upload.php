@@ -1,7 +1,7 @@
 <div class="modalHeader">Album Uploader</div>
 <div class="modalBody center">
     <div class="mCustomScrollbar" style="max-height: 200px; overflow: hidden">
-        <form action="/assets/API/upload_file.php" id="dropzone" class="dropzone">
+        <form id="dropzone" class="dropzone">
             <div class="fallback">
                 <input name="file" type="file" multiple/>
             </div>
@@ -50,7 +50,7 @@
         Dropzone.options.dropzone = {
             acceptedFiles: '.mp3,.jpg,.jpeg,.png,.gif,.wav',
             parallelUploads: 6,
-            url: '/assets/API/upload_file.php?uploader_id=' + uploader.uploaderID
+            url: '/assets/API/uploader.php?uploader_id=' + uploader.uploaderID + '&action=upload_files'
         };
 
         var myDropzone = new Dropzone("#dropzone");
