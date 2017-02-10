@@ -22,7 +22,7 @@ switch ($action) {
         try {
             Uploader::upload($uploader_id);
         } catch (Exception $e) {
-            $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage());
+            $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage(), 400);
         }
         break;
 
@@ -31,14 +31,24 @@ switch ($action) {
 
         $return = Uploader::createStatus($ripper->getStatus(), $ripper->getMessage());
         $return['percentage'] = $ripper->getPercentage();
+        $return['ripped'] = $ripper->getRippedTracks();
         break;
 
     case 'start_ripping':
         try {
             $ripper = new DiscRipper($uploader_id);
-            $ripper->rip();
+            if (!$ripper->rip()) {
+                $return = Uploader::createStatus(Uploader::STATUS_ERROR, 'the disc drive is busy');
+            }
         } catch (Exception $e) {
             $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage());
+        }
+        break;
+
+    case 'abort_ripping':
+        $ripper = new DiscRipper();
+        if (!$ripper->stop()) {
+            $return = Uploader::createStatus(Uploader::STATUS_ERROR, 'it was not possible to stop the ripping process');
         }
         break;
 
