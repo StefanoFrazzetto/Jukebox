@@ -10,6 +10,9 @@ require_once __DIR__ . "/Cover.php";
  */
 class Uploader
 {
+    const STATUS_SUCCESS = 'success';
+    const STATUS_ERROR = 'error';
+
     /** @const string The status file name */
     const STATUS_FILE = "uploader_status.json";
     /** @const array The array of allowed music extensions */
@@ -107,18 +110,17 @@ class Uploader
 
     public static function createStatus($status, $message = "")
     {
-        $return['status'] = $status;
-
-        if ($status == "error") {
-            if (empty($message)) {
-                $message = 'Unknown error.';
-            }
-
-            $return['error'] = $message;
+        if ($status == self::STATUS_ERROR) {
+            $return['message'] = $message;
             http_response_code(400);
         }
 
-        return json_encode($return);
+        $return = [
+            'status' => $status,
+            'message' => $message
+        ];
+
+        return $return;
     }
 
     public static function getNewUploaderID()
