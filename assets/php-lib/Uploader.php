@@ -108,11 +108,11 @@ class Uploader
         return move_uploaded_file($source_file, $destination_file);
     }
 
-    public static function createStatus($status, $message = "")
+    public static function createStatus($status, $message = "", $response_code = 200)
     {
         if ($status == self::STATUS_ERROR) {
             $return['message'] = $message;
-            http_response_code(400);
+            http_response_code($response_code);
         }
 
         $return = [
