@@ -132,10 +132,14 @@ Player.prototype.next = function () {
 };
 
 Player.prototype.previous = function () {
-    if (this.currentTrackNumber === 0)
-        return;
+    if (this.getCurrentTime() > 1.5) {
+        this.seek(0);
+    } else {
+        if (this.currentTrackNumber === 0)
+            return;
 
-    this.playSongAtIndex(this.currentTrackNumber - 1);
+        this.playSongAtIndex(this.currentTrackNumber - 1);
+    }
 };
 
 Player.prototype.seek = function (time) {
