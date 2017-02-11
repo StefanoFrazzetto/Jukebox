@@ -42,6 +42,9 @@ function Player() {
     //endregion
 
     //region Events
+    this.onPlayPause = null;
+    this.onPlay = null;
+    this.onPause = null;
     this.onTrackChange = null;
     this.onAlbumChange = null;
     this.onPlaylistChange = null;
@@ -66,6 +69,16 @@ function Player() {
 
     this.mediaElement.onstalled = function () {
         self.callback(self.onStalled);
+    };
+
+    this.mediaElement.onplay = function () {
+        self.callback(self.onPlay);
+        self.callback(self.onPlayPause);
+    };
+
+    this.mediaElement.onpause = function () {
+        self.callback(self.onPause);
+        self.callback(self.onPlayPause);
     };
 
     this.mediaElement.ontimeupdate = function () {

@@ -73,6 +73,13 @@ function initPlayer() {
     player.onError = function () {
         playerError();
     };
+
+    player.onPlayPause = function () {
+        if (player.isPlaying())
+            play_btn.css('background-image', 'url(/assets/img/buttons/pause.png)');
+        else
+            play_btn.css('background-image', 'url(/assets/img/buttons/playButton.png)');
+    };
     //endregion Event Bindings
 
     //region Random Functions
