@@ -16,6 +16,7 @@
 
         var ripperCheckStatus = $('#ripperCheckStatus');
         var ripperStart = $('#ripperStart');
+        var ripperStop = $('#ripperStop');
 
         btnBack.click(function () {
             uploader.previousPage();
@@ -40,12 +41,24 @@
         ripperStart.click(function () {
             $.getJSON('/assets/API/uploader.php?action=start_ripping&uploader_id=' + uploader.uploaderID)
                 .done(function (data) {
-                    alert(data.status)
+                    alert(data.status);
+                    console.log(data);
                 })
                 .fail(function () {
                     error("Failed to start ripping.");
                 });
 
         });
+
+        ripperStop.click(function () {
+            $.getJSON('/assets/API/uploader.php?action=stop_ripping')
+                .done(function (data) {
+                    alert(data.status);
+                    console.log(data);
+                })
+                .fail(function () {
+                    error("Failed to stop ripping.");
+                });
+        })
     });
 </script>
