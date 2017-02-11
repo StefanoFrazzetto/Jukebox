@@ -9,11 +9,9 @@
 $start = microtime(true);
 
 require_once "../../vendor/autoload.php";
-require_once '../php-lib/MusicClasses/Album.php';
-require_once '../php-lib/MusicClasses/Artist.php';
-require_once '../php-lib/MusicClasses/Song.php';
-require_once '../php-lib/Radio.php';
 
+use Lib\MusicClasses\Album;
+use Lib\MusicClasses\Artist;
 use Lib\Radio;
 
 $genres = file_get_contents('../php-lib/MusicClasses/genres.json');

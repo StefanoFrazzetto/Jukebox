@@ -6,7 +6,9 @@
  * Time: 12:30
  */
 
-include '../../php-lib/Theme.php';
+require_once '../../../vendor/autoload.php';
+
+use Lib\Theme;
 
 $themes = Theme::getAllThemes();
 $current_theme = Theme::getAppliedTheme();

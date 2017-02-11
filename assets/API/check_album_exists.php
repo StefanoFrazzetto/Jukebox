@@ -6,7 +6,9 @@
 
 header('Content-Type: application/json');
 
-require_once '../php-lib/MusicClasses/Album.php';
+require_once '../../vendor/autoload.php';
+
+use Lib\MusicClasses\Album;
 
 $in_title = filter_input(INPUT_GET, 'title', FILTER_SANITIZE_STRING);
 

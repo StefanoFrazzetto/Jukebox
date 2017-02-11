@@ -3,7 +3,9 @@
 // Put all the stuff you want to execute at startup time here.
 // Example: create config folders, files, etc.
 
-include __DIR__ . "/../php-lib/Network.php";
+require_once '../../vendor/autoload.php';
+
+use Lib\Network;
 
 $network = new Network();
 

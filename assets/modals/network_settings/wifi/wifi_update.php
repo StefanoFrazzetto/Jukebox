@@ -1,6 +1,8 @@
 <?php
 
-require '../../../php-lib/Wifi.php';
+require_once '../../../../vendor/autoload.php';
+
+use Lib\Wifi;
 
 header('Content-Type: application/json');
 

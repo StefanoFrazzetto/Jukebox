@@ -1,5 +1,8 @@
 <?php
-include '../../php-lib/Database.php';
+
+require_once '../../../vendor/autoload.php';
+
+use Lib\Database;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 

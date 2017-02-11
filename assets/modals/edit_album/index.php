@@ -1,5 +1,8 @@
 <?php
-include '../../php-lib/MusicClasses/Album.php';
+
+require_once '../../../vendor/autoload.php';
+
+use Lib\MusicClasses\Album;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 

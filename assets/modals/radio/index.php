@@ -1,6 +1,8 @@
 <?php
 
-require '../../php-lib/Radio.php';
+require_once '../../../vendor/autoload.php';
+
+use Lib\Radio;
 
 $radios = Radio::getAllRadios();
 ?>

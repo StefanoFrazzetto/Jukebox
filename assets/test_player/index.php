@@ -1,5 +1,9 @@
 <?php
-require_once '../php-lib/ICanHaz.php'
+
+require_once '../../../../vendor/autoload.php';
+
+use Lib\ICanHaz;
+
 ?>
 <!DOCTYPE html>
 <html>

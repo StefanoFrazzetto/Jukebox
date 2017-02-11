@@ -1,70 +1,75 @@
 <?php
 
-require_once __DIR__ . '/../Config';
-require_once '../php-lib/Database.php';
-require_once '../php-lib/FileUtils.php';
-require_once '../php-lib/Cover.php';
+require_once '../../vendor/autoload.php';
 
-class EditAlbum {
+use Lib\Cover;
+use Lib\Database;
+use Lib\FileUtils;
 
-	private $database;
+class EditAlbum
+{
 
-	// Constructor
-	public function __construct($json) {
+    private $database;
 
-		$this->database = new Database();
-		$response = array('success' => false, 'message' => "");
-		$array = json_decode($json, true);
-		$album_id = $array['album_id'];
+    // Constructor
+    public function __construct($json)
+    {
 
-		// DELETE THE ALBUM
-		if(isset($array['delete_album']) && $array['delete_album'] === true) {
+        $this->database = new Database();
+        $response = array('success' => false, 'message' => "");
+        $array = json_decode($json, true);
+        $album_id = $array['album_id'];
 
-			$response['success'] = $this->database->delete(Database::$_table_albums, " `id` = $album_id");
+        // DELETE THE ALBUM
+        if (isset($array['delete_album']) && $array['delete_album'] === true) {
 
-			if($response['success'] === false) {
-				$response['message'] = "Failed to delete the album.";
-			}
+            $response['success'] = $this->database->delete(Database::$_table_albums, " `id` = $album_id");
 
-		} else {
-			
-			// UPDATE THE ALBUM
-			if(isset($array['removed_tracks'])) {
-				$tracks = json_decode($array['removed_tracks'], true);
-				$this->removeTracks($album_id, $tracks);
-			}
+            if ($response['success'] === false) {
+                $response['message'] = "Failed to delete the album.";
+            }
 
-			if(isset($array['album_cover_url']) && $array['album_cover_url'] !== null) {
-				$cover = new Cover($array['album_cover_url']);
-				$cover->saveToAlbum($album_id);
-			}
+        } else {
 
-			$tracks_no = count($array['album_tracks']);
-			$data = array('title' => $array['album_title'], 'artist' => $array['album_artist'], 'tracks_no' => $tracks_no, 'tracks' => stripslashes(json_encode($array['album_tracks'])));
+            // UPDATE THE ALBUM
+            if (isset($array['removed_tracks'])) {
+                $tracks = json_decode($array['removed_tracks'], true);
+                $this->removeTracks($album_id, $tracks);
+            }
 
-			// file_put_contents("/tmp/EDIT_ALBUM-SAVE.txt", json_encode($data));
+            if (isset($array['album_cover_url']) && $array['album_cover_url'] !== null) {
+                $cover = new Cover($array['album_cover_url']);
+                $cover->saveToAlbum($album_id);
+            }
 
-			$response['success'] = $this->save($data, $album_id);
+            $tracks_no = count($array['album_tracks']);
+            $data = array('title' => $array['album_title'], 'artist' => $array['album_artist'], 'tracks_no' => $tracks_no, 'tracks' => stripslashes(json_encode($array['album_tracks'])));
 
-			if($response['success'] === false) {
-				$response['message'] = "Error: could not save the album.";
-			}
-		}
+            // file_put_contents("/tmp/EDIT_ALBUM-SAVE.txt", json_encode($data));
 
-		echo json_encode($response);
-	}
+            $response['success'] = $this->save($data, $album_id);
 
-	// The tracks column will be "overridden", so no need to delete them manually from the DB.
-	protected function removeTracks($album_id, $tracks) {
-		foreach ($tracks as $track) {
+            if ($response['success'] === false) {
+                $response['message'] = "Error: could not save the album.";
+            }
+        }
+
+        echo json_encode($response);
+    }
+
+    // The tracks column will be "overridden", so no need to delete them manually from the DB.
+    protected function removeTracks($album_id, $tracks)
+    {
+        foreach ($tracks as $track) {
             $track_path = Config::getPath('albums_root') . $album_id . '/' . $track['url'];
             FileUtils::remove($track_path);
-		}
-	}
+        }
+    }
 
-	protected function save($array, $album_id) {
-		return $this->database->update(Database::$_table_albums, $array, " `id` = $album_id");
-	}
+    protected function save($array, $album_id)
+    {
+        return $this->database->update(Database::$_table_albums, $array, " `id` = $album_id");
+    }
 
 }
 

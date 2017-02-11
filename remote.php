@@ -1,5 +1,8 @@
 <?php
-require_once 'assets/php-lib/ICanHaz.php';
+require_once 'vendor/autoload.php';
+
+use Lib\ICanHaz;
+
 ?>
 <!DOCTYPE html>
 <html>

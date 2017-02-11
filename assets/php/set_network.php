@@ -1,6 +1,8 @@
 <?php
 
-include __DIR__ . "/../php-lib/Network.php";
+require_once '../../vendor/autoload.php';
+
+use Lib\Network;
 
 $network = new Network();
 

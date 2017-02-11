@@ -3,6 +3,8 @@ header('Content-Type: application/json');
 
 require_once '../php-lib/MusicClasses/Album.php';
 
+use Lib\MusicClasses\Album;
+
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 $album = Album::getAlbum($albumID);

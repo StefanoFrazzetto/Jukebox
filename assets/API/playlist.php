@@ -6,7 +6,9 @@
  * Time: 12:35
  */
 
-require_once '../php-lib/MusicClasses/Album.php';
+require_once '../../vendor/autoload.php';
+
+use Lib\MusicClasses\Album;
 
 header('Content-Type: application/json');
 

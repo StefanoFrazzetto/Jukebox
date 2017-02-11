@@ -6,7 +6,9 @@
  * Time: 17:22
  */
 
-require "../../../php-lib/FileUtils.php";
+require_once '../../../../vendor/autoload.php';
+
+use Lib\FileUtils;
 
 header('Content-Type: application/json');
 

@@ -6,7 +6,9 @@
  * Time: 18:29
  */
 
-require_once '../../php-lib/Git.php';
+require_once '../../../vendor/autoload.php';
+use Lib\Git;
+
 ?>
 
 <div class="modalHeader">Update</div>
