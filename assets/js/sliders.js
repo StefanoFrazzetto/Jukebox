@@ -25,8 +25,7 @@ sliderv.slider({
         tooltip.fadeOut('fast');
     },
     change: function (event, ui) {
-        //var value = slider.slider('value'),
-        player.setVolume(ui.value);
+        player.setVolume(ui.value / 100);
     }
 });
 
