@@ -4,6 +4,7 @@ downloads
 node_modules
 oldjukebox
 phpmyadmin
+vendor
 
 # Ignore files
 info.php
