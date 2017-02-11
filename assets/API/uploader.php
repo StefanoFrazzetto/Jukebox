@@ -2,10 +2,12 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../php-lib/FileUtils.php';
-require_once __DIR__ . '/../php-lib/DiscRipper.php';
-require_once __DIR__ . '/../php-lib/Uploader.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
+use Lib\Config;
+use Lib\DiscRipper;
+use Lib\FileUtils;
+use Lib\Uploader;
 
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 $uploader_id = filter_input(INPUT_GET, 'uploader_id', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);

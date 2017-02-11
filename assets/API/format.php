@@ -1,8 +1,9 @@
 <?php
 
-require_once "../php-lib/Database.php";
-require_once "../php-lib/FileUtils.php";
-require_once "../php-lib/file-functions.php";
+require_once "../../vendor/autoload.php";
+
+use Lib\Database;
+use Lib\FileUtils;
 
 $Database = new Database();
 

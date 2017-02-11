@@ -1,6 +1,8 @@
 <?php
 
-require '../php-lib/Radio.php';
+require_once "../../vendor/autoload.php";
+
+use Lib\Radio;
 
 $radioID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 

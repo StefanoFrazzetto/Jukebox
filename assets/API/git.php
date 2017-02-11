@@ -8,7 +8,9 @@
 
 header('Content-Type: application/json');
 
-require_once '../php-lib/Git.php';
+require_once "../../vendor/autoload.php";
+
+use Lib\Git;
 
 $git = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
 

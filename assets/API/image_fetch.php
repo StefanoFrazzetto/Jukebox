@@ -2,7 +2,9 @@
 
 header('Content-Type: application/json');
 
-require_once "../php-lib/ImageFetcher.php";
+require_once "../../vendor/autoload.php";
+
+use Lib\ImageFetcher;
 
 $artist = urldecode($_GET['artist']);
 $album = urldecode($_GET['album']);
