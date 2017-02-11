@@ -675,32 +675,32 @@ function Visualiser(context, input, canvas) {
     this.wavePadding = 2;
     this.barHeightMultiplier = 0.3;     // 0.3
     this.smoothingTimeConstant = 0.7;   // 0.7
-    this.shownSpectrum = 0.7;           // 0.7
+    this.maxFrequency = 16000;          // 16.000 Hz
     this.reflectEQ = false;
 
-    // -------------
     // Initialisation
-
     this.javascriptNode.connect(this.context.destination);
 
-    // setup a analyzer
+    // Setup a analyzer
     this.analyser.smoothingTimeConstant = this.smoothingTimeConstant;
     this.analyser.fftSize = this.fftSize;
 
+    // Connect Nodes
     this.input.connect(this.analyser);
     this.analyser.connect(this.javascriptNode);
 
+    // Self variable
     var V = this;
 
     this.javascriptNode.onaudioprocess = function () {
         try {
             if (V.reflectEQ) {
                 V.barsCount = player.EQ.bandsList.length;
+                V.maxFrequency = player.EQ.bandsList[player.EQ.bandsList.length - 1];
             }
 
             var waveWidth = Math.floor(V.canvas.width / V.barsCount - V.wavePadding);
             var waveHeight = Math.floor(V.canvas.height);
-
 
             // Fail safe in case the bars gets too small
             if (waveWidth < 1) {
@@ -710,9 +710,8 @@ function Visualiser(context, input, canvas) {
                 waveWidth = Math.floor(V.canvas.width / V.barsCount - V.wavePadding);
             }
 
-            var length = Math.floor(V.analyser.frequencyBinCount * V.shownSpectrum);
+            var length = V.getIndexFromFrequency(V.maxFrequency) + 1;
             var frequencyStep = Math.floor(length / V.barsCount);
-
 
             var barSetWidth = V.barsCount * (waveWidth + V.wavePadding) - V.wavePadding;
 
@@ -722,17 +721,14 @@ function Visualiser(context, input, canvas) {
             var array = new Uint8Array(length);
             V.analyser.getByteFrequencyData(array);
 
-            V.canvasContext.clearRect(0, 0, V.canvas.width, V.canvas.height);
+            V.clearCanvas();
 
             for (var i = 0; i < V.barsCount; i++) {
 
                 var value = 0;
 
                 if (V.reflectEQ) {
-                    // Maybe they should be evaluated?
-                    var o = Math.floor(player.EQ.bandsList[i] / V.context.sampleRate * V.analyser.fftSize);
-                    value = array[o];
-                    //f = i * V.context.sampleRate / V.analyser.fftSize;
+                    value = array[V.getIndexFromFrequency(player.EQ.bandsList[i])];
                 } else {
                     // gets the average value in the frequency range
                     for (var j = i * frequencyStep; j < (i + 1) * frequencyStep; j++) {
@@ -745,7 +741,6 @@ function Visualiser(context, input, canvas) {
                 if (value < 0) {
                     value = 0;
                 }
-
 
                 var x = Math.floor(xOffset + i * (waveWidth + V.wavePadding));
                 var y = Math.floor(-yOffset + waveHeight - value * V.barHeightMultiplier);
@@ -764,4 +759,12 @@ function Visualiser(context, input, canvas) {
     };
 }
 
+Visualiser.prototype.getIndexFromFrequency = function (f) {
+    // index = frequency / sampleRate * fftSize
+    return Math.round(f / this.context.sampleRate * this.analyser.fftSize);
+};
+
+Visualiser.prototype.clearCanvas = function () {
+    this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+};
 //endregion Visualiser
