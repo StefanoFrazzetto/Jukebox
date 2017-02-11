@@ -1,6 +1,9 @@
 <?php
 
-include_once __DIR__ . '/../php-lib/Database.php';
+namespace Lib;
+
+use Exception;
+use JsonSerializable;
 
 class Radio implements JsonSerializable
 {

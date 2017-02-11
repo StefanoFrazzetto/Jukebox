@@ -1,6 +1,12 @@
 <?php
 
-require_once "Config.php";
+namespace Lib;
+
+use Exception;
+use InvalidArgumentException;
+use PDO;
+use PDOException;
+
 
 /**
  *  Database class provides the basic methods to access the database

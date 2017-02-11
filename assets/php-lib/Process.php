@@ -1,12 +1,16 @@
 <?php
 
-/* An easy way to keep in track of external processes.
-* Ever wanted to execute a process in php, but you still wanted to have somewhat controll of the process ? Well.. This is a way of doing it.
- *
-* @compability: Linux only. (Windows does not work).
-* @author: Peec
-*/
+namespace Lib;
 
+
+/**
+ * An easy way to keep in track of external processes.
+ *
+ * Linux only.
+ *
+ * @author Peec
+ * @author Stefano Frazzetto
+ */
 class Process
 {
     /** @var  int The process id */

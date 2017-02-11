@@ -1,5 +1,7 @@
 <?php
 
+namespace Lib;
+
 /**
  * Class Config provides access to the configuration of this software.
  *

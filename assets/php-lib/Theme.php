@@ -1,5 +1,11 @@
 <?php
 
+namespace Lib;
+
+use Exception;
+use InvalidArgumentException;
+use JsonSerializable;
+
 /**
  * Created by PhpStorm.
  * User: Vittorio

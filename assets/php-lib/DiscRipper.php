@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . "/Disc.php";
+namespace Lib;
+
+use Exception;
+
 
 /**
  * Class DiscRipper provides access to the disc device to
@@ -31,20 +34,6 @@ class DiscRipper extends Disc
     }
 
     /**
-     * Initializes the attributes needed by the DiscWriter.
-     */
-    protected function __init()
-    {
-        $paths = $this->config['ripper'];
-
-        $this->handler = $paths['handler'];
-        $this->input_dir = $paths['input'];
-        $this->output_dir = $paths['output'];
-        $this->cdparanoia_log_path = $paths['cdparanoia_log'];
-        $this->lame_log_path = $paths['lame_log'];
-    }
-
-    /**
      * Return the discid for this CD/DVD.
      *
      * @return string The discid of this CD/DVD.
@@ -55,28 +44,6 @@ class DiscRipper extends Disc
             $this->disc_id = OS::execute("discid $this->device_path");
         }
         return $this->disc_id;
-    }
-
-    /**
-     * Return the number of tracks on the CD/DVD.
-     *
-     * @return int The number of tracks on the CD/DVD.
-     */
-    public function getTotalTracks()
-    {
-        if (empty($this->total_tracks) && file_exists($this->status_file)) {
-            $status_file_content = $this->getStatusFileContent();
-            $total_tracks = $status_file_content['total_tracks'];
-        }
-
-        if (!isset($total_tracks)) {
-            $total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path 2>&1 | grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
-            // TODO save into status file
-        }
-
-        $this->total_tracks = intval($total_tracks);
-
-        return intval($this->total_tracks);
     }
 
     /**
@@ -126,6 +93,28 @@ class DiscRipper extends Disc
     }
 
     /**
+     * Return the number of tracks on the CD/DVD.
+     *
+     * @return int The number of tracks on the CD/DVD.
+     */
+    public function getTotalTracks()
+    {
+        if (empty($this->total_tracks) && file_exists($this->status_file)) {
+            $status_file_content = $this->getStatusFileContent();
+            $total_tracks = $status_file_content['total_tracks'];
+        }
+
+        if (!isset($total_tracks)) {
+            $total_tracks = OS::execute("cdparanoia -sQ -d $this->device_path 2>&1 | grep -P -c '^\\s+\\d+\\.' | grep -E '[0-9]'");
+            // TODO save into status file
+        }
+
+        $this->total_tracks = intval($total_tracks);
+
+        return intval($this->total_tracks);
+    }
+
+    /**
      * Stop the ripping process.
      *
      * @return bool true on success, false otherwise.
@@ -145,62 +134,17 @@ class DiscRipper extends Disc
     }
 
     /**
-     * Return the percentage using 2 values.
-     *
-     * @param int|float $val1 the partial value
-     * @param int|float $val2 the total value
-     * @return int the percentage obtained from val1/val2
+     * Initializes the attributes needed by the DiscWriter.
      */
-    private function calculatePercentage($val1, $val2)
+    protected function __init()
     {
-        if ($val1 == 0 || $val2 == 0) {
-            return 0;
-        }
+        $paths = $this->config['ripper'];
 
-        return intval(round(($val1 / $val2) * 100));
-    }
-
-    /**
-     * Checks if the processes used the ripper are currently running
-     * and returns the status associated with the running process.
-     *
-     * @return string The status associated with the running process.
-     */
-    protected function getStatusByProcess()
-    {
-        if (OS::isProcessRunning("cdparanoia")) {
-            $status = self::STATUS_RIPPING;
-        } elseif (OS::isProcessRunning("lame")) {
-            $status = self::STATUS_ENCODING;
-        } else {
-            $status = self::STATUS_IDLE;
-        }
-
-        return $status;
-    }
-
-    /**
-     * Return the number of ripped tracks.
-     *
-     * @return int the number of ripped tracks.
-     */
-    public function getRippedTracks()
-    {
-        $config = new Config();
-        $path = $config->get('disc')['ripper']['input'];
-        return FileUtils::countFiles($path);
-    }
-
-    /**
-     * Return the number of encoded tracks.
-     *
-     * @return int the number of encoded tracks.
-     */
-    public function getEncodedTracks()
-    {
-        $config = new Config();
-        $path = $config->get('disc')['ripper']['output'];
-        return FileUtils::countFiles($path);
+        $this->handler = $paths['handler'];
+        $this->input_dir = $paths['input'];
+        $this->output_dir = $paths['output'];
+        $this->cdparanoia_log_path = $paths['cdparanoia_log'];
+        $this->lame_log_path = $paths['lame_log'];
     }
 
     /**
@@ -230,5 +174,64 @@ class DiscRipper extends Disc
         }
         $this->setStatusMessagePercentage($status, $message, $percentage);
         return;
+    }
+
+    /**
+     * Checks if the processes used the ripper are currently running
+     * and returns the status associated with the running process.
+     *
+     * @return string The status associated with the running process.
+     */
+    protected function getStatusByProcess()
+    {
+        if (OS::isProcessRunning("cdparanoia")) {
+            $status = self::STATUS_RIPPING;
+        } elseif (OS::isProcessRunning("lame")) {
+            $status = self::STATUS_ENCODING;
+        } else {
+            $status = self::STATUS_IDLE;
+        }
+
+        return $status;
+    }
+
+    /**
+     * Return the number of encoded tracks.
+     *
+     * @return int the number of encoded tracks.
+     */
+    public function getEncodedTracks()
+    {
+        $config = new Config();
+        $path = $config->get('disc')['ripper']['output'];
+        return FileUtils::countFiles($path);
+    }
+
+    /**
+     * Return the number of ripped tracks.
+     *
+     * @return int the number of ripped tracks.
+     */
+    public function getRippedTracks()
+    {
+        $config = new Config();
+        $path = $config->get('disc')['ripper']['input'];
+        return FileUtils::countFiles($path);
+    }
+
+    /**
+     * Return the percentage using 2 values.
+     *
+     * @param int|float $val1 the partial value
+     * @param int|float $val2 the total value
+     * @return int the percentage obtained from val1/val2
+     */
+    private function calculatePercentage($val1, $val2)
+    {
+        if ($val1 == 0 || $val2 == 0) {
+            return 0;
+        }
+
+        return intval(round(($val1 / $val2) * 100));
     }
 }

@@ -1,5 +1,9 @@
 <?php
 
+namespace Lib;
+
+use InvalidArgumentException;
+
 /**
  * Class ID3 is used to get the main ID3v2 tags from a specified file.
  */

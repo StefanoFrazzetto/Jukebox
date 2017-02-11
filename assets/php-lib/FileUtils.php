@@ -1,7 +1,9 @@
 <?php
 
-require_once __DIR__ . '/StringUtils.php';
-require_once __DIR__ . '/OS.php';
+namespace Lib;
+
+use FilesystemIterator;
+use InvalidArgumentException;
 
 /**
  * FileUtils provide static methods to access, create, modify, and delete

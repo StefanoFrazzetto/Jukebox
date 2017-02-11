@@ -1,5 +1,9 @@
 <?php
 
+namespace Lib;
+
+use Exception;
+
 class Cover
 {
     const COVER_SIZE = 300;

@@ -1,5 +1,11 @@
 <?php
 
+namespace Lib;
+
+use Exception;
+use InvalidArgumentException;
+
+// Remove this.
 ini_set("error_log", __DIR__ . "/../../logs/network-errors.log");
 
 class Network

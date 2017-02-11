@@ -1,9 +1,8 @@
 <?php
 
-/**
- * Created by Stefano
- * Date: 31/10/2016
- */
+namespace Lib;
+
+
 abstract class StringUtils
 {
     /**

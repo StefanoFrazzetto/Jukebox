@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . "/Config.php";
-require_once __DIR__ . "/StringUtils.php";
-require_once __DIR__ . "/Exception/UploadException.php";
-require_once __DIR__ . "/Cover.php";
+namespace Lib;
+
+use InvalidArgumentException;
+use UploadException;
 
 /**
  * Class Uploader is used to handle the upload of albums into the jukebox.

@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . '/Config.php';
-require_once __DIR__ . '/OS.php';
+namespace Lib;
 
 /**
  * Class DiscWriter handles the disc writer operations...
@@ -92,10 +91,69 @@ abstract class Disc
         }
     }
 
-    abstract protected function __init();
+    /**
+     * Return the current status of the disc device.
+     *
+     * If a process id related to ripping or burning exists,
+     * the specific status associated with the current operation is
+     * returned, otherwise it means that the process is complete.
+     */
+    protected function setCurrentStatus()
+    {
+        if (!file_exists($this->status_file)) {
+            $this->status = self::STATUS_IDLE;
+            return;
+        }
 
+        $content = self::getStatusFileContent();
+
+        $pid = intval($content['pid']);
+        $process = new Process();
+        $process->setPid($pid);
+
+        // If the process is running, get the specific status
+        // calculate percentage, and set a message.
+
+        if (!$process->status()) {
+            // Process complete
+            $this->setStatusMessagePercentage(self::STATUS_COMPLETE, 'process complete', 100);
+            return;
+        }
+
+        $this->updateStatus();
+    }
+
+    protected function getStatusFileContent()
+    {
+        $file_content = file_get_contents($this->status_file);
+        return json_decode($file_content, true);
+    }
+
+    protected function setStatusMessagePercentage($status, $message, $percentage)
+    {
+        $this->setStatus($status);
+        $this->setMessage($message);
+        $this->setPercentage($percentage);
+    }
 
     abstract protected function updateStatus();
+
+    /**
+     * Returns the current status of the disc device
+     *
+     * @return string The status of the device.
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    protected function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    abstract protected function __init();
 
     /**
      * Returns the device path.
@@ -141,6 +199,38 @@ abstract class Disc
     }
 
     /**
+     * Returns the message relative to the process that is
+     * being executed by the disc device.
+     *
+     * @return string The message relative to the process, if any.
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    protected function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * Returns the percentage relative to the process that is
+     * being executed by the disc device.
+     *
+     * @return string The percentage relative to the process, if any.
+     */
+    public function getPercentage()
+    {
+        return $this->percentage;
+    }
+
+    protected function setPercentage($percentage)
+    {
+        $this->percentage = $percentage;
+    }
+
+    /**
      * TODO
      * @return bool
      */
@@ -154,66 +244,6 @@ abstract class Disc
         } else {
             return false;
         }
-    }
-
-    protected function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    protected function setMessage($message)
-    {
-        $this->message = $message;
-    }
-
-    protected function setPercentage($percentage)
-    {
-        $this->percentage = $percentage;
-    }
-
-    protected function getStatusFileContent()
-    {
-        $file_content = file_get_contents($this->status_file);
-        return json_decode($file_content, true);
-    }
-
-    protected function setStatusMessagePercentage($status, $message, $percentage)
-    {
-        $this->setStatus($status);
-        $this->setMessage($message);
-        $this->setPercentage($percentage);
-    }
-
-    /**
-     * Return the current status of the disc device.
-     *
-     * If a process id related to ripping or burning exists,
-     * the specific status associated with the current operation is
-     * returned, otherwise it means that the process is complete.
-     */
-    protected function setCurrentStatus()
-    {
-        if (!file_exists($this->status_file)) {
-            $this->status = self::STATUS_IDLE;
-            return;
-        }
-
-        $content = self::getStatusFileContent();
-
-        $pid = intval($content['pid']);
-        $process = new Process();
-        $process->setPid($pid);
-
-        // If the process is running, get the specific status
-        // calculate percentage, and set a message.
-
-        if (!$process->status()) {
-            // Process complete
-            $this->setStatusMessagePercentage(self::STATUS_COMPLETE, 'process complete', 100);
-            return;
-        }
-
-        $this->updateStatus();
     }
 
     protected function createStatusFile($parameters = "")
@@ -235,38 +265,6 @@ abstract class Disc
         }
 
         return FileUtils::createFile($this->status_file, $info, false, true);
-    }
-
-    /**
-     * Returns the current status of the disc device
-     *
-     * @return string The status of the device.
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Returns the message relative to the process that is
-     * being executed by the disc device.
-     *
-     * @return string The message relative to the process, if any.
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * Returns the percentage relative to the process that is
-     * being executed by the disc device.
-     *
-     * @return string The percentage relative to the process, if any.
-     */
-    public function getPercentage()
-    {
-        return $this->percentage;
     }
 
 

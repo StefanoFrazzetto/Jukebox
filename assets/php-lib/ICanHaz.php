@@ -1,5 +1,10 @@
 <?php
 
+namespace Lib;
+
+use Exception;
+use InvalidArgumentException;
+
 /**
  * Includes html elements such us CSS and JS, keeping them cached according to the changes and optimising requests
  * User: Vittorio

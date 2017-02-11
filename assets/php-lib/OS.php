@@ -1,7 +1,8 @@
 <?php
 
-require_once __DIR__ . '/Config.php';
-require_once __DIR__ . '/Process.php';
+namespace Lib;
+
+use InvalidArgumentException;
 
 /**
  * Class OS is used to access the OS commands without invoking shell_exec

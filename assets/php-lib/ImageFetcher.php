@@ -1,5 +1,10 @@
 <?php
 
+namespace Lib;
+
+use DOMDocument;
+use DOMXPath;
+
 /**
  * Class ImageFetcher retrieves albums images, covers, thumbnails from multiple source.
  * Non-working images are automatically removed.
@@ -49,22 +54,6 @@ class ImageFetcher
         return $images_array;
     }
 
-    /**
-     * Removes all the duplicates and the data:image from the images array.
-     *
-     * @param $images_array - the array containing the images URLs.
-     */
-    private function removeUselessImages(&$images_array)
-    {
-        foreach ($images_array as $key => $url) {
-            if (preg_match('(data:image|paypal)', $url) === 1 || preg_match('(png|jpg)', $url) == 0) {
-                unset($images_array[$key]);
-            }
-        }
-
-        $images_array = array_values(array_unique($images_array));
-    }
-
     private function getFrom($url, $no = 2)
     {
         $html = file_get_contents($url);
@@ -86,6 +75,7 @@ class ImageFetcher
         for ($i = 0; $i < $no; $i++) {
             if (!$imgs->item($i) == null) {
                 $img = $imgs->item($i);
+                /** @noinspection PhpUndefinedMethodInspection */
                 $url = $img->getAttribute('src');
                 $imageurls[$i] = $url;
             }
@@ -98,6 +88,22 @@ class ImageFetcher
         } else {
             return null;
         }
+    }
+
+    /**
+     * Removes all the duplicates and the data:image from the images array.
+     *
+     * @param $images_array - the array containing the images URLs.
+     */
+    private function removeUselessImages(&$images_array)
+    {
+        foreach ($images_array as $key => $url) {
+            if (preg_match('(data:image|paypal)', $url) === 1 || preg_match('(png|jpg)', $url) == 0) {
+                unset($images_array[$key]);
+            }
+        }
+
+        $images_array = array_values(array_unique($images_array));
     }
 
 }
