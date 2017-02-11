@@ -1,7 +1,8 @@
 {
   "autoload": {
     "psr-4": {
-      "Lib\\": "assets/php-lib/"
+      "Lib\\": "assets/php-lib/",
+      "Lib\\MusicClasses\\": "assets/php-lib/MusicClasses/"
     }
   },
   "require-dev": {

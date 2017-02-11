@@ -1,7 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../Database.php';
-require_once __DIR__ . '/Artist.php';
+namespace Lib\MusicClasses;
+
+use Exception;
+use JsonSerializable;
+use Lib\Database;
 
 /**
  * Created by PhpStorm.
