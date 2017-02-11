@@ -89,7 +89,7 @@ function Player() {
 
 //region Playback
 Player.prototype.play = function () {
-    if (this.tracks != null && this.tracks.length != 0 && this.currentTrackNumber == null)
+    if (this.tracks !== null && this.tracks.length !== 0 && this.currentTrackNumber === null)
         this.playSongAtIndex(0);
     else
         this.mediaElement.play();
@@ -185,7 +185,7 @@ Player.prototype.getAlbumPlaylist = function (albumId, callback) {
 Player.prototype.playAlbum = function (albumId, songNumber) {
     var _player = this;
 
-    if (typeof songNumber == "undefined")
+    if (typeof songNumber === "undefined")
         songNumber = 0;
 
     if (_player.getCurrentAlbumId() === albumId) {
@@ -202,7 +202,7 @@ Player.prototype.playAlbum = function (albumId, songNumber) {
 
         _player.callback(_player.onAlbumChange);
         _player.callback(_player.onTrackChange);
-    })
+    });
 };
 
 Player.prototype.playUrl = function (url) {
@@ -242,11 +242,11 @@ Player.prototype.playSongAtIndex = function (index) {
 
     this.playSong(newSong);
 
-    if (typeof oldSong == "undefined" || oldSong.id != newSong.id) {
+    if (typeof oldSong === "undefined" || oldSong.id !== newSong.id) {
         this.callback(this.onTrackChange);
     }
 
-    if (typeof oldSong != "undefined" && oldSong.album_id != newSong.album_id) {
+    if (typeof oldSong !== "undefined" && oldSong.album_id != newSong.album_id) {
         this.callback(this.onAlbumChange)
     }
 };
@@ -284,6 +284,7 @@ Player.prototype.addSongsToPlaylist = function (songs) {
     this.callback(this.onPlaylistChange);
 };
 
+//noinspection JSUnusedGlobalSymbols
 Player.prototype.removeSongFromPlaylistAtIndex = function (trackNumber) {
     this.tracks.splice(trackNumber, 1);
     this.callback(this.onPlaylistChange);
@@ -312,6 +313,7 @@ Player.prototype.addAlbumSongToPlaylist = function (albumId, trackNumber) {
     });
 };
 
+//noinspection JSUnusedGlobalSymbols
 Player.prototype.addAlbumSongsToPlaylist = function (albumId, trackNumbers) {
     var self = this;
 
@@ -334,7 +336,7 @@ Player.prototype.addAlbumCdToPlaylist = function (albumId, cdNumber) {
     this.getAlbumPlaylist(albumId, function (songs) {
         // Gets the songs that has the correct cd property
         songs = songs.filter(function (song) {
-            return song.cd == cdNumber;
+            return song.cd === cdNumber;
         });
 
         self.addSongsToPlaylist(songs);
@@ -383,9 +385,9 @@ Player.prototype.getJSON = function (url, successHandler, errorHandler) {
         var status;
         var data;
         // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
-        if (xhr.readyState == 4) { // `DONE`
+        if (xhr.readyState === 4) { // `DONE`
             status = xhr.status;
-            if (status == 200) {
+            if (status === 200) {
                 data = JSON.parse(xhr.responseText);
                 successHandler && successHandler(data);
             } else {
@@ -397,9 +399,9 @@ Player.prototype.getJSON = function (url, successHandler, errorHandler) {
 };
 
 Player.prototype.callback = function (callback, doesTriggerOnChange) {
-    if (typeof callback == "function")
+    if (typeof callback === "function")
         callback();
-    if (typeof doesTriggerOnChange == "undefined")
+    if (typeof doesTriggerOnChange === "undefined")
         doesTriggerOnChange = false;
 
     if (doesTriggerOnChange)
@@ -503,7 +505,7 @@ EQ.prototype.getFilteredBands = function () {
 
     for (var i = 0; i < this.bandsList.length; i++) {
         var band = this.context.createBiquadFilter();
-        if (i == 0) {
+        if (i === 0) {
             band.type = "lowshelf";
         } else if (i === this.bandsList.length - 1) {
             band.type = "highshelf";
@@ -560,7 +562,7 @@ EQ.prototype.setBands = function (bands) {
     this.connect();
 
 
-    if (this.container != null) {
+    if (this.container !== null) {
         this.container.innerHTML = '';
 
         this.drawEQ(this.container);
@@ -613,7 +615,7 @@ EQ.prototype.drawEQ = function (container) {
         _option.innerText = option.name;
         _option.setAttribute("value", index);
 
-        if (EQ.currentBandId == index) {
+        if (EQ.currentBandId === index) {
             _option.setAttribute("selected", "selected");
         }
         return _option;
@@ -745,10 +747,10 @@ function Visualiser(context, input, canvas) {
                 } else {
                     // gets the average value in the frequency range
                     for (var j = i * frequencyStep; j < (i + 1) * frequencyStep; j++) {
-                        value = value + array[j];
+                        value += array[j];
                     }
 
-                    value = value / frequencyStep;
+                    value /= frequencyStep;
                 }
 
                 if (value < 0) {
