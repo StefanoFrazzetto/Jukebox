@@ -155,7 +155,7 @@ function handleSearch() {
         }
     );
 
-    result.sort(artistSortingFunction);
+    result.sort(storage.artistSortingFunction);
 
     result.forEach(function (album) {
         results_container.append(makeSearchResult(album))
