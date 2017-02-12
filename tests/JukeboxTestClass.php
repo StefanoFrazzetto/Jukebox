@@ -4,12 +4,17 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
 
-class JukeboxTest extends TestCase
+class JukeboxTestClass extends TestCase
 {
     /**
      * @var string the directory where test files can be created.
      */
     const TEST_DIR = '/tmp/tests/';
+
+    /**
+     * @var string the path to a file that can be used for tests.
+     */
+    const TEST_FILE = '/tmp/tests/test.txt';
 
     /**
      * Create the tests directory.
