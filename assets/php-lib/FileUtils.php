@@ -47,13 +47,19 @@ abstract class FileUtils
      *
      * @param string $dir The directory to check
      * @return bool true if the directory is empty, false otherwise.
+     *
+     * @throws InvalidArgumentException if the directory does not exist.
      */
     public static function isDirEmpty($dir)
     {
+        if (!file_exists($dir)) {
+            throw new InvalidArgumentException('The directory does not exist');
+        }
+
         if (count(glob($dir . "/*", GLOB_NOSORT)) === 0) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
