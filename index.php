@@ -1,5 +1,9 @@
 <?php
+
+session_start();
+
 require_once "vendor/autoload.php";
+
 use Lib\ICanHaz;
 
 ?>
@@ -228,10 +232,10 @@ ICanHaz::js($scripts, true);
 
 if (isJukebox()) {
     include 'assets/modals/keyboard.php';
-    session_start();
     include 'assets/php/startup_scripts.php';
-    session_write_close();
 }
+
+session_write_close();
 ?>
 
 </body>
