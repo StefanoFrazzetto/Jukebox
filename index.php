@@ -206,6 +206,7 @@ function isJukebox()
 
 $scripts = [
     'assets/js/vars.js',
+    'assets/js/alerts.js',
     'assets/js/jquery.min.js',
     'assets/js/jquery-ui.min.js',
     'assets/js/sliders.js',
@@ -214,19 +215,19 @@ $scripts = [
     'assets/js/searchbar.js',
     'assets/js/modals.js',
     'assets/js/jquery.mCustomScrollbar.concat.min.js',
-    'assets/js/alerts.js',
     'assets/js/post-script.js'
 ];
 
-if (isJukebox())    // Things that wil be done only by the local jukebox client
-    $scripts = array_merge($scripts, ['assets/js/remote_listener.js', 'assets/js/vars_jb.js']);
+if (isJukebox()) {   // Things that wil be done only by the local jukebox client
+    $scripts[0] = 'assets/js/vars_jb.js';
+    $scripts[] = 'assets/js/remote_listener.js';
+}
 
 
 ICanHaz::js($scripts, true);
 
 if (isJukebox())
     include 'assets/modals/keyboard.php';
-
 ?>
 
 </body>

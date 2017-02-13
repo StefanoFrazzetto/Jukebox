@@ -2,7 +2,9 @@ var player = new Player();
 
 player.EQ.connect();
 
-player.visualiser = new Visualiser(player.context, player.outputNode, document.getElementById('eq_canvas'));
+if (!isJukebox) {
+    player.visualiser = new Visualiser(player.context, player.outputNode, document.getElementById('eq_canvas'));
+}
 
 function initPlayer() {
     //region Selectors
