@@ -451,7 +451,8 @@ function EQ(context, input, output) {
     this.input = input;
     this.output = output;
 
-    this.gainDb = 0;
+    this.defaultGain = 0;
+    this.maxGain = 12;
     this.bandsList = this.getBands(2);
     this.filteredBands = this.getFilteredBands(this.bandsList);
     this.connected = false;
@@ -520,7 +521,7 @@ EQ.prototype.getFilteredBands = function () {
         }
 
         band.frequency.value = this.bandsList[i];
-        band.gain.value = this.gainDb;
+        band.gain.value = this.defaultGain;
         band.Q.value = 1;
 
         filteredBands.push(band);
@@ -598,10 +599,10 @@ EQ.prototype.drawEQ = function (container) {
         var input = document.createElement("input");
 
         input.setAttribute("type", "range");
-        input.setAttribute("value", "0");
+        input.setAttribute("value", EQ.defaultGain.toString());
         input.setAttribute("step", "1");
-        input.setAttribute("max", "12");
-        input.setAttribute("min", "-12");
+        input.setAttribute("max", EQ.maxGain.toString());
+        input.setAttribute("min", (-EQ.maxGain).toString());
 
         input.setAttribute('orient', 'vertical');
         input.addEventListener('input', function () {

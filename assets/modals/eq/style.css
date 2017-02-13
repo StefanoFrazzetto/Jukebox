@@ -4,15 +4,17 @@
     width: 10px;
     position: relative;
     margin: 15px;
+    text-align: left;
 }
 
 #eq-holder {
-    width: 55%;
+    width: 50%;
     float: left;
+    text-align: center;
 }
 
 #eq-presets {
-    width: 45%;
+    width: 50%;
     float: right;
 
     overflow: hidden;
