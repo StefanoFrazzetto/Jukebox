@@ -80,6 +80,8 @@ function initPlayer() {
         else
             play_btn.css('background-image', 'url(/assets/img/buttons/playButton.png)');
     };
+
+    sliderv.slider('value', player.getVolume() * 100);
     //endregion Event Bindings
 
     //region Random Functions

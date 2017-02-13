@@ -84,6 +84,8 @@ function Player() {
     this.mediaElement.ontimeupdate = function () {
         self.callback(self.onTimeUpdate, false);
     };
+
+    this.setVolume(0.25);
     //endregion Events
 }
 
