@@ -1,5 +1,8 @@
 var player = new Player();
-player.visualiser = new Visualiser(player.context, player.inputNode, document.getElementById('eq_canvas'));
+
+player.EQ.connect();
+
+player.visualiser = new Visualiser(player.context, player.outputNode, document.getElementById('eq_canvas'));
 
 function initPlayer() {
     //region Selectors
