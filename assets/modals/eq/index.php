@@ -10,13 +10,7 @@ ICanHaz::css('style.css');
 
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
     <div id="eq-holder">
-        <?php
 
-        for ($i = 1; $i <= 10; $i++) {
-            echo "<div id=\"slider-eq-$i\" class=\"slider-eq progressBar\"></div>";
-        }
-
-        ?>
     </div>
     <div id="eq-presets" class="mCustomScrollbar">
         <h3>Presets</h3>
