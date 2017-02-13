@@ -140,7 +140,6 @@ function handleSearch() {
 
     storage.artists.forEach(function (artist) {
             if (artist.name.toLowerCase().indexOf(value) !== -1) {
-                console.log(artist);
                 artists.push(artist.id);
             }
         }
@@ -266,59 +265,6 @@ function getDeltaTime(callback) {
 
     oReq.send();
 }
-
-// function loadAlbumStorage(callback) {
-//     var address = '/assets/php/get_all_album.json.php';
-//
-//     $.getJSON(address)
-//         .done(function (data) {
-//             albums_storage = [];
-//
-//             try {
-//                 if (data != null)
-//                     data.forEach(function (data) {
-//                         albums_storage[data.id] = data;
-//                     });
-//             } catch (e) {
-//                 return;
-//             }
-//
-//             console.log("Loaded", data.length, "albums.");
-//
-//             if (typeof callback !== "undefined")
-//                 callback();
-//
-//         })
-//         .fail(function () {
-//             error("An error occurred while loading the albums.");
-//         });
-// }
-//
-// function loadRadioStorage(callback) {
-//     var address = '/assets/php/get_all_radios.json.php';
-//
-//     $.getJSON(address)
-//         .done(function (data) {
-//             storage.radios = [];
-//
-//             try {
-//                 if (data != null)
-//                     data.forEach(function (data) {
-//                         storage.radios[data.id] = data;
-//                     });
-//             } catch (e) {
-//
-//             }
-//
-//             console.log("Loaded", data.length, "radios.");
-//
-//             if (typeof callback !== "undefined")
-//                 callback();
-//         })
-//         .fail(function () {
-//             error("An error occurred while loading the radios.");
-//         });
-// }
 
 function loadAlbumPlaylist(id, callback) {
     var address = '/assets/API/playlist.php?id=' + id;

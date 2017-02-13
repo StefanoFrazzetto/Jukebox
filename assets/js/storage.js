@@ -154,8 +154,8 @@ var storage = {
     },
 
     artistSortingFunction: function (a, b) {
-        var x = this.getArtistName(a.artists[0]).toLowerCase();
-        var y = this.getArtistName(b.artists[0]).toLowerCase();
+        var x = storage.getArtistName(a.artists[0]).toLowerCase();
+        var y = storage.getArtistName(b.artists[0]).toLowerCase();
         var gne = x < y ? -1 : x > y ? 1 : 0;
 
         if (gne == 0) {
