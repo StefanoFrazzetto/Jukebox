@@ -226,8 +226,12 @@ if (isJukebox()) {   // Things that wil be done only by the local jukebox client
 
 ICanHaz::js($scripts, true);
 
-if (isJukebox())
+if (isJukebox()) {
     include 'assets/modals/keyboard.php';
+    session_start();
+    include 'assets/php/startup_scripts.php';
+    session_write_close();
+}
 ?>
 
 </body>
