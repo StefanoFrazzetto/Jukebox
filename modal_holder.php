@@ -1,11 +1,14 @@
+<?php require_once "vendor/autoload.php";
+use Lib\ICanHaz;
+
+?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>&lt;JUKEBOX&gt;</title>
-    <link href="assets/css/main.css?v5" rel="stylesheet" type="text/css"/>
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css"/>
+    <?php ICanHaz::css(['assets/css/main.css', 'assets/css/font-awesome.min.css', 'assets/css/jquery.mCustomScrollbar.min.css']) ?>
     <link rel="icon" type="image/png" href="assets/img/icons/vinyl1.png">
     <meta name="theme-color" content="#2a2a2a">
     <meta charset="UTF-8">
@@ -22,14 +25,19 @@
     </div>
 </div>
 
-<script type="text/javascript" src="assets/js/vars.js"></script>
-<script type="text/javascript" src="assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="assets/js/draggable.js"></script>
-<script type="text/javascript" src="assets/js/sliders.js"></script>
-<script type="text/javascript" src="assets/js/modals.js"></script>
-<script type="text/javascript" src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script type="text/javascript" src="assets/js/alerts.js"></script>
+<?php
+ICanHaz::js([
+    'assets/js/vars.js',
+    'assets/js/jquery.min.js',
+    'assets/js/jquery-ui.min.js',
+    'assets/js/draggable.js',
+    'assets/js/sliders.js',
+    'assets/js/modals.js',
+    'assets/js/jquery.mCustomScrollbar.concat.min.js',
+    'assets/js/alerts.js'
+]);
+?>
+
 <script type="text/javascript">
     modal.openPage('assets/modals/album_upload/1-Intro.php');
 </script>
