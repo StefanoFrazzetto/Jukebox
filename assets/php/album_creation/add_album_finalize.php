@@ -6,8 +6,13 @@ ini_set("error_log", "../../../logs/album_finalize.log");
 session_start();
 
 $remove_from_cdparanoia_folder = "../../modals/rip/scripts/remove_ripped.sh";
-require_once '../../php-lib/MusicClasses/Album.php';
+
+require_once '../../../vendor/autoload.php';
 require_once '../../php-lib/file-functions.php';
+
+use Lib\MusicClasses\Album;
+use Lib\MusicClasses\Artist;
+use Lib\MusicClasses\Song;
 
 // tmp_folder from ripper
 if (isset($_SESSION['tmp_folder'])) {

@@ -1,12 +1,9 @@
 <?php
 
-ini_set("log_errors", 1);
+require_once '../../../vendor/autoload.php';
 
-
-require_once '../../php-lib/Config.php';
-require_once '../../php-lib/Cover.php';
-require_once '../../php-lib/FileUtils.php';
-
+use Lib\Config;
+use Lib\Cover;
 
 $input = INPUT_POST;
 $mode = filter_input(INPUT_POST, 'coverFrom', FILTER_SANITIZE_NUMBER_INT);
@@ -47,8 +44,6 @@ switch ($mode) {
         $file = file_get_contents($url);
 
         file_put_contents($tmp_folder . 'cover.jpg', $file);
-
-        //echo 'sono il tuo dio di canies';
 
         try {
             $cover = new Cover($tmp_folder . 'cover.jpg');
