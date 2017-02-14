@@ -573,6 +573,10 @@ EQ.prototype.changeGain = function (value, band) {
     this.filteredBands[band].gain.value = parseFloat(value);
 };
 
+EQ.prototype.getGain = function (band) {
+    return this.filteredBands[band].gain.value;
+};
+
 EQ.prototype.setBands = function (bands) {
     if (typeof bands != "object")
         return;
@@ -615,7 +619,7 @@ EQ.prototype.drawEQ = function (container) {
         var input = document.createElement("input");
 
         input.setAttribute("type", "range");
-        input.setAttribute("value", EQ.defaultGain.toString());
+        input.setAttribute("value", EQ.getGain(i).toString());
         input.setAttribute("step", "1");
         input.setAttribute("max", EQ.maxGain.toString());
         input.setAttribute("min", (-EQ.maxGain).toString());

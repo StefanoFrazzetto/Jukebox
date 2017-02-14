@@ -14,7 +14,7 @@ EQ.prototype.drawModalEQ = function (container) {
             range: "min",
             animate: animation_medium,
             orientation: "vertical",
-            value: EQ.defaultGain,
+            value: EQ.getGain(i),
             min: -EQ.maxGain,
             max: EQ.maxGain,
             slide: function (_, ui) {
