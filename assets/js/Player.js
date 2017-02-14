@@ -54,6 +54,7 @@ function Player() {
     this.onError = null;
     this.onStalled = null;
     this.onTimeUpdate = null;
+    this.onVolumeChange = null;
     this.onChange = null;
 
     var self = this;
@@ -72,12 +73,12 @@ function Player() {
     };
 
     this.mediaElement.onplay = function () {
-        self.callback(self.onPlay);
+        self.callback(self.onPlay, false);
         self.callback(self.onPlayPause);
     };
 
     this.mediaElement.onpause = function () {
-        self.callback(self.onPause);
+        self.callback(self.onPause, false);
         self.callback(self.onPlayPause);
     };
 
@@ -157,7 +158,12 @@ Player.prototype.setVolume = function (value) {
     if (value > 1)
         value = 1;
 
-    return this.mediaElement.volume = value;
+    var oldValue = this.getVolume();
+
+    this.mediaElement.volume = value;
+
+    if (value != oldValue)
+        this.callback(this.onVolumeChange);
 };
 
 Player.prototype.getVolume = function () {
@@ -375,6 +381,15 @@ Player.prototype.getCurrentAlbumId = function () {
     else
         return null;
 };
+
+Player.prototype.getCurrentSongId = function () {
+    var song = this.getCurrentSong();
+
+    if (song)
+        return song.id;
+    else
+        return null;
+};
 //endregion Getters
 
 //region Utils
@@ -408,7 +423,8 @@ Player.prototype.callback = function (callback, doesTriggerOnChange) {
     if (typeof callback === "function")
         callback();
     if (typeof doesTriggerOnChange === "undefined")
-        doesTriggerOnChange = false;
+        doesTriggerOnChange = true;
+
 
     if (doesTriggerOnChange)
         this.callback(this.onChange, false);
@@ -426,9 +442,9 @@ Player.prototype.export = function () {
         };
     else
         return {
-            album_id: parseInt(this.getCurrentSong().album_id),
-            track_no: parseInt(this.track_no),
-            track_id: parseInt(this.getCurrentSong().id),
+            album_id: this.getCurrentAlbumId(),
+            track_no: this.track_no,
+            track_id: this.getCurrentSongId(),
             playing: this.isPlaying(),
             repeat: this.repeat,
             shuffle: this.shuffle,

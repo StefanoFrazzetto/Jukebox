@@ -35,26 +35,31 @@ function playingStatusChangedEvent() {
 
 function albumChangedEvent() {
     if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id != null) {
-        getAlbumDetails(playerStatus.album_id, function () {
-            var album = storage.getAlbum(playerStatus.album_id);
+        var album = storage.getAlbum(playerStatus.album_id);
 
-            cover.attr(album.getFullCoverUrl());
-            $('#artist').html(album.getArtistsNames());
-            $('#title').html(album.title);
+        if (!album) {
+            error("Unable to load the album");
+            return;
+        }
 
-            populatePlaylist(album);
+        cover.attr('src', album.getFullCoverUrl());
+        $('#artist').html(album.getArtistsNames());
+        $('#title').html(album.title);
+
+        loadAlbumPlaylist(album.id, function (songs) {
+            populatePlaylist(songs);
             trackChangedEvent();
         });
     }
     else
         console.log("Sorry, album id not provided");
 
-    function populatePlaylist(data) {
+    function populatePlaylist(songs) {
         var div = $('#playlist-section').find('tbody');
 
         div.html('');
 
-        data.songs.forEach(function (song, index) {
+        songs.forEach(function (song, index) {
             var asd = $("<tr data-track-id='" + song.id + "'><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
 
             asd.click(function (e) {
@@ -278,10 +283,8 @@ function loadAlbumPlaylist(id, callback) {
 
             console.log("Loaded", data.length, "songs.");
 
-            storage.getAlbum(id).songs = data;
-
             if (typeof callback !== "undefined")
-                callback();
+                callback(data);
         })
         .fail(function () {
             error("An error occurred while loading the playlist.");
@@ -347,8 +350,8 @@ function updateRemoteStatus(r) {
     }
 
     function volumeChangeEvent() {
-        $('#debug-volume').val(r.volume * 100);
-        $('#volume-slider').slider('value', r.volume * 100);
+        $('#debug-volume').val(r.volume);
+        $('#volume-slider').slider('value', r.volume);
 
         var icon = $('#volume-icon');
 
@@ -497,6 +500,8 @@ $(document).ready(function () {
         range: "min",
         animate: "fast",
         min: 0,
+        step: 0.01,
+        max: 1,
         change: function (event, ui) {
             sendEvent("set_volume", {value: ui.value});
         }
