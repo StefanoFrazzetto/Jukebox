@@ -110,7 +110,7 @@ var storage = {
 
     //region Stringifiers
     getArtistName: function (artistId) {
-        if (this.getArtist(artistId) == null)
+        if (this.getArtist(artistId) === null)
             return "[NO ARTIST]";
         else
             return this.getArtist(artistId).name;
@@ -158,7 +158,7 @@ var storage = {
         var y = storage.getArtistName(b.artists[0]).toLowerCase();
         var gne = x < y ? -1 : x > y ? 1 : 0;
 
-        if (gne == 0) {
+        if (gne === 0) {
             x = a.title.toLowerCase();
             y = b.title.toLowerCase();
             return x < y ? -1 : x > y ? 1 : 0;
@@ -177,7 +177,7 @@ var storage = {
             var y = b.title.toLowerCase();
             var gne = x < y ? -1 : x > y ? 1 : 0;
 
-            if (gne == 0) {
+            if (gne === 0) {
                 x = this.getArtistName(a.artists[0]).toLowerCase();
                 y = this.getArtistName(b.artists[0]).toLowerCase();
                 return x < y ? -1 : x > y ? 1 : 0;
@@ -192,7 +192,7 @@ var storage = {
             //noinspection JSUnresolvedVariable
             var gne = b.hits - a.hits;
 
-            if (gne == 0) {
+            if (gne === 0) {
                 //noinspection JSUnresolvedVariable
                 return b.last_played - a.last_played;
             }
@@ -260,7 +260,7 @@ var storage = {
             t = b, b = a, a = t;
         } // indexOf to loop over shorter
         return a.filter(function (e) {
-            if (b.indexOf(e) !== -1) return true;
+            return b.indexOf(e) !== -1;
         });
     }
     //endregion Array Intersect
@@ -344,14 +344,14 @@ Album.prototype.getArtistsNames = function () {
 };
 
 Album.prototype.getCoverUrl = function () {
-    if (this.cover != null)
+    if (this.cover !== null)
         return "/jukebox/" + this.id + "/thumb.jpg?" + this.cover;
     else
         return storage.cover_placeholder;
 };
 
 Album.prototype.getFullCoverUrl = function () {
-    if (this.cover != null)
+    if (this.cover !== null)
         return "/jukebox/" + this.id + "/cover.jpg?" + this.cover;
     else
         return storage.cover_placeholder;
@@ -375,14 +375,14 @@ Radio.read = function (data) {
 };
 
 Radio.prototype.getCoverUrl = function () {
-    if (this.cover != null)
+    if (this.cover !== null)
         return "/jukebox/radio-covers/" + this.id + "/thumb.jpg?" + this.cover;
     else
         return storage.cover_placeholder;
 };
 
 Radio.prototype.getCoverUrl = function () {
-    if (this.cover != null)
+    if (this.cover !== null)
         return "/jukebox/radio-covers/" + this.id + "/cover.jpg?" + this.cover;
     else
         return storage.cover_placeholder;
