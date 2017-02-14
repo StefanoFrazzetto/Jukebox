@@ -20,3 +20,8 @@
     overflow: hidden;
     max-height: 270px;
 }
+
+#eq-switch-div {
+    display: inline-block;
+    vertical-align: middle;
+}
