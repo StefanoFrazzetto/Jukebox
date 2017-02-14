@@ -1,4 +1,5 @@
 var eqSwitch = $('#eq-switch');
+var presetsHolder = $('#presets');
 
 EQ.prototype.drawModalEQ = function (container) {
     this.container = container;
@@ -18,7 +19,9 @@ EQ.prototype.drawModalEQ = function (container) {
             max: EQ.maxGain,
             slide: function (_, ui) {
                 EQ.changeGain(ui.value, i);
-                console.log(ui.value);
+            },
+            change: function (_, ui) {
+                EQ.changeGain(ui.value, i);
             }
         });
 
@@ -51,6 +54,23 @@ if (player.EQ.connected) {
 
 function set_eq_values(values) {
     values.forEach(function (value, index) {
-        $('.slider-eq').eq(index).slider('value', value);
+        $('.slider-eq').eq(index).slider('value', ((value - 50) / 50) * player.EQ.maxGain).stop();
     });
 }
+
+$.getJSON('/assets/modals/eq/presets.json')
+    .done(function (presets) {
+        presets.forEach(function (preset) {
+            var li = $('<li>');
+            li.html(preset.name);
+
+            li.click(function () {
+                set_eq_values(preset.values);
+            });
+
+            presetsHolder.append(li);
+        })
+    })
+    .fail(function () {
+        error("Failed to load presets.");
+    });
