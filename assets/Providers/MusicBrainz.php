@@ -56,22 +56,22 @@ class MusicBrainz
         $this->disc_id = $disc_id;
         $query = "http://musicbrainz.org/ws/2/discid/$disc_id?inc=recordings+artist-credits&fmt=json";
 
-        $json = file_get_contents($query);
-        if ($json === false) {
-            throw new Exception('Error while contacting the MusicBrainz API.');
+        $this->json = file_get_contents($query);
+        if ($this->json === false) {
+            throw new Exception('Error while contacting the MusicBrainz API: ' . $this->json);
         }
 
-        $info = json_decode($this->json, true);
-        if ($info === false || $info === null) {
-            throw new Exception('No information provided from MusicBrainz.');
+        $this->info = json_decode($this->json, true);
+        if ($this->info === false || $this->info === null) {
+            throw new Exception('No information provided from MusicBrainz: ' . $this->info);
         }
 
-        if (isset($info['error'])) {
-            throw new InvalidArgumentException($info['error']);
+        if (isset($this->info['error'])) {
+            throw new InvalidArgumentException($this->info['error']);
         }
 
-        $this->numberOfTracks = $info['offset-count'];
-        $release = $info['releases'][0];
+        $this->numberOfTracks = $this->info['offset-count'];
+        $release = $this->info['releases'][0];
         $this->title = $release['title'];
         $this->release_id = $release['id'];
         $this->tracks = $release['media'][0]['tracks'];
@@ -136,10 +136,10 @@ class MusicBrainz
 
             $recording = $track['recording'];
             $temp_tracks[$track['number']] = [
-                'title' => $recording['title'],
-                'length' => $recording['length'],
                 'number' => intval($track['number']),
-                'artists' => $artists_names
+                'title' => $recording['title'],
+                'artists' => $artists_names,
+                'length' => $recording['length']
             ];
         }
 
