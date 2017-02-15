@@ -1,5 +1,10 @@
 <?php
 
+namespace Providers;
+
+use Exception;
+use InvalidArgumentException;
+
 // Set the user agent for the APIs
 ini_set('user_agent', 'Jukebox/1.0.0 (info.freelancewd@gmail.com)');
 
@@ -37,29 +42,39 @@ class MusicBrainz
      * using MusicBrainz v2 APIs.
      *
      * @param string $disc_id The disc id to use when performing the research.
-     * @throws Exception If it was not possible to get the information from MusicBrainz.
+     *
+     * @throws InvalidArgumentException If it was not possible to get the information from MusicBrainz.
+     *
+     * @throws Exception If it was not possible to contact MusicBrainz.
      */
     public function __construct($disc_id)
     {
-        $this->disc_id = $disc_id;
-        $query = "http://musicbrainz.org/ws/2/discid/$disc_id?inc=recordings+artist-credits&fmt=json";
-        //       $query = "http://musicbrainz.org/ws/2/discid/$disc_id?inc=aliases+recordings&fmt=json";
-//        http://musicbrainz.org/ws/2/discid/SHexqDpVuXZ5oQEVXnZviX2e9OA-?inc=recordings+artist-credits&fmt=json
-        $this->json = file_get_contents($query);
-        $this->info = json_decode($this->json, true);
-
-        if ($this->json !== false && $this->info !== null) {
-//            throw new Exception('Error occurred while trying to get the disc id information.');
-            $this->numberOfTracks = $this->info['offset-count'];
-
-            $release = $this->info['releases'][0];
-
-            $this->title = $release['title'];
-            $this->release_id = $release['id'];
-            $this->tracks = $release['media'][0]['tracks'];
+        if (empty($disc_id)) {
+            throw new InvalidArgumentException('You must provide a disc id.');
         }
 
+        $this->disc_id = $disc_id;
+        $query = "http://musicbrainz.org/ws/2/discid/$disc_id?inc=recordings+artist-credits&fmt=json";
 
+        $json = file_get_contents($query);
+        if ($json === false) {
+            throw new Exception('Error while contacting the MusicBrainz API.');
+        }
+
+        $info = json_decode($this->json, true);
+        if ($info === false || $info === null) {
+            throw new Exception('No information provided from MusicBrainz.');
+        }
+
+        if (isset($info['error'])) {
+            throw new InvalidArgumentException($info['error']);
+        }
+
+        $this->numberOfTracks = $info['offset-count'];
+        $release = $info['releases'][0];
+        $this->title = $release['title'];
+        $this->release_id = $release['id'];
+        $this->tracks = $release['media'][0]['tracks'];
     }
 
     /**
@@ -93,9 +108,16 @@ class MusicBrainz
     }
 
     /**
-     * Parse the tracks information and stores their TITLE, NUMBER and LENGTH.
+     * Returns an array containing the parsed tracks information.
      *
-     * @return array - the parsed tracks array.
+     *
+     * Each track will have title, length, one or more artists,
+     * and its number from the source media.
+     *
+     * The returned array is not 0-indexed, so the key will correspond to
+     * the actual track number from its source.
+     *
+     * @return array the parsed tracks array.
      */
     public function getParsedTracks()
     {
