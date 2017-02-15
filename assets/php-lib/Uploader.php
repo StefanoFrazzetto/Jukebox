@@ -304,7 +304,7 @@ class Uploader
             $tracks_info[$index] = [
                 'number' => $index,
                 'title' => $track_info['title'],
-                'url' => realpath($track),
+                'url' => basename($track),
                 'length' => FileUtils::getTrackLength($track),
                 'artists' => $track_info['artists']
             ];
@@ -334,7 +334,7 @@ class Uploader
             $tracks_info[] = [
                 'number' => $id3->getTrackNumber(),
                 'title' => $id3->getTitle(),
-                'url' => realpath($track),
+                'url' => basename($track),
                 'length' => FileUtils::getTrackLength($track),
                 'artists' => $id3->getLeadArtist()
             ];
@@ -351,7 +351,7 @@ class Uploader
             $tracks_info[] = [
                 'number' => $index++,
                 'title' => basename($track, ".mp3"),
-                'url' => realpath($track),
+                'url' => basename($track),
                 'length' => FileUtils::getTrackLength($track),
                 'artists' => []
             ];
