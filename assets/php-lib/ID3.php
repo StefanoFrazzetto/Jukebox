@@ -13,6 +13,8 @@ class ID3
     /** @var array The array containing the ID3 tags */
     private $tags;
 
+    private $has_tags;
+
     /**
      * ID3 constructor extracts all the information from the specified file.
      *
@@ -26,6 +28,15 @@ class ID3
         }
 
         $output = shell_exec("id3v2 -R $file_path");
+
+        if (StringUtils::contains($output, 'no id3 tag')) {
+            $this->has_tags = false;
+            return;
+        } else {
+            $this->has_tags = true;
+        }
+
+
         $count = preg_match_all("/^([a-zA-Z]*[0-3]?):\\s*(.*)$/m", $output, $matches);
 
         $this->tags = [];
@@ -45,6 +56,16 @@ class ID3
                 $this->tags['TPOS2'] = intval($setsMatches[2][0]);
             }
         }
+    }
+
+    /**
+     * Returns true if the track contains ID3 tags, otherwise false.
+     *
+     * @return bool true if the track contains ID3 tags, otherwise false.
+     */
+    public function hasTags()
+    {
+        return $this->has_tags;
     }
 
     /**
