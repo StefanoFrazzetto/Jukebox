@@ -6,6 +6,9 @@ use InvalidArgumentException;
 
 /**
  * Class ID3 is used to get the main ID3v2 tags from a specified file.
+ *
+ * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
+ * @version 1.0.0
  */
 class ID3
 {
