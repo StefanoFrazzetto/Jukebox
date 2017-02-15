@@ -39,9 +39,7 @@ class Uploader
 
     public function __construct($media_source = "")
     {
-        if ($media_source == self::MEDIA_SOURCE_FILES || $media_source == self::MEDIA_SOURCE_RIPPER) {
-            $this->source = $media_source;
-        }
+        $this->source = $media_source;
 
         $this->tmp_path = self::getPath();
     }
