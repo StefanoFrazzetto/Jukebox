@@ -10,6 +10,9 @@ use UploadException;
 
 /**
  * Class Uploader handles the upload of albums into the jukebox.
+ *
+ * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
+ * @version 1.0.0
  */
 class Uploader
 {
@@ -36,6 +39,14 @@ class Uploader
 
     /** @var int the uploader source */
     private $source = 2;
+
+    private $uploader_id;
+
+    private $music_brainz_info;
+
+    private $album_title;
+
+    private $release_id;
 
     public function __construct($media_source = "")
     {
@@ -190,7 +201,7 @@ class Uploader
     }
 
     /**
-     * Returns an array containing the tracks info.
+     * Returns an array containing the album info.
      *
      * If the tracks were uploaded using the ripper, the info is
      * retrieved using the disc_id associated with the disc, then
@@ -210,33 +221,45 @@ class Uploader
      * @throws InvalidArgumentException if either the path or the media
      * is empty.
      *
-     * @return array the array containing the tracks information.
+     * @return array the array containing the album information.
      */
-    public function getTracksInfo($uploader_id)
+    public function getAlbumInfo($uploader_id)
     {
         if (empty($uploader_id)) {
             throw new InvalidArgumentException('You must provide the tracks path.');
         }
 
+        $cd_no = isset($_SESSION['cd']) ? $_SESSION['cd'] : 1;
+        $tracks_info = $this->getTracksInfo();
+
+        $info = [
+            'title' => $this->getAlbumTitle(),
+            'titles' => [],
+            'tracks' => [
+                "CD$cd_no" => $tracks_info
+            ],
+            'cover' => null,
+            'covers' => []
+        ];
+
+        return $info;
+    }
+
+    private function getAlbumTitle()
+    {
+        return $this->album_title;
+    }
+
+    private function getTracksInfo()
+    {
         $tracks_info = [];
-        $full_path = Uploader::getPath() . $uploader_id;
+        $full_path = Uploader::getPath() . $this->uploader_id;
 
         $finder = new Finder();
         $tracks = $finder->in($full_path)->files()->sortByName();
 
         if ($this->source == static::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
-            $disc_id = new DiscRipper();
-            $disc_id = $disc_id->getDiscID();
-
-            try {
-                $music_brainz = new MusicBrainz($disc_id);
-                $tracks_info = $music_brainz->getParsedTracks();
-                return $this->createTracksInfoMusicBrainz($tracks, $tracks_info);
-            } catch (InvalidArgumentException $e) {
-                // The disc id is wrong.
-            } catch (Exception $x) {
-                // It was not possible to get any information from MusicBrainz.
-            }
+            $tracks_info = $this->createTracksInfoMusicBrainz($tracks);
         }
 
         if ($this->source == static::MEDIA_SOURCE_FILES) { // If the source is just files
@@ -250,10 +273,32 @@ class Uploader
         return $tracks_info;
     }
 
-    private function createTracksInfoMusicBrainz($tracks, $music_brainz_info)
+    private function getMusicBrainzInfo()
+    {
+        if (empty($this->music_brainz_info)) {
+            $disc_id = new DiscRipper();
+            $disc_id = $disc_id->getDiscID();
+
+            try {
+                $music_brainz = new MusicBrainz($disc_id);
+                $this->music_brainz_info = $music_brainz->getParsedTracks();
+                $this->album_title = $music_brainz->getTitle();
+                $this->release_id = $music_brainz->getReleaseID();
+            } catch (Exception $x) {
+                // It was not possible to get any information from MusicBrainz.
+                $this->music_brainz_info = [];
+            }
+        }
+
+        return $this->music_brainz_info;
+    }
+
+    private function createTracksInfoMusicBrainz($tracks)
     {
         $index = 1;
         $tracks_info = [];
+        $music_brainz_info = $this->getMusicBrainzInfo();
+
         foreach ($tracks as $track) {
             $track_info = $music_brainz_info[$index];
             $tracks_info[$index] = [

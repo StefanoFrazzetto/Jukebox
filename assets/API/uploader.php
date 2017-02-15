@@ -79,7 +79,7 @@ switch ($action) {
 
     case 'get_tracks_json':
         $uploader = new Uploader($media_source);
-        $return = $uploader->getTracksInfo($uploader_id);
+        $return = $uploader->getAlbumInfo($uploader_id);
         break;
 
     default:
