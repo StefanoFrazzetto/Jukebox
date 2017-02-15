@@ -18,6 +18,9 @@ class ID3
     /**
      * ID3 constructor extracts all the information from the specified file.
      *
+     * If no ID3 tags are found, has_tags is set to false and the constructor
+     * returns.
+     *
      * @param $file_path string the path to the file
      * @throws InvalidArgumentException if the specified file path is not valid.
      */
@@ -27,9 +30,9 @@ class ID3
             throw new InvalidArgumentException("You must specify a valid file path.");
         }
 
-        $output = shell_exec("id3v2 -R $file_path");
+        $output = OS::execute("id3v2 -R $file_path");
 
-        if (StringUtils::contains($output, 'no id3 tag')) {
+        if (StringUtils::contains($output, 'No ID3 tag')) {
             $this->has_tags = false;
             return;
         } else {
@@ -61,7 +64,7 @@ class ID3
     /**
      * Returns true if the track contains ID3 tags, otherwise false.
      *
-     * @return bool true if the track contains ID3 tags, otherwise false.
+     * @return bool
      */
     public function hasTags()
     {
