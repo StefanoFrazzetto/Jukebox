@@ -1,5 +1,9 @@
 <?php
 
+namespace Providers;
+
+use InvalidArgumentException;
+
 /**
  * Class CoverArtArchive retrieves a music album cover and thumbnails using its release ID.
  *
@@ -41,6 +45,10 @@ class CoverArtArchive
      */
     public function __construct($release_id)
     {
+        if (empty($disc_id)) {
+            throw new InvalidArgumentException('You must provide a release id.');
+        }
+
         $this->release_id = $release_id;
 
         $json_images = @file_get_contents("http://coverartarchive.org/release/$release_id");
