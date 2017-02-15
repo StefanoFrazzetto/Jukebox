@@ -14,10 +14,10 @@ use UploadException;
 class Uploader
 {
     /** @const the uploader source when using the ripper */
-    const MEDIA_SOURCE_RIPPER = 1;
+    const MEDIA_SOURCE_RIPPER = 'ripper';
 
     /** @const the uploader source when using files */
-    const MEDIA_SOURCE_FILES = 2;
+    const MEDIA_SOURCE_FILES = 'files';
 
     /** @const string the status in case of success */
     const STATUS_SUCCESS = 'success';
