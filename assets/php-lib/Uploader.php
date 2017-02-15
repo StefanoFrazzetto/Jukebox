@@ -206,22 +206,23 @@ class Uploader
      * will containing just the basic info about the file, such as
      * title, url, length, number, and an empty array of artists.
      *
-     * @param string $path the path to the directory containing
-     * the tracks
+     * @param string $uploader_id the uploader id associated with
+     * the directory containing the tracks.
      *
      * @throws InvalidArgumentException if either the path or the media
      * is empty.
      *
      * @return array the array containing the tracks information.
      */
-    public function getTracksInfo($path)
+    public function getTracksInfo($uploader_id)
     {
-        if (empty($path)) {
+        if (empty($uploader_id)) {
             throw new InvalidArgumentException('You must provide the tracks path.');
         }
 
         $tracks_info = [];
-        $full_path = Uploader::getPath() . $path;
+        $full_path = Uploader::getPath() . $uploader_id;
+
         $finder = new Finder();
         $tracks = $finder->in($full_path)->files()->sortByName();
 
