@@ -8,9 +8,11 @@ use Lib\Config;
 use Lib\DiscRipper;
 use Lib\FileUtils;
 use Lib\Uploader;
+use Symfony\Component\Finder\Finder;
 
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 $uploader_id = filter_input(INPUT_GET, 'uploader_id', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
+$media_source = filter_input(INPUT_GET, 'media_source', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
 
 if ($uploader_id === null) {
     $uploader_id = Uploader::getNewUploaderID();
@@ -33,7 +35,6 @@ switch ($action) {
 
         $return = Uploader::createStatus($ripper->getStatus(), $ripper->getMessage());
         $return['percentage'] = $ripper->getPercentage();
-        $return['ripped'] = $ripper->getRippedTracks();
         break;
 
     case 'start_ripping':
@@ -67,7 +68,18 @@ switch ($action) {
 
     case 'list_uploads_in_progress':
         $path = Config::getPath('uploader');
-        $return['uploader_ids'] = FileUtils::getDirectories($path);
+        $finder = new Finder();
+        $directories = $finder->in($path)->directories();
+
+        $return['uploader_ids'] = [];
+        foreach ($directories as $directory) {
+            $return['uploader_ids'][] = $directory;
+        }
+        break;
+
+    case 'get_tracks_json':
+        $uploader = new Uploader($media_source);
+        $return = $uploader->getTracksInfo($uploader_id);
         break;
 
     default:
