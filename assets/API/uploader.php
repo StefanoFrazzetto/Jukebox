@@ -78,8 +78,12 @@ switch ($action) {
         break;
 
     case 'get_tracks_json':
-        $uploader = new Uploader($media_source);
-        $return = $uploader->getAlbumInfo($uploader_id);
+        try {
+            $uploader = new Uploader($media_source);
+            $return = $uploader->getAlbumInfo($uploader_id);
+        } catch (Exception $e) {
+            $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage(), 400);
+        }
         break;
 
     default:
