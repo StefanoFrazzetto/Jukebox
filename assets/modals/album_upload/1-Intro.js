@@ -7,29 +7,26 @@ var uploaderSelectorNext = $('#uploaderSelectorNext');
 if (typeof uploader === "undefined")
     uploader = new Uploader();
 
-if (uploader.stage != 0) {
-    uploader.openPage(uploader.stage);
-} else {
-    uploader.uploadMethods.forEach(function (method, key) {
-        var methodHtml = $("<div class='selector'></div>");
+uploader.uploadMethods.forEach(function (method, key) {
+    var methodHtml = $("<div class='selector'></div>");
 
-        methodHtml.append("<i class='fa fa-5x fa-" + method.icon + "'></i>");
+    methodHtml.append("<i class='fa fa-5x fa-" + method.icon + "'></i>");
 
-        methodHtml.append("<p>" + method.name + "<p>");
+    methodHtml.append("<p>" + method.name + "<p>");
 
-        methodHtml.click(function () {
-            $(this).siblings('.active').removeClass('active');
-            $(this).addClass('active');
-            uploaderSelectorNext.removeClass('disabled');
+    methodHtml.click(function () {
+        $(this).siblings('.active').removeClass('active');
+        $(this).addClass('active');
+        uploaderSelectorNext.removeClass('disabled');
 
-            uploader.uploadMethod = key;
+        uploader.uploadMethod = key;
 
-            $('#uploaderSelectorDescription').html(method.description);
-        });
-
-        selector.append(methodHtml);
+        $('#uploaderSelectorDescription').html(method.description);
     });
-}
+
+    selector.append(methodHtml);
+});
+
 
 uploaderSelectorNext.click(function () {
     uploader.nextPage();

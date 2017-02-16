@@ -36,6 +36,5 @@
 require_once '../../../vendor/autoload.php';
 use Lib\ICanHaz;
 
-ICanHaz::js('/assets/modals/album_upload/Uploader.js');
 ICanHaz::js('2-Metadata.js', false, true);
 ?>

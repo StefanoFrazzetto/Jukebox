@@ -34,12 +34,13 @@ ICanHaz::js([
     'assets/js/sliders.js',
     'assets/js/modals.js',
     'assets/js/jquery.mCustomScrollbar.concat.min.js',
-    'assets/js/alerts.js'
+    'assets/js/alerts.js',
+    'assets/js/Uploader.js'
 ]);
 ?>
 
 <script type="text/javascript">
-    modal.openPage('assets/modals/album_upload/1-Intro.php');
+    Uploader.start();
 </script>
 
 </body>

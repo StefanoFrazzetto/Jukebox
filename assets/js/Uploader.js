@@ -2,17 +2,23 @@
  * Created by Vittorio on 03/02/2017.
  */
 
+var uploader = undefined;
+
 function Uploader() {
     this.stage = 0;
-    this.uploadMethod = 0;
+    this.uploadMethod = null;
 
-    this.uploaderID = 0;
+    this.uploaderID = null;
 
     this.title = null;
     this.titles = [];
 
     this.tracks = [];
 }
+
+Uploader.prototype.continue = function () {
+    this.changePage(this.stage);
+};
 
 Uploader.prototype.nextPage = function () {
     this.changePage(this.stage + 1);
@@ -28,31 +34,35 @@ Uploader.prototype.changePage = function (page) {
 
     switch (page) {
         case 0: // Intro
-            modal.openPage('/assets/modals/album_upload/1-Intro.php');
+            if (self.uploaderID === null) {
+                self.getUploaderId(function (id) {
+                    self.uploaderID = id;
+                    modal.openPage('/assets/modals/album_upload/1-Intro.php');
+                });
+            } else {
+                modal.openPage('/assets/modals/album_upload/1-Intro.php');
+            }
             break;
         case 1: // Upload
-            self.getUploaderId(function (id) {
-                self.uploaderID = id;
-                switch (self.uploadMethod) {
-                    case 0: // Upload local files
-                        modal.openPage('/assets/modals/album_upload/uploaders/upload.php');
-                        break;
-                    case 1: // Rip a cd in the jukebox
-                        modal.openPage('/assets/modals/album_upload/uploaders/rip.php');
-                        break;
-                    case 2: // Browse USB drive plugged in the jukebox
-                        modal.openPage('/assets/modals/album_upload/uploaders/usb.php');
-                        break;
-                    case 3: // Import from jukebox
-                        modal.openPage('/assets/modals/album_upload/uploaders/jukebox.php');
-                        break;
-                    default: // Error
-                        var msg1 = "Uploader method not defined";
-                        error(msg1);
-                        console.error(msg1);
-                        break;
-                }
-            });
+            switch (self.uploadMethod) {
+                case 0: // Upload local files
+                    modal.openPage('/assets/modals/album_upload/uploaders/upload.php');
+                    break;
+                case 1: // Rip a cd in the jukebox
+                    modal.openPage('/assets/modals/album_upload/uploaders/rip.php');
+                    break;
+                case 2: // Browse USB drive plugged in the jukebox
+                    modal.openPage('/assets/modals/album_upload/uploaders/usb.php');
+                    break;
+                case 3: // Import from jukebox
+                    modal.openPage('/assets/modals/album_upload/uploaders/jukebox.php');
+                    break;
+                default: // Error
+                    var msg1 = "Uploader method not defined";
+                    error(msg1);
+                    console.error(msg1);
+                    break;
+            }
             break;
         case 2: // Edit names
             $.getJSON(this.getDataJsonUrl())
@@ -99,8 +109,12 @@ Uploader.prototype.changePage = function (page) {
 Uploader.prototype.getUploaderId = function (callback) {
     $.getJSON('/assets/API/uploader.php?action=get_new_id')
         .done(function (data) {
-            if (data.status === "success")
+            //noinspection JSUnresolvedVariable
+            if (data.status === "success" && typeof data.uploader_id !== "undefined") { //noinspection JSUnresolvedVariable
                 callback(data.uploader_id);
+                //noinspection JSUnresolvedVariable
+                console.log("The new uploader ID is", data.uploader_id);
+            }
             else
                 error("Failed to retrieve the uploader id");
         })
@@ -132,4 +146,12 @@ Uploader.prototype.getDataJsonUrl = function () {
     var codeName = this.uploadMethods[this.uploadMethod].codeName;
 
     return url + codeName + '&uploader_id=' + this.uploaderID;
+};
+
+Uploader.start = function () {
+    if (uploader === undefined) {
+        uploader = new Uploader();
+    }
+
+    uploader.continue();
 };
