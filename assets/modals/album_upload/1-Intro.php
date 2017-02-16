@@ -12,40 +12,10 @@
     <button class="right disabled" id="uploaderSelectorNext">Next</button>
 </div>
 
-<script src="/assets/modals/album_upload/Uploader.js"></script>
+<?php
+require_once '../../../vendor/autoload.php';
+use Lib\ICanHaz;
 
-<script>
-    var selector = $('#uploaderSelector');
-    var uploaderSelectorNext = $('#uploaderSelectorNext');
-
-    if (typeof uploader === "undefined")
-        uploader = new Uploader();
-
-    if (uploader.stage != 0) {
-        uploader.openPage(uploader.stage);
-    } else {
-        uploader.uploadMethods.forEach(function (method, key) {
-            var methodHtml = $("<div class='selector'></div>");
-
-            methodHtml.append("<i class='fa fa-5x fa-" + method.icon + "'></i>");
-
-            methodHtml.append("<p>" + method.name + "<p>");
-
-            methodHtml.click(function () {
-                $(this).siblings('.active').removeClass('active');
-                $(this).addClass('active');
-                uploaderSelectorNext.removeClass('disabled');
-
-                uploader.uploadMethod = key;
-
-                $('#uploaderSelectorDescription').html(method.description);
-            });
-
-            selector.append(methodHtml);
-        });
-    }
-
-    uploaderSelectorNext.click(function () {
-        uploader.nextPage();
-    });
-</script>
+ICanHaz::js('/assets/modals/album_upload/Uploader.js');
+ICanHaz::js('1-Intro.js', false, true);
+?>
