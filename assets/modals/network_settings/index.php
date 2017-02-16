@@ -1,8 +1,9 @@
 <div class="modalHeader">Network Settings</div>
-<div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
-    <form method="POST" id="network_settings_form">
+<form method="POST" id="network_settings_form">
+    <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
+
         <div id="network_selectors">
-            <select id="network_type" name="network_type" style="display: none">
+            <select title="Network Type" id="network_type" name="network_type" style="display: none">
                 <option value="0">NONE</option>
                 <option value="1">LAN</option>
                 <option value="2">WIFI</option>
@@ -48,61 +49,63 @@
                 </select>
             </p>
         </div>
-    </form>
 
-    <div id="wifi_module">
-        <hr/>
-        <h4>WiFi</h4>
-        <table class="songsTable" id="wifiTable" style="width: 100%; padding-top: 0; margin-top: 0;">
-            <thead>
-            <tr class="th">
-                <th class="wifiID">#</th>
-                <th class="wifiESSID">ESSID</th>
-                <th class="wifiEncryption">Encryption</th>
-                <th class="wifiQuality">Quality</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td colspan="4" style="text-align: center;">Loading...</td>
-            </tr>
-            </tbody>
-        </table>
-        <div id="wifi_details" class="hidden">
-            <div>ESSID: <span id="network_details_essid"></span></div>
-            <div>Security: <span id="network_details_security"></span></div>
+        <div id="wifi_module">
+            <hr/>
+            <h4>WiFi</h4>
+            <table class="songsTable" id="wifiTable" style="width: 100%; padding-top: 0; margin-top: 0;">
+                <thead>
+                <tr class="th">
+                    <th class="wifiID">#</th>
+                    <th class="wifiESSID">ESSID</th>
+                    <th class="wifiEncryption">Encryption</th>
+                    <th class="wifiQuality">Quality</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4" style="text-align: center;">Loading...</td>
+                </tr>
+                </tbody>
+            </table>
+            <div id="wifi_details" class="hidden">
+                <div>ESSID: <span id="network_details_essid"></span></div>
+                <div>Security: <span id="network_details_security"></span></div>
 
-            <div id="network_details_password">Password: <input type="password" name="network_password"
-                                                                id="network_password"/></div>
+                <div id="network_details_password">Password: <input title="password" type="password"
+                                                                    name="network_password"
+                                                                    id="network_password"/></div>
 
-            <button onclick="closeNetworkDetails()">Back</button>
+                <button onclick="closeNetworkDetails()">Back</button>
 
-            <button class="danger" id="network_details_forget">Forget</button>
+                <button class="danger" id="network_details_forget">Forget</button>
 
-            <button class="success saveBtn" onclick="setSelectedNetwork()">Save & Connect</button>
+                <button class="success saveBtn" onclick="setSelectedNetwork()">Save & Connect</button>
 
 
+            </div>
         </div>
     </div>
-</div>
 
-<div class="modalFooter">
+    <div class="modalFooter">
     <span id="dhcp_module">
         DHCP
-        <div class="onoffswitch" id="dhcp_div">
+        <span class="onoffswitch" id="dhcp_div">
             <input type="checkbox" name="dhcp" class="onoffswitch-checkbox" id="dhcp">
             <label class="onoffswitch-label" for="dhcp">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
             </label>
-        </div>
+        </span>
     </span>
-    <input type="submit" value="Save" class="right saveBtn" onclick="$('#network_settings_form').submit();"/>
-</div>
+        <input type="submit" value="Save" class="right saveBtn" onclick="$('#network_settings_form').submit();"/>
+    </div>
+</form>
 
+<?php
+require_once '../../../vendor/autoload.php';
+use Lib\ICanHaz;
 
-<link rel="stylesheet" type="text/css" href="/assets/modals/network_settings/css/style.css">
-<link rel="stylesheet" type="text/css" href="/assets/modals/network_settings/css/horizontal_selector.css">
-<script src="/assets/modals/network_settings/js/horizontal_selector.js"></script>
-<script type="text/javascript" src="/assets/modals/network_settings/js/scripts.js"></script>
-<script type="text/javascript" src="/assets/modals/network_settings/js/wifi_scan.js"></script>
+ICanHaz::css(['css/style.css', 'css/horizontal_selector.css']);
+ICanHaz::js(['js/horizontal_selector.js', 'js/scripts.js', 'js/wifi_scan.js'], false, true);
+?>
