@@ -226,9 +226,10 @@ class Uploader
     public function getAlbumInfo($uploader_id)
     {
         if (empty($uploader_id)) {
-            throw new InvalidArgumentException('You must provide the tracks path.');
+            throw new InvalidArgumentException('You must provide a valid uploader id.');
         }
 
+        $this->uploader_id = $uploader_id;
         $cd_no = isset($_SESSION['cd']) ? $_SESSION['cd'] : 1;
         $tracks_info = $this->getTracksInfo();
 
@@ -256,7 +257,7 @@ class Uploader
         $full_path = Uploader::getPath() . $this->uploader_id;
 
         $finder = new Finder();
-        $tracks = $finder->in($full_path)->files()->sortByName();
+        $tracks = $finder->in($full_path)->files()->name('*.mp3')->sortByName();
 
         if ($this->source == static::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
             $tracks_info = $this->createTracksInfoMusicBrainz($tracks);
