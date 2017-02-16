@@ -1,5 +1,5 @@
 <div class="modalHeader">Album Uploader</div>
-<div class="modalBody center">
+<div class="modalBody center mCustomScrollbar">
 
     <div class="col-row">
         <div class="col-left">
