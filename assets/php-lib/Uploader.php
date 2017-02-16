@@ -246,11 +246,6 @@ class Uploader
         return $info;
     }
 
-    private function getAlbumTitle()
-    {
-        return $this->album_title;
-    }
-
     private function getTracksInfo()
     {
         $tracks_info = [];
@@ -269,6 +264,28 @@ class Uploader
 
         if (empty($tracks_info)) {
             $tracks_info = $this->createTracksInfoFromFiles($tracks);
+        }
+
+        return $tracks_info;
+    }
+
+    private function createTracksInfoMusicBrainz($tracks)
+    {
+        $index = 1;
+        $tracks_info = [];
+        $music_brainz_info = $this->getMusicBrainzInfo();
+
+        foreach ($tracks as $track) {
+            $track_info = $music_brainz_info[$index];
+            $tracks_info[$index] = [
+                'number' => $index,
+                'title' => $track_info['title'],
+                'url' => basename($track),
+                'length' => FileUtils::getTrackLength($track),
+                'artists' => $track_info['artists']
+            ];
+
+            $index++;
         }
 
         return $tracks_info;
@@ -294,42 +311,23 @@ class Uploader
         return $this->music_brainz_info;
     }
 
-    private function createTracksInfoMusicBrainz($tracks)
-    {
-        $index = 1;
-        $tracks_info = [];
-        $music_brainz_info = $this->getMusicBrainzInfo();
-
-        foreach ($tracks as $track) {
-            $track_info = $music_brainz_info[$index];
-            $tracks_info[$index] = [
-                'number' => $index,
-                'title' => $track_info['title'],
-                'url' => basename($track),
-                'length' => FileUtils::getTrackLength($track),
-                'artists' => $track_info['artists']
-            ];
-
-            $index++;
-        }
-
-        return $tracks_info;
-    }
-
     private function createTracksInfoFromID3($tracks)
     {
         $tracks_info = [];
         $fail = 0;
         foreach ($tracks as $track) {
-            if ($fail >= 3) { // If 4 or more tracks have no ID3, skips the process
-                $tracks_info = [];
-                break;
-            }
-
             $id3 = new ID3($track);
             if (!$id3->hasTags()) { // If the tracks does not have id3 tags
                 $fail++;
+                if ($fail > 3) { // If 3 or more tracks have no ID3, skips the process
+                    $tracks_info = [];
+                    break;
+                }
                 continue;
+            }
+
+            if (empty($this->album_title)) {
+                $this->album_title = $id3->getAlbum();
             }
 
             $tracks_info[] = [
@@ -359,5 +357,10 @@ class Uploader
         }
 
         return $tracks_info;
+    }
+
+    private function getAlbumTitle()
+    {
+        return $this->album_title;
     }
 }
