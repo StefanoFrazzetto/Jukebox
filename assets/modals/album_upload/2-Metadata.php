@@ -32,53 +32,10 @@
     <button class="right" id="btnNext">Next</button>
 </div>
 
-<script src="/assets/modals/album_upload/Uploader.js"></script>
+<?php
+require_once '../../../vendor/autoload.php';
+use Lib\ICanHaz;
 
-<script>
-    var metaDataSongsTableBody = $('#metaDataSongsTableBody');
-    var metaDataTitlesList = $('#metaDataTitlesList');
-    var metaDataAlbumTitle = $('#metaDataAlbumTitle');
-
-    $('#btnBack').click(function () {
-        uploader.previousPage();
-    });
-
-    $('#btnNext').click(function () {
-        uploader.nextPage();
-    });
-
-    uploader.tracks.forEach(function (cd) {
-        cd.forEach(function (track, no) {
-            var tr = $("<tr>");
-
-            var td1 = $("<td>" + (no + 1) + "</td>");
-            var td2 = $("<td><input type='text' class='full-wide' value='" + track.title + "'/></td>");
-            var td3 = $("<td>" + track.main_artist + "</td>");
-            var td4 = $("<td>" + track.url + "</td>");
-
-            td2.find('input').change(function () {
-                track.title = $(this).val();
-            });
-
-            tr.append(td1);
-            tr.append(td2);
-            tr.append(td3);
-            tr.append(td4);
-
-            metaDataSongsTableBody.append(tr);
-        })
-    });
-
-    metaDataTitlesList.html('');
-    uploader.titles.forEach(function (title) {
-        var button = $("<button>" + title + "</button>");
-        button.click(function () {
-            metaDataAlbumTitle.val(title);
-        });
-        metaDataTitlesList.append(button);
-    });
-
-    if (uploader.title !== null) {
-        metaDataAlbumTitle.val(uploader.title);
-    }
-</script>
+ICanHaz::js('/assets/modals/album_upload/Uploader.js');
+ICanHaz::js('2-Metadata.js', false, true);
+?>
