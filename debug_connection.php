@@ -6,8 +6,9 @@
  * Time: 18:49
  */
 
-require "assets/php-lib/Network.php";
-require "assets/php-lib/Wifi.php";
+require "vendor/autoload.php";
+use Lib\Network;
+use Lib\Wifi;
 
 $network = new Network();
 
