@@ -55,7 +55,7 @@ Uploader.prototype.changePage = function (page) {
             });
             break;
         case 2: // Edit names
-            $.getJSON('/assets/modals/album_upload/sample_data.json')
+            $.getJSON(this.getDataJsonUrl())
                 .done(function (data) {
                     uploader.title = data.title;
 
@@ -110,8 +110,26 @@ Uploader.prototype.getUploaderId = function (callback) {
 };
 
 Uploader.prototype.uploadMethods = [
-    {name: "Browse Local", description: "Upload songs from the current device.", icon: "file-audio-o"},
-    {name: "Rip CD", description: "Store a disc in the Jukebox.", icon: "download"},
-    {name: "From USB", description: "Store songs from a USB plugged in the Jukebox.", icon: "usb"},
-    {name: "Remote Jukebox", description: "Import an album from a remote Jukebox via network.", icon: "music"}
+    {
+        name: "Browse Local",
+        description: "Upload songs from the current device.",
+        icon: "file-audio-o",
+        codeName: "files"
+    },
+    {name: "Rip CD", description: "Store a disc in the Jukebox.", icon: "download", codeName: "ripper"},
+    {name: "From USB", description: "Store songs from a USB plugged in the Jukebox.", icon: "usb", codeName: "usb"},
+    {
+        name: "Remote Jukebox",
+        description: "Import an album from a remote Jukebox via network.",
+        icon: "music",
+        codeName: "import"
+    }
 ];
+
+Uploader.prototype.getDataJsonUrl = function () {
+    var url = '/assets/API/uploader.php?action=get_tracks_json&media_source=';
+
+    var codeName = this.uploadMethods[this.uploadMethod].codeName;
+
+    return url + codeName + '&uploader_id=' + this.uploaderID;
+};
