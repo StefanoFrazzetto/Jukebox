@@ -142,30 +142,6 @@ class Uploader
     }
 
     /**
-     * Creates a status array from a status, a message, and an optional
-     * response code.
-     *
-     * @param string $status the status
-     * @param string $message the message
-     * @param int $response_code the response code to use in case of error
-     *
-     * @return array containing the status and the message.
-     */
-    public static function createStatus($status, $message = "", $response_code = 200)
-    {
-        $return = [
-            'status' => $status,
-            'message' => $message
-        ];
-
-        if ($status == self::STATUS_ERROR) {
-            http_response_code($response_code);
-        }
-
-        return $return;
-    }
-
-    /**
      * Returns a new upload ID and create its directory.
      *
      * If the uploader ID already exists, the function
@@ -198,6 +174,37 @@ class Uploader
         $directories = FileUtils::getDirectories($upload_path);
 
         return $directories;
+    }
+
+
+    /**
+     * Creates an album using a string containing a correctly formatted json.
+     *
+     * @param string $json the json to be parsed which contains
+     * the album info.
+     *
+     * @return bool true on success, false otherwise.
+     * @throws Exception if the content was not valid
+     */
+    public function createAlbumFromJson($json)
+    {
+        if (empty($json)) {
+            throw new InvalidArgumentException('Json not provided.');
+        }
+
+        $content = json_decode($json, true);
+        if (empty($content)) {
+            throw new Exception(json_last_error_msg());
+        }
+
+        $title = $content['title'];
+        $tracks = $content['tracks'];
+        $cd = array_keys($tracks)[0];
+        $cover = $content['cover'];
+
+        // TODO: add album creation process.
+
+        throw new Exception('Album creation process not yet implemented.');
     }
 
     /**
@@ -362,5 +369,29 @@ class Uploader
     private function getAlbumTitle()
     {
         return $this->album_title;
+    }
+
+    /**
+     * Creates a status array from a status, a message, and an optional
+     * response code.
+     *
+     * @param string $status the status
+     * @param string $message the message
+     * @param int $response_code the response code to use in case of error
+     *
+     * @return array containing the status and the message.
+     */
+    public static function createStatus($status, $message = "", $response_code = 200)
+    {
+        $return = [
+            'status' => $status,
+            'message' => $message
+        ];
+
+        if ($status == self::STATUS_ERROR) {
+            http_response_code($response_code);
+        }
+
+        return $return;
     }
 }
