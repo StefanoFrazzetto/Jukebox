@@ -54,9 +54,15 @@ Uploader.prototype.changePage = function (page) {
                     modal.openPage('/assets/modals/album_upload/uploaders/rip.php');
                     break;
                 case 2: // Browse USB drive plugged in the jukebox
+                    error("Not implemented.");
+                    this.stage--;
+                    return;
                     modal.openPage('/assets/modals/album_upload/uploaders/usb.php');
                     break;
                 case 3: // Import from jukebox
+                    error("Not implemented.");
+                    this.stage--;
+                    return;
                     modal.openPage('/assets/modals/album_upload/uploaders/jukebox.php');
                     break;
                 default: // Error
