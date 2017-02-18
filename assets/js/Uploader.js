@@ -207,7 +207,23 @@ Uploader.prototype.getAllArtists = function () {
 };
 
 Uploader.prototype.done = function () {
-    alert("Not implemented, but this should save.");
+    $.ajax({
+        url: '/assets/API/uploader.php?action=create_album&uploader_id=' + uploader.uploaderID,
+        type: 'POST',
+        data: JSON.stringify({
+            title: uploader.title,
+            tracks: uploader.tracks,
+            cover: uploader.cover
+        }),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json'
+    })
+        .done(function (data) {
+            alert(JSON.stringify(data));
+        })
+        .fail(function (error) {
+            error(JSON.stringify(error));
+        });
 };
 
 Uploader.start = function () {

@@ -4,6 +4,8 @@ namespace Lib;
 
 use Exception;
 use InvalidArgumentException;
+use Lib\MusicClasses\Album;
+use Lib\MusicClasses\Song;
 use Providers\MusicBrainz;
 use Symfony\Component\Finder\Finder;
 use UploadException;
@@ -215,19 +217,56 @@ class Uploader
             throw new InvalidArgumentException('Json not provided.');
         }
 
-        $content = json_decode($json, true);
+        $content = json_decode($json);
         if (empty($content)) {
             throw new Exception(json_last_error_msg());
         }
 
-        $title = $content['title'];
-        $tracks = $content['tracks'];
-        $cd = array_keys($tracks)[0];
-        $cover = $content['cover'];
+        $title = $content->title;
+        $tracks = $this->extractTracksFromCd($content->tracks);
+        $cover = $content->tracks;
 
-        // TODO: add album creation process.
+        $album = new Album();
+        $album->setTitle($title);
 
-        throw new Exception('Album creation process not yet implemented.');
+        if (!$album->save()) {
+            throw new Exception("Failed to save the new album to database.");
+        }
+
+        // Converts the tracks in the json into Songs
+        foreach ($tracks as &$track) {
+            $track = Song::newSongFromJson($track);
+        }
+
+        $album->addSongs($tracks);
+
+        // TODO Add cover
+
+        // TODO Move file
+
+        return true;
+    }
+
+    /**
+     * Flattens a multidimensional [cd][trackNo] array,
+     * adding the cd index directly to the track as a property.
+     *
+     * @param $cds array
+     * @return array
+     */
+    private function extractTracksFromCd($cds)
+    {
+        $tracks = [];
+
+        foreach ($cds as $cdIndex => $cd_tracks) {
+            if (is_array($tracks))
+                foreach ($cd_tracks as $track) {
+                    $track->cd = $cdIndex;
+                    $tracks[] = $track;
+                }
+        }
+
+        return $tracks;
     }
 
     /**
