@@ -104,7 +104,7 @@ class Song implements JsonSerializable
      * @param $album_id int
      * @return Song
      */
-    public static function newSongFromJson($json, $album_id)
+    public static function newSongFromJson($json, $album_id = null)
     {
         $song = new Song();
 
