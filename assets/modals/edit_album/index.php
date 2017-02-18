@@ -76,6 +76,7 @@ $tracks = $album->getTracks();
 <div class="modalFooter">
     <button onclick="modal.openPage('assets/modals/album_details?id=<?php echo $id ?>')">Back to Album</button>
     <button onclick="appendCd()">Add CD</button>
+    <div class="box-btn" onclick="storage.deleteAlbum(<?php echo $id ?>)">Delete</div>
     <button class="right" id="edit-album-save">Save</button>
 </div>
 
