@@ -17,6 +17,7 @@ $(function () {
     var confirmSongsTableBody = $('#confirmSongsTableBody');
 
     confirmTitleHeader.html(uploader.title);
+    confirmArtistsHeader.html(uploader.getAllArtists().join(', '));
 
     if (uploader.cover !== null) {
         confirmCoverImg.attr('src', uploader.cover);

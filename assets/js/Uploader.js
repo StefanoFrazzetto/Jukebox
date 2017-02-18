@@ -190,6 +190,22 @@ Uploader.prototype.createSongsTable = function (container, useInput) {
     });
 };
 
+Uploader.prototype.getAllArtists = function () {
+    var artists = [];
+
+    uploader.tracks.forEach(function (cd) {
+        cd.forEach(function (track) {
+            track.artists.forEach(function (artist) {
+                if (artists.indexOf(artist) === -1) {
+                    artists.push(artist);
+                }
+            });
+        });
+    });
+
+    return artists;
+};
+
 Uploader.prototype.done = function () {
     alert("Not implemented, but this should save.");
 };
