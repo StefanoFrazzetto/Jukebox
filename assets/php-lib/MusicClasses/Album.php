@@ -264,7 +264,33 @@ class Album implements JsonSerializable
         return $last;
     }
 
+    /**
+     * Add Songs to the album and save them.
+     * <p>
+     * <b>Note: Album must be saved!</b>
+     * @param $songs Song[]
+     */
+    public function addSongs($songs)
+    {
+        if (!$this->stored)
+            throw new \RuntimeException("Album must be saved before Songs can be added to.");
+
+        foreach ($songs as $song) {
+            $song->setAlbumId($this->getId());
+        }
+
+        Song::saveMultiple($songs);
+    }
+
     //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return string absolute unix path to cover thumb file
@@ -331,14 +357,6 @@ class Album implements JsonSerializable
     public function getSongs()
     {
         return Song::getSongsInAlbum($this->getId());
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
