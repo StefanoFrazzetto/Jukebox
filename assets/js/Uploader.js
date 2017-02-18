@@ -14,6 +14,8 @@ function Uploader() {
     this.titles = [];
 
     this.tracks = [];
+
+    this.cover = null;
 }
 
 Uploader.prototype.continue = function () {
@@ -94,8 +96,8 @@ Uploader.prototype.changePage = function (page) {
 
             break;
         case 3: // Add cover
-            break;
         case 4: // Confirm
+            modal.openPage('/assets/modals/album_upload/4-Confirm.php');
             break;
         default: // Error
             var msg2 = "Uploader page out of bound.";
@@ -146,6 +148,44 @@ Uploader.prototype.getDataJsonUrl = function () {
     var codeName = this.uploadMethods[this.uploadMethod].codeName;
 
     return url + codeName + '&uploader_id=' + this.uploaderID;
+};
+
+Uploader.prototype.createSongsTable = function (container, useInput) {
+    uploader.tracks.forEach(function (cd) {
+        cd.forEach(function (track, no) {
+            var tr = $("<tr>");
+
+            var td1 = $("<td>" + (no + 1) + "</td>");
+            var td2 = $("<td></td>");
+
+            if (useInput) {
+                var input = $("<input type='text' class='full-wide'/>");
+                input.val(track.title);
+
+                td2.append(input);
+            } else {
+                td2.html(track.title);
+            }
+
+            var td3 = $("<td>" + track.artists.concat(', ') + "</td>");
+            var td4 = $("<td>" + track.url + "</td>");
+
+            td2.find('input').change(function () {
+                track.title = $(this).val();
+            });
+
+            tr.append(td1);
+            tr.append(td2);
+            tr.append(td3);
+            tr.append(td4);
+
+            container.append(tr);
+        })
+    });
+};
+
+Uploader.prototype.done = function () {
+    alert("Not implemented, but this should save.");
 };
 
 Uploader.start = function () {
