@@ -204,7 +204,7 @@ class Album implements JsonSerializable
                 return false;
             }
 
-            $this->id = $db->getLastInsertedID();
+            $this->id = intval($db->getLastInsertedID());
             $this->stored = true;
         }
 
