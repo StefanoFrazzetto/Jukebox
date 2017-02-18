@@ -44,7 +44,7 @@ if ($album->getId() != null) {
 
     // tracks
     foreach ($tracks as $track) {
-        $song = Song::importSongFromJson((object)$track, $id);
+        $song = Song::newSongFromJson((object)$track, $id);
 
 //        error_log(json_encode($song));
 //        error_log(json_encode($track));

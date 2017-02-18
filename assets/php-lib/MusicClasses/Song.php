@@ -99,28 +99,48 @@ class Song implements JsonSerializable
     }
 
     /**
-     * Creates a song object out of a legacy song json
+     * Creates a song object out of json object
      * @param $json object json
      * @param $album_id int
      * @return Song
      */
-    public static function importSongFromJson($json, $album_id)
+    public static function newSongFromJson($json, $album_id)
     {
         $song = new Song();
 
-        $song->setTitle($json->title);
+        if (isset($json->title)) {
+            $song->setTitle($json->title);
+        }
 
         if (isset($json->track_no)) {
             $song->setTrackNo($json->track_no);
         }
 
-        $song->setCd($json->cd);
+        if (isset($json->cd)) {
+            $song->setCd($json->cd);
+        }
 
-        $song->setUrl($json->url);
+        if (isset($json->url)) {
+            $song->setUrl($json->url);
+        }
 
-        $song->setLength($json->length);
+        if (isset($json->length)) {
+            $song->setLength($json->length);
+        }
 
-        $song->setAlbumId($album_id);
+        if (isset($json->album_id)) {
+            $song->setAlbumId($json->album_id);
+        }
+
+        if (isset($album_id)) {
+            $song->setAlbumId($album_id);
+        }
+
+        if (isset($json->artists) && is_array($json->artists)) {
+            foreach ($json->artists as $artist) {
+                $song->artists[] = Artist::softCreateArtist($artist)->getId();
+            }
+        }
 
         return $song;
     }

@@ -482,7 +482,7 @@ class Album implements JsonSerializable
         $_songs = [];
 
         foreach ($songs as $song) {
-            $song = Song::importSongFromJson($song, $this->id);
+            $song = Song::newSongFromJson($song, $this->id);
             $_songs[] = $song;
         }
 
