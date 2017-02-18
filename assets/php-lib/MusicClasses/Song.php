@@ -365,6 +365,7 @@ class Song implements JsonSerializable
     {
         $db = new Database();
 
+        $db->delete(self::SONG_ARTISTS_TABLE, "`song_id` = $id");
         return $db->delete(self::SONGS_TABLE, "`id` = $id");
     }
 
