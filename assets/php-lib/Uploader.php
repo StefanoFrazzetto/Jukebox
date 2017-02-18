@@ -222,49 +222,55 @@ class Uploader
             throw new Exception(json_last_error_msg());
         }
 
-        $title = $content->title;
-        $tracks = $this->extractTracksFromCd($content->tracks);
-        $cover = $content->tracks;
+        if (empty($content->title)) {
+            throw new Exception("Album title required.");
+        }
 
         $album = new Album();
-        $album->setTitle($title);
+        $album->setTitle($content->title);
 
         if (!$album->save()) {
             throw new Exception("Failed to save the new album to database.");
         }
 
-        // Converts the tracks in the json into Songs
-        foreach ($tracks as &$track) {
-            $track = Song::newSongFromJson($track);
-        }
+        $tracks = self::extractTracksFromCd($content->tracks);
 
         $album->addSongs($tracks);
 
-        // TODO Add cover
+        mkdir($album->getAlbumPath());
 
-        // TODO Move file
+        $album->setCover($content->cover);
+
+        // TODO Move file to the album folder
 
         return true;
     }
 
     /**
-     * Flattens a multidimensional [cd][trackNo] array,
-     * adding the cd index directly to the track as a property.
+     * Flattens a multidimensional [cd][trackNo] array of {@link stdObjects},
+     * into a linear queue of ad-hoc defined {@link Song} objects,
+     * storing the CD index within the dedicated structure,
+     * preparing the aforementioned for being processed by further facilities.
+     * <p>
+     * Nevertheless, creates artists on-the-fly, if the are missing from the local database,
+     * adding a reference inside the {@link Song} object.
+     * <p><p>
+     * Hot stuff, man.
      *
      * @param $cds array
-     * @return array
+     * @return Song[]
      */
-    private function extractTracksFromCd($cds)
+    private static function extractTracksFromCd($cds)
     {
         $tracks = [];
 
-        foreach ($cds as $cdIndex => $cd_tracks) {
-            if (is_array($tracks))
+        foreach ($cds as $cdIndex => $cd_tracks)
+            if (is_array($cd_tracks))
                 foreach ($cd_tracks as $track) {
                     $track->cd = $cdIndex;
-                    $tracks[] = $track;
+                    $tracks[] = Song::newSongFromJson($track);
                 }
-        }
+
 
         return $tracks;
     }

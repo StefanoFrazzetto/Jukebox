@@ -5,6 +5,7 @@ namespace Lib\MusicClasses;
 use Exception;
 use JsonSerializable;
 use Lib\Config;
+use Lib\Cover;
 use Lib\Database;
 use Lib\FileUtils;
 
@@ -293,6 +294,33 @@ class Album implements JsonSerializable
     }
 
     /**
+     * Adds a cover to the album.
+     * @param $url String either remote or local, the program is so smart it doesn't give flying sheep about it.
+     */
+    public function setCover($url)
+    {
+        if ($url === null) {
+            if (file_exists($this->getCoverPath())) {
+                unlink($this->getCoverPath());
+                unlink($this->getThumbPath());
+            }
+
+        } else {
+            $cover = new Cover($url);
+
+            $cover->saveToAlbum($this->getId());
+        }
+    }
+
+    /**
+     * @return string absolute unix path to cover file.
+     */
+    public function getCoverPath()
+    {
+        return $this->albums_root . "$this->id/cover.jpg";
+    }
+
+    /**
      * @return string absolute unix path to cover thumb file
      */
     public function getThumbPath()
@@ -428,14 +456,6 @@ class Album implements JsonSerializable
             return null;
 
         return filemtime($this->getCoverPath());
-    }
-
-    /**
-     * @return string absolute unix path to cover file.
-     */
-    public function getCoverPath()
-    {
-        return $this->albums_root . "$this->id/cover.jpg";
     }
 
     /**
