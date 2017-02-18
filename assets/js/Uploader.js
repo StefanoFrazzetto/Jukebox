@@ -173,7 +173,7 @@ Uploader.prototype.createSongsTable = function (container, useInput) {
                 td2.html(track.title);
             }
 
-            var td3 = $("<td>" + track.artists.concat(', ') + "</td>");
+            var td3 = $("<td>" + track.artists.join(', ') + "</td>");
             var td4 = $("<td>" + track.url + "</td>");
 
             td2.find('input').change(function () {

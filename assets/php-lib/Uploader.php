@@ -176,6 +176,29 @@ class Uploader
         return $directories;
     }
 
+    /**
+     * Creates a status array from a status, a message, and an optional
+     * response code.
+     *
+     * @param string $status the status
+     * @param string $message the message
+     * @param int $response_code the response code to use in case of error
+     *
+     * @return array containing the status and the message.
+     */
+    public static function createStatus($status, $message = "", $response_code = 200)
+    {
+        $return = [
+            'status' => $status,
+            'message' => $message
+        ];
+
+        if ($status == self::STATUS_ERROR) {
+            http_response_code($response_code);
+        }
+
+        return $return;
+    }
 
     /**
      * Creates an album using a string containing a correctly formatted json.
@@ -342,7 +365,7 @@ class Uploader
                 'title' => $id3->getTitle(),
                 'url' => basename($track),
                 'length' => FileUtils::getTrackLength($track),
-                'artists' => $id3->getLeadArtist()
+                'artists' => [$id3->getLeadArtist()]
             ];
         }
 
@@ -369,29 +392,5 @@ class Uploader
     private function getAlbumTitle()
     {
         return $this->album_title;
-    }
-
-    /**
-     * Creates a status array from a status, a message, and an optional
-     * response code.
-     *
-     * @param string $status the status
-     * @param string $message the message
-     * @param int $response_code the response code to use in case of error
-     *
-     * @return array containing the status and the message.
-     */
-    public static function createStatus($status, $message = "", $response_code = 200)
-    {
-        $return = [
-            'status' => $status,
-            'message' => $message
-        ];
-
-        if ($status == self::STATUS_ERROR) {
-            http_response_code($response_code);
-        }
-
-        return $return;
     }
 }
