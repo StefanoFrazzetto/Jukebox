@@ -314,23 +314,31 @@ class Album implements JsonSerializable
      */
     public function delete()
     {
-        self::deleteAlbum($this->id);
+        $database = new Database();
+
+        FileUtils::remove(Config::getPath('albums_root') . $this->id, true);
+
+        foreach ($this->getTracks() as $song) {
+            $song->delete();
+        }
+
+        return $database->delete(self::ALBUMS_TABLE, "`id` = $this->id");
     }
 
     /**
-     * Deletes an album and all the related files irreversibly
-     *
-     * @param $id
-     * @return bool
+     * @return Song[] | null the songs in an album
      */
-    private static function deleteAlbum($id)
-
+    public function getTracks()
     {
-        $database = new Database();
+        return Song::getSongsInAlbum($this->getId());
+    }
 
-        FileUtils::remove(Config::getPath('albums_root') . "$id", true);
-
-        return $database->delete(self::ALBUMS_TABLE, "`id` = $id");
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -348,14 +356,6 @@ class Album implements JsonSerializable
     public function serializableArray()
     {
         return ["id" => $this->getId(), "title" => $this->getTitle(), "artists" => $this->getArtists(), "hits" => $this->getHits(), "last_played" => $this->getLastPlayed(), "cover" => $this->getCoverID()];
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -512,14 +512,6 @@ class Album implements JsonSerializable
         }
 
         return end($tracks)->getCd();
-    }
-
-    /**
-     * @return Song[] | null the songs in an album
-     */
-    public function getTracks()
-    {
-        return Song::getSongsInAlbum($this->getId());
     }
 
     //</editor-fold>
