@@ -2,7 +2,7 @@
 <div class="modalBody center">
     <div style="width: 30%; float: left; text-align: center">
         <h1>
-            <img src="/assets/img/album-placeholder.png" style="width: 90%" id="confirmCoverImg">
+            <img src="/assets/img/album-placeholder.png" style="width: 90%" id="confirmCoverImg" class="cover-picture">
         </h1>
     </div>
     <div style="width: 70%; float: right; max-height: 300px" class="mCustomScrollbar">
