@@ -58,7 +58,7 @@ class Song implements JsonSerializable
     private $created = false;
 
     /**
-     * @var Artist[] the artists of the song
+     * @var int[] the artists of the song
      */
     private $artists = [];
 
@@ -248,9 +248,46 @@ class Song implements JsonSerializable
 
             $this->id = intval($database->getLastInsertedID());
             $this->created = true;
+
+            foreach ($this->artists as $artist) {
+                $this->addArtist($artist);
+            }
+
+            $this->artists = [];
         }
 
         return true;
+    }
+
+    /**
+     * Adds an artist to the song
+     * @param $artist | Artist int the artist id
+     */
+    public function addArtist($artist)
+    {
+        if ($artist instanceof Artist)
+            $artist = $artist->getId();
+
+        if (!is_integer($artist)) {
+            var_dump($artist);
+            throw new \InvalidArgumentException("Artist is neither an int or a Artist instance. Maybe it's not saved? " . $artist);
+        }
+
+        if ($this->created) {
+            $db = new Database();
+
+            $db->insert(self::SONG_ARTISTS_TABLE, ['song_id' => $this->getId(), 'artist_id' => $artist]);
+        } else {
+            $this->artists[] = $artist;
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -444,25 +481,6 @@ class Song implements JsonSerializable
     public function setTitle($title)
     {
         $this->title = $title;
-    }
-
-    /**
-     * Adds an artist to the song
-     * @param $id int the artist id
-     */
-    public function addArtist($id)
-    {
-        $db = new Database();
-
-        $db->insert(self::SONG_ARTISTS_TABLE, ['song_id' => $this->getId(), 'artist_id' => $id]);
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
