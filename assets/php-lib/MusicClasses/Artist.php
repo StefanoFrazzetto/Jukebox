@@ -164,7 +164,7 @@ class Artist implements JsonSerializable
                 return false;
             }
 
-            $this->id = $database->getLastInsertedID();
+            $this->id = intval($database->getLastInsertedID());
             $this->created = true;
         }
 
@@ -189,6 +189,8 @@ class Artist implements JsonSerializable
     public static function deleteArtist($id)
     {
         $db = new Database();
+
+        $db->delete(Song::SONG_ARTISTS_TABLE, "`artist_id` = $id");
 
         return $db->delete(Artist::ARTIST_TABLE, "`id` = $id");
     }
