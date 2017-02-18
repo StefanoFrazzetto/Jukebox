@@ -62,17 +62,6 @@ class Song implements JsonSerializable
      */
     private $artists = [];
 
-
-    // ============================
-
-//    function __construct($url)
-//    {
-//        if (!file_exists($url))
-//            throw  new Exception("The song '$url' could not be found");
-//
-//        $this->setUrl($url);
-//    }
-
     /**
      * Factory method that return a song object from a file
      * @param $file string
@@ -86,8 +75,6 @@ class Song implements JsonSerializable
 
         $song = new Song();
 
-        $song->loadInfoFromMP3File();
-
         $song->setUrl(basename($file));
 
         $song->file_path = dirname($file);
@@ -95,11 +82,6 @@ class Song implements JsonSerializable
         $song->length = Song::getLength($file);
 
         return $song;
-    }
-
-    public function loadInfoFromMP3File()
-    {
-        // TODO loadInfoFromMP3File
     }
 
     /**
@@ -226,6 +208,52 @@ class Song implements JsonSerializable
     }
 
     /**
+     * Saves a batch of Songs to the database
+     * @param $songs Song[]
+     */
+    public static function saveMultiple($songs)
+    {
+        // FIXME this could be made more efficient using a single query, maybe?
+        foreach ($songs as $song) {
+            if (!$song instanceof Song)
+                throw new \InvalidArgumentException("You must pass only Song type");
+            if ($song->save() === false) {
+                throw new \RuntimeException("Failed to save one of the song");
+            }
+        }
+    }
+
+    /**
+     * Saves or update the song to the database
+     * @return bool
+     */
+    public function save()
+    {
+        $database = new Database();
+
+        $arr = [ // I AM A PIRATE!
+            'album_id' => $this->album_id, 'cd' => $this->cd, 'track_no' => $this->track_no,
+            'title' => $this->title, 'url' => $this->url, 'length' => $this->length
+        ];
+
+        if ($this->created) {
+            echo $this->id;
+            return $database->update(self::SONGS_TABLE, $arr, "`id` = $this->id");
+        } else {
+            $status = $database->insert(self::SONGS_TABLE, $arr);
+
+            if (!$status) {
+                return false;
+            }
+
+            $this->id = intval($database->getLastInsertedID());
+            $this->created = true;
+        }
+
+        return true;
+    }
+
+    /**
      * @return array|null of ID3v2 Tags
      */
     public function getID3Tags()
@@ -301,36 +329,6 @@ class Song implements JsonSerializable
         $db = new Database();
 
         return $db->delete(self::SONGS_TABLE, "`id` = $id");
-    }
-
-    /**
-     * Saves or update the song to the database
-     * @return bool
-     */
-    public function save()
-    {
-        $database = new Database();
-
-        $arr = [ // I AM A PIRATE!
-            'album_id' => $this->album_id, 'cd' => $this->cd, 'track_no' => $this->track_no,
-            'title' => $this->title, 'url' => $this->url, 'length' => $this->length
-        ];
-
-        if ($this->created) {
-            echo $this->id;
-            return $database->update(self::SONGS_TABLE, $arr, "`id` = $this->id");
-        } else {
-            $status = $database->insert(self::SONGS_TABLE, $arr);
-
-            if (!$status) {
-                return false;
-            }
-
-            $this->id = intval($database->getLastInsertedID());
-            $this->created = true;
-        }
-
-        return true;
     }
 
     /**
