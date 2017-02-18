@@ -58,7 +58,7 @@ if (file_exists($outputFile)) {
             </tr>
             <?php
 
-            $tracks = $album->getTracks();
+            $tracks = $album->getSongs();
 
             $differentCDs = $album->getCdCount() != 1;
             $CD = -1;
@@ -121,7 +121,7 @@ if (file_exists($outputFile)) {
         <img style="float: right;" src="<?php echo $album->getCoverUrl() ?>"/>
         <div class="download-box">
             <div class="text" id="album-size">Album size: <?php echo $album->getAlbumFolderSize() . " MB"; ?></div>
-            <div class="text" id="album-tracks">Tracks: <?php echo $album->getTracksCount(); ?></div>
+            <div class="text" id="album-tracks">Tracks: <?php echo $album->getSongsCount(); ?></div>
             <div class="text" id="album-cds">CDs: <?php echo $album->getCdCount() ?></div>
             <br>
             <div class="box-btn" id="download-btn-2">Download</div>

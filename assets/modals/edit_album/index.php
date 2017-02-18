@@ -8,7 +8,7 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 $album = Album::getAlbum($id);
 
-$tracks = $album->getTracks();
+$tracks = $album->getSongs();
 
 ?>
 <div class="modalHeader">Edit Album - <?php echo $album->getTitle() ?></div>

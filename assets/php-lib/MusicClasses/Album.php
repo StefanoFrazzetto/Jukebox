@@ -278,7 +278,7 @@ class Album implements JsonSerializable
      * Returns the number of tracks in the album
      * @return int the count of tracks
      */
-    public function getTracksCount()
+    public function getSongsCount()
     {
         $db = new Database();
 
@@ -318,7 +318,7 @@ class Album implements JsonSerializable
 
         FileUtils::remove(Config::getPath('albums_root') . $this->id, true);
 
-        foreach ($this->getTracks() as $song) {
+        foreach ($this->getSongs() as $song) {
             $song->delete();
         }
 
@@ -328,7 +328,7 @@ class Album implements JsonSerializable
     /**
      * @return Song[] | null the songs in an album
      */
-    public function getTracks()
+    public function getSongs()
     {
         return Song::getSongsInAlbum($this->getId());
     }
@@ -505,13 +505,13 @@ class Album implements JsonSerializable
      */
     public function getCdCount()
     {
-        $tracks = $this->getTracks();
+        $songs = $this->getSongs();
 
-        if (count($tracks) == 0) {
+        if (count($songs) == 0) {
             return 0;
         }
 
-        return end($tracks)->getCd();
+        return end($songs)->getCd();
     }
 
     //</editor-fold>

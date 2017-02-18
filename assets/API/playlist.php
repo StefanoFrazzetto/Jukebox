@@ -17,6 +17,6 @@ $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 $album = Album::getAlbum($id);
 
 if ($album != null)
-    echo json_encode($album->getTracks());
+    echo json_encode($album->getSongs());
 else
     echo "[]";
