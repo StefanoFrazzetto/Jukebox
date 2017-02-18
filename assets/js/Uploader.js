@@ -81,6 +81,10 @@ Uploader.prototype.changePage = function (page) {
 
                     uploader.tracks = mapCD(data.tracks);
 
+                    // uploader.cover = data.cover;
+
+                    // uploader.covers = data.covers;
+
                     function mapCD(CD) {
                         var arr = [];
 

@@ -211,7 +211,7 @@ class Uploader
      * @return bool true on success, false otherwise.
      * @throws Exception if the content was not valid
      */
-    public function createAlbumFromJson($json)
+    public function createAlbumFromJson($json, $uploader_id)
     {
         if (empty($json)) {
             throw new InvalidArgumentException('Json not provided.');
@@ -239,11 +239,16 @@ class Uploader
 
         mkdir($album->getAlbumPath());
 
+        // Let's grab all the juicy stuff.
+        rename(Uploader::getPath() . $uploader_id, $album->getAlbumPath());
+
         $album->setCover($content->cover);
 
-        // TODO Move file to the album folder
+        // Take the garbage out.
+        FileUtils::remove(Uploader::getPath() . $uploader_id, true);
 
-        return true;
+        // Job done, people, let's go home!
+        return true; // Now just pretend it might return something else, okay?
     }
 
     /**
@@ -307,6 +312,9 @@ class Uploader
         $this->uploader_id = $uploader_id;
         $cd_no = isset($_SESSION['cd']) ? $_SESSION['cd'] : 1;
         $tracks_info = $this->getTracksInfo();
+        $cover_info = $this->getCoverInfo();
+
+        $cover = isset($cover_info[0]) ? $cover_info[0] : null;
 
         $info = [
             'title' => $this->getAlbumTitle(),
@@ -314,8 +322,8 @@ class Uploader
             'tracks' => [
                 "CD$cd_no" => $tracks_info
             ],
-            'cover' => null,
-            'covers' => []
+            'cover' => $cover,
+            'covers' => $cover_info
         ];
 
         return $info;
@@ -429,6 +437,24 @@ class Uploader
                 'length' => FileUtils::getTrackLength($track),
                 'artists' => []
             ];
+        }
+
+        return $tracks_info;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getCoverInfo()
+    {
+        $tracks_info = [];
+        $full_path = Uploader::getPath() . $this->uploader_id;
+
+        $finder = new Finder();
+        $tracks = $finder->in($full_path)->files()->name('*.jpg')->sortByName();
+
+        foreach ($tracks as $track) {
+            $tracks_info[] = $track->getFileName();
         }
 
         return $tracks_info;

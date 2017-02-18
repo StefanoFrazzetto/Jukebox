@@ -94,7 +94,7 @@ switch ($action) {
     case 'create_album':
         try {
             $uploader = new Uploader();
-            $success = $uploader->createAlbumFromJson($json);
+            $success = $uploader->createAlbumFromJson($json, $uploader_id);
 
             if (!$success) {
                 Uploader::createStatus(Uploader::STATUS_ERROR, 'Error while creating the album.');
