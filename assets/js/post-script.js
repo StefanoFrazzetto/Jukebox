@@ -320,8 +320,7 @@ home_btn.click(function () {
 });
 
 add_btn.click(function () {
-    $.ajax('assets/php/album_creation/prepare_upload.php');
-    modal.openPage('assets/modals/add_album/1.upload_album.php');
+    Uploader.start();
 });
 
 buttonsLetter.click(function (event) { // Previous button click event
