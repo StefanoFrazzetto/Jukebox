@@ -10,7 +10,12 @@ $('#btnBack').click(function () {
 });
 
 $('#btnNext').click(function () {
-    uploader.nextPage();
+    if (metaDataAlbumTitle.val() == "") {
+        error("Album title is required.");
+    } else {
+        uploader.nextPage();
+    }
+
 });
 
 uploader.createSongsTable(metaDataSongsTableBody, true);

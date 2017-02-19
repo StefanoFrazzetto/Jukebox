@@ -173,17 +173,17 @@ Uploader.prototype.createSongsTable = function (container, useInput) {
                 input.val(track.title);
 
                 td2.append(input);
+
+                td2.find('input').change(function () {
+                    track.title = $(this).val();
+                });
             } else {
                 td2.html(track.title);
             }
 
             var td3 = $("<td>" + track.artists.join(', ') + "</td>");
             var td4 = $("<td>" + track.url + "</td>");
-
-            td2.find('input').change(function () {
-                track.title = $(this).val();
-            });
-
+            
             tr.append(td1);
             tr.append(td2);
             tr.append(td3);
@@ -226,7 +226,7 @@ Uploader.prototype.done = function () {
             alert(JSON.stringify(data));
         })
         .fail(function (error) {
-            alert("Unable to upoad album. " + JSON.stringify(error));
+            alert("Unable to upload album. " + error.responseText);
             console.log(error);
         });
 };
