@@ -35,7 +35,7 @@ class ID3
 
         $output = OS::execute("id3v2 -R $file_path");
 
-        if (StringUtils::contains($output, 'No ID3 tag')) {
+        if (StringUtils::contains(strtolower($output), 'no id3')) {
             $this->has_tags = false;
             return;
         } else {
