@@ -226,7 +226,8 @@ Uploader.prototype.done = function () {
             alert(JSON.stringify(data));
         })
         .fail(function (error) {
-            error(JSON.stringify(error));
+            alert("Unable to upoad album. " + JSON.stringify(error));
+            console.log(error);
         });
 };
 
