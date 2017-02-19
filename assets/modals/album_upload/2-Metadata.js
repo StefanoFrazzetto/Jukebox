@@ -15,6 +15,10 @@ $('#btnNext').click(function () {
 
 uploader.createSongsTable(metaDataSongsTableBody, true);
 
+metaDataAlbumTitle.change(function () {
+    uploader.title = $(this).val();
+});
+
 metaDataTitlesList.html('');
 uploader.titles.forEach(function (title) {
     var button = $("<button>" + title + "</button>");
