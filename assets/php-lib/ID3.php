@@ -7,6 +7,8 @@ use InvalidArgumentException;
 /**
  * Class ID3 is used to get the main ID3v2 tags from a specified file.
  *
+ * @see http://id3.org/id3v2.3.0
+ *
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
  * @version 1.0.0
  */
@@ -16,7 +18,7 @@ class ID3
     /** @var array The array containing the ID3 tags */
     private $tags;
 
-    private $has_tags;
+    private $has_tags = false;
 
     /**
      * ID3 constructor extracts all the information from the specified file.
@@ -30,23 +32,15 @@ class ID3
     public function __construct($file_path)
     {
         if (!file_exists($file_path)) {
-            throw new InvalidArgumentException("You must specify a valid file path.");
+            throw new InvalidArgumentException('You must specify a valid file path.');
         }
 
         $output = OS::execute("id3v2 -R $file_path");
 
-        if (StringUtils::contains(strtolower($output), 'no id3')) {
-            $this->has_tags = false;
-            return;
-        } else {
-            $this->has_tags = true;
-        }
-
-
         $count = preg_match_all("/^([a-zA-Z]*[0-3]?):\\s*(.*)$/m", $output, $matches);
 
         $this->tags = [];
-        if ($count >= 1) {
+        if ($count > 2) {
             $results = [];
             foreach ($matches[1] as $key => $match) {
                 if (!in_array($match, ['PRIV', 'COMM']))
@@ -54,6 +48,11 @@ class ID3
             }
 
             $this->tags = $results;
+
+            // If the track ID3 has the title, we assume it has ID3 tags.
+            if (!empty($this->getTitle())) {
+                $this->has_tags = true;
+            }
 
             // Parses the "Part of a set" string
             if (isset($this->tags['TPOS'])) {
@@ -178,7 +177,7 @@ class ID3
      */
     public function getSetNumber()
     {
-        return $this->tags['TPOS2'];
+        return $this->tags['TPOS1'];
     }
 
     /**
