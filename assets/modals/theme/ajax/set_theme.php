@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 25-Nov-16
- * Time: 13:09
+ * Time: 13:09.
  */
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
@@ -16,4 +16,4 @@ include '../../../php-lib/Theme.php';
 
 $theme = !Theme::applyThemeById($id);
 
-echo $theme ? "Theme not found." : "success";
+echo $theme ? 'Theme not found.' : 'success';

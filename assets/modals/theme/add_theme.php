@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 27-Nov-16
- * Time: 16:10
+ * Time: 16:10.
  */
 ?>
 <div class="modalHeader">Theme Creator</div>

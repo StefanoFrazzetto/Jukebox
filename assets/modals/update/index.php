@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 22-Nov-16
- * Time: 18:29
+ * Time: 18:29.
  */
-
 require_once '../../../vendor/autoload.php';
 use Lib\Git;
 
@@ -62,7 +61,7 @@ use Lib\Git;
         <?php
         $git = new Git();
 
-        $branches = Git::branch("-a");
+        $branches = Git::branch('-a');
 
         $current_branch = $git->getCurrentBranch();
 

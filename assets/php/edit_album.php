@@ -8,27 +8,23 @@ use Lib\FileUtils;
 
 class EditAlbum
 {
-
     private $database;
 
     // Constructor
     public function __construct($json)
     {
-
         $this->database = new Database();
-        $response = array('success' => false, 'message' => "");
+        $response = ['success' => false, 'message' => ''];
         $array = json_decode($json, true);
         $album_id = $array['album_id'];
 
         // DELETE THE ALBUM
         if (isset($array['delete_album']) && $array['delete_album'] === true) {
-
             $response['success'] = $this->database->delete(Database::$_table_albums, " `id` = $album_id");
 
             if ($response['success'] === false) {
-                $response['message'] = "Failed to delete the album.";
+                $response['message'] = 'Failed to delete the album.';
             }
-
         } else {
 
             // UPDATE THE ALBUM
@@ -43,14 +39,14 @@ class EditAlbum
             }
 
             $tracks_no = count($array['album_tracks']);
-            $data = array('title' => $array['album_title'], 'artist' => $array['album_artist'], 'tracks_no' => $tracks_no, 'tracks' => stripslashes(json_encode($array['album_tracks'])));
+            $data = ['title' => $array['album_title'], 'artist' => $array['album_artist'], 'tracks_no' => $tracks_no, 'tracks' => stripslashes(json_encode($array['album_tracks']))];
 
             // file_put_contents("/tmp/EDIT_ALBUM-SAVE.txt", json_encode($data));
 
             $response['success'] = $this->save($data, $album_id);
 
             if ($response['success'] === false) {
-                $response['message'] = "Error: could not save the album.";
+                $response['message'] = 'Error: could not save the album.';
             }
         }
 
@@ -61,7 +57,7 @@ class EditAlbum
     protected function removeTracks($album_id, $tracks)
     {
         foreach ($tracks as $track) {
-            $track_path = Config::getPath('albums_root') . $album_id . '/' . $track['url'];
+            $track_path = Config::getPath('albums_root').$album_id.'/'.$track['url'];
             FileUtils::remove($track_path);
         }
     }
@@ -70,7 +66,6 @@ class EditAlbum
     {
         return $this->database->update(Database::$_table_albums, $array, " `id` = $album_id");
     }
-
 }
 
 $json = file_get_contents('php://input');

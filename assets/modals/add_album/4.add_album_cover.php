@@ -78,17 +78,17 @@ session_start();
             <div class="row" id="covers">
             	 <?php
                  if (isset($_SESSION['covers'])) {
-		                foreach ($_SESSION['covers'] as $key => $cover) {
-		                    echo "<img src=\"jukebox/tmp_uploads/$cover?". time() ."\" data-type='local' data-id='$key' class='covers local'>";
-		                }
+                     foreach ($_SESSION['covers'] as $key => $cover) {
+                         echo "<img src=\"jukebox/tmp_uploads/$cover?".time()."\" data-type='local' data-id='$key' class='covers local'>";
+                     }
 
-		                /*foreach ($_SESSION['thumbnails']['large'] as $thumbnail) {
-		                    echo "<div class='remote_img_div' ><img src=\"$thumbnail\" data-type='local' class='all_image_style'></div>";
-		                }*/
-		            } else {
-		                //echo "<label>Cover URL: &nbsp;<input type='url' id='coverImageURL' name='coverImageURL' style='width: 50%;'></label>";
-		            }
-            	?>
+                        /*foreach ($_SESSION['thumbnails']['large'] as $thumbnail) {
+                            echo "<div class='remote_img_div' ><img src=\"$thumbnail\" data-type='local' class='all_image_style'></div>";
+                        }*/
+                 } else {
+                     //echo "<label>Cover URL: &nbsp;<input type='url' id='coverImageURL' name='coverImageURL' style='width: 50%;'></label>";
+                 }
+                ?>
                 <p style="display: none;">Loading...</p>
             </div>
         </center>

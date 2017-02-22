@@ -19,11 +19,12 @@ $full_address = $_GET['url'];
 $parsed_address = parse_url($full_address);
 
 $host = $parsed_address['host'];
-$request = $parsed_address['path'] . @$parsed_address['query'];
-if ($parsed_address['port'])
+$request = $parsed_address['path'].@$parsed_address['query'];
+if ($parsed_address['port']) {
     $port = $parsed_address['port'];
-else
+} else {
     $port = 80;
+}
 
 $meta['cycles'] = 0;
 
@@ -33,18 +34,17 @@ $meta['cycles']++;
 $fp = fsockopen($host, $port, $err_no, $err_str);
 
 if (!$fp) {
-    echo json_encode(["error-code" => $err_no, "message" => $err_str]);
+    echo json_encode(['error-code' => $err_no, 'message' => $err_str]);
 } else {
-
     $data = "\r\n\r\n";
 
     $msg = "GET $request HTTP/1.0\r\nIcy-MetaData: 1\r\n\r\n";
 
-    fputs($fp, $msg . $data);
+    fwrite($fp, $msg.$data);
 
     $header = '';
 
-    // get the response 
+    // get the response
     while (true) {
         $header_chunk = fread($fp, 1);
         $header .= $header_chunk;
@@ -56,10 +56,11 @@ if (!$fp) {
 
     preg_match_all('/\n([^:]*):\n?(.*)$/m', $header, $matches);
 
-    foreach ($matches[1] as $key => $name) $meta[trim($name, " \t\n\r\0\x0B")] = trim($matches[2][$key], " \t\n\r\0\x0B");
+    foreach ($matches[1] as $key => $name) {
+        $meta[trim($name, " \t\n\r\0\x0B")] = trim($matches[2][$key], " \t\n\r\0\x0B");
+    }
 
     if (isset($meta['icy-metaint'])) {
-
         $meta_int = $meta['icy-metaint'];
 
         $mp3_chunk = fread($fp, $meta_int);
@@ -67,8 +68,8 @@ if (!$fp) {
         if (strlen($mp3_chunk) != $meta_int && ((time() - $begin_time) < $timeout)) {
             fclose($fp);
             goto start; // God of programming, please forgive me for using a goto.
-        } else if ((time() - $begin_time) >= $timeout) {
-            $meta['error'] = "Request time out";
+        } elseif ((time() - $begin_time) >= $timeout) {
+            $meta['error'] = 'Request time out';
             goto end;
         }
 
@@ -95,11 +96,11 @@ if (!$fp) {
             }
         } else {
             $meta['no_meta_int'] = true;
-            $meta['error'] = "Magic byte not found";
+            $meta['error'] = 'Magic byte not found';
         }
     } else {
         $meta['no_meta_int'] = true;
-        $meta['error'] = "No meta int specified";
+        $meta['error'] = 'No meta int specified';
     }
     end:
     fclose($fp);

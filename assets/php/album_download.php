@@ -4,8 +4,7 @@ require_once '../php-lib/Zipper.php';
 require_once '../php-lib/MusicClasses/Album.php';
 
 $outputDIR = '/var/www/html/downloads/';
-$zipCheck = $outputDIR . 'zipCheck';
-
+$zipCheck = $outputDIR.'zipCheck';
 
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
@@ -14,7 +13,6 @@ if ((time() - file_get_contents($zipCheck)) > 300 && file_exists($zipCheck)) {
 }
 
 if (!file_exists($zipCheck)) {
-
     $album = Album::getAlbum($albumID);
 
     $title = $album->getTitle();
@@ -22,8 +20,8 @@ if (!file_exists($zipCheck)) {
 
     $tracks = $album->getTracks();
 
-    $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', ' ', implode($artists, '-')) . ' - ' . preg_replace('/[^A-Za-z0-9\-]/', ' ', $title);
-    $outputFile = $outputDIR . $outputFileName . '.zip';
+    $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', ' ', implode($artists, '-')).' - '.preg_replace('/[^A-Za-z0-9\-]/', ' ', $title);
+    $outputFile = $outputDIR.$outputFileName.'.zip';
 
     file_put_contents($zipCheck, time());
 
@@ -35,7 +33,6 @@ if (!file_exists($zipCheck)) {
     }
 
     foreach ($tracks as $key => $track) {
-
         if ($differentCDs) {
             if ($track->getCd() != $CD) {
                 $CD = $track->getCd();
@@ -56,9 +53,9 @@ if (!file_exists($zipCheck)) {
         sleep(1);
     }
 
-    $outputFile = 'http://' . $_SERVER['HTTP_HOST'] . '/downloads/' . $outputFileName . '.zip';
+    $outputFile = 'http://'.$_SERVER['HTTP_HOST'].'/downloads/'.$outputFileName.'.zip';
 
-    $output = "<a href='" . $outputFile . "'>Click here to download the album.</a>";
+    $output = "<a href='".$outputFile."'>Click here to download the album.</a>";
 
     unlink($zipCheck);
 } else {

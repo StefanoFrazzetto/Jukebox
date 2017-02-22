@@ -14,6 +14,7 @@ use UploadException;
  * Class Uploader handles the upload of albums into the jukebox.
  *
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
+ *
  * @version 1.0.0
  */
 class Uploader
@@ -31,7 +32,7 @@ class Uploader
     const STATUS_ERROR = 'error';
 
     /** @const string the status file name */
-    const STATUS_FILE = "uploader_status.json";
+    const STATUS_FILE = 'uploader_status.json';
 
     /** @const array the array of allowed music extensions */
     const ALLOWED_MUSIC_EXTENSIONS = ['mp3'];
@@ -50,7 +51,7 @@ class Uploader
 
     private $release_id;
 
-    public function __construct($media_source = "")
+    public function __construct($media_source = '')
     {
         $this->source = $media_source;
 
@@ -63,7 +64,8 @@ class Uploader
     private static function getPath()
     {
         $config = new Config();
-        return $config->get("paths")["uploader"];
+
+        return $config->get('paths')['uploader'];
     }
 
     /**
@@ -72,7 +74,8 @@ class Uploader
     public static function getStatus()
     {
         $config_path = self::getPath();
-        return json_encode($config_path . self::STATUS_FILE);
+
+        return json_encode($config_path.self::STATUS_FILE);
     }
 
     /**
@@ -83,32 +86,30 @@ class Uploader
     public static function setStatus($json)
     {
         if (empty($json)) {
-            throw new InvalidArgumentException("The parameter must not be empty.");
+            throw new InvalidArgumentException('The parameter must not be empty.');
         }
 
-        $status_file = self::getPath() . self::STATUS_FILE;
+        $status_file = self::getPath().self::STATUS_FILE;
         if (!file_exists($status_file)) {
             file_put_contents($status_file, '');
         }
-
-
     }
 
     /**
      * Uploads one or more files into the specified directory.
      *
      * @param string $uploadFolderID The destination directory
-     * @return bool true if the operation succeeds, false otherwise.
      *
      * @throws InvalidArgumentException if no argument is passed.
+     * @throws UploadException          if the file was not uploaded or if the
+     *                                  extension of the file is not allowed.
      *
-     * @throws UploadException if the file was not uploaded or if the
-     * extension of the file is not allowed.
+     * @return bool true if the operation succeeds, false otherwise.
      */
     public static function upload($uploadFolderID)
     {
         if (empty($uploadFolderID)) {
-            throw new InvalidArgumentException("The upload folder ID must not be empty.");
+            throw new InvalidArgumentException('The upload folder ID must not be empty.');
         }
 
         if (!isset($_FILES['file'])) {
@@ -133,12 +134,12 @@ class Uploader
         $source_file = $_FILES['file']['tmp_name'];
 
         // Check if the destination directory exists
-        $destination_path = self::getPath() . $uploadFolderID;
+        $destination_path = self::getPath().$uploadFolderID;
         if (!is_dir($destination_path)) {
             mkdir($destination_path, 0777, true);
         }
 
-        $destination_file = $destination_path . '/' . $file_name;
+        $destination_file = $destination_path.'/'.$file_name;
 
         return move_uploaded_file($source_file, $destination_file);
     }
@@ -153,15 +154,16 @@ class Uploader
      */
     public static function getNewUploaderID()
     {
-        $id = uniqid("", true);
+        $id = uniqid('', true);
 
         // Check if the folder already exists
-        $dir = Config::getPath('uploader') . "$id";
+        $dir = Config::getPath('uploader')."$id";
         if (file_exists($dir)) {
             return self::getNewUploaderID();
         }
 
         mkdir($dir, 0755, true);
+
         return $id;
     }
 
@@ -182,17 +184,17 @@ class Uploader
      * Creates a status array from a status, a message, and an optional
      * response code.
      *
-     * @param string $status the status
-     * @param string $message the message
-     * @param int $response_code the response code to use in case of error
+     * @param string $status        the status
+     * @param string $message       the message
+     * @param int    $response_code the response code to use in case of error
      *
      * @return array containing the status and the message.
      */
-    public static function createStatus($status, $message = "", $response_code = 200)
+    public static function createStatus($status, $message = '', $response_code = 200)
     {
         $return = [
-            'status' => $status,
-            'message' => $message
+            'status'  => $status,
+            'message' => $message,
         ];
 
         if ($status == self::STATUS_ERROR) {
@@ -206,10 +208,11 @@ class Uploader
      * Creates an album using a string containing a correctly formatted json.
      *
      * @param string $json the json to be parsed which contains
-     * the album info.
+     *                     the album info.
+     *
+     * @throws Exception if the content was not valid
      *
      * @return bool true on success, false otherwise.
-     * @throws Exception if the content was not valid
      */
     public function createAlbumFromJson($json, $uploader_id)
     {
@@ -223,14 +226,14 @@ class Uploader
         }
 
         if (empty($content->title)) {
-            throw new Exception("Album title required.");
+            throw new Exception('Album title required.');
         }
 
         $album = new Album();
         $album->setTitle($content->title);
 
         if (!$album->save()) {
-            throw new Exception("Failed to save the new album to database.");
+            throw new Exception('Failed to save the new album to database.');
         }
 
         $tracks = self::extractTracksFromCd($content->tracks);
@@ -240,12 +243,12 @@ class Uploader
         mkdir($album->getAlbumPath());
 
         // Let's grab all the juicy stuff.
-        rename(Uploader::getPath() . $uploader_id, $album->getAlbumPath());
+        rename(self::getPath().$uploader_id, $album->getAlbumPath());
 
         $album->setCover($content->cover);
 
         // Take the garbage out.
-        FileUtils::remove(Uploader::getPath() . $uploader_id, true);
+        FileUtils::remove(self::getPath().$uploader_id, true);
 
         // Job done, people, let's go home!
         return true; // Now just pretend it might return something else, okay?
@@ -263,19 +266,21 @@ class Uploader
      * Hot stuff, man.
      *
      * @param $cds array
+     *
      * @return Song[]
      */
     private static function extractTracksFromCd($cds)
     {
         $tracks = [];
 
-        foreach ($cds as $cdIndex => $cd_tracks)
-            if (is_array($cd_tracks))
+        foreach ($cds as $cdIndex => $cd_tracks) {
+            if (is_array($cd_tracks)) {
                 foreach ($cd_tracks as $track) {
                     $track->cd = $cdIndex;
                     $tracks[] = Song::newSongFromJson($track);
                 }
-
+            }
+        }
 
         return $tracks;
     }
@@ -296,10 +301,10 @@ class Uploader
      * title, url, length, number, and an empty array of artists.
      *
      * @param string $uploader_id the uploader id associated with
-     * the directory containing the tracks.
+     *                            the directory containing the tracks.
      *
      * @throws InvalidArgumentException if either the path or the media
-     * is empty.
+     *                                  is empty.
      *
      * @return array the array containing the album information.
      */
@@ -317,13 +322,13 @@ class Uploader
         $cover = isset($cover_info[0]) ? $cover_info[0] : null;
 
         $info = [
-            'title' => $this->getAlbumTitle(),
+            'title'  => $this->getAlbumTitle(),
             'titles' => [],
             'tracks' => [
-                "CD$cd_no" => $tracks_info
+                "CD$cd_no" => $tracks_info,
             ],
-            'cover' => $cover,
-            'covers' => $cover_info
+            'cover'  => $cover,
+            'covers' => $cover_info,
         ];
 
         return $info;
@@ -332,7 +337,7 @@ class Uploader
     private function getTracksInfo()
     {
         $tracks_info = [];
-        $full_path = Uploader::getPath() . $this->uploader_id;
+        $full_path = self::getPath().$this->uploader_id;
 
         $finder = new Finder();
         $tracks = $finder->in($full_path)->files()->name('*.mp3')->sortByName();
@@ -361,11 +366,11 @@ class Uploader
         foreach ($tracks as $track) {
             $track_info = $music_brainz_info[$index];
             $tracks_info[$index] = [
-                'number' => $index,
-                'title' => $track_info['title'],
-                'url' => basename($track),
-                'length' => FileUtils::getTrackLength($track),
-                'artists' => $track_info['artists']
+                'number'  => $index,
+                'title'   => $track_info['title'],
+                'url'     => basename($track),
+                'length'  => FileUtils::getTrackLength($track),
+                'artists' => $track_info['artists'],
             ];
 
             $index++;
@@ -414,11 +419,11 @@ class Uploader
             }
 
             $tracks_info[] = [
-                'number' => $id3->getTrackNumber(),
-                'title' => $id3->getTitle(),
-                'url' => basename($track),
-                'length' => FileUtils::getTrackLength($track),
-                'artists' => [$id3->getLeadArtist()]
+                'number'  => $id3->getTrackNumber(),
+                'title'   => $id3->getTitle(),
+                'url'     => basename($track),
+                'length'  => FileUtils::getTrackLength($track),
+                'artists' => [$id3->getLeadArtist()],
             ];
         }
 
@@ -431,11 +436,11 @@ class Uploader
         $index = 1;
         foreach ($tracks as $track) {
             $tracks_info[] = [
-                'number' => $index++,
-                'title' => basename($track, ".mp3"),
-                'url' => basename($track),
-                'length' => FileUtils::getTrackLength($track),
-                'artists' => []
+                'number'  => $index++,
+                'title'   => basename($track, '.mp3'),
+                'url'     => basename($track),
+                'length'  => FileUtils::getTrackLength($track),
+                'artists' => [],
             ];
         }
 
@@ -448,7 +453,7 @@ class Uploader
     private function getCoverInfo()
     {
         $tracks_info = [];
-        $full_path = Uploader::getPath() . $this->uploader_id;
+        $full_path = self::getPath().$this->uploader_id;
 
         $finder = new Finder();
         $tracks = $finder->in($full_path)->files()->name('*.jpg')->sortByName();

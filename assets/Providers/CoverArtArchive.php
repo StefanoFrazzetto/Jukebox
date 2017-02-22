@@ -8,39 +8,42 @@ use InvalidArgumentException;
  * Class CoverArtArchive retrieves a music album cover and thumbnails using its release ID.
  *
  * @author Stefano Frazzetto <s.frazzetto22@gmail.com>
+ *
  * @version 1.0.0
+ *
  * @see https://musicbrainz.org/doc/Cover_Art_Archive/API
  * @licence https://www.gnu.org/licenses/agpl-3.0.txt GNU AGPL v3
  */
 class CoverArtArchive
 {
     /**
-     * @var string $release_id the album release ID
+     * @var string the album release ID
      */
     private $release_id;
 
     /**
-     * @var array $raw_array the raw json from CoverArtArchive
+     * @var array the raw json from CoverArtArchive
      */
     private $raw_array;
 
     /**
-     * @var array $covers the array containing the covers
+     * @var array the array containing the covers
      */
     private $covers;
 
     /**
-     * @var  array $small_thumbnails the array containing the small thumbnails
+     * @var array the array containing the small thumbnails
      */
     private $small_thumbnails;
 
     /**
-     * @var array $large_thumbnails the array containing the large thumbnails
+     * @var array the array containing the large thumbnails
      */
     private $large_thumbnails;
 
     /**
      * CoverArtArchive constructor.
+     *
      * @param string $release_id - the album release ID.
      */
     public function __construct($release_id)
@@ -54,7 +57,7 @@ class CoverArtArchive
         $json_images = @file_get_contents("http://coverartarchive.org/release/$release_id");
         $raw_array = json_decode($json_images);
 
-        if ($json_images !== FALSE && $raw_array !== NULL) {
+        if ($json_images !== false && $raw_array !== null) {
             $this->raw_array = $raw_array;
             $images_array = $raw_array->images;
             foreach ($images_array as $image) {
@@ -66,7 +69,7 @@ class CoverArtArchive
     }
 
     /**
-     * Returns the raw array from CoverArtArchive
+     * Returns the raw array from CoverArtArchive.
      *
      * @return array - the raw array from CoverArtArchive
      */
@@ -104,5 +107,4 @@ class CoverArtArchive
     {
         return $this->large_thumbnails;
     }
-
 }

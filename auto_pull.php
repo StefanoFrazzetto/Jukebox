@@ -1,32 +1,32 @@
 <?php
 /**
- * GIT DEPLOYMENT SCRIPT
+ * GIT DEPLOYMENT SCRIPT.
  *
  * Used for automatically deploying websites via github or bitbucket, more deets here:
  *
  *		https://gist.github.com/1809044
  */
-if (!isset($_GET['security_var']) || $_GET['security_var']!= 'kuh25323khjv532') {
+if (!isset($_GET['security_var']) || $_GET['security_var'] != 'kuh25323khjv532') {
     exit('Forbidden!');
 }
 // The commands
-$commands = array(
+$commands = [
     'echo $PWD',
     'whoami',
     'git pull origin master',
     'git status',
     'git submodule sync',
     'git submodule update',
-    'git submodule status'
-);
+    'git submodule status',
+];
 // Run the commands for output
 $output = '';
-foreach($commands AS $command){
+foreach ($commands as $command) {
     // Run it
     $tmp = shell_exec($command);
     // Output
     $output .= "<span style=\"color: #6BE234;\">\$</span> <span style=\"color: #729FCF;\">{$command}\n</span>";
-    $output .= htmlentities(trim($tmp)) . "\n";
+    $output .= htmlentities(trim($tmp))."\n";
 }
 // Make it pretty for manual user access (and why not?)
 ?>

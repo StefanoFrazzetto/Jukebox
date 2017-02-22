@@ -5,13 +5,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if(isset($_SESSION['cd_title'])){
-	$_SESSION['albumTitle'] = $_SESSION['cd_title'];
-	$_SESSION['albumArtist'] = $_SESSION['cd_title'];
+if (isset($_SESSION['cd_title'])) {
+    $_SESSION['albumTitle'] = $_SESSION['cd_title'];
+    $_SESSION['albumArtist'] = $_SESSION['cd_title'];
 }
 
 ?>
-<div class="modalHeader">Add new album<?php if(isset($_SESSION['cd_title'])) echo ": ". $_SESSION['cd_title']; ?></div>
+<div class="modalHeader">Add new album<?php if (isset($_SESSION['cd_title'])) {
+    echo ': '.$_SESSION['cd_title'];
+} ?></div>
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark" style="max-height: 350px;">
     <form id="addAlbumForm" class="text-center" action="/assets/php/album_creation/add_album_details.php">
 

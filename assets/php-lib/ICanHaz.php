@@ -9,7 +9,7 @@ use InvalidArgumentException;
  * Includes html elements such us CSS and JS, keeping them cached according to the changes and optimising requests
  * User: Vittorio
  * Date: 05/02/2017
- * Time: 14:43
+ * Time: 14:43.
  */
 abstract class ICanHaz
 {
@@ -23,7 +23,6 @@ abstract class ICanHaz
     public static function js($filez, $merge = false, $hard = false)
     {
         $taggify = function ($src = '', $content = '', $close_tag = true, $open_tag = true) {
-
             $tag = '';
 
             if ($open_tag) {
@@ -40,7 +39,6 @@ abstract class ICanHaz
                 }
             }
 
-
             if ($close_tag) {
                 $tag .= '</script>';
             }
@@ -53,11 +51,13 @@ abstract class ICanHaz
 
     /**
      * Evil function that does most of the hard job. Don't mess with it. Seriously. I know where you sleep.
+     *
      * @param string $files
      * @param $extension string
      * @param $taggify callable
      * @param bool $merge
      * @param bool $hard
+     *
      * @throws Exception if something really weird happens.
      */
     private static function file($files, $extension, $taggify, $merge = false, $hard = false)
@@ -65,17 +65,19 @@ abstract class ICanHaz
         $files = self::normalise($files);
 
         if ($merge) {
-            if ($hard)
+            if ($hard) {
                 echo $taggify();
-            else
+            } else {
                 $times = [];
+            }
 
             $merged_content = [];
         }
 
         foreach ($files as &$file) {
-            if (!file_exists($file))
+            if (!file_exists($file)) {
                 continue;
+            }
 
             if (!$merge) {
                 if (!$hard) {
@@ -98,32 +100,27 @@ abstract class ICanHaz
         }
 
         if ($merge) {
-
-            if (!isset($merged_content))
+            if (!isset($merged_content)) {
                 throw new Exception("Undefined variable 'merged content'");
-
-            if (!isset($times))
+            }
+            if (!isset($times)) {
                 throw new Exception("Undefined variable 'times");
-
+            }
             if ($hard) {
-
-
                 echo implode($merged_content), $taggify(false, false, true, false);
             } else {
-                $cache_file = md5(implode($files)) . '.' . $extension;
+                $cache_file = md5(implode($files)).'.'.$extension;
 
                 $last_time = max($times);
 
-                if (!file_exists(self::getCacheFolder() . $cache_file) OR filemtime(self::getCacheFolder() . $cache_file) != $last_time) {
-                    file_put_contents(self::getCacheFolder() . $cache_file, $merged_content);
-                    touch(self::getCacheFolder() . $cache_file, $last_time);
-
+                if (!file_exists(self::getCacheFolder().$cache_file) or filemtime(self::getCacheFolder().$cache_file) != $last_time) {
+                    file_put_contents(self::getCacheFolder().$cache_file, $merged_content);
+                    touch(self::getCacheFolder().$cache_file, $last_time);
                 }
 
                 echo $taggify("/assets/cached_resource/$cache_file?$last_time");
             }
         }
-
     }
 
     /**
@@ -131,8 +128,10 @@ abstract class ICanHaz
      * Return an InvalidArgumentException if the argument is neither a string or an array.
      *
      * @param $files array|string
-     * @return array|string
+     *
      * @throws Exception if the file is not found
+     *
+     * @return array|string
      */
     public static function normalise($files)
     {
@@ -140,13 +139,14 @@ abstract class ICanHaz
             if (is_string($files)) {
                 $files = [$files];
             } else {
-                throw new InvalidArgumentException("The file argument should be either a string or an array");
+                throw new InvalidArgumentException('The file argument should be either a string or an array');
             }
         }
 
         foreach ($files as &$file) {
-            if ($file[0] === '/')
-                $file = $_SERVER['DOCUMENT_ROOT'] . $file;
+            if ($file[0] === '/') {
+                $file = $_SERVER['DOCUMENT_ROOT'].$file;
+            }
 
             if (!file_exists($file)) {
                 throw new Exception("File $file not found.");
@@ -161,13 +161,13 @@ abstract class ICanHaz
     /**
      * Append the time of the last edit to the file name.
      * <p>
-     * [/path/to/file/filename.ext]?[lastedit]
+     * [/path/to/file/filename.ext]?[lastedit].
      *
      * @param $file string the file to add version
      */
     public static function versionify(&$file)
     {
-        $file = $file . '?' . filemtime($file);
+        $file = $file.'?'.filemtime($file);
     }
 
     /**
@@ -177,7 +177,7 @@ abstract class ICanHaz
      */
     public static function getCacheFolder()
     {
-        return $_SERVER['DOCUMENT_ROOT'] . '/assets/cached_resource/';
+        return $_SERVER['DOCUMENT_ROOT'].'/assets/cached_resource/';
     }
 
     /**
@@ -190,7 +190,6 @@ abstract class ICanHaz
     public static function css($filez, $merge = false, $hard = false)
     {
         $taggify = function ($src = '', $content = '', $close_tag = true, $open_tag = true) {
-
             if ($src) {
                 return "<link href='$src' rel='stylesheet' type='text/css'/>";
             }
@@ -205,7 +204,6 @@ abstract class ICanHaz
                 }
             }
 
-
             if ($close_tag) {
                 $tag .= '</style>';
             }
@@ -216,4 +214,3 @@ abstract class ICanHaz
         self::file($filez, 'css', $taggify, $merge, $hard);
     }
 }
-

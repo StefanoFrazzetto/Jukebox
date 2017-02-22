@@ -3,22 +3,21 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 15-Oct-16
- * Time: 17:02
+ * Time: 17:02.
  */
-
-require "../../../php-lib/Radio.php";
+require '../../../php-lib/Radio.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if ($id == null) {
-    echo "Invalid radio ID.";
+    echo 'Invalid radio ID.';
     exit;
 }
 
 $radio = Radio::loadRadio($id);
 
 if ($radio == null) {
-    echo "Radio not found.";
+    echo 'Radio not found.';
     exit;
 }
 ?>

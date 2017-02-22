@@ -3,7 +3,6 @@
 /**
  * Returns an array of albums that have the same title as the get parameter "title".
  */
-
 header('Content-Type: application/json');
 
 require_once '../../vendor/autoload.php';

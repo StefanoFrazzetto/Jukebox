@@ -2,7 +2,6 @@
 
 namespace Lib;
 
-
 /**
  * An easy way to keep in track of external processes.
  *
@@ -13,7 +12,7 @@ namespace Lib;
  */
 class Process
 {
-    /** @var  int The process id */
+    /** @var int The process id */
     private $pid;
 
     /** @var string The command or path to script to execute */
@@ -28,11 +27,11 @@ class Process
      * If the first parameters is not empty, the process will be spawned.
      * If the second parameter is not empty, it will be used as output file.
      *
-     * @param string $cl The command or path to script to execute.
+     * @param string $cl          The command or path to script to execute.
      * @param string $output_file The path to the file where the output of the
-     * process will be saved.
+     *                            process will be saved.
      */
-    public function __construct($cl = "", $output_file = "/dev/null")
+    public function __construct($cl = '', $output_file = '/dev/null')
     {
         if (!empty($cl)) {
             $this->command = $cl;
@@ -46,9 +45,10 @@ class Process
      */
     private function runCom()
     {
-        $command = 'nohup bash ' . $this->command . " > $this->output_file 2>&1 & echo \$!";
+        $command = 'nohup bash '.$this->command." > $this->output_file 2>&1 & echo \$!";
         exec("$command", $op);
-        $this->pid = (int)$op[0];
+        $this->pid = (int) $op[0];
+
         return true;
     }
 
@@ -76,7 +76,7 @@ class Process
      * Start the process.
      *
      * @return bool true if the process is started successfully,
-     * false otherwise.
+     *              false otherwise.
      */
     public function start()
     {
@@ -94,10 +94,13 @@ class Process
      */
     public function stop()
     {
-        $command = 'kill ' . $this->pid;
+        $command = 'kill '.$this->pid;
         exec($command);
-        if ($this->status() == false) return true;
-        else return false;
+        if ($this->status() == false) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -107,9 +110,12 @@ class Process
      */
     public function status()
     {
-        $command = 'ps -p ' . $this->pid;
+        $command = 'ps -p '.$this->pid;
         exec($command, $op);
-        if (!isset($op[1])) return false;
-        else return true;
+        if (!isset($op[1])) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

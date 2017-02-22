@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 25-Nov-16
- * Time: 12:30
+ * Time: 12:30.
  */
-
 require_once '../../../vendor/autoload.php';
 
 use Lib\Theme;
@@ -22,7 +21,7 @@ $current_theme = Theme::getAppliedTheme();
                 $id = $theme->getId();
                 $current_theme_id = $current_theme != null ? $current_theme->getId() : 0;
                 $class = $id == $current_theme_id ? 'active' : '';
-                echo "<li data-id='$id' class='$class'>", $theme->getName(), "</li>";
+                echo "<li data-id='$id' class='$class'>", $theme->getName(), '</li>';
             }
             ?>
         </ul>

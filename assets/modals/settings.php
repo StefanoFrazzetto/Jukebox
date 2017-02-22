@@ -1,13 +1,15 @@
 <?php
 function get_string_between($string, $start, $end)
 {
-    $string = " " . $string;
+    $string = ' '.$string;
     $ini = strpos($string, $start);
 
-    if ($ini == 0)
-        return "";
+    if ($ini == 0) {
+        return '';
+    }
     $ini += strlen($start);
     $len = strpos($string, $end, $ini) - $ini;
+
     return substr($string, $ini, $len);
 }
 
@@ -16,17 +18,18 @@ function factory($raw_materials)
     $components = explode(' ', $raw_materials); //Let's hope it's not kerosene;
     $goods = [];
 
-    foreach ($components as $component)
+    foreach ($components as $component) {
         if (trim($component != '')) {
             $goods[] = $component;
         }
+    }
 
     return $goods;
 }
 
 function getSpeakerStatus()
 {
-    return boolval(intval(shell_exec("../cmd/get_speaker_active.sh")));
+    return boolval(intval(shell_exec('../cmd/get_speaker_active.sh')));
 }
 
 ?>
@@ -37,7 +40,9 @@ function getSpeakerStatus()
         Speakers
         <div class="onoffswitch inline" id="speakers_div">
             <input type="checkbox" name="dhcp" class="onoffswitch-checkbox"
-                   id="speakers" <?php if (getSpeakerStatus()) echo "checked" ?>>
+                   id="speakers" <?php if (getSpeakerStatus()) {
+    echo 'checked';
+} ?>>
             <label class="onoffswitch-label" for="speakers">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
@@ -58,7 +63,7 @@ function getSpeakerStatus()
 
     <div class="col-left">
         <?php
-        $raw_materials = exec("df -hT /home");
+        $raw_materials = exec('df -hT /home');
 
         $refined = factory($raw_materials);
 
@@ -72,7 +77,7 @@ function getSpeakerStatus()
 
         <?php
 
-        $raw_materials = exec("df -hT /var/www/html/jukebox");
+        $raw_materials = exec('df -hT /var/www/html/jukebox');
         $refined = factory($raw_materials);
 
         ?>

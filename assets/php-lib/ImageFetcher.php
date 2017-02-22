@@ -10,6 +10,7 @@ use DOMXPath;
  * Non-working images are automatically removed.
  *
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
+ *
  * @version 1.0.0
  * @licence GNU AGPL v3 - https://www.gnu.org/licences/agpl-3.0.txt
  */
@@ -24,24 +25,24 @@ class ImageFetcher
      * Gets the artist and album, and creates the search query.
      *
      * @param string $artist - the artist
-     * @param string $album - the album
+     * @param string $album  - the album
      */
-    function __construct($artist, $album)
+    public function __construct($artist, $album)
     {
-        $this->artist = str_replace(" ", "+", $artist);
-        $this->album = str_replace(" ", "+", $album);
-        $this->_search_query = $this->artist . "+" . $this->album;
+        $this->artist = str_replace(' ', '+', $artist);
+        $this->album = str_replace(' ', '+', $album);
+        $this->_search_query = $this->artist.'+'.$this->album;
     }
 
     public function getAll()
     {
-//        $images[] = $this->getYoutube($this->_search_query);
-        $images["covershut"] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 15);
+        //        $images[] = $this->getYoutube($this->_search_query);
+        $images['covershut'] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 15);
 //        $images[] = $this->getFrom("http://www.seekacover.com/cd/$this->_search_query", 2);
-        $images["allmusic"] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 4);
+        $images['allmusic'] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 4);
 //        $images[] = $this->getFrom("https://www.google.co.uk/search?q=$this->_search_query&tbm=isch&tbs=isz:l", 10);
 //        $images["discogs"] = $this->getFrom("https://www.discogs.com/search/?q=$this->_search_query&type=all", 10);
-        $images["slothradio"] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$$this->album", 2);
+        $images['slothradio'] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$$this->album", 2);
 
         $images_array = [];
 
@@ -60,15 +61,14 @@ class ImageFetcher
 
         // Return false on failure
         if (!$html) {
-            return null;
+            return;
         }
 
         $dom = new DOMDocument();
         @$dom->loadHTML($html);
 
-
         $xpath = new DOMXPath($dom);
-        $imgs = $xpath->evaluate("/html/body//img");
+        $imgs = $xpath->evaluate('/html/body//img');
 
         $imageurls = [];
 
@@ -86,7 +86,7 @@ class ImageFetcher
         if (!empty($imageurls)) {
             return $imageurls;
         } else {
-            return null;
+            return;
         }
     }
 
@@ -105,5 +105,4 @@ class ImageFetcher
 
         $images_array = array_values(array_unique($images_array));
     }
-
 }

@@ -6,30 +6,29 @@ use Exception;
 use InvalidArgumentException;
 
 // Remove this.
-ini_set("error_log", __DIR__ . "/../../logs/network-errors.log");
+ini_set('error_log', __DIR__.'/../../logs/network-errors.log');
 
 class Network
 {
-
-    var $interface = null; // eth0 - ra0
-    var $dhcp = null; // Dynamic - Static
+    public $interface = null; // eth0 - ra0
+    public $dhcp = null; // Dynamic - Static
 
     // Static DHCP
-    var $dhcp_address = null;
-    var $ip = null;
-    var $subnet_mask = null;
-    var $gateway = null;
-    var $dns = null;
+    public $dhcp_address = null;
+    public $ip = null;
+    public $subnet_mask = null;
+    public $gateway = null;
+    public $dns = null;
 
     // Wifi
-    var $encryption = null; // WPA - Open
-    var $ssid = null;
-    var $password = null;
+    public $encryption = null; // WPA - Open
+    public $ssid = null;
+    public $password = null;
 
     // Hotspot
-    var $hotspot_ssid = null;
-    var $hotspot_password = null;
-    var $hotspot_channel = null;
+    public $hotspot_ssid = null;
+    public $hotspot_password = null;
+    public $hotspot_channel = null;
 
     public function connect()
     {
@@ -38,32 +37,33 @@ class Network
         }
 
         if ($this->interface === 'ethernet') {
-            $this->run_term('ethernet ' . $this->getDhcpParams());
+            $this->run_term('ethernet '.$this->getDhcpParams());
         }
 
         if ($this->interface === 'wifi') {
-            $this->run_term('wifi ' . $this->getDhcpParams() . ' ' . $this->getWifiParams());
+            $this->run_term('wifi '.$this->getDhcpParams().' '.$this->getWifiParams());
         }
 
         if ($this->interface === 'hotspot') {
-            $this->run_term('hotspot ' . $this->getHotspotParams());
+            $this->run_term('hotspot '.$this->getHotspotParams());
         }
     }
 
     private function run_term($string)
     {
-        $path = __DIR__ . '/../cmd/network_setup.sh';
+        $path = __DIR__.'/../cmd/network_setup.sh';
+
         return shell_exec("sudo $path $string");
     }
 
     private function getDhcpParams()
     {
         if ($this->dhcp) {
-            return "dhcp";
+            return 'dhcp';
         } else {
-            if (!$this->isStaticDhcpValid())
+            if (!$this->isStaticDhcpValid()) {
                 throw new InvalidArgumentException();
-
+            }
             return "static $this->ip $this->subnet_mask $this->gateway $this->dns";
         }
     }
@@ -76,7 +76,7 @@ class Network
 
     private function getWifiParams()
     {
-        require_once __DIR__ . '/Wifi.php';
+        require_once __DIR__.'/Wifi.php';
 
         $wifi = new Wifi();
 
@@ -84,17 +84,17 @@ class Network
 
         $this->password = Wifi::decodePassword($network['password'], $network['salt']);
 
-        if ($network['encryption'] == "open") {
-            $this->encryption = "open";
-        } elseif ($network['encryption_type'] == "WPA" || $network['encryption_type'] == "WPA2") {
-            $this->encryption = "wpa";
-        } elseif ($network['encryption_type'] == "WEP") {
-            $this->encryption = "wep";
+        if ($network['encryption'] == 'open') {
+            $this->encryption = 'open';
+        } elseif ($network['encryption_type'] == 'WPA' || $network['encryption_type'] == 'WPA2') {
+            $this->encryption = 'wpa';
+        } elseif ($network['encryption_type'] == 'WEP') {
+            $this->encryption = 'wep';
         }
 
-        if (!$this->isWifiValid())
+        if (!$this->isWifiValid()) {
             throw new InvalidArgumentException();
-
+        }
         if ($this->encryption === 'open') {
             $this->password = '';
         }
@@ -110,9 +110,9 @@ class Network
 
     private function getHotspotParams()
     {
-        if (!$this->isHotspotValid())
+        if (!$this->isHotspotValid()) {
             throw new InvalidArgumentException();
-
+        }
         return "\"$this->hotspot_ssid\" \"$this->hotspot_password\" $this->hotspot_channel";
     }
 
@@ -125,32 +125,33 @@ class Network
     public function debug_connect()
     {
         if ($this->interface === 'none') {
-            echo('none');
+            echo 'none';
         }
 
         if ($this->interface === 'ethernet') {
-            echo 'ethernet ' . $this->getDhcpParams();
+            echo 'ethernet '.$this->getDhcpParams();
         }
 
         if ($this->interface === 'wifi') {
-            echo 'wifi ' . $this->getDhcpParams() . ' ' . $this->getWifiParams();
+            echo 'wifi '.$this->getDhcpParams().' '.$this->getWifiParams();
         }
 
         if ($this->interface === 'hotspot') {
-            echo 'hotspot ' . $this->getHotspotParams();
+            echo 'hotspot '.$this->getHotspotParams();
         }
     }
 
     public function load_network()
     {
-        $file = __DIR__ . '/../config/network_settings.json';
-        $default_file = __DIR__ . '/../config/default_network_settings.json';
+        $file = __DIR__.'/../config/network_settings.json';
+        $default_file = __DIR__.'/../config/default_network_settings.json';
 
         if (file_exists($file)) {
             $json = file_get_contents($file);
         } else {
-            if (!file_exists($default_file))
-                throw new Exception("Default network settings file not found");
+            if (!file_exists($default_file)) {
+                throw new Exception('Default network settings file not found');
+            }
             $json = file_get_contents($default_file);
         }
 
@@ -163,19 +164,19 @@ class Network
 
         foreach ($settings as $key => $setting) {
             if ($key === 'network_type') {
-                if ($setting == '0')
+                if ($setting == '0') {
                     $this->interface = 'none';
-                elseif ($setting == '1')
+                } elseif ($setting == '1') {
                     $this->interface = 'ethernet';
-                elseif ($setting == '2') {
+                } elseif ($setting == '2') {
                     $this->interface = 'wifi';
                 } elseif ($setting == '3') {
                     $this->interface = 'hotspot';
                 }
             } elseif ($key === 'dhcp') {
-                if ($setting == 'on')
+                if ($setting == 'on') {
                     $this->dhcp = true;
-                elseif ($setting == '2') {
+                } elseif ($setting == '2') {
                     $this->dhcp = false;
                 }
             } elseif ($key === 'ipaddress') {
@@ -195,7 +196,6 @@ class Network
             } elseif ($key === 'hotspot_channel') {
                 $this->hotspot_channel = $setting;
             }
-
         }
 
         if (!isset($this->dhcp)) {
@@ -209,7 +209,7 @@ class Network
 
     public function isConnected()
     {
-        $connected = @fsockopen("www.google.com", 443);
+        $connected = @fsockopen('www.google.com', 443);
 
         if ($connected) {
             $is_conn = true; //action when connected
@@ -217,8 +217,7 @@ class Network
         } else {
             $is_conn = false; //action in connection failure
         }
+
         return $is_conn;
-
     }
-
 }

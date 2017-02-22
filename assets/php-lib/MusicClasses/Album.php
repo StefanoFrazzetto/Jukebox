@@ -13,12 +13,12 @@ use Lib\FileUtils;
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 20/12/2016
- * Time: 12:10
+ * Time: 12:10.
  */
 class Album implements JsonSerializable
 {
     /**
-     * string
+     * string.
      */
     const ALBUMS_TABLE = 'albums';
 
@@ -57,7 +57,7 @@ class Album implements JsonSerializable
      */
     private $stored;
 
-    /** @var  string The albums root directory */
+    /** @var string The albums root directory */
     private $albums_root;
 
     /**
@@ -79,22 +79,24 @@ class Album implements JsonSerializable
 
         $albums = [];
 
-        if (is_array($db_object))
+        if (is_array($db_object)) {
             foreach ($db_object as $album) {
                 $albums[] = self::makeAlbumFromDatabaseObject($album);
             }
+        }
 
         return $albums;
     }
 
     /**
      * @param $db_object object
+     *
      * @return Album | null
      */
     private static function makeAlbumFromDatabaseObject($db_object)
     {
         try {
-            $album = new Album();
+            $album = new self();
 
             $album->setId($db_object->id);
             $album->setTitle($db_object->title);
@@ -109,7 +111,7 @@ class Album implements JsonSerializable
 
             return $album;
         } catch (Exception $e) {
-            return null;
+            return;
         }
     }
 
@@ -147,6 +149,7 @@ class Album implements JsonSerializable
 
     /**
      * @param $id integer database id of the album
+     *
      * @return Album|null
      */
     public static function getAlbum($id)
@@ -155,15 +158,18 @@ class Album implements JsonSerializable
 
         $db_object = $db->select('*', self::ALBUMS_TABLE, "WHERE `id` = $id");
 
-        if (!isset($db_object[0]))
-            return null;
+        if (!isset($db_object[0])) {
+            return;
+        }
 
         return self::makeAlbumFromDatabaseObject($db_object[0]);
     }
 
     /**
-     * Returns an array of albums that matches the given title
+     * Returns an array of albums that matches the given title.
+     *
      * @param $title string title of the album
+     *
      * @return Album[]
      */
     public static function findAlbumByTitle($title)
@@ -174,16 +180,18 @@ class Album implements JsonSerializable
 
         $albums = [];
 
-        if (is_array($db_objects))
+        if (is_array($db_objects)) {
             foreach ($db_objects as $db_object) {
                 $albums[] = self::makeAlbumFromDatabaseObject($db_object);
             }
+        }
 
         return $albums;
     }
 
     /**
-     * Saves or update the song to the database
+     * Saves or update the song to the database.
+     *
      * @return bool
      */
     public function save()
@@ -192,11 +200,12 @@ class Album implements JsonSerializable
 
         $arr = [ // I AM A PIRATE!
             'title' => $this->title,
-            'genre' => $this->genre
+            'genre' => $this->genre,
         ];
 
         if ($this->stored) {
             echo $this->id;
+
             return $db->update(self::ALBUMS_TABLE, $arr, "`id` = $this->id");
         } else {
             $status = $db->insert(self::ALBUMS_TABLE, $arr);
@@ -213,7 +222,7 @@ class Album implements JsonSerializable
     }
 
     /**
-     * Updates statistics about the last album played and so on
+     * Updates statistics about the last album played and so on.
      */
     public function play()
     {
@@ -222,7 +231,6 @@ class Album implements JsonSerializable
         $db = new Database();
 
         $db->increment(self::ALBUMS_TABLE, ['hits', 'last_played'], "id = $this->id");
-
 
         if ($this->getLastPlayed() != self::getLastPlayedId()) {
             $last = self::incrementLastPlayedId();
@@ -246,14 +254,16 @@ class Album implements JsonSerializable
      */
     public static function getLastPlayedId()
     {
-        if (file_exists(self::LAST_PLAYED_FILE))
+        if (file_exists(self::LAST_PLAYED_FILE)) {
             return intval(file_get_contents(self::LAST_PLAYED_FILE));
+        }
 
         return 0;
     }
 
     /**
-     * Increments the count of the last played album
+     * Increments the count of the last played album.
+     *
      * @return int the updated value
      */
     public static function incrementLastPlayedId()
@@ -268,14 +278,15 @@ class Album implements JsonSerializable
     /**
      * Add Songs to the album and save them.
      * <p>
-     * <b>Note: Album must be saved!</b>
+     * <b>Note: Album must be saved!</b>.
+     *
      * @param $songs Song[]
      */
     public function addSongs($songs)
     {
-        if (!$this->stored)
-            throw new \RuntimeException("Album must be saved before Songs can be added to.");
-
+        if (!$this->stored) {
+            throw new \RuntimeException('Album must be saved before Songs can be added to.');
+        }
         foreach ($songs as $song) {
             $song->setAlbumId($this->getId());
         }
@@ -295,6 +306,7 @@ class Album implements JsonSerializable
 
     /**
      * Adds a cover to the album.
+     *
      * @param $url String either remote or local, the program is so smart it doesn't give flying sheep about it.
      */
     public function setCover($url)
@@ -304,7 +316,6 @@ class Album implements JsonSerializable
                 unlink($this->getCoverPath());
                 unlink($this->getThumbPath());
             }
-
         } else {
             $cover = new Cover($url);
 
@@ -317,7 +328,7 @@ class Album implements JsonSerializable
      */
     public function getCoverPath()
     {
-        return $this->albums_root . "$this->id/cover.jpg";
+        return $this->albums_root."$this->id/cover.jpg";
     }
 
     /**
@@ -325,11 +336,12 @@ class Album implements JsonSerializable
      */
     public function getThumbPath()
     {
-        return $this->albums_root . "$this->id/cover.jpg";
+        return $this->albums_root."$this->id/cover.jpg";
     }
 
     /**
-     * Returns the number of tracks in the album
+     * Returns the number of tracks in the album.
+     *
      * @return int the count of tracks
      */
     public function getSongsCount()
@@ -364,13 +376,13 @@ class Album implements JsonSerializable
     }
 
     /**
-     *  Deletes the album and all the related files irreversibly
+     *  Deletes the album and all the related files irreversibly.
      */
     public function delete()
     {
         $database = new Database();
 
-        FileUtils::remove(Config::getPath('albums_root') . $this->id, true);
+        FileUtils::remove(Config::getPath('albums_root').$this->id, true);
 
         foreach ($this->getSongs() as $song) {
             $song->delete();
@@ -388,20 +400,23 @@ class Album implements JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
+     *               which is a value of any type other than a resource.
+     *
      * @since 5.4.0
      */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return $this->serializableArray();
     }
 
     public function serializableArray()
     {
-        return ["id" => $this->getId(), "title" => $this->getTitle(), "artists" => $this->getArtists(), "hits" => $this->getHits(), "last_played" => $this->getLastPlayed(), "cover" => $this->getCoverID()];
+        return ['id' => $this->getId(), 'title' => $this->getTitle(), 'artists' => $this->getArtists(), 'hits' => $this->getHits(), 'last_played' => $this->getLastPlayed(), 'cover' => $this->getCoverID()];
     }
 
     /**
@@ -421,7 +436,8 @@ class Album implements JsonSerializable
     }
 
     /**
-     * Return an array of participating artists IDs
+     * Return an array of participating artists IDs.
+     *
      * @return int []
      */
     public function getArtists()
@@ -452,14 +468,16 @@ class Album implements JsonSerializable
      */
     public function getCoverID()
     {
-        if (!file_exists($this->getCoverPath()))
-            return null;
+        if (!file_exists($this->getCoverPath())) {
+            return;
+        }
 
         return filemtime($this->getCoverPath());
     }
 
     /**
-     * Returns an array of contributing artists
+     * Returns an array of contributing artists.
+     *
      * @return string[]
      */
     public function getArtistsName()
@@ -477,23 +495,25 @@ class Album implements JsonSerializable
 
     public function getCoverUrl($thumb = false)
     {
-        if (!file_exists($this->getCoverPath()))
+        if (!file_exists($this->getCoverPath())) {
             return '/assets/img/album-placeholder.png';
+        }
 
         $file = $thumb ? 'thumb' : 'cover';
 
-        return "/jukebox/$this->id/$file.jpg?" . $this->getCoverID();
+        return "/jukebox/$this->id/$file.jpg?".$this->getCoverID();
     }
 
     /**
-     * Returns an array of songs created with the legacy album system
+     * Returns an array of songs created with the legacy album system.
+     *
      * @return Song[]
      */
     public function getLegacySongs()
     {
         $db = new Database();
 
-        $result = $db->select('tracks', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+        $result = $db->select('tracks', self::ALBUMS_TABLE, 'WHERE `id` = '.$this->id);
 
         //$result = $result;
 
@@ -510,7 +530,8 @@ class Album implements JsonSerializable
     }
 
     /**
-     * The size in MB of the album folder (tracks and covers)
+     * The size in MB of the album folder (tracks and covers).
+     *
      * @return float|null
      */
     public function getAlbumFolderSize()
@@ -520,18 +541,19 @@ class Album implements JsonSerializable
 
     public function getAlbumPath()
     {
-        return $this->albums_root . $this->getId() . '/';
+        return $this->albums_root.$this->getId().'/';
     }
 
     /**
-     * Gets an artist from the previous artist configuration and return a new Artist object
+     * Gets an artist from the previous artist configuration and return a new Artist object.
+     *
      * @return Artist
      */
     public function getLegacyArtist()
     {
         $db = new Database();
 
-        $result = $db->select('artist', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+        $result = $db->select('artist', self::ALBUMS_TABLE, 'WHERE `id` = '.$this->id);
 
         $artist = $result[0]->artist;
 

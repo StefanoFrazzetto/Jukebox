@@ -19,11 +19,11 @@ class Bluetooth
      * @param $act - the action to perform
      * @param $mac - the device mac address
      */
-    public function __construct($act, $mac = "")
+    public function __construct($act, $mac = '')
     {
-        $this->config = include "../config/config.php";
-        $this->cmd_folder = $this->config['assets_path'] . '/cmd/bluetooth/';
-        $this->helper = $this->cmd_folder . 'bluetooth-helper.sh';
+        $this->config = include '../config/config.php';
+        $this->cmd_folder = $this->config['assets_path'].'/cmd/bluetooth/';
+        $this->helper = $this->cmd_folder.'bluetooth-helper.sh';
 
         switch ($act) {
             case 'turn_on':
@@ -37,7 +37,7 @@ class Bluetooth
             case 'scan':
                 if ($this->scan()) {
                 } else {
-                    $this->output("Error");
+                    $this->output('Error');
                 }
                 break;
 
@@ -58,11 +58,12 @@ class Bluetooth
      * Change the bluetooth status.
      *
      * @param string $mode on or off
+     *
      * @return string
      */
     private function power($mode)
     {
-        $cmd = shell_exec($this->cmd_folder . "power.sh $mode");
+        $cmd = shell_exec($this->cmd_folder."power.sh $mode");
         if (strpos($cmd, 'succeeded') !== false) {
             $this->output("Bluetooth is now $mode");
         } else {
@@ -71,7 +72,7 @@ class Bluetooth
     }
 
     /**
-     * AJAX output
+     * AJAX output.
      *
      * @param string $string
      */
@@ -87,11 +88,11 @@ class Bluetooth
      */
     private function scan()
     {
-        $cmd = shell_exec($this->helper . ' scan');
+        $cmd = shell_exec($this->helper.' scan');
 
         if (strpos($cmd, 'not available') === false) {
             str_replace('Scanning ...', '', $cmd);
-            preg_match("/\\n\\t(.*)\\t(.*)\\n/", $cmd, $matches);
+            preg_match('/\\n\\t(.*)\\t(.*)\\n/', $cmd, $matches);
             unset($matches[0]);
 
             for ($i = 1; $i < count($matches); $i += 2) {
@@ -102,6 +103,7 @@ class Bluetooth
             }
 
             $this->output($this->devices);
+
             return true;
         }
 
@@ -110,26 +112,24 @@ class Bluetooth
 
     private function pair($mac)
     {
-        $output = shell_exec($this->cmd_folder . "bluez5-connect $mac");
+        $output = shell_exec($this->cmd_folder."bluez5-connect $mac");
         if (strpos($output, 'org.bluez.Error.Failed') !== false) {
             $this->output('failed');
         } else {
-            $this->output("connected");
+            $this->output('connected');
         }
     }
 
     private function unpair()
     {
-        $cmd = shell_exec($this->cmd_folder . 'unpair-all.sh');
+        $cmd = shell_exec($this->cmd_folder.'unpair-all.sh');
         if (strpos($cmd, 'done') === false) {
-            $this->output("Error unpairing the devices");
+            $this->output('Error unpairing the devices');
         } else {
-            $this->output("All devices unpaired.");
+            $this->output('All devices unpaired.');
         }
     }
-
 }
-
 
 $action = $_POST['action'];
 $mac = isset($_POST['mac']) ? $_POST['mac'] : '';

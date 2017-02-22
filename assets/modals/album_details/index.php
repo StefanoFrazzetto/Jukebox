@@ -11,7 +11,7 @@ $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 $album = Album::getAlbum($albumID);
 
 if ($album == null) {
-    exit("No such album.");
+    exit('No such album.');
 }
 
 $artists_ids = $album->getArtists();
@@ -26,10 +26,9 @@ foreach ($artists_ids as $artist_id) {
 // TODO @Stefano you should look into this
 // P.S. It's possibly totally broken now. :)
 
-$dir = '/var/www/html/jukebox/' . $albumID;
-$outputFileName = preg_replace('/[^A-Za-z0-9\-]/', '', $album->getTitle()) . '.zip';
-$outputFile = '/var/www/html/downloads/' . $outputFileName;
-
+$dir = '/var/www/html/jukebox/'.$albumID;
+$outputFileName = preg_replace('/[^A-Za-z0-9\-]/', '', $album->getTitle()).'.zip';
+$outputFile = '/var/www/html/downloads/'.$outputFileName;
 
 if (file_exists($outputFile)) {
     $fileExists = true;
@@ -73,8 +72,7 @@ if (file_exists($outputFile)) {
                         }
 
                         $CDMap[$CD][] = $key;
-                    }
-                    ?>
+                    } ?>
                     <tr class="trackRow"
                         data-track-id="<?php echo $track->getId() ?>"
                         data-track-no="<?php echo $key + 1; ?>"
@@ -90,12 +88,15 @@ if (file_exists($outputFile)) {
                             <?php echo $track->getTimeString(); ?>
                         </td>
                     </tr>
-                <?php }
-            } else { ?>
+                <?php 
+                }
+            } else {
+                ?>
                 <tr class="th">
                     <th colspan="3">No tracks found</th>
                 </tr>
-            <?php } ?>
+            <?php 
+            } ?>
         </table>
         <?php
         if ($differentCDs) { // This will inject the CD/tracks map  as a javascript variable. I don't know whether it's nasty or cool.
@@ -120,7 +121,7 @@ if (file_exists($outputFile)) {
     <div class="modalBody download-body" id="pre-download">
         <img style="float: right;" src="<?php echo $album->getCoverUrl() ?>"/>
         <div class="download-box">
-            <div class="text" id="album-size">Album size: <?php echo $album->getAlbumFolderSize() . " MB"; ?></div>
+            <div class="text" id="album-size">Album size: <?php echo $album->getAlbumFolderSize().' MB'; ?></div>
             <div class="text" id="album-tracks">Tracks: <?php echo $album->getSongsCount(); ?></div>
             <div class="text" id="album-cds">CDs: <?php echo $album->getCdCount() ?></div>
             <br>
@@ -139,8 +140,8 @@ if (file_exists($outputFile)) {
 
     <!--suppress JSUnusedLocalSymbols -->
     <script type="text/javascript">
-        var album_id =  <?php echo $albumID;?>;
-        var folderSize =  <?php echo $album->getAlbumFolderSize();?>;
+        var album_id =  <?php echo $albumID; ?>;
+        var folderSize =  <?php echo $album->getAlbumFolderSize(); ?>;
     </script>
 
 <?php

@@ -10,12 +10,12 @@ $network->load_network();
 
 try {
     $network->connect();
-    echo "success";
+    echo 'success';
 } catch (Exception $e) {
     error_log("Failed to connect to the network. Cause: $e");
-    echo "<pre>";
+    echo '<pre>';
     echo $e;
     print_r($e->getTraceAsString());
     print_r($network);
-    echo "</pre>";
+    echo '</pre>';
 }

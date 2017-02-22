@@ -2,7 +2,7 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__.'/../../vendor/autoload.php';
 
 use Lib\Config;
 use Lib\DiscRipper;
@@ -18,7 +18,7 @@ $json = file_get_contents('php://input');
 // If the uploader id is not set and the action is different from getting a new id,
 // return an error.
 if (empty($uploader_id) && $action !== 'get_new_id') {
-//    $return = Uploader::createStatus(Uploader::STATUS_ERROR, 'The uploader id is not set.', 400);
+    //    $return = Uploader::createStatus(Uploader::STATUS_ERROR, 'The uploader id is not set.', 400);
 //    echo json_encode($return);
 //    return;
 }

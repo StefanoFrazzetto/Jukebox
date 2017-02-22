@@ -12,7 +12,9 @@ ini_set('user_agent', 'Jukebox/1.0.0 (info.freelancewd@gmail.com)');
  * Class MusicBrainz retrieves a CD/DVD information using MusicBrainz API v2.
  *
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
+ *
  * @version 2.0.0
+ *
  * @see http://musicbrainz.org/doc/Development/XML_Web_Service/Version_2
  * @licence GNU AGPL v3 - https://www.gnu.org/licenses/agpl-3.0.txt
  */
@@ -26,15 +28,15 @@ class MusicBrainz
 
     private $info;
 
-    /** @var  string the CD/DVD title */
+    /** @var string the CD/DVD title */
     private $title;
 
     private $numberOfTracks;
 
-    /** @var  array the information about the CD/DVD */
+    /** @var array the information about the CD/DVD */
     private $release_id;
 
-    /** @var  array the array containing the tracks */
+    /** @var array the array containing the tracks */
     private $tracks;
 
     /**
@@ -44,8 +46,7 @@ class MusicBrainz
      * @param string $disc_id The disc id to use when performing the research.
      *
      * @throws InvalidArgumentException If it was not possible to get the information from MusicBrainz.
-     *
-     * @throws Exception If it was not possible to contact MusicBrainz.
+     * @throws Exception                If it was not possible to contact MusicBrainz.
      */
     public function __construct($disc_id)
     {
@@ -58,12 +59,12 @@ class MusicBrainz
 
         $this->json = file_get_contents($query);
         if ($this->json === false) {
-            throw new Exception('Error while contacting the MusicBrainz API: ' . $this->json);
+            throw new Exception('Error while contacting the MusicBrainz API: '.$this->json);
         }
 
         $this->info = json_decode($this->json, true);
         if ($this->info === false || $this->info === null) {
-            throw new Exception('No information provided from MusicBrainz: ' . $this->info);
+            throw new Exception('No information provided from MusicBrainz: '.$this->info);
         }
 
         if (isset($this->info['error'])) {
@@ -122,12 +123,11 @@ class MusicBrainz
     public function getParsedTracks()
     {
         if (!is_array($this->tracks) || count($this->tracks) <= 0) {
-            return null;
+            return;
         }
 
         $temp_tracks = [];
         foreach ($this->tracks as $track) {
-
             $artists_names = [];
             $artist_credit = $track['artist-credit'];
             foreach ($artist_credit as $artist) {
@@ -136,10 +136,10 @@ class MusicBrainz
 
             $recording = $track['recording'];
             $temp_tracks[$track['number']] = [
-                'number' => intval($track['number']),
-                'title' => $recording['title'],
+                'number'  => intval($track['number']),
+                'title'   => $recording['title'],
                 'artists' => $artists_names,
-                'length' => $recording['length']
+                'length'  => $recording['length'],
             ];
         }
 
@@ -155,6 +155,4 @@ class MusicBrainz
     {
         return $this->info;
     }
-
-
 }
