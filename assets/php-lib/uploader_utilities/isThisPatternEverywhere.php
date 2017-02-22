@@ -1,17 +1,18 @@
 <?php
 
-function isThisPatternEverywhere($pattern, $titles) {
+function isThisPatternEverywhere($pattern, $titles)
+{
     $occurencies = 0;
     foreach ($titles as $title) {
         if (preg_match($pattern, $title)) {
-            $occurencies ++;
+            $occurencies++;
         }
     }
 
     //echo '<pre>I found this pattern ', $pattern, " $occurencies time(s)!</pre>";
     if ($occurencies == count($titles) && count($titles) > 1) {
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }

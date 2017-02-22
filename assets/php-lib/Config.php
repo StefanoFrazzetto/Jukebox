@@ -14,6 +14,7 @@ namespace Lib;
  *   runtime changes to the system configuration.
  *
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
+ *
  * @version 1.1.0
  */
 class Config
@@ -29,13 +30,13 @@ class Config
 
     public function __construct()
     {
-        $config_dir = $_SERVER["DOCUMENT_ROOT"] . "/assets/config/";
+        $config_dir = $_SERVER['DOCUMENT_ROOT'].'/assets/config/';
 
         // Loads the static configuration file
-        $this->static_conf = include($config_dir . "config.php");
+        $this->static_conf = include $config_dir.'config.php';
 
         // Loads the dynamic configuration file
-        $this->dynamic_conf_file = $config_dir . "config.json";
+        $this->dynamic_conf_file = $config_dir.'config.json';
         if (!file_exists($this->dynamic_conf_file)) {
             file_put_contents($this->dynamic_conf_file, null);
         }
@@ -49,13 +50,14 @@ class Config
      * If the first parameter is not specified, an array of paths is returned.
      *
      * @param string $path The path to get from the config file.
+     *
      * @return mixed|null If a path is passed, the specified path is returned
-     * if it does exist, otherwise null is returned. If no parameter is passed,
-     * the array of paths is returned instead.
+     *                    if it does exist, otherwise null is returned. If no parameter is passed,
+     *                    the array of paths is returned instead.
      */
-    public static function getPath($path = "")
+    public static function getPath($path = '')
     {
-        $config = new Config();
+        $config = new self();
         $paths = $config->get('paths');
 
         if (empty($paths)) {
@@ -74,6 +76,7 @@ class Config
      *
      * @param $key - the key to return
      * @param $static - flag to force the static config to be returned
+     *
      * @return mixed - the value associated with the config key
      */
     public function get($key, $static = false)
@@ -83,7 +86,7 @@ class Config
         } elseif (isset($this->static_conf[$key])) {
             return $this->getStatic($key);
         } else {
-            return null;
+            return;
         }
     }
 
@@ -91,6 +94,7 @@ class Config
      * Returns the value associated with the key from the dynamic configuration file.
      *
      * @param $key - the key to search
+     *
      * @return mixed - the return value(s)
      */
     private function getDynamic($key)
@@ -102,6 +106,7 @@ class Config
      * Returns the value associated with the key from the static configuration file.
      *
      * @param $key - the key to search
+     *
      * @return mixed - the return value(s)
      */
     private function getStatic($key)
@@ -128,5 +133,4 @@ class Config
     {
         file_put_contents($this->dynamic_conf_file, json_encode($this->dynamic_config));
     }
-
 }

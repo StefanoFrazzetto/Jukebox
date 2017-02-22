@@ -10,11 +10,11 @@ use InvalidArgumentException;
  * @see http://id3.org/id3v2.3.0
  *
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
+ *
  * @version 1.0.0
  */
 class ID3
 {
-
     /** @var array The array containing the ID3 tags */
     private $tags;
 
@@ -27,6 +27,7 @@ class ID3
      * returns.
      *
      * @param $file_path string the path to the file
+     *
      * @throws InvalidArgumentException if the specified file path is not valid.
      */
     public function __construct($file_path)
@@ -37,14 +38,15 @@ class ID3
 
         $output = OS::execute("id3v2 -R $file_path");
 
-        $count = preg_match_all("/^([a-zA-Z]*[0-3]?):\\s*(.*)$/m", $output, $matches);
+        $count = preg_match_all('/^([a-zA-Z]*[0-3]?):\\s*(.*)$/m', $output, $matches);
 
         $this->tags = [];
         if ($count > 2) {
             $results = [];
             foreach ($matches[1] as $key => $match) {
-                if (!in_array($match, ['PRIV', 'COMM']))
+                if (!in_array($match, ['PRIV', 'COMM'])) {
                     $results[$match] = $matches[2][$key];
+                }
             }
 
             $this->tags = $results;
@@ -66,7 +68,6 @@ class ID3
                     }
                 }
             }
-
         }
     }
 
@@ -147,7 +148,7 @@ class ID3
      * numer of tracks/elements on the original recording. E.g. "4/9".
      *
      * @return int The number corresponding to the order number of the
-     * audio-file on its original recording converted to int
+     *             audio-file on its original recording converted to int
      */
     public function getTrackNumber()
     {
@@ -162,7 +163,7 @@ class ID3
      * containing the total number of parts in the set. E.g. "1/2".
      *
      * @return string The numeric string that describes which part of a set the
-     * audio came from
+     *                audio came from
      */
     public function getSet()
     {
@@ -170,9 +171,10 @@ class ID3
     }
 
     /**
-     * The number associated with the current set
+     * The number associated with the current set.
      *
      * @see getSetNumber()
+     *
      * @return int The number associated with the current set
      */
     public function getSetNumber()
@@ -181,9 +183,10 @@ class ID3
     }
 
     /**
-     * The total number of sets for the album
+     * The total number of sets for the album.
      *
      * @see getSetNumber()
+     *
      * @return int The total number of sets
      */
     public function getSetTotal()
@@ -224,7 +227,6 @@ class ID3
     {
         return intval($this->tags['TYER']);
     }
-
 
     /**
      * The 'Album/Movie/Show title' frame is intended for the title of the
@@ -278,5 +280,4 @@ class ID3
     {
         return $this->tags['TPUB'];
     }
-
 }

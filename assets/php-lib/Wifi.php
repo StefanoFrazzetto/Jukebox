@@ -15,8 +15,8 @@ class Wifi
 
     public function __construct()
     {
-        $this->CONFIG_FOLDER = __DIR__ . '/../config/';
-        $this->CONFIG_FIlE = $this->CONFIG_FOLDER . "wifiDB.json";
+        $this->CONFIG_FOLDER = __DIR__.'/../config/';
+        $this->CONFIG_FIlE = $this->CONFIG_FOLDER.'wifiDB.json';
 
         if (!file_exists($this->CONFIG_FOLDER)) {
             mkdir($this->CONFIG_FOLDER, 777);
@@ -36,7 +36,7 @@ class Wifi
 
     private function loadFile()
     {
-        $data = file_get_contents(__DIR__ . '/../config/wifiDB.json');
+        $data = file_get_contents(__DIR__.'/../config/wifiDB.json');
         $this->wifiConfig = json_decode($data, true);
     }
 
@@ -44,6 +44,7 @@ class Wifi
     {
         $saltedpw = base64_decode($password);
         $password = str_replace($salt, '', $saltedpw);
+
         return $password;
     }
 
@@ -52,12 +53,13 @@ class Wifi
         try {
             return $this->wifiConfig[$essid];
         } catch (Exception $e) {
-            return null;
+            return;
         }
     }
 
     /**
-     * Adds or update a network
+     * Adds or update a network.
+     *
      * @param $network array network associative array that should contain the password
      */
     public function updateNetwork($network)
@@ -79,17 +81,19 @@ class Wifi
 
     private static function createSalt($essid)
     {
-        $salt = base64_encode(sha1(microtime() . md5($essid)));
+        $salt = base64_encode(sha1(microtime().md5($essid)));
+
         return $salt;
     }
 
     private static function encodePassword($password, $salt)
     {
-        $password = base64_encode($password . $salt);
+        $password = base64_encode($password.$salt);
+
         return $password;
     }
 
-    function forgetNetwork($essid)
+    public function forgetNetwork($essid)
     {
         unset($this->wifiConfig[$essid]);
 
@@ -100,16 +104,16 @@ class Wifi
     {
         $interface = self::getInterface();
 
-        $cmd = __DIR__ . "/../cmd/wifi_scan.sh";
+        $cmd = __DIR__.'/../cmd/wifi_scan.sh';
 
         if (!file_exists($cmd)) {
-            throw new Exception("wifi_scan.sh not found!");
+            throw new Exception('wifi_scan.sh not found!');
         }
 
         $mega_command = shell_exec("bash $cmd $interface");
 
         if ($mega_command == '') {
-            return null;
+            return;
         }
 
         $wifi_array = explode("\n", trim($mega_command));
@@ -127,14 +131,12 @@ class Wifi
 
             preg_match($mega_regex1, $wifi, $matches);
 
-
             if (isset($matches[1], $matches[2])) {
                 $match_key = trim($matches[1], '"');
                 $match_value = trim($matches[2], '"');
             } else {
                 continue;
             }
-
 
             if ($match_key == 'ESSID' && $match_value != $network_index) {
                 // ESSID
@@ -143,34 +145,30 @@ class Wifi
                 if (in_array($network_index, $wifiNetworks)) {
                     $networks[$network_index]['saved'] = true;
                 }
-
             } elseif ($match_key == 'Quality') {
                 // Signal
-                $match_value = str_replace("/", "", substr($match_value, 0, 3));
+                $match_value = str_replace('/', '', substr($match_value, 0, 3));
                 $match_key = 'signal';
-
-            } elseif ($match_key == "Encryption key") {
+            } elseif ($match_key == 'Encryption key') {
                 // Encryption
 
                 if ($match_value == 'off') {
                     $match_value = 'open';
                 }
                 $match_key = 'encryption';
-
-            } elseif ($match_key == "IE") {
+            } elseif ($match_key == 'IE') {
                 // Encryption Type
 
-                if (self::has($match_value, "WPA2")) {
-                    $match_value = "WPA2";
+                if (self::has($match_value, 'WPA2')) {
+                    $match_value = 'WPA2';
                 } elseif (self::has($match_value, 'WPA')) {
-                    $match_value = "WPA";
-                } elseif (isset($networks[$network_index]['encryption']) && $networks[$network_index]['encryption'] == "open") {
+                    $match_value = 'WPA';
+                } elseif (isset($networks[$network_index]['encryption']) && $networks[$network_index]['encryption'] == 'open') {
                     continue;
                 } else {
-                    $match_value = "WEP";
+                    $match_value = 'WEP';
                 }
-                $match_key = "encryption_type";
-
+                $match_key = 'encryption_type';
             }
 
             // Prevents values overriding
@@ -180,7 +178,6 @@ class Wifi
 
             // Finally adds the value to the array
             $networks[$network_index][$match_key] = $match_value;
-
         }
 
         $conn = $this->getConnectedNetwork();
@@ -217,19 +214,19 @@ class Wifi
     {
         $interface = self::getInterface();
 
-        $output = shell_exec('sudo iwconfig ' . $interface);
+        $output = shell_exec('sudo iwconfig '.$interface);
 
-        preg_match("/ESSID:\"(.*)\" /", $output, $matches);
+        preg_match('/ESSID:"(.*)" /', $output, $matches);
 
         if (!isset($matches[1])) {
-            return null;
+            return;
         }
 
         $essid = $matches[1];
 
         $matches = [];
 
-        preg_match("/Access Point: (.*)   /", $output, $matches);
+        preg_match('/Access Point: (.*)   /', $output, $matches);
 
         $AP = $matches[1];
 
@@ -241,13 +238,12 @@ class Wifi
 
         $matches = [];
 
-        preg_match("/Link Quality=(.*)\\//", $output, $matches);
+        preg_match('/Link Quality=(.*)\\//', $output, $matches);
 
         $quality = $matches[1];
 
-        return ["ESSID" => $essid, "encryption" => $encryption, "signal" => $quality, "AP" => $AP, "connected" => true];
+        return ['ESSID' => $essid, 'encryption' => $encryption, 'signal' => $quality, 'AP' => $AP, 'connected' => true];
     }
-
 }
 
 //function getNetworkPassword($essid)

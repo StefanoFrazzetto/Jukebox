@@ -32,10 +32,10 @@ session_start();
                 }
 
                 echo
-                "<tr>",
-                "<td>", $track['track_no'], "</td>",
-                "<td>", $track['title'], "</td>",
-                "<td>", gmdate("i:s", (int)$track['length']), "</td>",
+                '<tr>',
+                '<td>', $track['track_no'], '</td>',
+                '<td>', $track['title'], '</td>',
+                '<td>', gmdate('i:s', (int) $track['length']), '</td>',
                 '</tr>';
             }
 

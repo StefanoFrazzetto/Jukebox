@@ -19,7 +19,8 @@
         ?>
         <div class="box-btn pull-right" onclick="modal.openPage('assets/modals/add_album/2.fix_titles.php');">Cancel
         </div>
-    <?php } ?>
+    <?php 
+    } ?>
 
     <div class="box-btn pull-right" id="nextBtn" style="display: none"
          onclick="modal.openPage('assets/modals/add_album/2.fix_titles.php');">Next

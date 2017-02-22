@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/JukeboxTestClass.php';
+require_once __DIR__.'/JukeboxTestClass.php';
 use Lib\FileUtils;
 
 final class FileUtilsTest extends JukeboxTestClass

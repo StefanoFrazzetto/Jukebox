@@ -6,6 +6,7 @@ namespace Lib;
  * Class DiscWriter handles the disc writer operations...
  *
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
+ *
  * @version 1.0.0
  */
 abstract class Disc
@@ -23,14 +24,14 @@ abstract class Disc
     /** @var array The configuration variables for the disc device */
     protected $config;
 
-    /** @var  string The path to the file containing the device status */
+    /** @var string The path to the file containing the device status */
     protected $status_file;
 
     /** @var string The current status */
     protected $status;
 
     /** @var string The message relative to the device status */
-    protected $message = "";
+    protected $message = '';
 
     /** @var int The percentage relative to the current operation */
     protected $percentage = 0;
@@ -41,19 +42,19 @@ abstract class Disc
     /** @var string The rom device path, i.e.: /dev/sr0 */
     protected $device_path;
 
-    /** @var  string The disc_id for this cd/dvd */
+    /** @var string The disc_id for this cd/dvd */
     protected $disc_id;
 
-    /** @var  int The total number of tracks on the this cd/dvd */
+    /** @var int The total number of tracks on the this cd/dvd */
     protected $total_tracks;
 
-    /** @var  float This disc size */
+    /** @var float This disc size */
     protected $disc_size;
 
-    /** @var  string The directory containing the scripts */
+    /** @var string The directory containing the scripts */
     protected $scripts_dir;
 
-    /** @var  string The directory where the logs are saved. */
+    /** @var string The directory where the logs are saved. */
     protected $logs_dir;
 
     /** @var string The directory where the input files are saved. */
@@ -62,13 +63,13 @@ abstract class Disc
     /** @var string The directory where the output files are saved. */
     protected $output_dir;
 
-    /** @var  string The directory where the ready to use files are saved. */
+    /** @var string The directory where the ready to use files are saved. */
     protected $destination_dir;
 
-    /** @var  string The directory containing the disc ripper/burner sub directories */
+    /** @var string The directory containing the disc ripper/burner sub directories */
     protected $parent_dir;
 
-    /** @var  int The process id */
+    /** @var int The process id */
     protected $pid;
 
     public function __construct()
@@ -81,7 +82,7 @@ abstract class Disc
         $this->scripts_dir = $this->config['scripts'];
         $this->logs_dir = $this->config['logs'];
 
-        $device_name = OS::getDevicesByType("rom");
+        $device_name = OS::getDevicesByType('rom');
         $this->device_path = "/dev/$device_name";
 
         $this->setCurrentStatus();
@@ -102,6 +103,7 @@ abstract class Disc
     {
         if (!file_exists($this->status_file)) {
             $this->status = self::STATUS_IDLE;
+
             return;
         }
 
@@ -117,6 +119,7 @@ abstract class Disc
         if (!$process->status()) {
             // Process complete
             $this->setStatusMessagePercentage(self::STATUS_COMPLETE, 'process complete', 100);
+
             return;
         }
 
@@ -126,6 +129,7 @@ abstract class Disc
     protected function getStatusFileContent()
     {
         $file_content = file_get_contents($this->status_file);
+
         return json_decode($file_content, true);
     }
 
@@ -139,7 +143,7 @@ abstract class Disc
     abstract protected function updateStatus();
 
     /**
-     * Returns the current status of the disc device
+     * Returns the current status of the disc device.
      *
      * @return string The status of the device.
      */
@@ -191,7 +195,7 @@ abstract class Disc
     {
         $command = OS::execute("wodim -atip -v dev=$this->device_path | grep 'Current:'| awk {'print $3'}");
 
-        if (strpos($command, "CD") !== false) {
+        if (strpos($command, 'CD') !== false) {
             return true;
         }
 
@@ -231,22 +235,23 @@ abstract class Disc
     }
 
     /**
-     * TODO
+     * TODO.
+     *
      * @return bool
      */
     protected function checkBlank()
     {
         $cmd = OS::execute("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
-        $disc_check = OS::execute("wodim -v dev=/dev/sr0 -toc 2>&1");
+        $disc_check = OS::execute('wodim -v dev=/dev/sr0 -toc 2>&1');
 
-        if ($cmd < 10 && substr_count($disc_check, "Cannot load media") == 0) {
+        if ($cmd < 10 && substr_count($disc_check, 'Cannot load media') == 0) {
             return true;
         } else {
             return false;
         }
     }
 
-    protected function createStatusFile($parameters = "")
+    protected function createStatusFile($parameters = '')
     {
         $info = [];
         if (!empty($parameters) && is_array($parameters)) {
@@ -266,6 +271,4 @@ abstract class Disc
 
         return FileUtils::createFile($this->status_file, $info, false, true);
     }
-
-
 }

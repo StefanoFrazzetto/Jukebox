@@ -2,8 +2,9 @@
 
 session_start();
 
-function getPostTrackByID($ID) {
-    return filter_input(INPUT_POST, 'track' . $ID, FILTER_SANITIZE_STRING);
+function getPostTrackByID($ID)
+{
+    return filter_input(INPUT_POST, 'track'.$ID, FILTER_SANITIZE_STRING);
 }
 
 $tracks = $_SESSION['tracks'];

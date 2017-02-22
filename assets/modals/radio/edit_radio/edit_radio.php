@@ -12,7 +12,7 @@ $cover = filter_input(INPUT_GET, 'cover', FILTER_SANITIZE_STRING);
 
 function error($message)
 {
-    echo json_encode(["status" => "error", "message" => $message]);
+    echo json_encode(['status' => 'error', 'message' => $message]);
     exit;
 }
 
@@ -21,20 +21,20 @@ function error($message)
  */
 function success($radio)
 {
-    echo json_encode(["status" => "success", "cover" => $radio->getCover()]);
+    echo json_encode(['status' => 'success', 'cover' => $radio->getCover()]);
     exit;
 }
 
 if ($id == null) {
-    error("Invalid ID provided");
+    error('Invalid ID provided');
 }
 
-require "../../../php-lib/Radio.php";
+require '../../../php-lib/Radio.php';
 
 $radio = Radio::loadRadio($id);
 
 if ($radio == null) {
-    error("Radio not found");
+    error('Radio not found');
 }
 
 if ($name != null) {
@@ -53,7 +53,8 @@ if ($cover != null) {
     }
 }
 
-if ($radio->save())
+if ($radio->save()) {
     success($radio);
-else
-    error("Database error");
+} else {
+    error('Database error');
+}

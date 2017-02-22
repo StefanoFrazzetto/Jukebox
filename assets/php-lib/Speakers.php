@@ -7,19 +7,19 @@ use Exception;
 /**
  * Class Speakers provides access to the device speakers.
  *
- * @package Lib
  * @author Stefano Frazzetto
+ *
  * @version 1.0.0
  */
 class Speakers
 {
-
     /**
      * Return true if the speakers are on, false otherwise.
      *
-     * @return bool true if the speakers are on, false otherwise
      * @throws Exception if it is not possible to get the speakers
-     * status.
+     *                   status.
+     *
+     * @return bool true if the speakers are on, false otherwise
      */
     public static function getStatus()
     {
@@ -38,8 +38,8 @@ class Speakers
      */
     public static function turnOn()
     {
-        OS::execute("gpio mode 0 out");
-        OS::execute("gpio write 0 1");
+        OS::execute('gpio mode 0 out');
+        OS::execute('gpio write 0 1');
     }
 
     /**
@@ -47,8 +47,7 @@ class Speakers
      */
     public static function turnOff()
     {
-        OS::execute("gpio mode 0 out");
-        OS::execute("gpio write 0 0");
+        OS::execute('gpio mode 0 out');
+        OS::execute('gpio write 0 0');
     }
-
 }

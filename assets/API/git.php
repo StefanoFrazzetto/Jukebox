@@ -3,18 +3,17 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 10/01/2017
- * Time: 09:56
+ * Time: 09:56.
  */
-
 header('Content-Type: application/json');
 
-require_once "../../vendor/autoload.php";
+require_once '../../vendor/autoload.php';
 
 use Lib\Git;
 
 $git = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
 
-$return = ["status" => "error"];
+$return = ['status' => 'error'];
 
 $g = new Git();
 
@@ -28,9 +27,9 @@ switch ($git) {
 
         Git::checkout($branch);
 
-        if ($actual_branch = $g->getCurrentBranch() == $branch)
+        if ($actual_branch = $g->getCurrentBranch() == $branch) {
             $return['status'] = 'success';
-        else {
+        } else {
             $return['status'] = 'error';
             $return['message'] = "Attempted to change branch, but failed still on '$actual_branch'";
         }
@@ -56,7 +55,7 @@ switch ($git) {
         break;
     case 'branch':
         $return['status'] = 'success';
-        $return['data'] = Git::branch("-a");
+        $return['data'] = Git::branch('-a');
         break;
     case 'current_branch':
         $return['status'] = 'success';

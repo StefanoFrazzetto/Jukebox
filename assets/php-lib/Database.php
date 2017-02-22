@@ -7,60 +7,59 @@ use InvalidArgumentException;
 use PDO;
 use PDOException;
 
-
 /**
- *  Database class provides the basic methods to access the database
+ *  Database class provides the basic methods to access the database.
  */
 class Database
 {
     /**
-     * @var string $_table_albums The default table containing the albums
+     * @var string The default table containing the albums
      */
-    public static $_table_albums = "albums";
+    public static $_table_albums = 'albums';
     /**
-     * @var string $_table_radio_stations The default table containing the radio station
+     * @var string The default table containing the radio station
      */
-    public static $_table_radio_stations = "radio_stations";
+    public static $_table_radio_stations = 'radio_stations';
 
     /**
-     * @var string $_table_artist The default table containing the artists
+     * @var string The default table containing the artists
      */
-    public static $_table_artist = "artists";
+    public static $_table_artist = 'artists';
 
     /**
-     * @var string $_table_songs The default table containing the songs
+     * @var string The default table containing the songs
      */
-    public static $_table_songs = "songs";
+    public static $_table_songs = 'songs';
 
     /**
-     * @var string $_table_song_artists The default table containing the artists for each song
+     * @var string The default table containing the artists for each song
      */
-    public static $_table_song_artists = "song_artists";
+    public static $_table_song_artists = 'song_artists';
 
     /**
-     * @var Database $_instance The single database instance
+     * @var Database The single database instance
      */
     private static $_instance;
 
     /**
-     * @var PDO $_connection The database connection
+     * @var PDO The database connection
      */
     private $_connection;
 
     /**
-     * @var string $_host The database host
+     * @var string The database host
      */
     private $_host;
     /**
-     * @var string $_database The database name
+     * @var string The database name
      */
     private $_database;
     /**
-     * @var string $_username The database username
+     * @var string The database username
      */
     private $_username;
     /**
-     * @var string $_password The database password
+     * @var string The database password
      */
     private $_password;
 
@@ -72,15 +71,15 @@ class Database
     public function __construct()
     {
         $config = new Config();
-        $this->_host = $config->get("database")["host"];
-        $this->_database = $config->get("database")["name"];
-        $this->_username = $config->get("database")["user"];
-        $this->_password = $config->get("database")["password"];
+        $this->_host = $config->get('database')['host'];
+        $this->_database = $config->get('database')['name'];
+        $this->_username = $config->get('database')['user'];
+        $this->_password = $config->get('database')['password'];
 
         try {
             $this->_connection = new PDO("mysql:host=$this->_host;dbname=$this->_database;charset=utf8mb4", $this->_username, $this->_password);
         } catch (PDOException $e) {
-            echo 'Connection failed: ' . $e->getMessage();
+            echo 'Connection failed: '.$e->getMessage();
         }
     }
 
@@ -92,6 +91,7 @@ class Database
         if (!self::$_instance) { // If no instance then make one
             self::$_instance = new self();
         }
+
         return self::$_instance;
     }
 
@@ -100,29 +100,31 @@ class Database
      */
     public static function resetDatabase()
     {
-        $db = new Database();
+        $db = new self();
 
         $db->dropDatabase();
         $db->createDatabase();
 
-        $db = new Database();
+        $db = new self();
 
-        $sql_folder = __DIR__ . '/../../installation/';
+        $sql_folder = __DIR__.'/../../installation/';
 
-        $db->executeFile($sql_folder . 'base_schema.sql');
-        $db->executeFile($sql_folder . 'themes.sql');
+        $db->executeFile($sql_folder.'base_schema.sql');
+        $db->executeFile($sql_folder.'themes.sql');
     }
 
     /**
      * Drops a database the database. Removes the default db if none specified.
+     *
      * @param string $db database name to drop
      *
      * @return array|bool result
      */
     public function dropDatabase($db = '')
     {
-        if ($db == '')
+        if ($db == '') {
             $db = $this->_database;
+        }
 
         return $this->rawQuery("DROP DATABASE $db");
     }
@@ -131,13 +133,15 @@ class Database
      * Execute a raw query on the database.
      *
      * @param string $query - the query to be executed
-     * @return array|boolean An <b>array</b> containing the objects from the query or
-     * <b>false</b> if the query was unsuccessful.
+     *
+     * @return array|bool An <b>array</b> containing the objects from the query or
+     *                    <b>false</b> if the query was unsuccessful.
      */
     public function rawQuery($query)
     {
-        if (!isset($query))
+        if (!isset($query)) {
             return false;
+        }
 
         try {
             $stmt = $this->getConnection()->prepare($query);
@@ -165,12 +169,14 @@ class Database
      * Crates a new database. If no database name is specified, the default database will be created.
      *
      * @param string $db the name of the database to create
+     *
      * @return array|bool
      */
     public function createDatabase($db = '')
     {
-        if ($db == '')
+        if ($db == '') {
             $db = $this->_database;
+        }
 
         return $this->rawQuery("CREATE DATABASE $db");
     }
@@ -179,17 +185,19 @@ class Database
      * Runs a .sql file.
      *
      * @param $file string the sql file to run
-     * @return array|bool query result
+     *
      * @throws Exception if the file is absent
+     *
+     * @return array|bool query result
      */
     public function executeFile($file)
     {
-        if (empty($file))
-            throw new Exception("No filename specified");
-
-        if (!file_exists($file))
+        if (empty($file)) {
+            throw new Exception('No filename specified');
+        }
+        if (!file_exists($file)) {
             throw new Exception("File '$file' not found");
-
+        }
         $sql = file_get_contents($file);
 
         return $this->rawQuery($sql);
@@ -200,17 +208,18 @@ class Database
      *
      * @param $table
      * @param $array
+     *
      * @return bool
      */
     public function insert($table, $array)
     {
         $array_fields = array_keys($array);
 
-        $fields = '(' . implode(',', $array_fields) . ')';
-        $val_holders = '(:' . implode(', :', $array_fields) . ')';
+        $fields = '('.implode(',', $array_fields).')';
+        $val_holders = '(:'.implode(', :', $array_fields).')';
 
         $sql = "INSERT INTO $table";
-        $sql .= $fields . ' VALUES ' . $val_holders;
+        $sql .= $fields.' VALUES '.$val_holders;
 
         $stmt = $this->_connection;
         $stmt = $stmt->prepare($sql);
@@ -224,7 +233,7 @@ class Database
     }
 
     /**
-     * Returns the last inserted ID
+     * Returns the last inserted ID.
      *
      * @return mixed
      */
@@ -237,12 +246,12 @@ class Database
      * Select $columns from $table with additional $query.
      *
      * @param string $columns The columns to select. Default is *.
-     * @param string $table The table where to perform the select from. Default is albums.
-     * @param string $query The additional query: WHERE ...
+     * @param string $table   The table where to perform the select from. Default is albums.
+     * @param string $query   The additional query: WHERE ...
      *
      * @return array|null
      */
-    public function select($columns = "*", $table = "albums", $query = "WHERE 1")
+    public function select($columns = '*', $table = 'albums', $query = 'WHERE 1')
     {
         $start = microtime();
 
@@ -263,12 +272,12 @@ class Database
         $row_count = $stmt->rowCount();
 
         if ($row_count == 0) {
-            return null;
+            return;
         }
 
         $total = microtime() - $start;
-        $string = "[" . date("D M j G:i:s") . "] Database hit: SELECT. Time taken: $total microseconds";
-        file_put_contents("/var/www/html/logs/database.log", $string);
+        $string = '['.date('D M j G:i:s')."] Database hit: SELECT. Time taken: $total microseconds";
+        file_put_contents('/var/www/html/logs/database.log', $string);
 
         return $rows;
     }
@@ -279,11 +288,12 @@ class Database
      * @param string $table
      * @param $array
      * @param string $where
+     *
      * @return bool
      */
-    public function update($table = "", $array, $where = "")
+    public function update($table, $array, $where = '')
     {
-        if ($table == "" || $array == null) {
+        if ($table == '' || $array == null) {
             return false;
         }
 
@@ -291,32 +301,35 @@ class Database
 
         foreach ($array as $key => $value) {
             $value = addslashes($value);
-            $sql .= $key . "=" . "'$value'" . ",";
+            $sql .= $key.'='."'$value'".',';
         }
 
-        $sql = rtrim($sql, ",");
+        $sql = rtrim($sql, ',');
 
-        $sql .= " WHERE " . $where;
+        $sql .= ' WHERE '.$where;
 
         $stmt = $this->_connection;
         $stmt = $stmt->prepare($sql);
 
-        foreach ($array as $key => $value)
+        foreach ($array as $key => $value) {
             $stmt->bindValue(":$key", $value);
+        }
 
         return $stmt->execute();
     }
 
     /**
      * Increase one or more numeric fields.
+     *
      * @param $table string name of the table to update
      * @param $fields array | string field(s) to alter
      * @param $where string clause
+     *
      * @return bool success status
      */
     public function increment($table, $fields, $where = '')
     {
-        if ($table == "" || $fields == null) {
+        if ($table == '' || $fields == null) {
             return false;
         }
 
@@ -331,10 +344,11 @@ class Database
             $sql .= "$value = $value + 1,";
         }
 
-        $sql = rtrim($sql, ",");
+        $sql = rtrim($sql, ',');
 
-        if ($where != '')
-            $sql .= " WHERE " . $where;
+        if ($where != '') {
+            $sql .= ' WHERE '.$where;
+        }
 
         $stmt = $this->_connection;
         $stmt = $stmt->prepare($sql);
@@ -343,9 +357,11 @@ class Database
     }
 
     /**
-     * Counts the occurrences of a query in a table
+     * Counts the occurrences of a query in a table.
+     *
      * @param $table
      * @param $where
+     *
      * @return int the number of occurrences
      */
     public function count($table, $where)
@@ -370,6 +386,7 @@ class Database
      *
      * @param string $table
      * @param string $where
+     *
      * @return bool
      */
     public function delete($table, $where)
@@ -383,6 +400,7 @@ class Database
 
         try {
             $stmt = $this->getConnection()->prepare($sql);
+
             return $stmt->execute();
         } catch (PDOException $e) {
             return false;
@@ -393,30 +411,32 @@ class Database
      * Truncate one or more tables.
      *
      * @param string | string[] $tables the table to truncate or the array
+     *
      * @return bool
      */
     public function truncate($tables)
     {
-
-        if (empty($tables))
+        if (empty($tables)) {
             throw new InvalidArgumentException('No table specified');
-
+        }
         if ($tables === 'all') {
             $tables = [self::$_table_albums, self::$_table_artist, self::$_table_songs, self::$_table_song_artists, self::$_table_radio_stations];
         }
 
         if (is_array($tables)) {
             foreach ($tables as $table) {
-                if (!$this->truncate($table))
+                if (!$this->truncate($table)) {
                     return false;
+                }
             }
 
             return true;
-        } else if (is_string($tables)) {
+        } elseif (is_string($tables)) {
             $sql = "TRUNCATE TABLE $tables";
 
             try {
                 $stmt = $this->getConnection()->prepare($sql);
+
                 return $stmt->execute();
             } catch (PDOException $e) {
                 return false;
@@ -430,5 +450,4 @@ class Database
     private function __clone()
     {
     }
-
 }

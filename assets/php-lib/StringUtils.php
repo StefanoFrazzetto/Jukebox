@@ -2,7 +2,6 @@
 
 namespace Lib;
 
-
 abstract class StringUtils
 {
     /**
@@ -13,14 +12,15 @@ abstract class StringUtils
      * character are removed.
      *
      * @param string $string The string to be clean.
+     *
      * @return string The string without any non-alphanumeric characters.
      */
     public static function cleanString($string)
     {
-        $string = preg_replace_callback("/(&#[0-9]+;)/", function ($m) {
-            return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES");
+        $string = preg_replace_callback('/(&#[0-9]+;)/', function ($m) {
+            return mb_convert_encoding($m[1], 'UTF-8', 'HTML-ENTITIES');
         }, $string);
-        $string = html_entity_decode($string, ENT_COMPAT, "UTF-8");
+        $string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
         $string = str_replace(' ', '_', $string); // Replaces all spaces with hyphens.
         return preg_replace('/[^A-Za-z0-9_\-.]+/', '', $string); // Replace special chars with hyphens.
     }
@@ -31,14 +31,12 @@ abstract class StringUtils
      * @see strpos()
      *
      * @param string $haystack The string to search in.
-     *
-     * @param string $needle If needle is not a string, it is converted to an integer
-     * and applied as the ordinal value of a character.
-     *
-     * @param int $offset
-     * If specified, search will start this number of characters
-     * counted from the beginning of the string. Unlike strrpos() and strripos(),
-     * the offset cannot be negative.
+     * @param string $needle   If needle is not a string, it is converted to an integer
+     *                         and applied as the ordinal value of a character.
+     * @param int    $offset
+     *                         If specified, search will start this number of characters
+     *                         counted from the beginning of the string. Unlike strrpos() and strripos(),
+     *                         the offset cannot be negative.
      *
      * @return bool true if the string was found, false otherwise.
      */
@@ -50,10 +48,9 @@ abstract class StringUtils
     /**
      * Check if an array contains a string as value or part of its value.
      *
-     * @param array $array_haystack The array to search in.
-     *
-     * @param string $needle If needle is not a string, it is converted to an integer
-     * and applied as the ordinal value of a character.
+     * @param array  $array_haystack The array to search in.
+     * @param string $needle         If needle is not a string, it is converted to an integer
+     *                               and applied as the ordinal value of a character.
      *
      * @return bool true if the string was found, false otherwise.
      */

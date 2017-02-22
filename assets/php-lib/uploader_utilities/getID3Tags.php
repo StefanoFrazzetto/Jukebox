@@ -3,13 +3,14 @@
 function readRow($table, $row)
 {
     //^[[:alnum:]]+:\W(.*)$
-    $pattern = '/\n' . $row . ':\W(.*)\n/';
+    $pattern = '/\n'.$row.':\W(.*)\n/';
     preg_match($pattern, $table, $matches);
 
-    if (isset($matches[1]))
+    if (isset($matches[1])) {
         return $matches[1];
-    else
+    } else {
         return false;
+    }
 }
 
 function preg_remove($pattern, &$string)
@@ -42,6 +43,6 @@ function getID3Tags($file)
 
         return $return;
     } else {
-        return FALSE;
+        return false;
     }
 }

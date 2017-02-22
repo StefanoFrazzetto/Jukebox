@@ -1,11 +1,11 @@
 <?php
 
-ini_set("log_errors", 1);
-ini_set("error_log", "../../../logs/album_finalize.log");
+ini_set('log_errors', 1);
+ini_set('error_log', '../../../logs/album_finalize.log');
 
 session_start();
 
-$remove_from_cdparanoia_folder = "../../modals/rip/scripts/remove_ripped.sh";
+$remove_from_cdparanoia_folder = '../../modals/rip/scripts/remove_ripped.sh';
 
 require_once '../../../vendor/autoload.php';
 require_once '../../php-lib/file-functions.php';
@@ -44,7 +44,7 @@ if ($album->getId() != null) {
 
     // tracks
     foreach ($tracks as $track) {
-        $song = Song::newSongFromJson((object)$track, $id);
+        $song = Song::newSongFromJson((object) $track, $id);
 
 //        error_log(json_encode($song));
 //        error_log(json_encode($track));
@@ -57,14 +57,15 @@ if ($album->getId() != null) {
 
     if (isset($_SESSION['covers']) && is_array($_SESSION['covers'])) {
         foreach ($_SESSION['covers'] as $cover) {
-            if ($cover != "cover.jpg")
-                unlink($tmp_folder . $cover);
+            if ($cover != 'cover.jpg') {
+                unlink($tmp_folder.$cover);
+            }
         }
     }
 
     session_destroy();
 
-    $cmd = 'mv "' . $tmp_folder . '" "../../../jukebox/' . $id . '"';
+    $cmd = 'mv "'.$tmp_folder.'" "../../../jukebox/'.$id.'"';
     exec($cmd);
 
     exec($remove_from_cdparanoia_folder);

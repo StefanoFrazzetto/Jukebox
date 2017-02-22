@@ -6,12 +6,13 @@ use Lib\Database;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-if (!isset($id))
+if (!isset($id)) {
     $id = 2;
+}
 
 $database = new Database();
 
-$album_details = $database->select('*', 'albums', 'WHERE `id` = ' . $id)[0]; // colonna tabella query
+$album_details = $database->select('*', 'albums', 'WHERE `id` = '.$id)[0]; // colonna tabella query
 
 $tracks = json_decode($album_details->tracks);
 ?>

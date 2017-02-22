@@ -21,22 +21,22 @@ session_start();
 			</tr>
 
 			<?php
-			$tracks = $_SESSION['tracks'];
-			session_write_close();
+            $tracks = $_SESSION['tracks'];
+            session_write_close();
 
-			foreach ($tracks as $key => $track) {
-				if(!isset($track['track_no'])){
-					$track['track_no'] = $key; 
-				}                    
-				echo "
-				<tr>",
-					"<td>", $track['track_no'], "</td>",
-					"<td>", $track['title'], "</td>",
-					"<td>", gmdate("i:s", (int)$track['length']), "</td>",
-					'</tr>';
-				}
+            foreach ($tracks as $key => $track) {
+                if (!isset($track['track_no'])) {
+                    $track['track_no'] = $key;
+                }
+                echo '
+				<tr>',
+                    '<td>', $track['track_no'], '</td>',
+                    '<td>', $track['title'], '</td>',
+                    '<td>', gmdate('i:s', (int) $track['length']), '</td>',
+                    '</tr>';
+            }
 
-				?>
+                ?>
 			</table>
 		</div>
 

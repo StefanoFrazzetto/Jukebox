@@ -1,4 +1,4 @@
-<?php require_once "vendor/autoload.php";
+<?php require_once 'vendor/autoload.php';
 use Lib\ICanHaz;
 
 ?>
@@ -35,7 +35,7 @@ ICanHaz::js([
     'assets/js/modals.js',
     'assets/js/jquery.mCustomScrollbar.concat.min.js',
     'assets/js/alerts.js',
-    'assets/js/Uploader.js'
+    'assets/js/Uploader.js',
 ]);
 ?>
 

@@ -5,7 +5,9 @@ setSessionCoversURLS();
 setSessionTracks();
 
 ?>
-<div class="modalHeader">Titles Enhance<?php if(isset($_SESSION['cd_title'])) echo ": ". $_SESSION['cd_title']; ?></div>
+<div class="modalHeader">Titles Enhance<?php if (isset($_SESSION['cd_title'])) {
+    echo ': '.$_SESSION['cd_title'];
+} ?></div>
 
 <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
     <form action="assets/php/album_creation/fix_title.php" id="fixTitleForm">
@@ -18,18 +20,18 @@ setSessionTracks();
 			</tr>
 			<?php
 
-			$tracks = $_SESSION['tracks'];
+            $tracks = $_SESSION['tracks'];
 
-			$previous_cd = 0;
-			//$CD = $_SESSION['CD'];
-			
+            $previous_cd = 0;
+            //$CD = $_SESSION['CD'];
+
             foreach ($tracks as $key => $track) {
-            	if($previous_cd !== $track['cd']){
-            		$previous_cd = $track['cd'];
-            		echo '<th colspan="4">CD ', $track['cd'], '</th>';
-            	}
-            	
-            	echo '<tr><td><input type="text" name="track', $key, '" value="', $track['title'], '"/></td><td>', $track['title'], '</td><td>', utf8_encode($track['url']), '</td><td>', utf8_encode($track['track_no']), '</td></tr>';
+                if ($previous_cd !== $track['cd']) {
+                    $previous_cd = $track['cd'];
+                    echo '<th colspan="4">CD ', $track['cd'], '</th>';
+                }
+
+                echo '<tr><td><input type="text" name="track', $key, '" value="', $track['title'], '"/></td><td>', $track['title'], '</td><td>', utf8_encode($track['url']), '</td><td>', utf8_encode($track['track_no']), '</td></tr>';
             }
 
             ?>

@@ -16,7 +16,7 @@ if (!isset($_SESSION['started']) || !$_SESSION['started']) {
             $network->load_network();
             $network->connect();
         } catch (Exception $e) {
-            error_log("Failed to connect at start up because of this: " . $e->getMessage());
+            error_log('Failed to connect at start up because of this: '.$e->getMessage());
             error_log("Don't blame if it doesn't work, I am a good program, and I catch my exceptions.");
         }
     }

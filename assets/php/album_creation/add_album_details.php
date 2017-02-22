@@ -3,7 +3,7 @@
 $albumTitle = utf8_decode(filter_input(INPUT_POST, 'albumTitle', FILTER_SANITIZE_STRING));
 $albumArtist = utf8_decode(filter_input(INPUT_POST, 'albumArtist', FILTER_SANITIZE_STRING));
 
-if ($albumTitle && $albumArtist) {    
+if ($albumTitle && $albumArtist) {
     session_start();
 
     $_SESSION['albumTitle'] = $albumTitle;

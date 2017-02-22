@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-header("Content-Type: text/html; charset=utf8");
+header('Content-Type: text/html; charset=utf8');
 $error = false;
 ?>
 <div class="modalHeader">Set Tracks Titles</div>
@@ -19,8 +19,8 @@ $error = false;
         $tracks = [];
     }
 
-    if (count($tracks) == 0 OR $tracks == null OR !isset($tracks)) {
-        echo "Error! No actual tracks were found.";
+    if (count($tracks) == 0 or $tracks == null or !isset($tracks)) {
+        echo 'Error! No actual tracks were found.';
         $error = true;
         goto footer;
     }
@@ -31,7 +31,6 @@ $error = false;
         $sortBy = 'cd,track_no,title';
         //echo 'ci su tutti pari, figgh\'i bottana ';
     } else {
-
         require '../../php-lib/uploader_utilities/isThisPatternEverywhere.php';
 
         /* MESSY STUFF STARTS HERE */
@@ -40,7 +39,6 @@ $error = false;
 
         if (isThisPatternEverywhere('/[0-9]+-/', $urls)) {
             //echo '<pre>Every item has the pattern</pre>';
-
 
             foreach ($tracks as $key => $track) {
                 preg_match('/([0-9]+)-/', $tracks[$key]['url'], $matches); // don't ask me why I can't use the pointer, damn bug.
@@ -79,20 +77,20 @@ $error = false;
 
             </tr>
             <?php foreach ($tracks as $key => $track) {
-                $CD = &$track['cd'];
-                if ($CD != $previousCD) {
-                    echo '<th colspan="4">CD ', $CD, '</th>';
-                }
+        $CD = &$track['cd'];
+        if ($CD != $previousCD) {
+            echo '<th colspan="4">CD ', $CD, '</th>';
+        }
 
-                if (isset($track['track_no'])) {
-                    $track_no = utf8_encode($track['track_no']);
-                } else {
-                    $track_no = $key + 1;
-                }
+        if (isset($track['track_no'])) {
+            $track_no = utf8_encode($track['track_no']);
+        } else {
+            $track_no = $key + 1;
+        }
 
-                $previousCD = $track ['cd'];
-                echo '<tr><td>', $track_no, '</td><td><input type="text" name="track', $key, '" value="', utf8_encode($track['title']), '"/></td><td>', utf8_encode($track['title']), '</td><td>', utf8_encode($track['url']), '</td></tr>';
-            } ?>
+        $previousCD = $track['cd'];
+        echo '<tr><td>', $track_no, '</td><td><input type="text" name="track', $key, '" value="', utf8_encode($track['title']), '"/></td><td>', utf8_encode($track['title']), '</td><td>', utf8_encode($track['url']), '</td></tr>';
+    } ?>
         </table>
     </form>
 
@@ -102,10 +100,12 @@ $error = false;
 </div>
 <div class="modalFooter">
     <div class="box-btn" onclick="modal.openPage('assets/modals/add_album/1.upload_album.php');">Previous</div>
-    <?php if (!$error) { ?>
+    <?php if (!$error) {
+        ?>
         <div class="box-btn center" id="nextCD">Add CD2</div>
         <div class="box-btn pull-right" id="submit">Next</div>
-    <?php } ?>
+    <?php 
+    } ?>
 </div>
 <script>
     var addAlbumForm = $('#fixTitleForm');

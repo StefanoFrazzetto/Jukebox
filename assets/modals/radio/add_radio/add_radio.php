@@ -18,12 +18,12 @@ $radio = new Radio($name, $url);
 
 $result = $radio->save();
 
-if ($cover != "/assets/img/album-placeholder.png")
-    $radio->addCover("/var/www/html" . $cover);
+if ($cover != '/assets/img/album-placeholder.png') {
+    $radio->addCover('/var/www/html'.$cover);
+}
 
 if (!$result) {
-    echo "{\"status\": \"error\"}";
+    echo '{"status": "error"}';
 } else {
-
-    echo "{\"status\": \"success\"}";
+    echo '{"status": "success"}';
 }

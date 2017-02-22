@@ -10,7 +10,6 @@ exec("$scripts/remove_ripped.sh > /dev/null 2>&1 &");
 exec("$scripts/abort_encoding.sh > /dev/null 2>&1 &");
 exec("$scripts/remove_encoded.sh > /dev/null 2>&1 &");
 
-
 ?>
 
 <div class="modalHeader">Operation canceled</div>

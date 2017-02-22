@@ -21,7 +21,7 @@ switch ($mode) {
         if (isset($_SESSION['covers'][$picked_cover]) && is_string($_SESSION['covers'][$picked_cover])) {
             $_SESSION['cover'] = $_SESSION['covers'][$picked_cover];
 
-            $cover = new Cover($tmp_folder . $_SESSION['cover']);
+            $cover = new Cover($tmp_folder.$_SESSION['cover']);
 
             $cover->saveAlbumImagesToFolder($tmp_folder);
         }
@@ -31,9 +31,8 @@ switch ($mode) {
     case 1:
         $url = filter_input($input, 'coverURL', FILTER_VALIDATE_URL);
 
-
         if (isset($_POST['savePath']) && $_POST['savePath'] !== '') {
-            $tmp_folder = $_POST['savePath'];;
+            $tmp_folder = $_POST['savePath'];
         }
 
         if (!$url) {
@@ -43,10 +42,10 @@ switch ($mode) {
 
         $file = file_get_contents($url);
 
-        file_put_contents($tmp_folder . 'cover.jpg', $file);
+        file_put_contents($tmp_folder.'cover.jpg', $file);
 
         try {
-            $cover = new Cover($tmp_folder . 'cover.jpg');
+            $cover = new Cover($tmp_folder.'cover.jpg');
 
             $cover->saveAlbumImagesToFolder($tmp_folder);
         } catch (Exception $e) {
@@ -58,4 +57,3 @@ switch ($mode) {
     default:
         echo 'Bad Request';
 }
-

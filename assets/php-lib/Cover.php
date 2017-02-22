@@ -14,14 +14,14 @@ class Cover
 
     private $image; // A resource type containing the image
 
-    function __construct($url)
+    public function __construct($url)
     {
-        if (isset($url))
+        if (isset($url)) {
             return $this->loadImagefromUrl($url);
-        return null;
+        }
     }
 
-    function loadImagefromUrl($url)
+    public function loadImagefromUrl($url)
     {
         // TODO VALIDATE URL
 
@@ -40,12 +40,11 @@ class Cover
         }
 
         return true;
-
     }
 
     public function saveToAlbum($id)
     {
-        $path = $_SERVER['DOCUMENT_ROOT'] . "/jukebox/$id";
+        $path = $_SERVER['DOCUMENT_ROOT']."/jukebox/$id";
 
         $this->saveAlbumImagesToFolder($path);
     }
@@ -78,7 +77,6 @@ class Cover
             //$x = $sizex;
             $y = $sizey;
 
-
             if ($height < $sizey) {
                 $y = $height;
             }
@@ -90,8 +88,6 @@ class Cover
             $tmp = imagecreatetruecolor($x, $y);
 
             imagecopyresampled($tmp, $this->image, 0, 0, 0, 0, $x, $y, $width, $height);
-
-
         } else {
             $tmp = imagecreatetruecolor($sizex, $sizey);
 

@@ -4,7 +4,6 @@ namespace Lib;
 
 use Exception;
 
-
 /**
  * Class DiscRipper provides access to the disc device to
  * rip and encode tracks from a CD/DVD.
@@ -13,23 +12,23 @@ use Exception;
  */
 class DiscRipper extends Disc
 {
-    /** @var  string the path to cdparanoia log file */
+    /** @var string the path to cdparanoia log file */
     protected $cdparanoia_log_path;
 
-    /** @var  string the path to lame log file */
+    /** @var string the path to lame log file */
     protected $lame_log_path;
 
-    /** @var  string the path to the files that handles the ripping */
+    /** @var string the path to the files that handles the ripping */
     protected $handler;
 
     /** @var string the directory where the files will be moved */
     protected $final_dir;
 
-    public function __construct($final_dir_name = "")
+    public function __construct($final_dir_name = '')
     {
         parent::__construct();
         if (!empty($final_dir_name)) {
-            $this->final_dir = Config::getPath('uploader') . $final_dir_name;
+            $this->final_dir = Config::getPath('uploader').$final_dir_name;
         }
     }
 
@@ -43,15 +42,17 @@ class DiscRipper extends Disc
         if (empty($this->disc_id)) {
             $this->disc_id = OS::execute("discid $this->device_path");
         }
+
         return $this->disc_id;
     }
 
     /**
      * Start ripping a CD/DVD.
      *
-     * @return bool true on success, false if it was not possible to start
-     * the ripping process.
      * @throws Exception if no directory was passed to the constructor.
+     *
+     * @return bool true on success, false if it was not possible to start
+     *              the ripping process.
      */
     public function rip()
     {
@@ -64,12 +65,12 @@ class DiscRipper extends Disc
         }
 
         $arguments = [
-            'device' => $this->device_path,
+            'device'              => $this->device_path,
             'cdparanoia_log_path' => $this->cdparanoia_log_path,
-            'lame_log_path' => $this->lame_log_path,
-            'ripping_dir' => $this->input_dir,
-            'encoding_dir' => $this->output_dir,
-            'final_dir' => $this->final_dir
+            'lame_log_path'       => $this->lame_log_path,
+            'ripping_dir'         => $this->input_dir,
+            'encoding_dir'        => $this->output_dir,
+            'final_dir'           => $this->final_dir,
         ];
 
         FileUtils::remove($this->parent_dir, true);
@@ -130,6 +131,7 @@ class DiscRipper extends Disc
 
         $process = new Process();
         $process->setPid($pid);
+
         return $process->stop();
     }
 
@@ -149,14 +151,14 @@ class DiscRipper extends Disc
 
     /**
      * Set the exact status and percentage for the ripper.
-     * <b>This method will be invoked only if the process is still running!</b>
+     * <b>This method will be invoked only if the process is still running!</b>.
      */
     protected function updateStatus()
     {
         $status = $this->getStatusByProcess();
         $total_tracks = $this->getTotalTracks();
         $percentage = 0;
-        $message = "";
+        $message = '';
 
         $encoded = $this->getEncodedTracks();
         $ripped = $this->getRippedTracks();
@@ -169,11 +171,10 @@ class DiscRipper extends Disc
 
         if ($encoded == $total_tracks) {
             $status = self::STATUS_COMPLETE;
-            $message = "your disc is ready";
+            $message = 'your disc is ready';
             $percentage = 100;
         }
         $this->setStatusMessagePercentage($status, $message, $percentage);
-        return;
     }
 
     /**
@@ -184,9 +185,9 @@ class DiscRipper extends Disc
      */
     protected function getStatusByProcess()
     {
-        if (OS::isProcessRunning("cdparanoia")) {
+        if (OS::isProcessRunning('cdparanoia')) {
             $status = self::STATUS_RIPPING;
-        } elseif (OS::isProcessRunning("lame")) {
+        } elseif (OS::isProcessRunning('lame')) {
             $status = self::STATUS_ENCODING;
         } else {
             $status = self::STATUS_IDLE;
@@ -204,6 +205,7 @@ class DiscRipper extends Disc
     {
         $config = new Config();
         $path = $config->get('disc')['ripper']['output'];
+
         return FileUtils::countFiles($path);
     }
 
@@ -216,6 +218,7 @@ class DiscRipper extends Disc
     {
         $config = new Config();
         $path = $config->get('disc')['ripper']['input'];
+
         return FileUtils::countFiles($path);
     }
 
@@ -224,6 +227,7 @@ class DiscRipper extends Disc
      *
      * @param int|float $val1 the partial value
      * @param int|float $val2 the total value
+     *
      * @return int the percentage obtained from val1/val2
      */
     private function calculatePercentage($val1, $val2)

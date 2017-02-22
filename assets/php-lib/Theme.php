@@ -10,25 +10,30 @@ use JsonSerializable;
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 23-Nov-16
- * Time: 19:05
+ * Time: 19:05.
  */
-require __DIR__ . '/../php-lib/Database.php';
+require __DIR__.'/../php-lib/Database.php';
 
 class Theme implements JsonSerializable
 {
     const THEME_FILE = '/var/www/html/assets/scss/_colors_theme.scss';
 
-    private $name = "Theme";
+    private $name = 'Theme';
     /**
      * @var string
      */
-    private $text_color, $background_color, $background_color_highlight, $border_color, $overlays, $highlight_color;
+    private $text_color;
+    private $background_color;
+    private $background_color_highlight;
+    private $border_color;
+    private $overlays;
+    private $highlight_color;
     /**
-     * @var boolean
+     * @var bool
      */
     private $dark_accents;
     /**
-     * @var boolean
+     * @var bool
      */
     private $isStored;
     /**
@@ -42,6 +47,7 @@ class Theme implements JsonSerializable
 
     /**
      * Theme constructor.
+     *
      * @param $name string name of the theme
      * @param $text_color string
      * @param $background_color string
@@ -56,17 +62,17 @@ class Theme implements JsonSerializable
         // Am I seriously validating the parameters? I am getting to serious.
         $args = func_get_args();
 
-
         $args = array_splice($args, 1, count($args) - 2);
 
         foreach ($args as $color) {
-            if (!$this->validate_color_string($color))
+            if (!$this->validate_color_string($color)) {
                 throw new InvalidArgumentException("$color is not a valid color");
+            }
         }
 
-        if (!is_bool($dark_accents))
+        if (!is_bool($dark_accents)) {
             throw new InvalidArgumentException("$dark_accents is not a valid boolean for the dark accents");
-
+        }
         $this->name = $name;
         $this->text_color = $text_color;
         $this->background_color = $background_color;
@@ -78,9 +84,11 @@ class Theme implements JsonSerializable
     }
 
     /**
-     * Validates a color string according to the 6 hex digit with heading '#' symbol
+     * Validates a color string according to the 6 hex digit with heading '#' symbol.
+     *
      * @param $color string representation of a color
-     * @return boolean {@code true} if a valid color | {@code false} if not
+     *
+     * @return bool {@code true} if a valid color | {@code false} if not
      */
     private function validate_color_string($color)
     {
@@ -88,7 +96,8 @@ class Theme implements JsonSerializable
     }
 
     /**
-     * Returns all the themes stored in the database
+     * Returns all the themes stored in the database.
+     *
      * @return Theme[] or null
      */
     public static function getAllThemes()
@@ -96,14 +105,16 @@ class Theme implements JsonSerializable
         $db = new Database();
         $results = $db->select('*', 'themes');
 
-        if ($results == null)
-            return null;
+        if ($results == null) {
+            return;
+        }
 
         /** @var Theme[] $themes */
         $themes = [];
 
-        foreach ($results as $result)
+        foreach ($results as $result) {
             $themes[] = self::makeThemeFromObject($result);
+        }
 
         return $themes;
 //        return [
@@ -119,41 +130,47 @@ class Theme implements JsonSerializable
     {
 
         /** @noinspection PhpUndefinedFieldInspection */
-        $theme = new Theme($db_object->name, $db_object->text_color, $db_object->background_color_highlight, $db_object->background_color, $db_object->border_color, $db_object->overlays, $db_object->highlight_color, boolval($db_object->dark_accents));
+        $theme = new self($db_object->name, $db_object->text_color, $db_object->background_color_highlight, $db_object->background_color, $db_object->border_color, $db_object->overlays, $db_object->highlight_color, boolval($db_object->dark_accents));
 
         $theme->isReadOnly = boolval($db_object->read_only);
 
         $theme->isStored = $stored;
 
         if ($stored) {
-            if (!isset($db_object->id))
+            if (!isset($db_object->id)) {
                 throw new Exception("The theme was supposed to be stored, but it's lacking of id");
+            }
             $theme->id = $db_object->id;
         }
 
         return $theme;
-
     }
 
     /**
-     * Apply a theme, given the id. Will return false if the theme is not found
+     * Apply a theme, given the id. Will return false if the theme is not found.
+     *
      * @param $id int
+     *
      * @return bool
      */
     public static function applyThemeById($id)
     {
         $theme = self::getThemeById($id);
 
-        if ($theme == null)
+        if ($theme == null) {
             return false;
+        }
 
         $theme->applyTheme();
+
         return true;
     }
 
     /**
-     * Loads a theme from the database
+     * Loads a theme from the database.
+     *
      * @param $id int the id of the theme
+     *
      * @return Theme or null
      */
     public static function getThemeById($id)
@@ -162,18 +179,19 @@ class Theme implements JsonSerializable
 
         $result = $db->select('*', 'themes', "WHERE id = $id")[0];
 
-        if ($result == null)
-            return null;
+        if ($result == null) {
+            return;
+        }
 
         return self::makeThemeFromObject($result);
     }
 
     /**
-     * Applies the theme to the scss
+     * Applies the theme to the scss.
      */
     public function applyTheme()
     {
-        $dark_accents = $this->dark_accents ? "true" : "false";
+        $dark_accents = $this->dark_accents ? 'true' : 'false';
 
         $theme = "        //$this->id
         \$text_color: $this->text_color;
@@ -186,21 +204,23 @@ class Theme implements JsonSerializable
 
         file_put_contents(self::THEME_FILE, $theme);
 
-        $script = __DIR__ . '/../nodejs/sass.js';
+        $script = __DIR__.'/../nodejs/sass.js';
 
         exec("node $script");
     }
 
     /**
      * Returns the currently applied theme object. Even if it shouldn't happen, will return null in case of failure.
+     *
      * @return Theme | null on failure
      */
     public static function getAppliedTheme()
     {
-        if ($id = self::getAppliedId())
+        if ($id = self::getAppliedId()) {
             return self::getThemeById($id);
-        else
-            return null;
+        } else {
+            return;
+        }
     }
 
     /**
@@ -216,7 +236,8 @@ class Theme implements JsonSerializable
     }
 
     /**
-     * Saves the theme to the database
+     * Saves the theme to the database.
+     *
      * @return bool true on success
      */
     public function saveTheme()
@@ -226,48 +247,52 @@ class Theme implements JsonSerializable
         if ($this->isStored) {
             return $this->updateToDb($db);
         } else {
-            if (!$this->insertToDb($db))
+            if (!$this->insertToDb($db)) {
                 return false;
+            }
             $this->id = $db->getLastInsertedID();
             $this->isStored = true;
+
             return true;
         }
     }
 
     /**
      * @param $db Database
+     *
      * @return bool true on success
      */
     private function updateToDb($db)
     {
-        return $db->update("themes", [
-            "name" => $this->name,
-            "text_color" => $this->text_color,
-            "background_color" => $this->background_color,
-            "background_color_highlight" => $this->background_color_highlight,
-            "border_color" => $this->border_color,
-            "overlays" => $this->overlays,
-            "highlight_color" => $this->highlight_color,
-            "dark_accents" => $this->dark_accents
+        return $db->update('themes', [
+            'name'                       => $this->name,
+            'text_color'                 => $this->text_color,
+            'background_color'           => $this->background_color,
+            'background_color_highlight' => $this->background_color_highlight,
+            'border_color'               => $this->border_color,
+            'overlays'                   => $this->overlays,
+            'highlight_color'            => $this->highlight_color,
+            'dark_accents'               => $this->dark_accents,
         ], " WHERE id = $this->id");
     }
 
     /**
      * @param $db Database
+     *
      * @return bool true on success
      */
     private function insertToDb($db)
     {
         return $db->insert('themes',
             [
-                "name" => $this->name,
-                "text_color" => $this->text_color,
-                "background_color" => $this->background_color,
-                "background_color_highlight" => $this->background_color_highlight,
-                "border_color" => $this->border_color,
-                "overlays" => $this->overlays,
-                "highlight_color" => $this->highlight_color,
-                "dark_accents" => $this->dark_accents
+                'name'                       => $this->name,
+                'text_color'                 => $this->text_color,
+                'background_color'           => $this->background_color,
+                'background_color_highlight' => $this->background_color_highlight,
+                'border_color'               => $this->border_color,
+                'overlays'                   => $this->overlays,
+                'highlight_color'            => $this->highlight_color,
+                'dark_accents'               => $this->dark_accents,
             ]
         );
     }
@@ -275,16 +300,16 @@ class Theme implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "text_color" => $this->text_color,
-            "background_color" => $this->background_color,
-            "background_color_highlight" => $this->background_color_highlight,
-            "border_color" => $this->border_color,
-            "overlays" => $this->overlays,
-            "highlight_color" => $this->highlight_color,
-            "dark_accents" => $this->dark_accents,
-            "read_only" => $this->isReadOnly];
+            'id'                         => $this->id,
+            'name'                       => $this->name,
+            'text_color'                 => $this->text_color,
+            'background_color'           => $this->background_color,
+            'background_color_highlight' => $this->background_color_highlight,
+            'border_color'               => $this->border_color,
+            'overlays'                   => $this->overlays,
+            'highlight_color'            => $this->highlight_color,
+            'dark_accents'               => $this->dark_accents,
+            'read_only'                  => $this->isReadOnly, ];
     }
 
     //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
@@ -386,7 +411,7 @@ class Theme implements JsonSerializable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDarkAccents()
     {
@@ -394,7 +419,7 @@ class Theme implements JsonSerializable
     }
 
     /**
-     * @param boolean $dark_accents
+     * @param bool $dark_accents
      */
     public function setDarkAccents($dark_accents)
     {
@@ -426,11 +451,12 @@ class Theme implements JsonSerializable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsReadOnly()
     {
         return $this->isReadOnly;
     }
+
     //</editor-fold>
 }

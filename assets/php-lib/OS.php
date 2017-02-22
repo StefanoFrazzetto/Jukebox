@@ -15,19 +15,21 @@ abstract class OS
      * Checks if a process is running by checking if its process id is present.
      *
      * @param string $process_name The name of the process
+     *
      * @return bool true if the process is currently running, false otherwise.
      */
     public static function isProcessRunning($process_name)
     {
-        return self::execute("pidof -x $process_name") != "";
+        return self::execute("pidof -x $process_name") != '';
     }
 
     /**
      * Execute a command and returns its output.
      * The argument(s) can be passed as string or array.
      *
-     * @param string $command The command to execute
+     * @param string       $command   The command to execute
      * @param string|array $arguments The argument(s) to pass
+     *
      * @return string A string containing the output of the command.
      */
     public static function execute($command, $arguments = '')
@@ -43,10 +45,11 @@ abstract class OS
     /**
      * Execute a command and return if it was successful or not.
      *
-     * @param string $command The command or script to execute.
+     * @param string       $command   The command or script to execute.
      * @param string|array $arguments The argument(s) to pass along with the command.
+     *
      * @return bool true if the command/script has been executed successfully,
-     * false otherwise.
+     *              false otherwise.
      */
     public static function executeWithResult($command, $arguments = '')
     {
@@ -64,6 +67,7 @@ abstract class OS
      * Get the devices of the same type.
      *
      * @param string $type The type of device to look for.
+     *
      * @return string A string containing all the devices of the searched type.
      */
     public static function getDevicesByType($type)
@@ -81,29 +85,31 @@ abstract class OS
     public static function getScriptsPath()
     {
         $config = new Config();
-        return $config->get("paths")["scripts"];
+
+        return $config->get('paths')['scripts'];
     }
 
     /**
      * Executes a command using the env passed as an array.
      * The arguments must be passed as an associative array.
      *
-     * @param string $command The command or script to execute
-     * @param string $arguments The arguments to be set in the environment
-     * @param boolean $background The command/script is executed in background if this
-     * flag is set to true. The default is false.
+     * @param string $command    The command or script to execute
+     * @param string $arguments  The arguments to be set in the environment
+     * @param bool   $background The command/script is executed in background if this
+     *                           flag is set to true. The default is false.
+     *
      * @return int The process id of the command/script.
      */
-    public static function executeWithEnv($command, $arguments = "", $background = false)
+    public static function executeWithEnv($command, $arguments = '', $background = false)
     {
         if (empty($arguments) || !is_array($arguments)) {
-            throw new InvalidArgumentException("The second argument must be an associative array");
+            throw new InvalidArgumentException('The second argument must be an associative array');
         }
 
-        file_put_contents("/tmp/bestemmie-debug.log", '');
+        file_put_contents('/tmp/bestemmie-debug.log', '');
         foreach ($arguments as $key => $argument) {
             $setting = "$key=$argument";
-            file_put_contents("/tmp/bestemmie-debug.log", $setting, FILE_APPEND);
+            file_put_contents('/tmp/bestemmie-debug.log', $setting, FILE_APPEND);
             putenv($setting);
         }
 
@@ -118,20 +124,20 @@ abstract class OS
      * Executes a command without returning its output.
      * It's possible to set whether the command should run in background or not.
      *
-     * @param string $command The command to execute
-     * @param string $arguments The arguments to pass along with the command
-     * @param bool $background Flag to set whether the task should run in
-     * background or not.
+     * @param string $command    The command to execute
+     * @param string $arguments  The arguments to pass along with the command
+     * @param bool   $background Flag to set whether the task should run in
+     *                           background or not.
      */
-    public static function executeWithoutOutput($command, $arguments = "", $background = false)
+    public static function executeWithoutOutput($command, $arguments = '', $background = false)
     {
         if (!empty($arguments)) {
-            $arguments = is_array($arguments) ? implode(" ", $arguments) : $arguments;
+            $arguments = is_array($arguments) ? implode(' ', $arguments) : $arguments;
             $arguments = escapeshellarg($arguments);
         }
 
         if ($background) {
-            self::executeBackgroundCommand("command");
+            self::executeBackgroundCommand('command');
         } else {
             exec("bash $command $arguments");
         }
@@ -144,15 +150,15 @@ abstract class OS
      * and/or stderr should be stored.
      *
      * @param string $command The command to be executed
-     * @param string $output The full path to the location file where
-     * the output should be redirected.
+     * @param string $output  The full path to the location file where
+     *                        the output should be redirected.
      *
      * @return int The process id of the command/script.
      */
-    public static function executeBackgroundCommand($command, $output = "/dev/null")
+    public static function executeBackgroundCommand($command, $output = '/dev/null')
     {
         $process = new Process($command, $output);
+
         return $process->getPid();
     }
-
 }
