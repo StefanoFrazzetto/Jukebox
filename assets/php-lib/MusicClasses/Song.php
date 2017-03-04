@@ -204,7 +204,7 @@ class Song implements JsonSerializable
 
             $song->track_no = intval($db_object->track_no);
 
-            $song->title = $db_object->title;
+            $song->setTitle($db_object->title);
 
             $song->length = intval($db_object->length);
 
@@ -212,7 +212,7 @@ class Song implements JsonSerializable
 
             return $song;
         } catch (Exception $e) {
-            return;
+            return null;
         }
     }
 
@@ -535,7 +535,7 @@ class Song implements JsonSerializable
      */
     public function setTitle($title)
     {
-        $this->title = $title;
+        $this->title = stripslashes($title);
     }
 
     /**

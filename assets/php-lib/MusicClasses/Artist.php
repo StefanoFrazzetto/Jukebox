@@ -227,7 +227,7 @@ class Artist implements JsonSerializable
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = stripslashes($name);
     }
 
     /**
