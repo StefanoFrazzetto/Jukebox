@@ -19,6 +19,10 @@ $(function () {
     confirmTitleHeader.html(uploader.title);
     confirmArtistsHeader.html(uploader.getAllArtists().join(', '));
 
+    if (imageSelector.imageUrl !== null) {
+        uploader.cover = imageSelector.imageUrl;
+    }
+
     if (uploader.cover !== null) {
         confirmCoverImg.attr('src', uploader.cover);
     }

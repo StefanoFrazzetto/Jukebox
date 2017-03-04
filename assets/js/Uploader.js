@@ -106,6 +106,16 @@ Uploader.prototype.changePage = function (page) {
 
             break;
         case 3: // Add cover
+            imageSelector.from = '/assets/modals/album_upload/2-Metadata.php';
+            imageSelector.to = '/assets/modals/album_upload/4-Confirm.php';
+            imageSelector.albumArtist = true;
+            imageSelector.isRadio = false;
+
+            imageSelector.defaultAlbum = this.title;
+            imageSelector.defaultArtist = this.getAllArtists();
+
+            imageSelector.open();
+            break;
         case 4: // Confirm
             modal.openPage('/assets/modals/album_upload/4-Confirm.php');
             break;
@@ -114,7 +124,6 @@ Uploader.prototype.changePage = function (page) {
             error(msg2);
             console.error(msg2);
             break;
-
     }
 };
 
@@ -183,7 +192,7 @@ Uploader.prototype.createSongsTable = function (container, useInput) {
 
             var td3 = $("<td>" + track.artists.join(', ') + "</td>");
             var td4 = $("<td>" + track.url + "</td>");
-            
+
             tr.append(td1);
             tr.append(td2);
             tr.append(td3);
