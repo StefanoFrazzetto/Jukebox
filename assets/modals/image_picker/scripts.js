@@ -12,18 +12,18 @@ $('#coverImageURL').bind('input propertychange', function () {
 
 // Search the covers
 $('#search').on('click', function () {
-
     var artist = $('#artist').val();
     var album = $('#album').val();
 
     var covers = $('#covers');
+
     if (artist != '' && album != '') {
         $('#loading-img').css('display', 'block');
         covers.find('> p').css('display', 'block');
 
         $.ajax({
-            url: 'assets/php-lib/image_sources/fetch.php',
-            method: 'POST',
+            url: '/assets/API/image_fetch.php',
+            method: 'GET',
             data: {artist: artist, album: album},
             dataType: 'json',
             success: function (data) {
@@ -61,6 +61,9 @@ $('#search').on('click', function () {
                     submit_btn.removeClass('disabled');
                 });
 
+            },
+            fail: function () {
+                error("Failed to fetch covers.");
             }
         });
 

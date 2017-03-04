@@ -35,7 +35,7 @@
             <p>Or upload a file</p>
             <p>(*.jpg, *.png, *.gif)</p>
         </div>
-        <form action="assets/php/image_upload.php" enctype="multipart/form-data" class="dropzone"
+        <form action="/assets/php/image_upload.php" enctype="multipart/form-data" class="dropzone"
               id="image_picker_dropzone">
             <div class="fallback">
                 <input name="name" type="file" multiple/>
@@ -48,6 +48,12 @@
     <button onclick="imageSelector.back();">Back</button>
     <button class="right disabled" id="imagePickerSubmit">Confirm</button>
 </div>
-<script type="text/javascript" src="assets/js/dropzone.js"></script>
-<script type="text/javascript" src="assets/modals/image_picker/scripts.js"></script>
-<link href="assets/css/dropzone.css" rel="stylesheet"/>
+<?php
+include '../../../vendor/autoload.php';
+
+use Lib\ICanHaz;
+
+ICanHaz::js('/assets/js/dropzone.js');
+ICanHaz::js('scripts.js', false, true);
+
+?>
