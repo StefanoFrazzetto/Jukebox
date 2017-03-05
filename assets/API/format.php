@@ -23,8 +23,8 @@ if (isset($_GET['operation'])) {
         case 'factory_reset':
             $Database::resetDatabase();
             FileUtils::emptyDirectory($jukebox_folder);
-            FileUtils::emptyDirectory($config_folder);
-            $res = FileUtils::isDirEmpty($jukebox_folder) && FileUtils::isDirEmpty($config_folder);
+            // TODO Create method to reset the configuration
+            $res = FileUtils::isDirEmpty($jukebox_folder);
             echo $res ? 'The Jukebox has been reset to the factory settings.' : $fail;
             break;
 
