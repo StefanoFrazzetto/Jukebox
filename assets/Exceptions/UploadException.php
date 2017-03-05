@@ -1,5 +1,9 @@
 <?php
 
+namespace Exceptions;
+
+use Exception;
+
 class UploadException extends Exception
 {
     public function __construct($code)

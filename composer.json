@@ -10,6 +10,7 @@
   },
   "autoload": {
     "psr-4": {
+      "Exceptions\\": "assets/Exceptions/",
       "Lib\\": "assets/php-lib/",
       "Lib\\MusicClasses\\": "assets/php-lib/MusicClasses/",
       "Providers\\": "assets/Providers/"

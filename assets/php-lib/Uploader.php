@@ -3,12 +3,12 @@
 namespace Lib;
 
 use Exception;
+use Exceptions\UploadException;
 use InvalidArgumentException;
 use Lib\MusicClasses\Album;
 use Lib\MusicClasses\Song;
 use Providers\MusicBrainz;
 use Symfony\Component\Finder\Finder;
-use UploadException;
 
 /**
  * Class Uploader handles the upload of albums into the jukebox.
