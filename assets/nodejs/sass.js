@@ -11,17 +11,12 @@ var result = sass.renderSync({
     outputStyle: 'compressed'
 });
 
-//console.log(result);
-
-
 // No errors during the compilation, write this result on the disk
 fs.writeFile(outFilez, result.css, function (err) {
     if (err) {
-        console.log('[!] Failed to write main.css');
+        console.log('[!] Failed to write main.css\n', err);
     }
 });
-
-//console.log(result.css.toString());
 
 outFilez = __dirname + '/../css/main_remote.css';
 inFilez = __dirname + '/../scss/main_remote.scss';
@@ -35,8 +30,8 @@ result = sass.renderSync({
 
 fs.writeFile(outFilez, result.css, function (err) {
     if (err) {
-        console.log('[!] Failed to write main_remote.css');
+        console.log('[!] Failed to write main_remote.css\n', err);
     }
 });
 
-console.log("[@] Finished writing css files.");;
+console.log("[@] Finished writing css files.");
