@@ -64,6 +64,7 @@ class Network
             if (!$this->isStaticDhcpValid()) {
                 throw new InvalidArgumentException();
             }
+
             return "static $this->ip $this->subnet_mask $this->gateway $this->dns";
         }
     }
@@ -113,6 +114,7 @@ class Network
         if (!$this->isHotspotValid()) {
             throw new InvalidArgumentException();
         }
+
         return "\"$this->hotspot_ssid\" \"$this->hotspot_password\" $this->hotspot_channel";
     }
 
