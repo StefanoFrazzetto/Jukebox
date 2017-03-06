@@ -59,7 +59,7 @@ abstract class StringUtils
         $contains = false;
         foreach ($array_haystack as $key => $value) {
             if (self::contains($array_haystack[$key], $needle)) {
-                $contains = false;
+                $contains = true;
             }
         }
 
