@@ -212,7 +212,7 @@ class Song implements JsonSerializable
 
             return $song;
         } catch (Exception $e) {
-            return null;
+            return;
         }
     }
 

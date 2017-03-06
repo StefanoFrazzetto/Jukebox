@@ -40,9 +40,9 @@ abstract class StringUtils
      *                         counted from the beginning of the string. Unlike strrpos() and strripos(),
      *                         the offset cannot be negative.
      *
-     * @return bool true if the string was found, false otherwise.
-     *
      * @throws Exception if the needle is empty.
+     *
+     * @return bool true if the string was found, false otherwise.
      */
     public static function contains($haystack, $needle, $offset = 0)
     {

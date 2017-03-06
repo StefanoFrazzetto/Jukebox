@@ -11,7 +11,7 @@ class Bluetooth
      */
     public function __construct()
     {
-        $this->scripts = Config::getPath('scripts') . 'bluetooth/';
+        $this->scripts = Config::getPath('scripts').'bluetooth/';
         static::powerOn();
     }
 
@@ -107,6 +107,7 @@ class Bluetooth
         $command = str_replace('MAC_ADDRESS', $mac, $command);
 
         $output = OS::execute($command);
+
         return StringUtils::contains($output, 'Connection successful');
     }
 
