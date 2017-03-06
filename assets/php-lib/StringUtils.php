@@ -2,6 +2,8 @@
 
 namespace Lib;
 
+use Exception;
+
 abstract class StringUtils
 {
     /**
@@ -39,9 +41,15 @@ abstract class StringUtils
      *                         the offset cannot be negative.
      *
      * @return bool true if the string was found, false otherwise.
+     *
+     * @throws Exception if the needle is empty.
      */
     public static function contains($haystack, $needle, $offset = 0)
     {
+        if (empty($needle)) {
+            throw new Exception('The needle cannot be empty.');
+        }
+
         return strpos($haystack, $needle, $offset) !== false ? true : false;
     }
 
