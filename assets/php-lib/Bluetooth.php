@@ -4,23 +4,21 @@ namespace Lib;
 
 class Bluetooth
 {
-    private $config;
-
-    /** The bluetooth devices array */
-    private $devices;
+    private $scripts;
 
     /**
      * Return the Bluetooth helper.
      */
     public function __construct()
     {
-        $this->config = Config::getPath('scripts');
+        $this->scripts = Config::getPath('scripts') . 'bluetooth/';
+        static::powerOn();
     }
 
     /**
      * Turns on bluetooth.
      */
-    public function powerOn()
+    public static function powerOn()
     {
         $command = 'expect -c "
         spawn \"bluetoothctl\"
@@ -37,7 +35,7 @@ class Bluetooth
     /**
      * Turns off bluetooth.
      */
-    public function powerOff()
+    public static function powerOff()
     {
         $command = 'expect -c "
         spawn \"bluetoothctl\"
@@ -56,11 +54,7 @@ class Bluetooth
      *
      * The array will contain the device mac and name.
      *
-     * @return array|bool an array containing devices in the following format:
-     * array['index']['mac']
-     * array['index']['name']
-     *
-     * If the bluetooth controller is off, false is returned.
+     * @return array an array containing the bluetooth devices/
      */
     public function scan()
     {
@@ -70,42 +64,65 @@ class Bluetooth
         $result = OS::execute($command);
 
         if (StringUtils::contains($result, $bluetooth_off)) {
-            return false;
+            return [];
         }
 
         $dev_no = preg_match_all("/(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))\s([^\s]+)/", $result, $devices_tmp);
 
         $devices = [];
         for ($i = 0; $i < $dev_no; $i++) {
-            $devices[$i]["mac"] = $devices_tmp[1][$i];
-            $devices[$i]["name"] = $devices_tmp[4][$i];
+            $devices[$i]['mac'] = $devices_tmp[1][$i];
+            $devices[$i]['name'] = $devices_tmp[4][$i];
         }
 
         return $devices;
     }
 
-    public function connect($mac)
+    public function pair($mac)
     {
+        $command = 'expect -c "
+        spawn \"bluetoothctl\"
+        expect \"# \"
+        
+        send \"agent on\r\"
+        expect \"Agent registered\"
+        
+        send \"default agent\r\"
+        expect \"Default agent request successful\"
+        
+        send \"pair MAC_ADDRESS\r\"
+        expect \"Pairing successful\"
+        
+        send \"trust MAC_ADDRESS\r\"
+        expect \"Changing MAC_ADDRESS trust succeeded\"
+        
+        send \"connect MAC_ADDRESS\r\"
+        expect \"Connection successful\"
+        
+        send \"exit\r\"
+        expect eof
+        "';
 
+        // Replace the string with the mac address
+        $command = str_replace('MAC_ADDRESS', $mac, $command);
+
+        $output = OS::execute($command);
+        return StringUtils::contains($output, 'Connection successful');
     }
 
-    private function pair($mac)
+    public function unpairAll()
     {
-        $output = shell_exec($this->cmd_folder . "bluez5-connect $mac");
-        if (strpos($output, 'org.bluez.Error.Failed') !== false) {
-            $this->output('failed');
-        } else {
-            $this->output('connected');
-        }
-    }
+        $cmd = 'expect -c "
+        spawn \"bluetoothctl\"
+        expect \"# \"
+        send \"remove *\r\"
+        expect \"# \"
+        send \"exit\r\"
+        expect eof
+        "';
 
-    private function unpair()
-    {
-        $cmd = shell_exec($this->cmd_folder . 'unpair-all.sh');
-        if (strpos($cmd, 'done') === false) {
-            $this->output('Error unpairing the devices');
-        } else {
-            $this->output('All devices unpaired.');
-        }
+        $res = OS::execute($cmd);
+
+        return StringUtils::contains($res, 'done');
     }
 }
