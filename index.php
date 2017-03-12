@@ -14,7 +14,13 @@ if (isJukebox()) {
 
 <head>
     <title>&lt;JUKEBOX&gt;</title>
-    <?php ICanHaz::css(['/assets/css/main.css', '/assets/css/font-awesome.min.css', '/assets/css/jquery.mCustomScrollbar.min.css'], true); ?>
+    <?php
+    try {
+        ICanHaz::css(['/assets/css/main.css', '/assets/css/font-awesome.min.css', '/assets/css/jquery.mCustomScrollbar.min.css'], true);
+    } catch (Exception $e) {
+        die("<h1>CSS FILES MISSING!</h1>");
+    }
+    ?>
     <link href="assets/img/icons/vinyl1.png" rel="icon" type="image/png">
     <meta name="theme-color" content="#2a2a2a">
     <meta charset="UTF-8">
