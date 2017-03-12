@@ -1,37 +1,43 @@
-var sass = require('node-sass');
+var sass = require(__dirname + '/../../node_modules/node-sass');
 var fs = require('fs');
 
-var outFilez = __dirname + '/../css/main.css';
-var inFilez = __dirname + '/../scss/main.scss';
+function compileFile(file) {
+    var outFolder = __dirname + '/../css/';
+    var inFolder = __dirname + '/../scss/';
 
-var result = sass.renderSync({
-    file: inFilez,
-    outFile: outFilez,
-    //sourceMap: true,
-    outputStyle: 'compressed'
-});
+    var outFile = outFolder + file + '.css';
+    var inFile = inFolder + file + '.scss';
 
-// No errors during the compilation, write this result on the disk
-fs.writeFile(outFilez, result.css, function (err) {
-    if (err) {
-        console.log('[!] Failed to write main.css\n', err);
-    }
-});
+    var result = sass.renderSync({
+        file: inFile,
+        outFile: outFile,
+        //sourceMap: true,
+        outputStyle: 'compressed'
+    });
 
-outFilez = __dirname + '/../css/main_remote.css';
-inFilez = __dirname + '/../scss/main_remote.scss';
+    fs.readFile(outFile, 'utf8', function (err, data) {
 
-result = sass.renderSync({
-    file: inFilez,
-    outFile: outFilez,
-    //sourceMap: true,
-    outputStyle: 'compressed'
-});
+        if (err || data != result.css) {
+            fs.writeFile(outFile + ".tmp", result.css, function (err) {
+                if (err) {
+                    console.log("[@] Error while reading " + file + ".");
+                } else {
+                    console.log("[@] File " + file + " needs updating.");
+                }
 
-fs.writeFile(outFilez, result.css, function (err) {
-    if (err) {
-        console.log('[!] Failed to write main_remote.css\n', err);
-    }
-});
+                if (err) {
+                    console.log('[!] Failed to write ' + file + '.\n', err);
+                } else {
+                    console.log("[@] Finished writing " + file + ".");
+                }
 
-console.log("[@] Finished writing css files.");
+                fs.renameSync(outFile + ".tmp", outFile);
+            });
+        } else {
+            console.log("[@] File " + file + " already up to date.");
+        }
+    });
+}
+
+compileFile('main');
+compileFile('main_remote');
