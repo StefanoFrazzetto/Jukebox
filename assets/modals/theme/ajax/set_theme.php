@@ -12,7 +12,9 @@ if ($id < 1 && !is_int($id)) {
     exit;
 }
 
-include '../../../php-lib/Theme.php';
+include '../../../../vendor/autoload.php';
+
+use Lib\Theme;
 
 $theme = !Theme::applyThemeById($id);
 

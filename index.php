@@ -14,7 +14,7 @@ if (isJukebox()) {
 
 <head>
     <title>&lt;JUKEBOX&gt;</title>
-    <?php ICanHaz::css(['assets/css/main.css', 'assets/css/font-awesome.min.css', 'assets/css/jquery.mCustomScrollbar.min.css'], true); ?>
+    <?php ICanHaz::css(['/assets/css/main.css', '/assets/css/font-awesome.min.css', '/assets/css/jquery.mCustomScrollbar.min.css'], true); ?>
     <link href="assets/img/icons/vinyl1.png" rel="icon" type="image/png">
     <meta name="theme-color" content="#2a2a2a">
     <meta charset="UTF-8">
