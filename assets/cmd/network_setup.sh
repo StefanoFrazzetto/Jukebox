@@ -143,7 +143,7 @@ if [ $network == "ethernet" ]; then
 
     # Set the DNS servers
     logMessage "Setting DNS: $dns"
-    setDns "$dns" "8.8.4.4"
+    setDns "8.8.8.8" "8.8.4.4"
 
     sudo ifconfig eth0 up
     logMessage "Setting configuration: eth0 $ip_address $netmask $gateway"
@@ -170,7 +170,7 @@ if [ $network == "wifi" ]; then
 
     # Set DNS servers
     logMessage "Setting DNS: $dns"
-    setDns "$dns" "8.8.4.4"
+    setDns "8.8.8.8" "8.8.4.4"
 
     sudo ifconfig "$wifi_interface" up
     logMessage "Setting configuration: $wifi_interface $ip_address $netmask $gateway"
