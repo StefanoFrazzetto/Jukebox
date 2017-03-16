@@ -18,7 +18,7 @@ if (isJukebox()) {
     try {
         ICanHaz::css(['/assets/css/main.css', '/assets/css/font-awesome.min.css', '/assets/css/jquery.mCustomScrollbar.min.css'], true);
     } catch (Exception $e) {
-        die("<h1>CSS FILES MISSING!</h1>");
+        die('<h1>CSS FILES MISSING!</h1>');
     }
     ?>
     <link href="assets/img/icons/vinyl1.png" rel="icon" type="image/png">
@@ -212,9 +212,9 @@ if (isJukebox()) {
 
 <?php
 function isJukebox()
-{
-    return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
-}
+    {
+        return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
+    }
 
 $scripts = [
     'assets/js/vars.js',
