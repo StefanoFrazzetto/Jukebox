@@ -6,7 +6,6 @@ var modal = {
     loaderGifElement: modalElement.find('.ajaxloader'),
     watchDogHandler: -1,
     last_top: null,
-    handleScanner: -1, // Used to kill wifi scanner task
     jqxhr: null,
     autoPositioned: false,
     onModalClosed: null,
@@ -58,8 +57,6 @@ var modal = {
             _this.modalLoaderElement.html('');
             _this.loaderGifElement.show();
 
-            clearInterval(_this.handleScanner);
-
             if (_this.onModalClosed != null) {
                 _this.onModalClosed();
                 _this.onModalClosed = null;
@@ -69,7 +66,6 @@ var modal = {
     },
 
     openPage: function (page) {
-        clearInterval(this.handleScanner);
         this.loaderGifElement.show();
         this.modalLoaderElement.html('');
 
