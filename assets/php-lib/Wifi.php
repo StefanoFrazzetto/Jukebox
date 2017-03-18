@@ -48,6 +48,16 @@ class Wifi
         return $password;
     }
 
+    private static function compare($i, $j)
+    {
+        $a = $i['signal'];
+        $b = $j['signal'];
+
+        if ($a == $b) return 0;
+        if ($a > $b) return -1;
+        return 1;
+    }
+
     public function getNetworkByEssid($essid)
     {
         try {
@@ -177,19 +187,14 @@ class Wifi
             }
 
             // Finally adds the value to the array
-            $networks[$network_index][$match_key] = $match_value;
+            if (!empty($network_index)) {
+                $networks[$network_index][$match_key] = $match_value;
+            }
         }
 
         $conn = $this->getConnectedNetwork();
 
-        uasort($networks, function ($i, $j) {
-            $a = $i['signal'];
-            $b = $j['signal'];
-
-            if ($a == $b) return 0;
-            if ($a > $b) return -1;
-            return 1;
-        });
+        uasort($networks, array('self', 'compare'));
 
         if ($conn !== null) {
             $conn_essid = $conn['ESSID'];
