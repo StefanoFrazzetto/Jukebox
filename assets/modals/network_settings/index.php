@@ -1,3 +1,10 @@
+<?php
+
+require_once '../../../vendor/autoload.php';
+use Lib\ICanHaz;
+use Lib\Wifi;
+
+?>
 <div class="modalHeader">Network Settings</div>
 <form method="POST" id="network_settings_form">
     <div class="modalBody mCustomScrollbar" data-mcs-theme="dark">
@@ -52,38 +59,28 @@
 
         <div id="wifi_module">
             <hr/>
-            <h4>WiFi</h4>
-            <table class="songsTable" id="wifiTable" style="width: 100%; padding-top: 0; margin-top: 0;">
-                <thead>
-                <tr class="th">
-                    <th class="wifiID">#</th>
-                    <th class="wifiESSID">ESSID</th>
-                    <th class="wifiEncryption">Encryption</th>
-                    <th class="wifiQuality">Quality</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td colspan="4" style="text-align: center;">Loading...</td>
-                </tr>
-                </tbody>
-            </table>
-            <div id="wifi_details" class="hidden">
-                <div>ESSID: <span id="network_details_essid"></span></div>
-                <div>Security: <span id="network_details_security"></span></div>
 
-                <div id="network_details_password">Password: <input title="password" type="password"
-                                                                    name="network_password"
-                                                                    id="network_password"/></div>
+            <?php
+            $wifi = new Wifi();
 
-                <button onclick="closeNetworkDetails()">Back</button>
+            $network = $wifi->getConnectedNetwork();
+            $wifiPassword = "";
+            $wifiEssid = "";
 
-                <button class="danger" id="network_details_forget">Forget</button>
+            if ($network !== null) {
+                echo "<span>Connected to \"" . $network["ESSID"] . "\"</span>";
+                $wifiPassword = $wifi->getNetworkByEssid($network["ESSID"]);
 
-                <button class="success saveBtn" onclick="setSelectedNetwork()">Save & Connect</button>
+                $wifiPassword = Wifi::decodePassword($wifiPassword['password'], $wifiPassword['salt']);
+                $wifiEssid = $network["ESSID"];
+            }
 
-
+            ?>
+            <div class="box-btn" onclick="modal.openPage('/assets/modals/network_settings/wifi.php')">Connect to a WiFi
+                network
             </div>
+            <input type="hidden" id="wifi_essid" name="essid" value="<?php echo $wifiEssid ?>"/>
+            <input type="hidden" id="wifi_password" name="password" value="<?php echo $wifiPassword ?>"/>
         </div>
     </div>
 
@@ -101,11 +98,7 @@
         <input type="submit" value="Save" class="right saveBtn" onclick="$('#network_settings_form').submit();"/>
     </div>
 </form>
-
 <?php
-require_once '../../../vendor/autoload.php';
-use Lib\ICanHaz;
-
 ICanHaz::css(['css/style.css', 'css/horizontal_selector.css']);
 ICanHaz::js(['js/horizontal_selector.js', 'js/scripts.js', 'js/wifi_scan.js'], false, true);
 ?>

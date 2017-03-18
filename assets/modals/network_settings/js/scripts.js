@@ -14,8 +14,8 @@ var modules_hash = [
 network_type.horizontalSelector();
 
 function toggleManualField() {
-    var dhcpenabled = $('#dhcp').prop('checked');
-    if (dhcpenabled) {
+    var dhcpEnabled = $('#dhcp').prop('checked');
+    if (dhcpEnabled) {
         //$('#manual_settings input').prop('disabled', true);
         $('#manual_settings').hide();
     } else {
@@ -31,14 +31,8 @@ $('#dhcp').change(function () {
 network_type.change(function () {
     var val = parseInt($(this).val());
 
-    // Starts the wifiscan if the wifi tab is selected
-    if (val === 2) {
-        startScan();
-    } else {
-        stopScan();
-    }
-
     for (var key in modules_hash[val]) {
+        //noinspection JSUnfilteredForInLoop
         if (modules_hash[val][key]) {
             $('#' + key).show();
         } else {
@@ -62,15 +56,12 @@ $('#network_settings_form').submit(function (e) {
     e.preventDefault();
     var data = $(this).serialize();
 
-    stopScan();
-
     $.ajax({
         url: "/assets/php/set_network_settings.php",
         method: "POST",
-        timeout: 20000, // SETTE!!!
+        timeout: 20000,
         data: data
     }).done(function (data) {
-
         if (data == "success")
             alert("Network settings saved successfully!");
         else {
@@ -94,45 +85,8 @@ $('#network_settings_form').submit(function (e) {
     });
 });
 
-function openNetworkDetails(network) {
-    selected_network = network;
-
-    $('#wifi_details').show(animation_short);
-    $('#wifiTable').hide(animation_short);
-
-    stopScan();
-
-    $('#network_details_essid').text(selected_network['essid']);
-
-    if (typeof selected_network['encryption_type'] === 'undefined') {
-        selected_network['encryption_type'] = 'open';
-    }
-
-    $('#network_details_security').text(selected_network['encryption_type']);
-
-    if (selected_network.saved) {
-        $('#network_details_password').hide();
-
-        $('#network_details_forget').show();
-    } else {
-        $('#network_details_forget').hide();
-
-        $('#network_details_password').show();
-    }
-}
-
-function closeNetworkDetails(network) {
-    selected_network = null;
-
-    $('#wifi_details').hide(animation_short);
-    $('#wifiTable').show(animation_short);
-
-    startScan();
-}
-
 $('#network_details_forget').click(function () {
     forgetNetwork(selected_network['ESSID']);
-    closeNetworkDetails();
 });
 
 
@@ -150,6 +104,7 @@ function loadConfigurationFromJson(data) {
         thing.triggerHandler('change');
     });
 
+    //noinspection JSUnresolvedVariable
     var val = data.network_type;
 
     if (typeof val != "undefined" && (val == 2 || val == 1)) {

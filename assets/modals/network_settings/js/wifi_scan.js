@@ -1,7 +1,17 @@
-var essidArray = [];
-var networks = [], xhr, networkz = [];
+var networks = {},
+    handleScanner,
+    xhr,
+    networksPerPage = 5,
+    wifiNetworkPage = 0;
 
-function wifi_networks() {
+var wifiPagination = $('#wifiPagination');
+
+
+function writeErrorInTable(text) {
+    $('#wifiTable').find('tbody').html("<tr><td colspan='3' class='text-center'>" + text + "</td></tr>");
+}
+
+function getWifiNetworks() {
     xhr = $.ajax({
         url: "assets/modals/network_settings/wifi/wifi_scan.php",
         type: 'POST',
@@ -9,105 +19,116 @@ function wifi_networks() {
         dataType: 'json',
         cache: false,
         success: function (json) {
-         networks = [];
-
-         var r = [],
-         j = 0;
-
-         networkz = json;
-
-         $.each (json, function (key, val) {
-            var essid = val['ESSID'];
-            var nlength = networks.length;
-            var encryption = val['encryption'];
-            var connected = val['connected'];
-            var type = val['encryption_type'];
-            var saved = val['saved'];
-
-            var signal = val['signal'];
-
-            var classes = "networkContainer";
-
-            if (connected) {
-                classes += " playing";
-            }
-
-            r[++j] = '<tr class="' + classes + '" data-essid="' + essid + '" data-encryption="' + encryption + '">';
-
-            r[++j] = '<td class="wifiID">';
-            r[++j] = nlength + 1;
-            r[++j] = '</td>';
-            r[++j] = '<td class="wifiESSID">' + essid + '</td>';
-
-            var icon = "";
-
-            if (encryption == "on") {
-                icon = '<i class="fa fa-lock" aria-hidden="true" title="'+type+'"></i>';
-            } else if (encryption == "saved") {
-
-            } else {
-                icon = '<i class="fa fa-unlock" aria-hidden="true" title="open"></i>';
-            }
-
-            if(saved){
-                icon += ' <i class="fa fa-floppy-o" aria-hidden="true" title="saved"></i>';
-            }
-
-            if(connected){
-                icon += ' <i class="fa fa-link" aria-hidden="true" title="connected"></i>'
-            }
-
-            r[++j] = '<td class="wifiEncryption">' + icon + '</i></td>';
-
-            r[++j] = '<td class="wifiQuality">';
-            r[++j] = "<div class='progressBar' style='width: 98%; margin-bottom: 0;'>";
-            r[++j] = "<div class='progress' title='" + signal + "%' style='width: " + signal + "%;' ></div></div>";
-            r[++j] = '</td></tr>';
-            j = 0;
-
-                // if (essidArray.indexOf(essid) == '-1' && encryption != 'null' && encryption != null) {
-                //     essidArray.push(essid);
-                //     var network = r.join('');
-                //     networks.push(network);
-                // } else {
-                //     console.log("cose brutte qui");
-                // }
-
-
-                essidArray.push(essid);
-                var network = r.join('');
-                networks.push(network);
+            $.each(json, function (key, val) {
+                networks[key] = val;
             });
 
-         if (networks.length) {
-            $('#wifiTable').find('tbody').html(networks);
-        } else {
-            $('#wifiTable').find('tbody').html("<tr><td colspan='4' class='text-center'>I found no WiFi network. :(</td></tr>");
+            displayNetworks();
+        },
+        error: function () {
+            writeErrorInTable("An error has occurred while fetching WiFi networks.");
+        }
+    });
+}
+
+function displayNetworks() {
+    var r = [],
+        j = 0,
+        i = 0,
+        numberOfNetworks = Object.keys(networks).length,
+        numberOfPages = Math.floor((numberOfNetworks - 1) / networksPerPage) + 1;
+
+    $.each(networks, function (key, val) {
+        if (i < networksPerPage * wifiNetworkPage || i > networksPerPage * (wifiNetworkPage + 1) - 1) {
+            i++;
+            return;
         }
 
-        bindWifiScannerClicks();
-    },
-    error: function () {
-        $('#wifiTable').find('tbody').html("An error has occured");
+        var essid = val['ESSID'];
+        var encryption = val['encryption'];
+        var connected = val['connected'];
+        var type = val['encryption_type'];
+        var saved = val['saved'];
+
+        var signal = val['signal'];
+
+        var classes = "networkContainer";
+
+        if (connected) {
+            classes += " playing";
+        }
+
+        r[++j] = '<tr class="' + classes + '" data-essid="' + essid + '" data-encryption="' + encryption + '">';
+
+        r[++j] = '<td class="wifiESSID">' + essid + '</td>';
+
+        var icon = "";
+
+        if (encryption == "on") {
+            icon = '<i class="fa fa-lock" aria-hidden="true" title="' + type + '"></i>';
+        } else if (encryption == "saved") {
+
+        } else {
+            icon = '<i class="fa fa-unlock" aria-hidden="true" title="open"></i>';
+        }
+
+        if (saved) {
+            icon += ' <i class="fa fa-floppy-o" aria-hidden="true" title="saved"></i>';
+        }
+
+        if (connected) {
+            icon += ' <i class="fa fa-link" aria-hidden="true" title="connected"></i>'
+        }
+
+        r[++j] = '<td class="wifiEncryption">' + icon + '</i></td>';
+
+        r[++j] = '<td class="wifiQuality">';
+        r[++j] = "<div class='progressBar' style='width: 98%; margin-bottom: 0;'>";
+        r[++j] = "<div class='progress' title='" + signal + "%' style='width: " + signal + "%;' ></div></div>";
+        r[++j] = '</td></tr>';
+        i++;
+    });
+
+    if (numberOfNetworks) {
+        $('#wifiTable').find('tbody').html(r.join('\n'));
+    } else {
+        $('#wifiTable').find('tbody').html("<tr><td colspan='3' class='text-center'>No WiFi networks found. :(</td></tr>");
     }
-});
+
+    bindWifiScannerClicks();
+
+    wifiPagination.html("");
+    for (i = 0; i < numberOfPages; i++) {
+        var pageButton = $('<button>' + (i + 1) + "</button>");
+        pageButton.page = i;
+
+        pageButton.click(function () {
+            wifiNetworkPage = parseInt($(this).text()) - 1;
+            displayNetworks();
+        });
+
+        wifiPagination.append(pageButton);
+    }
 }
 
 function stopScan() {
+    console.log("Attempting to stop wifi scanner...");
     try {
-        xhr.abort();
         clearInterval(handleScanner);
+        xhr.abort();
+        console.log("scanner stopped.");
     } catch (e) {
-
+        console.error("Error while aborting the wifi scan.");
     }
 }
 
 function startScan() {
     $(document).ready(function () {
-        wifi_networks();
+        console.log("Starting wifi scan...");
 
+        getWifiNetworks();
         // This will run the scanner every 1000 seconds. Doesn't look like it's getting more networks anyways
-        handleScanner = setInterval(wifi_networks, 5000);
+        handleScanner = setInterval(getWifiNetworks, 5000);
     });
 }
 
@@ -128,59 +149,33 @@ function bindWifiScannerClicks() {
     $('.networkContainer').click(function () {
         var essid = $(this).attr('data-essid');
 
-        //setNetwork(essid);
-
-        openNetworkDetails(networkz[essid]);
+        new Alert({
+            message: "Connect to the network?",
+            title: essid,
+            buttons: [
+                {
+                    text: "Connect!",
+                    callback: function () {
+                        alert("Not implemented yet!");
+                    }
+                },
+                "Cancel"
+            ]
+        }).show();
     });
 }
 
-function setSelectedNetwork(callback){
-    setNetwork(selected_network['ESSID'], callback);
-}
+function forgetNetwork(essid, callback) {
+    var network = networks[essid];
 
-function setNetwork(essid, callback){
-    var network = networkz[essid];
-
-    $('#ssid').val(essid);
-
-    if(!network.saved){
-        var password = $('#network_password').val();
-
-        network['password'] = password;
-
+    //noinspection JSUnresolvedVariable
+    if (network.saved) {
         $.ajax({
-            type: "POST",
-            url: "assets/modals/network_settings/wifi/wifi_update.php",
-            data: JSON.stringify(network)
-        }).always(function () {
-            
-            $('#network_settings_form').submit();
-            
-            closeNetworkDetails();
-
-            if(typeof callback !== 'undefined')
-            callback();
-        });
-    } else {
-        $('#network_settings_form').submit();
-        closeNetworkDetails();
-    }
-    
-    
-}
-
-function forgetNetwork(essid, callback){
-    var network = networkz[essid];
-
-    console.log(network);
-
-    if(network.saved){
-        $.ajax({
-            url: "assets/modals/network_settings/wifi/wifi_forget.php?essid="+essid,
+            url: "assets/modals/network_settings/wifi/wifi_forget.php?essid=" + essid
             //contentType: "application/json; charset=utf-8",
             //dataType: "json",
-        }).done(function (){
-            if(typeof callback !== 'undefined')
+        }).done(function () {
+            if (typeof callback !== 'undefined')
                 callback();
         });
     }

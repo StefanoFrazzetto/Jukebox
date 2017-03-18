@@ -27,12 +27,8 @@ hr {
     margin-top: 10px;
 }
 
-.wifiID {
-    text-align: center;
-    width: 10%;
-}
-
 .wifiESSID {
+    padding-left: 10px;
     text-align: left;
     width: 50%;
 }
@@ -50,4 +46,10 @@ hr {
 
 #wifi_details div {
     margin: 15px;
+}
+
+#wifiPagination {
+    text-align: center;
+
+    margin-top: 10px;
 }
