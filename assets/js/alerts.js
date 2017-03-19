@@ -68,6 +68,10 @@ Alert.prototype.show = function () {
     this.container.fadeTo(0, 0);
     $('body').append(this.container);
     this.container.fadeTo(animation_short, 1);
+
+    if (this.showInput) {
+        this.input.focus();
+    }
 };
 
 Alert.prototype.hide = function (callback) {
