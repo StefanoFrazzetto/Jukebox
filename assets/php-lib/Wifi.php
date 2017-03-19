@@ -60,11 +60,22 @@ class Wifi
 
     public function getNetworkByEssid($essid)
     {
-        try {
+        if (isset($this->wifiConfig[$essid])) {
             return $this->wifiConfig[$essid];
-        } catch (Exception $e) {
-            return;
+        } else {
+            return null;
         }
+    }
+
+    public function saveNetwork($ssid, $protocol, $encryption, $encryption_type, $password)
+    {
+        $this->updateNetwork([
+            "ESSID" => $ssid,
+            "Protocol" => $protocol,
+            "encryption" => $encryption,
+            "encryption_type" => $encryption_type,
+            "password" => $password
+        ]);
     }
 
     /**
