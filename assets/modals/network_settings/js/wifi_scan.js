@@ -6,6 +6,7 @@ var networks = {},
 
 var wifiPagination = $('#wifiPagination');
 
+var selectedNetwork = undefined;
 
 function writeErrorInTable(text) {
     $('#wifiTable').find('tbody').html("<tr><td colspan='3' class='text-center'>" + text + "</td></tr>");
@@ -132,9 +133,6 @@ function startScan() {
     });
 }
 
-
-//if($('#wifiTable').is(":hidden"))
-
 $('#wifiTable').on('remove', function () {
     stopScan();
 });
@@ -149,19 +147,52 @@ function bindWifiScannerClicks() {
     $('.networkContainer').click(function () {
         var essid = $(this).attr('data-essid');
 
-        new Alert({
-            message: "Connect to the network?",
+        var network = networks[essid];
+
+        if (typeof network === "undefined") {
+            error("Unable to find the network " + essid + ".");
+            return;
+        }
+
+        var opt = {
+            message: "Insert the password for '" + essid + "'",
             title: essid,
             buttons: [
+                "Cancel",
                 {
-                    text: "Connect!",
+                    text: "Connect",
                     callback: function () {
-                        alert("Not implemented yet!");
+                        network.password = connectAlert.getInputValue();
+                        selectedNetwork = network;
+                        modal.openPage('/assets/modals/network_settings');
                     }
-                },
-                "Cancel"
-            ]
-        }).show();
+                }
+            ],
+            showInput: true,
+            inputIsPassword: true,
+            inputPlaceholder: "password"
+        };
+
+        if (network.encryption == "open") {
+            opt.showInput = false;
+            opt.message = "Connect to the open network '" + essid + "'?";
+        }
+
+        if (network.saved) {
+            opt.showInput = false;
+            opt.message = "Connect to '" + essid + "'?";
+            opt.buttons.unshift({
+                text: "Forget",
+                callback: function () {
+                    forgetNetwork(essid, function () {
+                        alert("Network " + essid + " forgot.")
+                    })
+                }
+            });
+        }
+
+        var connectAlert = new Alert(opt);
+        connectAlert.show();
     });
 }
 
