@@ -51,14 +51,50 @@ network_type.change(function () {
     network_type.updateSelector();
 });
 
-$('#network_settings_form').submit(function (e) {
+function checkWifiNetwork() {
+    $.getJSON('/assets/modals/network_settings/wifi/wifi_connected.php')
+        .done(function (data) {
+            console.log(data);
+            if (data == null) {
+                error("Failed to connect to '" + wifi_essid.val() + "'. Currently connected to no WiFi network.");
+            } else if (data.ESSID == wifi_essid.val()) {
+                alert("Connected successfully to '" + data.ESSID + "'.")
+            } else {
+                error("Failed to connect to the selected network. I am connected to '" + data.ESSID + "'.");
+            }
+        })
+        .fail(function () {
+            error("Failed to fetch the current WiFi network. You might need to change the network configuration locally.");
+        })
+        .always(function () {
+            enableInteractions();
+        });
+}
+
+function enableInteractions() {
+    var btn = $('.saveBtn');
+    btn.attr('disabled', false);
+    btn.removeClass('disabled');
+    btn.val('Save');
+    modal.enable();
+}
+
+function disableInteractions() {
+    modal.disable();
     var btn = $('.saveBtn');
     btn.attr('disabled', true);
     btn.addClass('disabled');
     btn.val('Wait...');
+}
+
+$('#network_settings_form').submit(function (e) {
+    disableInteractions();
 
     e.preventDefault();
     var data = $(this).serialize();
+
+    var requestStatus = 'fail';
+    var requestError = 'Unknown error';
 
     $.ajax({
         url: "/assets/php/set_network_settings.php",
@@ -67,23 +103,34 @@ $('#network_settings_form').submit(function (e) {
         data: data
     }).done(function (data) {
         if (data == "success")
-            alert("Network settings saved successfully!");
+            requestStatus = 'success';
         else {
-            error("An error occurred while saving. Check the logs for more.");
+            requestError = "An error occurred while saving. Check the logs for more.";
             console.log(data);
         }
     }).fail(function (a, b, c) {
-
         if (b === 'timeout') {
-            error("The connection to the jukebox timed out. You might need to change the network configuration locally");
+            requestStatus = 'timeout';
         } else {
-            error("Something went wrong while contacting the saving network server. " + c);
+            requestStatus = 'fail';
+            requestError = "Something went wrong while contacting the saving network server. " + b;
         }
 
     }).always(function () {
-        btn.attr('disabled', false);
-        btn.removeClass('disabled');
-        btn.val('Save');
+        if (requestStatus == "fail") {
+            error(requestError);
+        }
+        else if (network_type.val() == 2) {
+            checkWifiNetwork();
+        } else if (requestStatus == "timeout") {
+            error("Request timed out.");
+        } else {
+            alert("Connected successfully.");
+        }
+
+        if (network_type.val() != 2) {
+            enableInteractions();
+        }
     });
 });
 

@@ -111,5 +111,13 @@ var modal = {
                 });
         });
 
+    },
+
+    disable: function () {
+        modalElement.addClass("disabled");
+    },
+
+    enable: function () {
+        modalElement.removeClass("disabled");
     }
 };

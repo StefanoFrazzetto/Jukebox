@@ -1,3 +1,5 @@
+@import 'colors';
+
 $min-height: 150px;
 
 $width: 850px;
@@ -42,6 +44,14 @@ $width: 850px;
   z-index: 100;
 
   @include window;
+
+  transition: background 400ms, opacity 400ms;
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.90;
+    background-color: darken($background_color, 3%);
+  }
 
   .closeModal {
     position: absolute;

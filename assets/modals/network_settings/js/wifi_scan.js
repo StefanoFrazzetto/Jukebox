@@ -185,7 +185,7 @@ function bindWifiScannerClicks() {
                 text: "Forget",
                 callback: function () {
                     forgetNetwork(essid, function () {
-                        alert("Network " + essid + " forgot.")
+                        alert("Network '" + essid + "' forgot.")
                     })
                 }
             });
