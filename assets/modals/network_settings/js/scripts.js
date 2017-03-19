@@ -126,11 +126,18 @@ $.getJSON('/assets/config/network_settings.json')
         loadConfigurationFromJson(data);
 
         if (typeof selectedNetwork != "undefined") {//noinspection JSUnresolvedVariable
+            network_type.val(2);
+            network_type.triggerHandler('change');
+
             wifi_essid.val(selectedNetwork.ESSID);//noinspection JSUnresolvedVariable
             wifi_password.val(selectedNetwork.password);//noinspection JSUnresolvedVariable
             wifi_protocol.val(selectedNetwork.Protocol);//noinspection JSUnresolvedVariable
             wifi_encryption.val(selectedNetwork.encryption);//noinspection JSUnresolvedVariable
             wifi_encryption_type.val(selectedNetwork.encryption_type);
+
+            $('#network_settings_form').submit();
+
+            selectedNetwork = undefined;
         }
     })
     .fail(function () {
