@@ -81,6 +81,9 @@ use Lib\Wifi;
             </div>
             <input type="hidden" id="wifi_essid" name="ssid" value="<?php echo $wifiEssid ?>"/>
             <input type="hidden" id="wifi_password" name="password" value="<?php echo $wifiPassword ?>"/>
+            <input type="hidden" id="wifi_protocol" name="protocol"/>
+            <input type="hidden" id="wifi_encryption" name="encryption"/>
+            <input type="hidden" id="wifi_encryption_type" name="encryption_type"/>
         </div>
     </div>
 

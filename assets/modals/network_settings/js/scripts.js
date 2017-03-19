@@ -1,8 +1,12 @@
 $.ajaxSetup({cache: false});
 
-var selected_network = null;
-
 var network_type = $("#network_type");
+
+var wifi_essid = $("#wifi_essid");
+var wifi_password = $("#wifi_password");
+var wifi_protocol = $("#wifi_protocol");
+var wifi_encryption = $("#wifi_encryption");
+var wifi_encryption_type = $("#wifi_encryption_type");
 
 var modules_hash = [
     {dhcp_module: false, manual_settings: false, wifi_module: false, hotspot_module: false},
@@ -80,15 +84,8 @@ $('#network_settings_form').submit(function (e) {
         btn.attr('disabled', false);
         btn.removeClass('disabled');
         btn.val('Save');
-
-        startScan();
     });
 });
-
-$('#network_details_forget').click(function () {
-    forgetNetwork(selected_network['ESSID']);
-});
-
 
 function loadConfigurationFromJson(data) {
     $.each(data, function (key, value) {
@@ -124,8 +121,17 @@ function loadDefaultConfiguration() {
 
 
 $.getJSON('/assets/config/network_settings.json')
+
     .done(function (data) {
         loadConfigurationFromJson(data);
+
+        if (typeof selectedNetwork != "undefined") {//noinspection JSUnresolvedVariable
+            wifi_essid.val(selectedNetwork.ESSID);//noinspection JSUnresolvedVariable
+            wifi_password.val(selectedNetwork.password);//noinspection JSUnresolvedVariable
+            wifi_protocol.val(selectedNetwork.Protocol);//noinspection JSUnresolvedVariable
+            wifi_encryption.val(selectedNetwork.encryption);//noinspection JSUnresolvedVariable
+            wifi_encryption_type.val(selectedNetwork.encryption_type);
+        }
     })
     .fail(function () {
         loadDefaultConfiguration();
