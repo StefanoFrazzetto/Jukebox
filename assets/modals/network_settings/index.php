@@ -79,7 +79,7 @@ use Lib\Wifi;
             <div class="box-btn" onclick="modal.openPage('/assets/modals/network_settings/wifi.php')">Connect to a WiFi
                 network
             </div>
-            <input type="hidden" id="wifi_essid" name="essid" value="<?php echo $wifiEssid ?>"/>
+            <input type="hidden" id="wifi_essid" name="ssid" value="<?php echo $wifiEssid ?>"/>
             <input type="hidden" id="wifi_password" name="password" value="<?php echo $wifiPassword ?>"/>
         </div>
     </div>
