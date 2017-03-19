@@ -1,37 +1,44 @@
-.alert_container{
+.alert_container {
 
-	text-align: center;
+  text-align: center;
 
-	position: absolute;
+  position: absolute;
 
-	top: 0;
-	left: 0;
+  top: 0;
+  left: 0;
 
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 
-	background-color: $black_80;
+  background-color: $black_80;
 
-	z-index: 500;
+  z-index: 500;
 
-	.alert {
-		position: absolute;
-		margin: auto;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		width: 400px;
-		height: 120px;
+  .alert {
+    position: absolute;
+    margin: auto;
+    top: 40%;
+    right: 0;
+    left: 0;
+    width: 400px;
+    bottom: inherit !important;
 
-		@include window; // From _modals.scss
-	}
+    @include window; // From _modals.scss
+  }
 
-	.header{
-		@include window-header; // From _modals.scss
-	}
+  .header {
+    @include window-header; // From _modals.scss
+  }
 
-	.body {
-		padding: 10px;
-	}
+  .body {
+    padding: 10px;
+  }
+
+  .input {
+    margin: 0 10px 10px;
+  }
+
+  .buttons {
+    padding: 0 10px 10px;
+  }
 }

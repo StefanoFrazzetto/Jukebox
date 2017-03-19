@@ -28,6 +28,12 @@ var Alert = function (opt) {
 
     this.showHeader = true;
 
+    this.showInput = false;
+
+    this.inputPlaceholder = "";
+
+    this.inputIsPassword = false;
+
     this.class = null;
 
     // Loads custom options
@@ -48,6 +54,8 @@ var Alert = function (opt) {
     this.body = $('<div class="body"></div>');
 
     this.buttons_container = $('<div class="buttons"></div>');
+
+    this.input = $('<input class="input" type="text"/>')
 };
 
 Alert.prototype.show = function () {
@@ -104,6 +112,16 @@ Alert.prototype.render = function () {
 
     this.alert.append(this.body);
 
+    if (this.showInput) {
+        this.alert.append(this.input);
+
+        this.input.attr("placeholder", this.inputPlaceholder);
+
+        if (this.inputIsPassword) {
+            this.input.attr("type", "password");
+        }
+    }
+
     this.alert.append(this.buttons_container);
 
     this.container.addClass(this.class);
@@ -124,6 +142,10 @@ Alert.prototype.options = function (opt) {
     });
 
     //this.render();
+};
+
+Alert.prototype.getInputValue = function () {
+    return this.input.val();
 };
 
 var Button = function (opt, classes, callback) {
@@ -150,26 +172,25 @@ var Button = function (opt, classes, callback) {
 };
 
 
-
-function lavuoinapizza(){
+function lavuoinapizza() {
     new Alert({
         message: "Are you sure you want to eat pizza?",
         title: "Pizza tonight?",
         buttons: [
-        "Vittorio IS STUPID",
-        {
-            text: "Sure!",
-            callback: function () {
-                lavuoinapizza();
+            "Vittorio IS STUPID",
+            {
+                text: "Sure!",
+                callback: function () {
+                    lavuoinapizza();
+                }
+            },
+            {
+                text: "No",
+                class: "danger",
+                callback: function () {
+                    lavuoinapizza();
+                }
             }
-        },
-        {
-            text: "No",
-            class: "danger",
-            callback: function () {
-                lavuoinapizza();
-            }
-        }
         ]
     }).show();
 }
