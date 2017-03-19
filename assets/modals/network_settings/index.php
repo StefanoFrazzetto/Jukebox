@@ -100,5 +100,5 @@ use Lib\Wifi;
 </form>
 <?php
 ICanHaz::css(['css/style.css', 'css/horizontal_selector.css']);
-ICanHaz::js(['js/horizontal_selector.js', 'js/scripts.js', 'js/wifi_scan.js'], false, true);
+ICanHaz::js(['js/horizontal_selector.js', 'js/scripts.js'], false, true);
 ?>
