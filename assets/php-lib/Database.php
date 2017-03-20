@@ -107,6 +107,7 @@ class Database
 
         $db = new self();
 
+        // TODO: remove hard-coded vars.
         $sql_folder = __DIR__.'/../../installation/';
 
         $db->executeFile($sql_folder.'base_schema.sql');
@@ -253,8 +254,6 @@ class Database
      */
     public function select($columns = '*', $table = 'albums', $query = 'WHERE 1')
     {
-        $start = microtime();
-
         if (is_array($columns)) {
             $columns = implode(', ', $columns);
         }
@@ -263,21 +262,8 @@ class Database
         $sql .= $query;
 
         $stmt = $this->_connection->prepare($sql);
-
-        // DEBUG
-        // $stmt->debugDumpParams();
-
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_CLASS);
-        $row_count = $stmt->rowCount();
-
-        if ($row_count == 0) {
-            return;
-        }
-
-        $total = microtime() - $start;
-        $string = '['.date('D M j G:i:s')."] Database hit: SELECT. Time taken: $total microseconds";
-        file_put_contents('/var/www/html/logs/database.log', $string);
 
         return $rows;
     }
