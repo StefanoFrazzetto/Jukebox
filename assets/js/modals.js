@@ -3,7 +3,7 @@ var modalElement = $('#modal');
 var modal = {
     modalElement: modalElement,
     modalLoaderElement: $('#modalAjaxLoader'),
-    loaderGifElement: modalElement.find('.ajaxloader'),
+    loaderGifElement: modalElement.find('.modalContainer'),
     watchDogHandler: -1,
     last_top: null,
     jqxhr: null,

@@ -18,7 +18,7 @@ use Lib\ICanHaz;
 <div id="container">
     <div id="modal">
         <img src="assets/img/icons/close.png" class="closeModal" onclick="modal.close()"/>
-        <div class="ajaxloader">
+        <div class="modalContainer">
             <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>
         </div>
         <div id="modalAjaxLoader"></div>
