@@ -232,7 +232,34 @@ Uploader.prototype.done = function () {
         dataType: 'json'
     })
         .done(function (data) {
-            alert(JSON.stringify(data));
+            if (data.status == "success") {
+                modal.close();
+                uploader = undefined;
+                reload();
+                new Alert({
+                    message: "Album uploaded successfully!",
+                    title: "Success",
+                    buttons: [
+                        {
+                            text: "Add another",
+                            callback: function () {
+                                Uploader.restart();
+                            }
+                        },
+                        {
+                            text: "Open Album",
+                            class: "danger",
+                            callback: function () {
+                                modal.openPage('/assets/modals/album_details?id=' + data.album_id);
+                            }
+                        },
+                        "Okay"
+                    ]
+
+                }).show();
+            } else {
+                error("Failed to upload the album. " + data.message);
+            }
         })
         .fail(function (error) {
             alert("Unable to upload album. " + error.responseText);
@@ -246,4 +273,10 @@ Uploader.start = function () {
     }
 
     uploader.continue();
+};
+
+Uploader.restart = function () {
+    uploader = new Uploader();
+
+    Uploader.start();
 };

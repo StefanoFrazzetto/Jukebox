@@ -2,7 +2,7 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Lib\Config;
 use Lib\DiscRipper;
@@ -94,11 +94,14 @@ switch ($action) {
     case 'create_album':
         try {
             $uploader = new Uploader();
-            $success = $uploader->createAlbumFromJson($json, $uploader_id);
+            $albumId = $uploader->createAlbumFromJson($json, $uploader_id);
 
-            if (!$success) {
+            if ($albumId === null) {
                 Uploader::createStatus(Uploader::STATUS_ERROR, 'Error while creating the album.');
+            } else {
+                $return['album_id'] = $albumId;
             }
+
         } catch (Exception $e) {
             $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage(), 400);
         }

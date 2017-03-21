@@ -59,7 +59,7 @@ class ID3
             // Parses the "Part of a set" string
             if (isset($this->tags['TPOS'])) {
                 $sets = $this->tags['TPOS'];
-                if (preg_match('([0-9]+)\/([0-9]+)', $sets, $setsMatches)) {
+                if (preg_match("([0-9]+)\\/([0-9]+)", $sets, $setsMatches)) {
                     if (isset($this->tags['TPOS1'])) {
                         $this->tags['TPOS1'] = intval($setsMatches[1][0]);
                     }
@@ -69,6 +69,17 @@ class ID3
                 }
             }
         }
+    }
+
+    /**
+     * The 'Title/Songname/Content description' frame is the actual name of the
+     * piece (e.g. "Adagio", "Hurricane Donna").
+     *
+     * @return string The song title
+     */
+    public function getTitle()
+    {
+        return $this->tags['TIT2'];
     }
 
     /**
@@ -92,17 +103,6 @@ class ID3
     public function getContentGroupDescription()
     {
         return $this->tags['TIT1'];
-    }
-
-    /**
-     * The 'Title/Songname/Content description' frame is the actual name of the
-     * piece (e.g. "Adagio", "Hurricane Donna").
-     *
-     * @return string The song title
-     */
-    public function getTitle()
-    {
-        return $this->tags['TIT2'];
     }
 
     /**
