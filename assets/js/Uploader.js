@@ -106,6 +106,7 @@ Uploader.prototype.changePage = function (page) {
 
             break;
         case 3: // Add cover
+            uploader.defragmentArtists();
             imageSelector.from = '/assets/modals/album_upload/2-Metadata.php';
             imageSelector.to = '/assets/modals/album_upload/4-Confirm.php';
             imageSelector.albumArtist = true;
@@ -169,7 +170,23 @@ Uploader.prototype.getDataJsonUrl = function () {
     return url + codeName + '&uploader_id=' + this.uploaderID;
 };
 
-Uploader.prototype.createSongsTable = function (container, useInput) {
+Uploader.prototype.createSongsTable = function (container, editable) {
+    function createArtistChip(index, track) {
+        var name = track.artists[index];
+
+        var artistChip = $('<div class="chip closable">' + name + '</div>');
+        var closeChip = $('<i class="fa fa-close delete"></i>');
+
+        closeChip.click(function () {
+            delete track.artists[index];
+            artistChip.remove();
+        });
+
+        artistChip.append(closeChip);
+
+        return artistChip;
+    }
+
     uploader.tracks.forEach(function (cd) {
         cd.forEach(function (track, no) {
             var tr = $("<tr>");
@@ -177,7 +194,7 @@ Uploader.prototype.createSongsTable = function (container, useInput) {
             var td1 = $("<td>" + (no + 1) + "</td>");
             var td2 = $("<td></td>");
 
-            if (useInput) {
+            if (editable) {
                 var input = $("<input type='text' class='full-wide'/>");
                 input.val(track.title);
 
@@ -190,8 +207,56 @@ Uploader.prototype.createSongsTable = function (container, useInput) {
                 td2.html(track.title);
             }
 
-            var td3 = $("<td>" + track.artists.join(', ') + "</td>");
-            var td4 = $("<td>" + track.url + "</td>");
+            var td3;
+
+            if (editable) {
+                td3 = $("<td></td>");
+
+                track.artists.forEach(function (_, index) {
+                    td3.append(createArtistChip(index, track));
+                });
+
+                var add = $('<div class="chip round clickable"><i class="fa fa-plus"></i></div>');
+
+                add.click(function () {
+                    var dialog = new Alert({
+                        title: "Add Artist",
+                        showInput: true,
+                        inputPlaceholder: "Artist",
+                        buttons: [
+                            "Cancel",
+                            {
+                                text: "Add to all",
+                                callback: function () {
+                                    var artist = dialog.getInputValue();
+                                    cd.forEach(function (track, no) {
+                                        track.artists.push(artist);
+                                        createArtistChip(track.artists.length - 1, track)
+                                            .insertBefore(container.find('tr:eq(' + no + ')').find('.chip.round'));
+                                    })
+                                }
+                            },
+                            {
+                                text: "Add",
+                                callback: function () {
+                                    var artist = dialog.getInputValue();
+                                    track.artists.push(artist);
+                                    createArtistChip(track.artists.length - 1, track).insertBefore(add);
+                                }
+                            }
+                        ]
+                    });
+
+                    dialog.show();
+                });
+
+                td3.append(add);
+            } else {
+                td3 = $("<td>" + track.artists.join(', ') + "</td>");
+            }
+
+
+            var td4 = $("<td></td>");
 
             tr.append(td1);
             tr.append(td2);
@@ -279,4 +344,16 @@ Uploader.restart = function () {
     uploader = new Uploader();
 
     Uploader.start();
+};
+
+Uploader.prototype.defragmentArtists = function () {
+    uploader.tracks.forEach(function (cd) {
+        cd.forEach(function (track) {
+            var _artists = [];
+            track.artists.forEach(function (artist) {
+                if (typeof artist != "undefined" && artist != null) _artists.push(artist);
+            });
+            track.artists = _artists;
+        })
+    });
 };
