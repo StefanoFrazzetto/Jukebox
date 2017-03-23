@@ -9,16 +9,16 @@
   visibility: hidden;
 }
 
-.pull-right {
-  @extend .right;
-}
-
-.right {
+.right, .pull-right {
   float: right;
 }
 
 .text-center, .center {
   text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 hr {
