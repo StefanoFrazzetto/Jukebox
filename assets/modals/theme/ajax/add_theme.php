@@ -5,7 +5,8 @@
  * Date: 27-Nov-16
  * Time: 15:51.
  */
-include '../../../php-lib/Theme.php';
+include '../../../../vendor/autoload.php';
+use Lib\Theme;
 
 $json = file_get_contents('php://input');
 
