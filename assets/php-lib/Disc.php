@@ -79,7 +79,7 @@ abstract class Disc
         $this->status_file = $this->config['status_file'];
 
         $this->parent_dir = $this->config['parent_dir'];
-        $this->scripts_dir = $this->config['scripts'];
+        $this->scripts_dir = $this->config['scripts'].'/disc';
         $this->logs_dir = $this->config['logs'];
 
         $device_name = OS::getDevicesByType('rom');
