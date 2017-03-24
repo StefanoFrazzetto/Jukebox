@@ -2,6 +2,7 @@
 
 namespace Lib;
 
+use Exception;
 use FilesystemIterator;
 use InvalidArgumentException;
 
@@ -17,10 +18,10 @@ abstract class FileUtils
      * Create a file.
      *
      * @param string $file_path The file path
-     * @param mixed  $content   The content to be written
-     * @param bool   $append    If set to true, appends the content rather than deleting the
+     * @param mixed $content The content to be written
+     * @param bool $append If set to true, appends the content rather than deleting the
      *                          previous file content
-     * @param bool   $json      If set to true, the content is encoded to json format
+     * @param bool $json If set to true, the content is encoded to json format
      *
      * @return bool true if the operation succeeds, false otherwise.
      */
@@ -58,11 +59,39 @@ abstract class FileUtils
             throw new InvalidArgumentException('The directory does not exist');
         }
 
-        if (count(glob($dir.'/*', GLOB_NOSORT)) === 0) {
+        if (count(glob($dir . '/*', GLOB_NOSORT)) === 0) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * Removes an index from a json file.
+     *
+     * @param string $json_file the path to the json file.
+     * @param string $index the index to remove.
+     *
+     * @throws Exception if the json file does not exist.
+     *
+     * @return bool true on success, false otherwise.
+     */
+    public static function removeIndexFromJson($json_file, $index)
+    {
+        if (!file_exists($json_file)) {
+            throw new Exception('The json file does not exist');
+        }
+
+        $file = file_get_contents($json_file);
+        $json = json_decode($file, true);
+
+        if (empty($json[$index])) {
+            return false;
+        }
+
+        unset($json[$index]);
+
+        return file_put_contents($json_file, json_encode($json));
     }
 
     /**
@@ -86,9 +115,9 @@ abstract class FileUtils
     /**
      * Move (rename) file(s).
      *
-     * @param string $source      The source file or directory to move.
+     * @param string $source The source file or directory to move.
      * @param string $destination The destination file or directory.
-     * @param bool   $force       If set to true, do not prompt before overriding.
+     * @param bool $force If set to true, do not prompt before overriding.
      *                            The default value is false.
      *
      * @return bool True if the operation is successful, false otherwise.
@@ -110,9 +139,9 @@ abstract class FileUtils
     /**
      * Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.
      *
-     * @param string $source      The source file or directory.
+     * @param string $source The source file or directory.
      * @param string $destination The destination file or directory.
-     * @param bool   $force       If an existing destination file cannot be opened,
+     * @param bool $force If an existing destination file cannot be opened,
      *                            remove it and try again.
      *
      * @return bool True if the operation is successful, false otherwise.
@@ -133,9 +162,9 @@ abstract class FileUtils
     /**
      * Remove files that match an extension.
      *
-     * @param string $path      The directory where the file(s) are located.
-     * @param string $ext       The file(s) extension.
-     * @param bool   $recursive If set to true, remove the files recursively.
+     * @param string $path The directory where the file(s) are located.
+     * @param string $ext The file(s) extension.
+     * @param bool $recursive If set to true, remove the files recursively.
      *
      * @return bool true if the operation was successful, false otherwise.
      */
@@ -149,8 +178,8 @@ abstract class FileUtils
     /**
      * Remove files or directories.
      *
-     * @param string $path      The file or directory path.
-     * @param bool   $recursive If set to true, remove directories and their contents
+     * @param string $path The file or directory path.
+     * @param bool $recursive If set to true, remove directories and their contents
      *                          recursively.
      *
      * @return bool true if the operation was successful, false otherwise.
@@ -173,7 +202,7 @@ abstract class FileUtils
         }
 
         if (!file_exists($path)) {
-            return;
+            return [];
         }
 
         $iterator = new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS);
@@ -189,31 +218,12 @@ abstract class FileUtils
     }
 
     /**
-     * Get a JSON file as an associative array.
-     *
-     * @param string $file_path The JSON file path.
-     *
-     * @return mixed|null The decoded content of the file is returned if
-     *                    the operation succeeds, otherwise null is returned.
-     */
-    public static function getJson($file_path)
-    {
-        $content = file_get_contents($file_path);
-
-        if ($content === false) {
-            return;
-        }
-
-        return json_decode($content, true);
-    }
-
-    /**
      * Count files in a directory.
      * If a file extension is passed as second parameter, only the files
      * with that extension will be counted.
      *
      * @param string $directory The directory where the files should be counted.
-     * @param string $ext       The optional extension of the files.
+     * @param string $ext The optional extension of the files.
      *
      * @return int The number of files.
      */
@@ -225,7 +235,7 @@ abstract class FileUtils
             $ext = '*';
         }
 
-        return count(glob($directory."/*.$ext", GLOB_NOSORT));
+        return count(glob($directory . "/*.$ext", GLOB_NOSORT));
     }
 
     /**
@@ -263,12 +273,12 @@ abstract class FileUtils
      * Remove all files in the directory that are older than the
      * specified time in seconds.
      *
-     * @param string $dir     The directory containing the files to remove.
-     * @param int    $seconds The time in seconds.
+     * @param string $dir The directory containing the files to remove.
+     * @param int $seconds The time in seconds.
      */
     public static function deleteFilesOlderThan($dir, $seconds)
     {
-        foreach (glob($dir.'/*') as $file) {
+        foreach (glob($dir . '/*') as $file) {
             if (filemtime($file) < time() - $seconds && !is_dir($file)) {
                 unlink($file);
             }
