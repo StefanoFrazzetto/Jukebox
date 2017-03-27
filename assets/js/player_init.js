@@ -10,6 +10,8 @@ function initPlayer() {
     //region Selectors
     var playlistTable = $('#playlistTable');
     var seekDiv = $('#seek');
+    var seekDivElement = seekDiv.get(0);
+    var lastTimeUpdate = 0;
     var songTitle = $('#songTitle');
     var albumTitle = $('#albumTitle');
     var albumCover = $('#albumCover');
@@ -63,12 +65,12 @@ function initPlayer() {
     };
 
     player.onAlbumChange = function () {
-        if (typeof player.getCurrentSong() != "undefined" && player.getCurrentSong() != null)
+        if (typeof player.getCurrentSong() !== "undefined" && player.getCurrentSong() !== null)
             showAlbumsDetails(player.getCurrentSong().album_id);
     };
 
     player.onRadioChange = function () {
-        if (typeof player.getCurrentSong() == "undefined" || player.getCurrentSong() == null)
+        if (typeof player.getCurrentSong() === "undefined" || player.getCurrentSong() === null)
             return;
 
         songTitle.html(player.currentRadio.name);
@@ -101,6 +103,15 @@ function initPlayer() {
     }
 
     function updateProgressBar() {
+        var time = Math.floor(player.getCurrentTime());
+
+        // Updates the UI only if the track time has changed of one second
+        if (time === lastTimeUpdate)
+            return;
+        else
+            lastTimeUpdate = time;
+
+        // Converts seconds to a mm:ss string format
         function timestamp(time) {
             function addZero(value) {
                 if (value < 10)
@@ -114,12 +125,12 @@ function initPlayer() {
             return addZero(minutes) + ':' + addZero(seconds);
         }
 
-        var percentage = (100 / player.getCurrentSongDuration()) * player.getCurrentTime();
+        // Updates the seekbar
+        var percentage = (100 / player.getCurrentSongDuration()) * time;
         slider.slider('value', percentage);
 
-
-        seekDiv.text(timestamp(player.getCurrentTime()));
-
+        // Updates the UI time
+        seekDivElement.innerText = timestamp(time);
     }
 
     function highlightCurrentTrack() {
@@ -138,7 +149,7 @@ function initPlayer() {
         var items = '';
 
         $.each(player.tracks, function (key, val) {
-            if (typeof val != 'undefined')
+            if (typeof val !== 'undefined')
                 items = items + (
                         "<tr>" +
                         "<td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' " +
@@ -155,7 +166,7 @@ function initPlayer() {
         });
 
         try {
-            if (typeof updateBigPlaylist != 'undefined')
+            if (typeof updateBigPlaylist !== 'undefined')
                 updateBigPlaylist();
         } catch (ex) {
             console.warn('Watch out, error here!');
@@ -168,7 +179,7 @@ function initPlayer() {
         if (typeof id === 'undefined')
             return;
 
-        if (storage.getAlbum(id) == null) {
+        if (storage.getAlbum(id) === null) {
             error("Album [" + id + "] missing from local DB. Report to @Vittorio.");
             return;
         }
@@ -177,7 +188,7 @@ function initPlayer() {
 
         albumTitle.html(data.title);
 
-        if (data.cover != null)
+        if (data.cover !== null)
             changeCover(data.getFullCoverUrl());
         else
             changeCover(storage.cover_placeholder);
