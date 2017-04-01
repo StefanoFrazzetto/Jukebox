@@ -70,6 +70,9 @@ Alert.prototype.show = function () {
     this.container.fadeTo(animation_short, 1);
 
     if (this.showInput) {
+        if (typeof bindForms !== "undefined")
+            bindForms();
+
         this.input.focus();
     }
 };
