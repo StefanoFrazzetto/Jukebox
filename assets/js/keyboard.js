@@ -2,8 +2,8 @@ var $write;
 var $well = $("#keyboardWell");
 
 function bindForms() {
-    $('input:not([type="submit"])').focus(function () {
-        $well.clearQueue(); // This will stop any occuring animation (like the keyboard going down)
+    $('input:not([type="submit"]):not([type="color"])').focus(function () {
+        $well.clearQueue(); // This will stop any occurring animation (like the keyboard going down)
 
         var window_height = $(window).height();
         var window_width = $(window).width();
