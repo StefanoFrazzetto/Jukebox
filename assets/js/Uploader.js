@@ -297,7 +297,7 @@ Uploader.prototype.done = function () {
         dataType: 'json'
     })
         .done(function (data) {
-            if (data.status == "success") {
+            if (data.status === "success") {
                 modal.close();
                 uploader = undefined;
                 reload();
@@ -351,7 +351,7 @@ Uploader.prototype.defragmentArtists = function () {
         cd.forEach(function (track) {
             var _artists = [];
             track.artists.forEach(function (artist) {
-                if (typeof artist != "undefined" && artist != null) _artists.push(artist);
+                if (typeof artist !== "undefined" && artist !== null) _artists.push(artist);
             });
             track.artists = _artists;
         })
