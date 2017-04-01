@@ -8,7 +8,7 @@
 </div>
 
 <div class="modalFooter">
-    <button>Cancel</button>
+    <button id="btnCancel">Cancel</button>
     <button class="right disabled" id="uploaderSelectorNext">Next</button>
 </div>
 

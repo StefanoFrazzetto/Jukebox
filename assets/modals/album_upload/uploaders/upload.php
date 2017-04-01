@@ -14,13 +14,13 @@
 </div>
 <div class="modalFooter">
     <button id="btnBack">Back</button>
+    <button id="btnCancel">Cancel</button>
     <button class="right disabled" id="btnNext">Next</button>
 </div>
 
 <script src="/assets/js/dropzone.js"></script>
 <script>
     Dropzone.autoDiscover = false;
-
 
     $(function () {
 
@@ -33,6 +33,10 @@
 
         btnNext.click(function () {
             uploader.nextPage();
+        });
+
+        $('#btnCancel').click(function () {
+            Uploader.abort();
         });
 
         if (uploader.tracks.length)

@@ -332,6 +332,12 @@ Uploader.prototype.done = function () {
         });
 };
 
+Uploader.abort = function () {
+    uploader = undefined;
+
+    modal.close();
+};
+
 Uploader.start = function () {
     if (uploader === undefined) {
         uploader = new Uploader();

@@ -10,12 +10,16 @@ $('#btnBack').click(function () {
 });
 
 $('#btnNext').click(function () {
-    if (metaDataAlbumTitle.val() == "") {
+    if (metaDataAlbumTitle.val() === "") {
         error("Album title is required.");
     } else {
         uploader.nextPage();
     }
 
+});
+
+$('#btnCancel').click(function () {
+    Uploader.abort();
 });
 
 uploader.createSongsTable(metaDataSongsTableBody, true);

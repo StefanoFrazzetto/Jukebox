@@ -28,6 +28,7 @@
 
 <div class="modalFooter">
     <button id="btnBack">Back</button>
+    <button id="btnCancel">Cancel</button>
     <button class="right" id="btnConfirm">Confirm</button>
 </div>
 

@@ -10,6 +10,10 @@ $('#btnConfirm').click(function () {
     uploader.done();
 });
 
+$('#btnCancel').click(function () {
+    Uploader.abort();
+});
+
 $(function () {
     var confirmTitleHeader = $('#confirmTitleHeader');
     var confirmArtistsHeader = $('#confirmArtistsHeader');

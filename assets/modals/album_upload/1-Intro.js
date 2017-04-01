@@ -31,3 +31,7 @@ uploader.uploadMethods.forEach(function (method, key) {
 uploaderSelectorNext.click(function () {
     uploader.nextPage();
 });
+
+$('#btnCancel').click(function () {
+    Uploader.abort();
+});
