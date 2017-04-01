@@ -1,80 +1,90 @@
+@import 'colors';
+@import 'mixins';
+
 #keyboardWell {
-	position: fixed;
-	z-index: 400;
-	padding: 20px;
-	background-color: lighten($background_color, 10);
-	//Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
-	box-shadow: inset 0 1px 0 $white_10, 0 1px 20px $black_50;
-	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
-	border-radius: 10px;
-	display: none;
-	overflow: hidden;
-	left: calc((100% - 728px)/2);
-	top: 100%;
+  position: fixed;
+  z-index: 400;
+  padding: 20px;
+  background-color: lighten($background_color, 10);
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: inset 0 1px 0 $white_10, 0 1px 20px $black_50;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 10px;
+  display: none;
+  overflow: hidden;
+  left: calc((100% - 728px) / 2);
+  top: 100%;
 }
+
 #keyboard {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	min-width: 688px;
-	li {
-		@extend %ui_button;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 688px;
+  li {
+    @extend %ui_button;
 
-		float: left;
-		margin: 0 5px 5px 0;
-		width: 42px;
-		height: 42px;
-		line-height: 33px;
-		vertical-align: baseline;
-		font-size: 12pt;
+    float: left;
+    margin: 0 5px 5px 0 !important;
+    width: 42px;
+    height: 42px;
+    line-height: 33px;
+    vertical-align: baseline;
+    font-size: 12pt;
 
-		&:hover {
-			//position: relative;
-			cursor: pointer;
-			background-color: $highlight_color;
-		}
-		&:active, &.active  {
-			@extend %extend_8;
-		}
-	}
-	.tab {
-		width: 70px;
-	}
-	.delete {
-		width: 70px;
-	}
-	.capslock {
-		width: 80px;
-	}
-	.return {
-		width: 79px;
-	}
-	.left-shift {
-		width: 97px;
-	}
-	.right-shift {
-		width: 109px;
-	}
-	.space {
-		clear: left;
-		width: 681px;
-	}
+    &:hover {
+      //position: relative;
+      cursor: pointer;
+      background-color: $highlight_color;
+    }
+    &:active, &.active {
+      @extend %extend_8;
+    }
+  }
+  .tab {
+    width: 70px;
+  }
+  .delete {
+    width: 70px;
+  }
+  .capslock {
+    width: 80px;
+  }
+  .return {
+    width: 79px;
+  }
+  .left-shift {
+    width: 97px;
+  }
+  .right-shift {
+    width: 109px;
+  }
+  .space {
+    clear: left;
+    width: 681px;
+  }
 }
+
 .capslock {
-	clear: left;
+  clear: left;
 }
+
 .tab {
-	clear: left;
+  clear: left;
 }
+
 .left-shift {
-	clear: left;
+  clear: left;
 }
+
 .lastitem {
-	margin-right: 0;
+  margin-right: 0;
 }
+
 .uppercase {
-	text-transform: uppercase;
+  text-transform: uppercase;
 }
+
 .on {
-	display: none;
+  display: none;
 }
