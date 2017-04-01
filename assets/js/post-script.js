@@ -17,7 +17,7 @@ var dropdownModal = $('#dropdownModal');
 //Sizes of the album divs
 var box_size = 172;
 
-//Getting the window size. Look, it's sunny outisde! No, not anymore, I'm in Scotland.
+//Getting the window size. Look, it's sunny outside! No, not anymore, I'm in Scotland.
 //var height = container.height();
 //var width = container.width();
 
@@ -181,8 +181,8 @@ function alphabet(value) {
     var artists = []; // Lists the artists ids beginning with the chosen letter
 
     storage.artists.forEach(function (element) {
-        if (value != 0) {
-            if (element.name.charAt(0).toLowerCase() == value.toLowerCase()) {
+        if (value !== 0) {
+            if (element.name.charAt(0).toLowerCase() === value.toLowerCase()) {
                 artists.push(element.id);
             }
         }
@@ -199,10 +199,10 @@ function alphabet(value) {
     });
 
     results = results.filter(function (n) {
-        return n != undefined
+        return n !== undefined
     }); // remove undefined from array
 
-    if (results.length == 0) {
+    if (results.length === 0) {
         error("No artists found starting with '" + value + "'.");
         return;
     }
@@ -218,13 +218,13 @@ function search(value) {
 
     var results = [];
 
-    if (search_field == "tracks") {
+    if (search_field === "tracks") {
         error("not implemented");
         // TODO load results from database
         return;
     }
 
-    if (search_field == "artist") {
+    if (search_field === "artist") {
         var artists = [];
 
         storage.artists.forEach(function (artist) {
@@ -246,13 +246,13 @@ function search(value) {
 
 
     results = results.filter(function (n) {
-        return n != undefined
+        return n !== undefined
     });
 
     var t1 = performance.now();
     console.log('Took', (t1 - t0).toFixed(4), 'milliseconds to perform search.');
 
-    if (results.length == 0) {
+    if (results.length === 0) {
         error("No albums found with '" + value + "' in " + search_field + ".");
         return;
     }
@@ -389,7 +389,7 @@ $(window).bind('resize', function () { //Good job! :)
             var _show = show;
             getHowManyAlbumsToShow();
 
-            if (_show != show) {
+            if (_show !== show) {
                 paginate();
             }
         }, animation_short);
