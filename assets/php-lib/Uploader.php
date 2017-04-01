@@ -459,11 +459,26 @@ class Uploader
         $full_path = self::getPath() . $this->uploader_id;
 
         $finder = new Finder();
-        $tracks = $finder->in($full_path)->files()->name('*.jpg')->sortByName();
+        $covers = $finder->in($full_path)->files()->name('*.jpg')->sortByName();
 
-        foreach ($tracks as $track) {
+        foreach ($covers as $track) {
             $tracks_info[] = $track->getFileName();
         }
+
+        $covers = $finder->in($full_path)->files()->name('*.png')->sortByName();
+
+        foreach ($covers as $track) {
+            $tracks_info[] = $track->getFileName();
+        }
+
+        $covers = $finder->in($full_path)->files()->name('*.jpeg')->sortByName();
+
+        foreach ($covers as $track) {
+            $tracks_info[] = $track->getFileName();
+        }
+
+        // I have no idea why but the same file was repeated 5 times. This ugly fix should do.
+        $tracks_info = array_unique($tracks_info);
 
         return $tracks_info;
     }
