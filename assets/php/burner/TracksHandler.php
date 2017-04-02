@@ -1,13 +1,18 @@
 <?php
 
 /**
- *	Created by Stefano Frazzetto - https://github.com/StefanoFrazzetto.
+ * Class TracksHandler groups the albums/tracks in order to use
+ * all the space available on the CD/DVD.
  *
- *	Last update: 15 Jul 2016
+ * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
+ *
+ *  Last update: 2 Apr 2017
+ *  Fixed queries to use the new database schema.
  */
 use Lib\Config;
 use Lib\Database;
 use Lib\FileUtils;
+use Lib\MusicClasses\Song;
 use Lib\StringUtils;
 
 require_once 'autoload.php';
@@ -18,9 +23,12 @@ class TracksHandler
     private $_cds;
 
     /**
-     *	Create the "Burner" using albums: initialise $DiscWriter and $_albums[ALBUM_ID]['size'];.
+     * Create the "Burner" using albums: initialise $DiscWriter and $_albums[ALBUM_ID]['size'];.
      *
-     *	@param $type: Specifies if $values will contain an array of albums or a json of tracks.
+     * @param string $type the type of compilation to burn (playlist or albums).
+     * @param array|string $values the values passed from the modal (json containing the tracks
+     *                              or an array of album ids).
+     * @param string $output_format the output format for the current cd (mp3 or wav).
      */
     public function __construct($type, $values, $output_format)
     {
@@ -34,15 +42,16 @@ class TracksHandler
 
         switch ($type) {
             case 'playlist':
-            $this->playlist($values);
-            break;
+                $this->playlist($values);
+                break;
 
             case 'albums':
-            $this->manyAlbums($values, $output_format);
-            break;
+                file_put_contents('/tmp/tracksHandler.log', "Creating albums cd\n\n", FILE_APPEND);
+                $this->manyAlbums($values, $output_format);
+                break;
 
             default:
-            exit(1);
+                exit(1);
         }
 
         // Save the created array to a tmp file.
@@ -50,27 +59,10 @@ class TracksHandler
         file_put_contents(BurnerHandler::$_burner_tracks_json, $cds_json);
     }
 
-    public static function getTracksJSON()
-    {
-        $content = file_get_contents(BurnerHandler::$_burner_tracks_json);
-        if ($content === FALSE) {
-            return null;
-        }
-
-        return json_decode($content, true);
-    }
-
-    public static function removeBurnedTracksJSON($index)
-    {
-        $cds_json = json_decode(BurnerHandler::$_burner_tracks_json, true);
-        unset($cds_json[$index]);
-        file_put_contents(BurnerHandler::$_burner_tracks_json, $cds_json);
-    }
-
     /**
-     *	Burn a playlist.
+     *    Burn a playlist.
      *
-     *	@param $playlist = json encoded playlist;
+     * @param $playlist = json encoded playlist;
      */
     private function playlist($playlist)
     {
@@ -78,53 +70,7 @@ class TracksHandler
     }
 
     /**
-     *	Burn many albums at once.
-     *
-     *	@param $albums = array('album1_id', 'album2_id');
-     */
-    private function manyAlbums($albums, $output_format)
-    {
-        $tracks = [];
-
-        foreach ($albums as $album_id) {
-            $album_path = BurnerHandler::$_burner_folder.'/'.$album_id;
-            $size = FileUtils::getSize($album_path);
-
-            $info = ['title', 'artist', 'tracks'];
-            $album_info = $this->_database->select($info, 'albums', "WHERE `id` = $album_id");
-
-            if ($size == null || $album_info == null) {
-                continue;
-            }
-
-            $tmp_array = json_decode($album_info[0]->{'tracks'}, true);
-
-            // MAY BE REMOVED BEFORE THE DEPLOYMENT.
-            foreach ($tmp_array as $key => $value) {
-                $tmp_array[$key]['album'] = $album_id;
-            }
-
-            $tracks = array_merge($tracks, $tmp_array);
-        }
-
-        $this->_cds = self::groupTracks($tracks, 'albums', $output_format);
-    }
-
-    public function getRequiredCDS()
-    {
-        return count($this->_cds);
-    }
-
-    public function getCompilationSize()
-    {
-        $indexes = array_filter(array_keys($this->_cds), 'is_int');
-
-        $index = (int) $indexes[0];
-        return $this->_cds[$index]['size'] / 1000;
-    }
-
-    /**
-     *	Group the tracks together calculating the size of each group of tracks.
+     *    Group the tracks together calculating the size of each group of tracks.
      *
      * @param $tracks
      * @param string $type
@@ -136,8 +82,8 @@ class TracksHandler
     {
         $audio_cd = false;
         $cd_no = 1;
-        $cds = [];
-        $playlist_index = 01;
+        $cds = array();
+        $playlist_index = 1;
 
         // Check if the user wants to burn an audio CD.
         if ($type == 'albums' && $output_format == 'wav') {
@@ -153,16 +99,16 @@ class TracksHandler
             $media_size = $DiscWriter->getDiscSize();
         }
 
-        foreach ($tracks as $key => $track) {
+        foreach ($tracks as $track) {
 
             // Skip the track if either album or url is not set.
-            if (!isset($track['album']) || !isset($track['url'])) {
+            if (!isset($track['album_id']) || !isset($track['url'])) {
                 continue;
             }
 
             // Updated on 31/10/2016
             // Some files were incorrectly parsed due to special chars
-            $track['title'] = sprintf('%02d', $playlist_index).'-'.StringUtils::cleanString($track['title']);
+            $track['title'] = sprintf('%02d', $playlist_index) . '-' . StringUtils::cleanString($track['title']);
 
             $playlist_index++;
 
@@ -190,7 +136,7 @@ class TracksHandler
 
             $conf = new Config();
             $albums_root = $conf->get('paths')['albums_root'];
-            $track_path = $albums_root.'/'.$track['album'].'/'.$track['url'];
+            $track_path = $albums_root.$track['album_id'].'/'.$track['url'];
 
             if (!isset($cd_size)) {
                 $cd_size = 0;
@@ -199,15 +145,76 @@ class TracksHandler
             if ($audio_cd) {
                 $cd_size += FileUtils::getTrackLength($track_path);
             } else {
-                $cd_size += FileUtils::getSize($track_path);
+                $cd_size += FileUtils::getFileSize($track_path);
             }
         }
 
-        // $cd_size = 0;
-        // foreach ($cds as $cd) {
-        // 	if($cd['size'] < $media_size)
-        // }
-
         return $cds;
+    }
+
+    /**
+     *    Burn many albums at once.
+     *
+     * @param array $albums the array containing the album ids.
+     * @param string $output_format the CD output format (mp3 or wav).
+     */
+    private function manyAlbums($albums, $output_format)
+    {
+        $tracks = array();
+
+        foreach ($albums as $album_id) {
+            $album_path = BurnerHandler::$_burner_folder . '/' . $album_id;
+            $size = FileUtils::getDirectorySize($album_path);
+            $Songs = Song::getSongsInAlbum($album_id);
+
+            if ($size === 0 || $Songs == null) {
+                continue;
+            }
+
+            $tmp_array = array();
+            foreach ($Songs as $song) {
+                $song_id = $song->getId();
+                $tmp_array[$song_id] = ([
+                    'album_id' => $album_id,
+                    'title' => $song->getTitle(),
+                    'url' => $song->getUrl(),
+                    'cd' => $song->getCd()
+                ]);
+            }
+
+            $tracks = array_merge($tracks, $tmp_array);
+        }
+
+        $this->_cds = self::groupTracks($tracks, 'albums', $output_format);
+    }
+
+    public static function getTracksJSON()
+    {
+        $content = file_get_contents(BurnerHandler::$_burner_tracks_json);
+        if ($content === FALSE) {
+            return null;
+        }
+
+        return json_decode($content, true);
+    }
+
+    public static function removeBurnedTracksJSON($index)
+    {
+        $cds_json = json_decode(BurnerHandler::$_burner_tracks_json, true);
+        unset($cds_json[$index]);
+        file_put_contents(BurnerHandler::$_burner_tracks_json, $cds_json);
+    }
+
+    public function getRequiredCDS()
+    {
+        return count($this->_cds);
+    }
+
+    public function getCompilationSize()
+    {
+        $indexes = array_filter(array_keys($this->_cds), 'is_int');
+
+        $index = (int)$indexes[0];
+        return $this->_cds[$index]['size'] / 1000;
     }
 }

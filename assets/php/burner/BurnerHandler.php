@@ -11,7 +11,7 @@ use Lib\OS;
 
 class BurnerHandler
 {
-    public static $_burner_folder = '/var/www/html/jukebox/burner';
+    public static $_burner_folder = '/var/www/html/jukebox';
     public static $_burner_tracks_json = '/tmp/burner_tracks.json';
     public static $_burner_status_file = '/tmp/burner_status.json';
     public static $_burner_scripts = './scripts';
@@ -25,7 +25,7 @@ class BurnerHandler
 
     public function __construct($action = 'check', $input_type = '', $input_content = '', $output_format = '')
     {
-        if ($input_content == '' || empty($input_content) || !(isset($input_content)) || empty($output_format)) {
+        if (empty($input_content) || empty($output_format)) {
             $action = 'check';
         }
 
@@ -44,7 +44,7 @@ class BurnerHandler
                     $output['message'] = 'CDs required: '.$TracksHandler->getRequiredCDS();
 
                     if ($output_format == 'mp3') {
-                        $output['message'] .= ' - Compilation size: '.$TracksHandler->getCompilationSize().' MB';
+                        $output['message'] .= ' - Compilation size: '.ceil($TracksHandler->getCompilationSize()).' MB';
                     }
                 } else {
                     $output['status'] = 'Error';
