@@ -1,47 +1,53 @@
 <?php
 
+require_once '../../vendor/autoload.php';
 require_once '../php-lib/Zipper.php';
-require_once '../php-lib/MusicClasses/Album.php';
+
+use Lib\MusicClasses\Album;
+use Lib\MusicClasses\Song;
 
 $outputDIR = '/var/www/html/downloads/';
 $zipCheck = $outputDIR.'zipCheck';
 
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-if ((time() - file_get_contents($zipCheck)) > 300 && file_exists($zipCheck)) {
+if (file_exists($zipCheck) && (time() - file_get_contents($zipCheck)) > 300) {
     unlink($zipCheck);
 }
 
 if (!file_exists($zipCheck)) {
-    $album = Album::getAlbum($albumID);
+    $Album = Album::getAlbum($albumID);
+    $Songs = Song::getSongsInAlbum($albumID);
 
-    $title = $album->getTitle();
-    $artists = $album->getArtistsName();
+    $title = $Album->getTitle();
+    $artists = $Album->getArtistsName();
 
-    $tracks = $album->getTracks();
 
     $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', ' ', implode($artists, '-')).' - '.preg_replace('/[^A-Za-z0-9\-]/', ' ', $title);
     $outputFile = $outputDIR.$outputFileName.'.zip';
 
+    if (!file_exists($outputDIR)) {
+        mkdir($outputDIR, 0755, true);
+    }
     file_put_contents($zipCheck, time());
 
-    if (end($tracks)->getCd() != $tracks[0]->getCd()) {
+    if (end($Songs)->getCd() != $Songs[0]->getCd()) {
         $differentCDs = true;
         $CD = -1; //Del
     } else {
         $differentCDs = false;
     }
 
-    foreach ($tracks as $key => $track) {
+    foreach ($Songs as $key => $song) {
         if ($differentCDs) {
-            if ($track->getCd() != $CD) {
-                $CD = $track->getCd();
+            if ($song->getCd() != $CD) {
+                $CD = $song->getCd();
                 //echo $CD;
             }
-            $albumMap[$CD][] = $track->getUrl();
+            $albumMap[$CD][] = $song->getUrl();
         } else {
-            $CD = $track->getCd();
-            $albumMap[$CD][] = $track->getUrl();
+            $CD = $song->getCd();
+            $albumMap[$CD][] = $song->getUrl();
         }
     }
 
