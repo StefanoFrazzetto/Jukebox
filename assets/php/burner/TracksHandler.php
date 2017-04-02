@@ -5,13 +5,16 @@
  *
  *	Last update: 15 Jul 2016
  */
+use Lib\Config;
+use Lib\Database;
+use Lib\FileUtils;
+use Lib\StringUtils;
+
 require_once 'autoload.php';
 
 class TracksHandler
 {
-    private $_media_size;
     private $_database;
-    private $_output_format;
     private $_cds;
 
     /**
@@ -44,19 +47,24 @@ class TracksHandler
 
         // Save the created array to a tmp file.
         $cds_json = json_encode($this->_cds);
-        FileUtil::saveFile(BurnerHandler::$_burner_tracks_json, $cds_json);
+        file_put_contents(BurnerHandler::$_burner_tracks_json, $cds_json);
     }
 
     public static function getTracksJSON()
     {
-        return FileUtil::getJson(BurnerHandler::$_burner_tracks_json);
+        $content = file_get_contents(BurnerHandler::$_burner_tracks_json);
+        if ($content === FALSE) {
+            return null;
+        }
+
+        return json_decode($content, true);
     }
 
     public static function removeBurnedTracksJSON($index)
     {
         $cds_json = json_decode(BurnerHandler::$_burner_tracks_json, true);
         unset($cds_json[$index]);
-        FileUtil::saveFile(BurnerHandler::$_burner_tracks_json, $cds_json);
+        file_put_contents(BurnerHandler::$_burner_tracks_json, $cds_json);
     }
 
     /**
@@ -79,7 +87,8 @@ class TracksHandler
         $tracks = [];
 
         foreach ($albums as $album_id) {
-            $size = FileUtil::getDirectorySize($album_id);
+            $album_path = BurnerHandler::$_burner_folder.'/'.$album_id;
+            $size = FileUtils::getSize($album_path);
 
             $info = ['title', 'artist', 'tracks'];
             $album_info = $this->_database->select($info, 'albums', "WHERE `id` = $album_id");
@@ -110,7 +119,8 @@ class TracksHandler
     {
         $indexes = array_filter(array_keys($this->_cds), 'is_int');
 
-        return $this->_cds[$indexes[0]]['size'] / 1000;
+        $index = (int) $indexes[0];
+        return $this->_cds[$index]['size'] / 1000;
     }
 
     /**
@@ -177,16 +187,19 @@ class TracksHandler
 
             $cds[$cd_no][] = $track;
 
-            $track_path = FileUtil::$_albums_root.'/'.$track['album'].'/'.$track['url'];
+
+            $conf = new Config();
+            $albums_root = $conf->get('paths')['albums_root'];
+            $track_path = $albums_root.'/'.$track['album'].'/'.$track['url'];
 
             if (!isset($cd_size)) {
                 $cd_size = 0;
             }
 
             if ($audio_cd) {
-                $cd_size += FileUtil::getTrackLength($track_path);
+                $cd_size += FileUtils::getTrackLength($track_path);
             } else {
-                $cd_size += FileUtil::getFileSize($track_path);
+                $cd_size += FileUtils::getSize($track_path);
             }
         }
 

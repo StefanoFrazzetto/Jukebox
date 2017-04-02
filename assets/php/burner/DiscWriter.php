@@ -1,5 +1,8 @@
 <?php
 
+use Lib\Config;
+use Lib\OS;
+
 require_once 'autoload.php';
 
 /**
@@ -18,8 +21,11 @@ class DiscWriter
     /** Create a new instance */
     public function __construct()
     {
-        $this->device = CommandExecutor::getRomId();
+        $this->device = OS::getDevicesByType('rom');
         $this->disc_size = $this->setDiscSize();
+
+        $conf = new Config();
+        $this->_albums_root = $conf->get('paths')['albums_root'];
     }
 
     /**
@@ -37,30 +43,7 @@ class DiscWriter
         return $size;
     }
 
-    /**
-     * Check if the disc is blank.
-     *
-     * @return bool
-     *              TRUE if the disc is blank, FALSE otherwise.
-     */
-    public function checkDiscBlank()
-    {
-        $command = CommandExecutor::raw(CommandExecutor::$scripts_folder.'CdCheck.sh');
-
-        if (strpos($command, '<<No disc in drive>>') !== false) {
-            return false;
-        } elseif (strpos($command, 'DVD') !== false) {
-            $this->checkBlank();
-        } elseif (strpos($command, 'CD-ROM') !== false) {
-            return false;
-        } elseif (strpos($command, 'CD') !== false) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function checkBlank()
+    public static function checkDiscBlank()
     {
         $cmd = shell_exec("lsblk | grep rom | awk {'print $4'} | sed 's/[^0-9]*//g'");
         $disc_check = shell_exec('wodim -v dev=/dev/sr0 -toc 2>&1');

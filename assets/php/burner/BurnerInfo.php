@@ -1,5 +1,8 @@
 <?php
 
+use Lib\FileUtils;
+use Lib\OS;
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -164,8 +167,8 @@ class BurnerInfo
 
     protected function decoding()
     {
-        $partial = FileUtil::countFiles(BurnerHandler::$_burner_folder, 'wav');
-        $total = FileUtil::countFiles(BurnerHandler::$_burner_folder, 'mp3');
+        $partial = FileUtils::countFiles(BurnerHandler::$_burner_folder, 'wav');
+        $total = FileUtils::countFiles(BurnerHandler::$_burner_folder, 'mp3');
 
         $this->partial_progress = $this->percentage($partial, $total);
 
@@ -222,20 +225,20 @@ class BurnerInfo
         $file_content = file_get_contents(self::$_burn_output);
 
         $tracks_count = substr_count($file_content, 'Track');
-        $total = FileUtil::countFiles(BurnerHandler::$_burner_folder, 'mp3');
+        $total = FileUtils::countFiles(BurnerHandler::$_burner_folder, 'mp3');
 
         $this->partial_progress = $this->percentage($tracks_count, $total);
     }
 
     protected function checkProcesses()
     {
-        if (CommandExecutor::isProcessRunning('lame')) {
+        if (OS::isProcessRunning('lame')) {
             $output['status'] = self::$_status_decoding;
-        } elseif (CommandExecutor::isProcessRunning('mkisofs') || CommandExecutor::isProcessRunning('genisoimage')) {
+        } elseif (OS::isProcessRunning('mkisofs') || OS::isProcessRunning('genisoimage')) {
             $output['status'] = self::$_status_iso;
-        } elseif (CommandExecutor::isProcessRunning('normalize-audio')) {
+        } elseif (OS::isProcessRunning('normalize-audio')) {
             $output['status'] = self::$_status_normalizing;
-        } elseif (CommandExecutor::isProcessRunning('wodim')) {
+        } elseif (OS::isProcessRunning('wodim')) {
             $output['status'] = self::$_status_burning;
 
             $output['message'] = 'Please wait. Your DISC will be ejected once the process will be complete.';

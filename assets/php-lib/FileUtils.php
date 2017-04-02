@@ -243,14 +243,19 @@ abstract class FileUtils
      *
      * @param string $path The path to the file or directory.
      *
+     * @throws Exception if the file/directory does not exist.
+     *
      * @return int $size The size of the file/directory in KB.
      */
     public static function getSize($path)
     {
-        $cmd = "du -sc $path | grep total | grep -o '[0-9]*'";
-        $size = OS::execute($cmd);
+        file_put_contents('/tmp/burner.log', "path for size: " . $path);
 
-        return intval($size);
+        $bytes = 0;
+        foreach (glob(rtrim($path, '/').'/*', GLOB_NOSORT) as $each) {
+            $bytes += is_file($each) ? filesize($each) : self::getSize($each);
+        }
+        return $bytes/1024;
     }
 
     /**

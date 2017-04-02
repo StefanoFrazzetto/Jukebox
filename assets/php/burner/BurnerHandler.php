@@ -6,6 +6,9 @@ require_once 'autoload.php';
 // 	$_SESSION['burner_CD'] = 1;
 // }
 
+use Lib\FileUtils;
+use Lib\OS;
+
 class BurnerHandler
 {
     public static $_burner_folder = '/var/www/html/jukebox/burner';
@@ -65,7 +68,7 @@ class BurnerHandler
                     $tracks = TracksHandler::getTracksJSON();
                     if (count($tracks) > 0) {
                         unset($tracks);
-                        CommandExecutor::removeDir(self::$_burner_folder);
+                        FileUtils::remove(self::$_burner_folder, true);
                     }
 
                     //Start the burning process.
@@ -94,13 +97,13 @@ class BurnerHandler
      */
     private static function checkStatus()
     {
-        if (CommandExecutor::isProcessRunning('lame')) {
+        if (OS::isProcessRunning('lame')) {
             $status = self::$_status_decoding;
-        } elseif (CommandExecutor::isProcessRunning('normalize-audio')) {
+        } elseif (OS::isProcessRunning('normalize-audio')) {
             $status = self::$_status_normalizing;
-        } elseif (CommandExecutor::isProcessRunning('mkisofs') || CommandExecutor::isProcessRunning('genisoimage')) {
+        } elseif (OS::isProcessRunning('mkisofs') || OS::isProcessRunning('genisoimage')) {
             $status = self::$_status_burning;
-        } elseif (CommandExecutor::isProcessRunning('wodim')) {
+        } elseif (OS::isProcessRunning('wodim')) {
             $status = self::$_status_burning;
         } else {
             $status = self::$_status_idle;
