@@ -536,7 +536,7 @@ class Album implements JsonSerializable
      */
     public function getAlbumFolderSize()
     {
-        return FileUtils::getSize($this->getId());
+        return FileUtils::getDirectorySize($this->albums_root.$this->getId());
     }
 
     public function getAlbumPath()
