@@ -121,7 +121,8 @@ if (file_exists($outputFile)) {
     <div class="modalBody download-body" id="pre-download">
         <img style="float: right;" src="<?php echo $album->getCoverUrl() ?>"/>
         <div class="download-box">
-            <div class="text" id="album-size">Album size: <?php echo $album->getAlbumFolderSize().' MB'; ?></div>
+            <div class="text" id="album-size">Album
+                size: <?php echo round($album->getAlbumFolderSize()) . ' MB'; ?></div>
             <div class="text" id="album-tracks">Tracks: <?php echo $album->getSongsCount(); ?></div>
             <div class="text" id="album-cds">CDs: <?php echo $album->getCdCount() ?></div>
             <br>
@@ -141,7 +142,7 @@ if (file_exists($outputFile)) {
     <!--suppress JSUnusedLocalSymbols -->
     <script type="text/javascript">
         var album_id =  <?php echo $albumID; ?>;
-        var folderSize =  <?php echo round($album->getAlbumFolderSize()); ?>;
+        var folderSize =  <?php echo $album->getAlbumFolderSize(); ?>;
     </script>
 
 <?php
