@@ -249,8 +249,6 @@ abstract class FileUtils
      */
     public static function getSize($path)
     {
-        file_put_contents('/tmp/burner.log', "path for size: " . $path);
-
         $bytes = 0;
         foreach (glob(rtrim($path, '/').'/*', GLOB_NOSORT) as $each) {
             $bytes += is_file($each) ? filesize($each) : self::getSize($each);
