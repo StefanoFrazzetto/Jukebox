@@ -239,20 +239,43 @@ abstract class FileUtils
     }
 
     /**
-     * Return the size in KB of files and directories.
+     * Return the size in KB of the directory.
      *
-     * @param string $path The path to the file or directory.
+     * @param string $path The directory path.
      *
-     * @throws Exception if the file/directory does not exist.
+     * @throws Exception if the directory does not exist.
      *
-     * @return int $size The size of the file/directory in KB.
+     * @return int $size The size of the directory in KB.
      */
-    public static function getSize($path)
+    public static function getDirectorySize($path)
     {
+        if (!file_exists($path)) {
+            throw new Exception("The directory at $path does not exist.");
+        }
+
         $bytes = 0;
         foreach (glob(rtrim($path, '/').'/*', GLOB_NOSORT) as $each) {
-            $bytes += is_file($each) ? filesize($each) : self::getSize($each);
+            $bytes += is_file($each) ? filesize($each) : self::getDirectorySize($each);
         }
+        return $bytes/1024;
+    }
+
+    /**
+     * Return the size in KB of the file.
+     *
+     * @param string $path The file path.
+     *
+     * @throws Exception if the file does not exist.
+     *
+     * @return int $size The size of the file in KB.
+     */
+    public static function getFileSize($path)
+    {
+        if (!file_exists($path)) {
+            throw new Exception("The file at $path does not exist.");
+        }
+
+        $bytes = filesize($path);
         return $bytes/1024;
     }
 
