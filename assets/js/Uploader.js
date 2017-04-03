@@ -83,7 +83,7 @@ Uploader.prototype.changePage = function (page) {
 
                     // uploader.cover = data.cover;
 
-                    // uploader.covers = data.covers;
+                    uploader.covers = data.covers;
 
                     function mapCD(CD) {
                         var arr = [];
@@ -114,6 +114,7 @@ Uploader.prototype.changePage = function (page) {
 
             imageSelector.defaultAlbum = this.title;
             imageSelector.defaultArtist = this.getAllArtists();
+            imageSelector.presetCovers = this.covers;
 
             imageSelector.open();
             break;
@@ -201,6 +202,7 @@ Uploader.prototype.createSongsTable = function (container, editable) {
                 td2.append(input);
 
                 td2.find('input').change(function () {
+                    //noinspection JSUndefinedPropertyAssignment
                     track.title = $(this).val();
                 });
             } else {
@@ -327,7 +329,7 @@ Uploader.prototype.done = function () {
             }
         })
         .fail(function (error) {
-            alert("Unable to upload album. " + error.responseText);
+            alert("Unable to upload album. " + JSON.parse(error.responseText).message);
             console.log(error);
         });
 };
@@ -359,6 +361,7 @@ Uploader.prototype.defragmentArtists = function () {
             track.artists.forEach(function (artist) {
                 if (typeof artist !== "undefined" && artist !== null) _artists.push(artist);
             });
+            //noinspection JSUndefinedPropertyAssignment
             track.artists = _artists;
         })
     });

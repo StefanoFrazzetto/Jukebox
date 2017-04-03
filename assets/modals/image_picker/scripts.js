@@ -1,99 +1,106 @@
-var addAlbumForm = $('#coverPickerForm');
-var submit_btn = $('#imagePickerSubmit');
-var imageURL;
-
-if (typeof imageSelector === 'undefined') {
-    alert('imageSelector variable not found');
-}
-
-$('#coverImageURL').bind('input propertychange', function () {
-    imageURL = $('#coverImageURL').val();
-});
-
-// Search the covers
-$('#search').on('click', function () {
-    var artist = $('#artist').val();
-    var album = $('#album').val();
-
+$(function () {
+    var addAlbumForm = $('#coverPickerForm');
+    var submit_btn = $('#imagePickerSubmit');
     var covers = $('#covers');
+    var coverImageURL = $('#coverImageURL');
+    var imageURL;
 
-    if (artist != '' && album != '') {
-        $('#loading-img').css('display', 'block');
-        covers.find('> p').css('display', 'block');
+    if (typeof imageSelector === 'undefined') {
+        alert('imageSelector variable not found');
+    }
 
-        $.ajax({
-            url: '/assets/API/image_fetch.php',
-            method: 'GET',
-            data: {artist: artist, album: album},
-            dataType: 'json',
-            success: function (data) {
-                $('.cover-container').remove();
-                covers.find('> p').css('display', 'none');
+    coverImageURL.bind('input propertychange', function () {
+        imageURL = coverImageURL.val();
+    });
 
-                $('#loading-img').css('display', 'none');
+    function createCovers(data) {
+        data = imageSelector.presetCovers.concat(data);
 
-                // If the array is not empty
-                if (data.length === 0) {
-                    covers.html("No images found. Check your connection.");
-                } else {
-                    // Append the cover to #covers
-                    $.each(data, function (key, value) {
-                        var imagehtml = $("<img class='covers cover-picture' id='cover-" + key + "' src='" + value + "'>");
-                        var cointainerhtml = $("<div class='cover-container'></div>");
+        // If the array is not empty
+        if (data.length === 0) {
+            covers.html("No images found. Check your connection.");
+        } else {
+            // Append the cover to #covers
+            $.each(data, function (key, value) {
+                var imageHtml = $("<img class='covers cover-picture' id='cover-" + key + "' src='" + value + "'>");
+                var containerHtml = $("<div class='cover-container'></div>");
 
-                        imagehtml.on('error', function () {
-                            $(this).parent().remove();
-                        });
-
-                        cointainerhtml.html(imagehtml);
-
-                        covers.append(cointainerhtml);
-
-                        submit_btn.addClass('disabled');
-                    });
-                }
-
-                // Bind the onclick event to each cover
-                $('img.covers').on('click', function () {
-                    covers.find('.active').removeClass("active");
-                    $(this).addClass("active");
-                    imageURL = $(this).attr('src');
-                    submit_btn.removeClass('disabled');
+                imageHtml.on('error', function () {
+                    $(this).parent().remove();
                 });
 
-            },
-            fail: function () {
-                error("Failed to fetch covers.");
-            }
+                containerHtml.html(imageHtml);
+
+                covers.append(containerHtml);
+
+                submit_btn.addClass('disabled');
+            });
+        }
+
+        // Bind the onclick event to each cover
+        $('img.covers').on('click', function () {
+            covers.find('.active').removeClass("active");
+            $(this).addClass("active");
+            imageURL = $(this).attr('src');
+            submit_btn.removeClass('disabled');
         });
-
     }
-});
 
-submit_btn.click(function () {
-    imageSelector.imageUrl = imageURL;
+    // Search the covers
+    $('#search').on('click', function () {
+        var artist = $('#artist').val();
+        var album = $('#album').val();
 
-    imageSelector.done();
-});
+        if (artist !== '' && album !== '') {
+            $('#loading-img').css('display', 'block');
+            covers.find('> p').css('display', 'block');
 
-addAlbumForm.submit(function (e) {
-    e.preventDefault();
-    submit_btn.click();
-});
+            $.ajax({
+                url: '/assets/API/image_fetch.php',
+                method: 'GET',
+                data: {artist: artist, album: album},
+                dataType: 'json',
+                success: function (data) {
+                    $('.cover-container').remove();
+                    covers.find('> p').css('display', 'none');
 
-$("#searchImage").submit(function (e) {
-    e.preventDefault();
-    $("#search").click();
-});
+                    $('#loading-img').css('display', 'none');
 
-$('#artist').val(imageSelector.defaultArtist);
-$('#album').val(imageSelector.defaultAlbum);
+                    createCovers(data);
+                },
+                fail: function () {
+                    error("Failed to fetch covers.");
+                }
+            });
 
-Dropzone.autoDiscover = false;
+        }
+    });
 
-$(function () {
+    submit_btn.click(function () {
+        imageSelector.imageUrl = imageURL;
+
+        imageSelector.done();
+    });
+
+    addAlbumForm.submit(function (e) {
+        e.preventDefault();
+        submit_btn.click();
+    });
+
+    var searchImage = $("#searchImage");
+
+    searchImage.submit(function (e) {
+        e.preventDefault();
+        $("#search").click();
+    });
+
+    $('#artist').val(imageSelector.defaultArtist);
+    $('#album').val(imageSelector.defaultAlbum);
+
+    Dropzone.autoDiscover = false;
+
     if (imageSelector.albumArtist === false) {
-        var cont = $('#searchImage');
+        var cont = searchImage;
         cont.find('#album').hide().val(' ');
         cont.find('#artist').addClass("large");
     }
@@ -105,8 +112,6 @@ $(function () {
     ImgPickerDropzone.acceptedFiles = "image/jpeg,image/png,image/gif";
 
     ImgPickerDropzone.on("success", function (file, response) {
-
-
         var resp = $.parseJSON(response);
 
         if (resp.status === "error") {
@@ -114,11 +119,14 @@ $(function () {
             return;
         }
 
-        imageSelector.imageUrl = resp.cover_path;
+        //noinspection JSUnresolvedVariable
+        imageSelector.imageUrl = resp.cover_url;
 
         imageSelector.done();
-
     });
+
+    if (imageSelector.presetCovers.length !== 0)
+        createCovers([]);
 });
 
 

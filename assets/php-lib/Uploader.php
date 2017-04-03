@@ -245,15 +245,18 @@ class Uploader
 
         mkdir($album->getAlbumPath());
 
-        // Let's grab all the juicy stuff.
-        rename(self::getPath() . $uploader_id, $album->getAlbumPath());
-
+        $content->cover = stripslashes($content->cover);
         // Prevents unix path to be passed to the program
         if (strpos($content->cover, '/') === 0) {
             $content->cover = $_SERVER['DOCUMENT_ROOT'] . substr($content->cover, 0);
         }
 
         $album->setCover($content->cover);
+
+        // Let's grab all the juicy stuff.
+        if (!FileUtils::moveContents(self::getPath() . $uploader_id . '/', $album->getAlbumPath(), true)) {
+            throw new Exception("Failed to move files.");
+        };
 
         // Take the garbage out.
         FileUtils::remove(self::getPath() . $uploader_id, true);
@@ -464,23 +467,19 @@ class Uploader
         $full_path = self::getPath() . $this->uploader_id;
 
         $finder = new Finder();
-        $covers = $finder->in($full_path)->files()->name('*.jpg')->sortByName();
 
-        foreach ($covers as $track) {
-            $tracks_info[] = $track->getFileName();
-        }
+        $pack = function ($ext, $finder, $full_path, &$tracks_info) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $covers = $finder->in($full_path)->files()->name($ext)->sortByName();
+            foreach ($covers as $track) {
+                /** @noinspection PhpUndefinedMethodInspection */
+                $tracks_info[] = FileUtils::pathToHostUrl($track->getRealPath());
+            }
+        };
 
-        $covers = $finder->in($full_path)->files()->name('*.png')->sortByName();
-
-        foreach ($covers as $track) {
-            $tracks_info[] = $track->getFileName();
-        }
-
-        $covers = $finder->in($full_path)->files()->name('*.jpeg')->sortByName();
-
-        foreach ($covers as $track) {
-            $tracks_info[] = $track->getFileName();
-        }
+        $pack('*.jpg', $finder, $full_path, $tracks_info);
+        $pack('*.png', $finder, $full_path, $tracks_info);
+        $pack('*.jpeg', $finder, $full_path, $tracks_info);
 
         // I have no idea why but the same file was repeated 5 times. This ugly fix should do.
         $tracks_info = array_unique($tracks_info);
