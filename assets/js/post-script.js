@@ -42,6 +42,7 @@ function initImageSelectorObject() {
         imageUrl: null,
         defaultArtist: '',
         defaultAlbum: '',
+        presetCovers: [],
 
         open: function () {
             modal.openPage('assets/modals/image_picker/');
@@ -360,16 +361,7 @@ $('#albumCover').click(function () {
         modal.openPage('assets/modals/album_details?id=' + album_id);
 });
 
-//alert(show); //Just for debugging
 previous.hide(); // This will hide the previous button, since we are at page 1 for reasons.
-
-//Smart stuff
-$(document).ready(function () {
-    getHowManyAlbumsToShow(); //Pretty much self self explanatory
-    $.getScript('/assets/js/storage.js', function () {
-        reload(); //We now load the remote script via ajax
-    });
-});
 
 $(document).mouseup(function (e) {
     if (!dropdownModal.is(e.target) // if the target of the click isn't the container...
@@ -379,20 +371,30 @@ $(document).mouseup(function (e) {
     }
 });
 
-/* this should be included in a separated file to be loaded only in the local version of the app */
+//Smart stuff
+$(document).ready(function () {
+    getHowManyAlbumsToShow(); //Pretty much self self explanatory
 
-$(window).bind('resize', function () { //Good job! :)
-    //window.resizeEvt;
-    $(window).resize(function () {
-        clearTimeout(window.resizeEvt);
-        window.resizeEvt = setTimeout(function () {
-            var _show = show;
-            getHowManyAlbumsToShow();
-
-            if (_show !== show) {
-                paginate();
-            }
-        }, animation_short);
+    $.getScript('/assets/js/storage.js', function () {
+        reload(); //We now load the remote script via ajax
     });
-});
 
+    // Handles window resize event to paginate the view.
+    // Must be disabled in the jukebox for performance reasons.
+    if (!isJukebox) {
+        $(window).bind('resize', function () { //Good job! :)
+            //window.resizeEvt;
+            $(window).resize(function () {
+                clearTimeout(window.resizeEvt);
+                window.resizeEvt = setTimeout(function () {
+                    var _show = show;
+                    getHowManyAlbumsToShow();
+
+                    if (_show !== show) {
+                        paginate();
+                    }
+                }, animation_short);
+            });
+        });
+    }
+});
