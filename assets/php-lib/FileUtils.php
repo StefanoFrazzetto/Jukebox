@@ -254,10 +254,10 @@ abstract class FileUtils
         }
 
         $bytes = 0;
-        foreach (glob(rtrim($path, '/').'/*', GLOB_NOSORT) as $each) {
+        foreach (glob(rtrim($path, '/') . '/*', GLOB_NOSORT) as $each) {
             $bytes += is_file($each) ? filesize($each) : self::getDirectorySize($each);
         }
-        return $bytes/1024;
+        return $bytes / 1024;
     }
 
     /**
@@ -276,7 +276,7 @@ abstract class FileUtils
         }
 
         $bytes = filesize($path);
-        return $bytes/1024;
+        return $bytes / 1024;
     }
 
     /**
@@ -309,5 +309,25 @@ abstract class FileUtils
                 unlink($file);
             }
         }
+    }
+
+    /**
+     * Converts a Unix path to the URL from the DOCUMENT_ROOT.
+     *
+     * i.e. <code>/var/www/html/index.php -> /index.php</code>
+     *
+     * @param $path string path to convert.
+     * @throws Exception if the path is not inside the DOCUMENT_ROOT.
+     * @return string host url.
+     */
+    public static function pathToHostUrl($path)
+    {
+        $documentRoot = $_SERVER['DOCUMENT_ROOT'];
+
+        if (strpos($path, $documentRoot) !== 0) {
+            throw new Exception("The path '$path' is not part of the document root '$documentRoot'");
+        }
+
+        return str_replace($documentRoot, '', $path);
     }
 }
