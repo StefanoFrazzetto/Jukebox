@@ -137,6 +137,28 @@ abstract class FileUtils
     }
 
     /**
+     * Moves the content of one folder to another one file(s).
+     *
+     * @param string $source The source directory to move.
+     * @param string $destination The destination directory.
+     * @param bool $force If set to true, do not prompt before overriding.
+     *                            The default value is false.
+     *
+     * @return bool True if the operation is successful, false otherwise.
+     */
+    public static function moveContents($source, $destination, $force = false)
+    {
+        $flags = '-v';
+
+        if ($force)
+            $flags .= ' -f';
+
+        $cmd = "mv $flags $source* $destination";
+
+        return OS::executeWithResult($cmd);
+    }
+
+    /**
      * Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.
      *
      * @param string $source The source file or directory.
