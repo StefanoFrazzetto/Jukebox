@@ -248,6 +248,11 @@ class Uploader
         // Let's grab all the juicy stuff.
         rename(self::getPath() . $uploader_id, $album->getAlbumPath());
 
+        // Prevents unix path to be passed to the program
+        if (strpos($content->cover, '/') === 0) {
+            $content->cover = $_SERVER['DOCUMENT_ROOT'] . substr($content->cover, 0);
+        }
+
         $album->setCover($content->cover);
 
         // Take the garbage out.
