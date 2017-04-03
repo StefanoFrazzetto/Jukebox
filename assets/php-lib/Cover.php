@@ -16,14 +16,18 @@ class Cover
 
     public function __construct($url)
     {
-        if (isset($url)) {
-            return $this->loadImagefromUrl($url);
+        if (isset($url) && !empty($url)) {
+            return $this->loadImageFromUrl($url);
+        } else {
+            throw new Exception("No url provided.");
         }
     }
 
-    public function loadImagefromUrl($url)
+    public function loadImageFromUrl($url)
     {
-        // TODO VALIDATE URL
+        if (!@getimagesize($url)) {
+            throw new Exception("Failed to load image because '$url' is not available.");
+        }
 
         $type = exif_imagetype($url);
 
@@ -44,7 +48,7 @@ class Cover
 
     public function saveToAlbum($id)
     {
-        $path = $_SERVER['DOCUMENT_ROOT']."/jukebox/$id";
+        $path = $_SERVER['DOCUMENT_ROOT'] . "/jukebox/$id";
 
         $this->saveAlbumImagesToFolder($path);
     }
