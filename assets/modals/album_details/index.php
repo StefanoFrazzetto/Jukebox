@@ -6,6 +6,7 @@ use Lib\ICanHaz;
 use Lib\MusicClasses\Album;
 use Lib\MusicClasses\Artist;
 
+
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 $album = Album::getAlbum($albumID);
@@ -21,21 +22,6 @@ $artists = [];
 foreach ($artists_ids as $artist_id) {
     $artists[] = Artist::getArtist($artist_id)->getName();
 }
-
-//<editor-fold desc="Downloader Stuff">
-// TODO @Stefano you should look into this
-// P.S. It's possibly totally broken now. :)
-
-$dir = '/var/www/html/jukebox/'.$albumID;
-$outputFileName = preg_replace('/[^A-Za-z0-9\-]/', '', $album->getTitle()).'.zip';
-$outputFile = '/var/www/html/downloads/'.$outputFileName;
-
-if (file_exists($outputFile)) {
-    $fileExists = true;
-} else {
-    $fileExists = false;
-}
-//</editor-fold>
 ?>
 
 
@@ -88,14 +74,14 @@ if (file_exists($outputFile)) {
                             <?php echo $track->getTimeString(); ?>
                         </td>
                     </tr>
-                <?php 
+                    <?php
                 }
             } else {
                 ?>
                 <tr class="th">
                     <th colspan="3">No tracks found</th>
                 </tr>
-            <?php 
+                <?php
             } ?>
         </table>
         <?php
@@ -111,41 +97,16 @@ if (file_exists($outputFile)) {
     <div class="modalFooter" id="details-footer">
         <div class="box-btn" onclick="player.playAlbum(<?php echo $albumID ?>)">Play</div>
         <div class="box-btn" onclick="modal.openPage('assets/modals/edit_album/?id=<?php echo $albumID ?>')">Edit</div>
-        <div class="box-btn" id="download-btn">Download</div>
+        <div class="box-btn" onclick="modal.openPage('assets/modals/download_album/?id=<?php echo $albumID ?>')">
+            Download
+        </div>
         <div class="box-btn" id="burner_single_album">Burn Album</div>
         <!-- <div class="box-btn" id="burner_addto_compilation">Add to burning compilation</div> -->
         <div class="box-btn" onclick="player.addAlbumToPlaylist(<?php echo $albumID ?>)">Add to Playlist</div>
     </div>
-
-    <!-- PRE-DOWNLOAD -->
-    <div class="modalBody download-body" id="pre-download">
-        <img style="float: right;" src="<?php echo $album->getCoverUrl() ?>"/>
-        <div class="download-box">
-            <div class="text" id="album-size">Album
-                size: <?php echo round($album->getAlbumFolderSize()) . ' MB'; ?></div>
-            <div class="text" id="album-tracks">Tracks: <?php echo $album->getSongsCount(); ?></div>
-            <div class="text" id="album-cds">CDs: <?php echo $album->getCdCount() ?></div>
-            <br>
-            <div class="box-btn" id="download-btn-2">Download</div>
-        </div>
-    </div>
-
-    <!-- ALBUM DOWNLOAD -->
-    <div class="modalBody" id="download" data-mcs-theme="dark">
-        <div class="download-link">Please wait. Your download will be ready soon.</div>
-        <div id="progressContainer" class="progressBar" style="width: 98%; margin-bottom: 0;">
-            <div id="progressBar" class="progress" style="width: 0; padding-left: 5px;">
-            </div>
-        </div>
-    </div>
-
-    <!--suppress JSUnusedLocalSymbols -->
-    <script type="text/javascript">
-        var album_id =  <?php echo $albumID; ?>;
-        var folderSize =  <?php echo $album->getAlbumFolderSize(); ?>;
-    </script>
-
 <?php
+
+
 ICanHaz::css('/assets/modals/album_details/style.css');
-ICanHaz::js(['/assets/js/progressbar.min.js', 'scripts.js'], true);
+ICanHaz::js('scripts.js', true);
 ?>

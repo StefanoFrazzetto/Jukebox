@@ -7,7 +7,7 @@ use Lib\MusicClasses\Album;
 use Lib\MusicClasses\Song;
 
 $outputDIR = '/var/www/html/downloads/';
-$zipCheck = $outputDIR.'zipCheck';
+$zipCheck = $outputDIR . 'zipCheck';
 
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
@@ -23,8 +23,8 @@ if (!file_exists($zipCheck)) {
     $artists = $Album->getArtistsName();
 
 
-    $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', ' ', implode($artists, '-')).' - '.preg_replace('/[^A-Za-z0-9\-]/', ' ', $title);
-    $outputFile = $outputDIR.$outputFileName.'.zip';
+    $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', ' ', implode($artists, '-')) . ' - ' . preg_replace('/[^A-Za-z0-9\-]/', ' ', $title);
+    $outputFile = $outputDIR . $outputFileName . '.zip';
 
     if (!file_exists($outputDIR)) {
         mkdir($outputDIR, 0755, true);
@@ -59,9 +59,9 @@ if (!file_exists($zipCheck)) {
         sleep(1);
     }
 
-    $outputFile = 'http://'.$_SERVER['HTTP_HOST'].'/downloads/'.$outputFileName.'.zip';
+    $outputFile = 'http://' . $_SERVER['HTTP_HOST'] . '/downloads/' . $outputFileName . '.zip';
 
-    $output = "<a href='".$outputFile."'>Click here to download the album.</a>";
+    $output = "<br/><a href='" . $outputFile . "'><button>Download Album</button></a>";
 
     unlink($zipCheck);
 } else {
