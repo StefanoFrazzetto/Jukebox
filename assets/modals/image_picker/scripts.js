@@ -27,7 +27,7 @@ $(function () {
         imageSelector.presetCovers = extract(imageSelector.presetCovers);
 
         // Adds the preset covers at the beginning of the results
-        data = imageSelector.presetCovers.concat(data);
+        data = imageSelector.presetCovers.concat(data.reverse());
 
         // If the array is not empty
         if (data.length === 0) {
