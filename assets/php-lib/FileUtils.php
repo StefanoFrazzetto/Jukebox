@@ -352,4 +352,22 @@ abstract class FileUtils
 
         return str_replace($documentRoot, '', $path);
     }
+
+    /**
+     * Performs the operations of #pathToHostUrl() only if necessary.
+     *
+     * @param $path string non-normalised url.
+     * @return string string normalised url.
+     */
+    public static function normaliseUrl($path)
+    {
+        $path = stripslashes($path);
+
+        // Prevents unix path to be passed to the program
+        if (strpos($path, '/') === 0) {
+            $path = $_SERVER['DOCUMENT_ROOT'] . substr($path, 0);
+        }
+
+        return $path;
+    }
 }

@@ -245,11 +245,7 @@ class Uploader
 
         mkdir($album->getAlbumPath());
 
-        $content->cover = stripslashes($content->cover);
-        // Prevents unix path to be passed to the program
-        if (strpos($content->cover, '/') === 0) {
-            $content->cover = $_SERVER['DOCUMENT_ROOT'] . substr($content->cover, 0);
-        }
+        $content->cover = FileUtils::normaliseUrl($content->cover);
 
         $album->setCover($content->cover);
 
