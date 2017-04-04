@@ -167,7 +167,6 @@ $error_color: rgb(190, 38, 38);
     }
 
     &.dz-image-preview {
-      background: white;
       .dz-details {
         @include prefix((transition: opacity 0.2s linear));
       }
