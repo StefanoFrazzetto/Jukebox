@@ -14,9 +14,11 @@ $(function () {
     });
 
     function extract(obj) {
-        return Object.keys(obj).map(function (k) {
-            return obj[k]
-        });
+        if (typeof obj === "object")
+            return Object.keys(obj).map(function (k) {
+                return obj[k]
+            });
+        return [];
     }
 
     function createCovers(data) {
