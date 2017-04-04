@@ -19,7 +19,6 @@
                 <th>#</th>
                 <th style="min-width: 337px;">Title</th>
                 <th>Artist(s)</th>
-                <th></th>
             </tr>
             </thead>
             <tbody id="metaDataSongsTableBody"></tbody>

@@ -16,7 +16,6 @@
                     <th>#</th>
                     <th>Title</th>
                     <th>Artist</th>
-                    <th>File Name</th>
                 </tr>
                 </thead>
                 <tbody id="confirmSongsTableBody"></tbody>

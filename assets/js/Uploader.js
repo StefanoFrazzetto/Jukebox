@@ -257,13 +257,9 @@ Uploader.prototype.createSongsTable = function (container, editable) {
                 td3 = $("<td>" + track.artists.join(', ') + "</td>");
             }
 
-
-            var td4 = $("<td></td>");
-
             tr.append(td1);
             tr.append(td2);
             tr.append(td3);
-            tr.append(td4);
 
             container.append(tr);
         })
