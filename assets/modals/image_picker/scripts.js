@@ -13,7 +13,18 @@ $(function () {
         imageURL = coverImageURL.val();
     });
 
+    function extract(obj) {
+        return Object.keys(obj).map(function (k) {
+            return obj[k]
+        });
+    }
+
     function createCovers(data) {
+        // Convert objects to arrays
+        data = extract(data);
+        imageSelector.presetCovers = extract(imageSelector.presetCovers);
+
+        // Adds the preset covers at the beginning of the results
         data = imageSelector.presetCovers.concat(data);
 
         // If the array is not empty
