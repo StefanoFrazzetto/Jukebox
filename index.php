@@ -227,6 +227,7 @@ $scripts = [
     'assets/js/searchbar.js',
     'assets/js/modals.js',
     'assets/js/jquery.mCustomScrollbar.concat.min.js',
+    'assets/js/ImageSelector.js',
     'assets/js/Uploader.js',
     'assets/js/post-script.js',
 ];

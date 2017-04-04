@@ -107,6 +107,10 @@ Uploader.prototype.changePage = function (page) {
             break;
         case 3: // Add cover
             uploader.defragmentArtists();
+
+            //noinspection JSUndeclaredVariable
+            imageSelector = new ImageSelector();
+
             imageSelector.from = '/assets/modals/album_upload/2-Metadata.php';
             imageSelector.to = '/assets/modals/album_upload/4-Confirm.php';
             imageSelector.albumArtist = true;

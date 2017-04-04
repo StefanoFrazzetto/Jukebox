@@ -31,35 +31,6 @@ var page = 1;
 //noinspection JSUnusedGlobalSymbols
 var answer_to_life_universe_and_everything = 42; //That's probably why something still works.
 
-var imageSelector;
-
-function initImageSelectorObject() {
-    imageSelector = {
-        albumArtist: false,
-        isRadio: false,
-        to: null,
-        from: null,
-        imageUrl: null,
-        defaultArtist: '',
-        defaultAlbum: '',
-        presetCovers: [],
-
-        open: function () {
-            modal.openPage('assets/modals/image_picker/');
-        },
-
-        back: function () {
-            modal.openPage(this.from)
-        },
-
-        done: function () {
-            modal.openPage(this.to);
-        }
-    }
-}
-
-initImageSelectorObject();
-
 function paginate() {
     var lastPage = Math.ceil(storage.albumsFiltered.filter(Object).length / show);
 

@@ -15,18 +15,18 @@ var editRadioForm = $('#editRadioForm');
 var editRadioImg = null;
 
 function editRadioSubmit(goback) {
-    if (typeof goback == "undefined")
+    if (typeof goback === "undefined")
         goback = true;
 
     var name = radioNameField.val();
     var url = radioUrlField.val();
 
-    if (name.length == 0) {
+    if (name.length === 0) {
         error("Radio name must not be empty.");
         return;
     }
 
-    if (url.length == 0) {
+    if (url.length === 0) {
         error("Radio name must not be empty.");
         return;
     }
@@ -39,7 +39,7 @@ function editRadioSubmit(goback) {
     $.getJSON("/assets/modals/radio/edit_radio/edit_radio.php",
         {id: editRadioId, name: name, url: url, cover: editRadioImg})
         .done(function (response) {
-            if (response.status == "success") {
+            if (response.status === "success") {
                 alert("Radio edited successfully!");
 
 
@@ -76,7 +76,7 @@ editRadioCancelBtn.click(function () {
 });
 
 editRadioCoverImg.click(function () {
-    initImageSelectorObject();
+    imageSelector = new ImageSelector();
 
     imageSelector.isRadio = true;
     imageSelector.isRadioUploaded = true;
@@ -87,12 +87,11 @@ editRadioCoverImg.click(function () {
     imageSelector.open();
 });
 
-if (imageSelector.imageUrl != null) {
+if (imageSelector.imageUrl !== null) {
 
     editRadioImg = imageSelector.imageUrl;
 
     editRadioSubmit(false);
 
-    initImageSelectorObject();
     editRadioImg = null;
 }

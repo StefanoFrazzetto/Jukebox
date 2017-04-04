@@ -34,7 +34,7 @@ function submit(callback) {
         data.album_removed_tracks = edit_album_deleted_tracks;
     }
 
-    if (imageSelector.imageUrl != null) {
+    if (imageSelector.imageUrl !== null) {
         data.album_cover_url = imageSelector.imageUrl;
     }
 
@@ -43,7 +43,7 @@ function submit(callback) {
     $.post('assets/php/edit_album.php', data, function (resp) {
         var json = $.parseJSON(resp);
 
-        if (json.success == true) {
+        if (json.success === true) {
             edit_album_deleted_tracks = [];
 
             alert("Album updated successfully.");
@@ -91,7 +91,7 @@ edit_tracks.find('.edit').click(function (e) {
     input.blur(function () {
         var title_new = input.val();
 
-        if (title_new != title_original) {
+        if (title_new !== title_original) {
             edit_album_tracks[track_no].title = title_new;
 
             title_cont.html(title_new);
@@ -102,11 +102,11 @@ edit_tracks.find('.edit').click(function (e) {
     });
 
     input.keypress(function (e) { // Press enter
-        if (e.which == 13) {
+        if (e.which === 13) {
             input.blur();
         }
 
-        else if (e.which == 27) { // Press escape - Resets input
+        else if (e.which === 27) { // Press escape - Resets input
             e.preventDefault();
             input.val(title_original);
             input.blur();
@@ -155,8 +155,7 @@ function deleteCD(li) {
 }
 
 function openPickCoverModal() {
-    initImageSelectorObject();
-
+    imageSelector = new ImageSelector();
     imageSelector.albumArtist = true;
     imageSelector.to = 'assets/modals/edit_album/?id=' + album_id;
     imageSelector.from = 'assets/modals/edit_album/?id=' + album_id;
@@ -166,7 +165,7 @@ function openPickCoverModal() {
 }
 
 
-if (imageSelector.imageUrl != null) {
+if (imageSelector.imageUrl !== null) {
     submit(function () {
 
         var src = album_cover_img.attr('src') + "?date=" + +new Date().getTime();

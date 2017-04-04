@@ -14,7 +14,7 @@ function addNewRadio() {
 
     $.getJSON(request)
         .done(function (response) {
-            if (response.status == 'success') {
+            if (response.status === 'success') {
                 alert('Radio successfully added!');
             } else {
                 console.log(response);
@@ -54,7 +54,7 @@ function testRadio() {
 
 
     // Put port 80 if it is not assigned from URL
-    if (radio.port == "") {
+    if (radio.port === "") {
         radio.port = 80;
     }
 
@@ -113,7 +113,7 @@ function secondRadioPage() {
 }
 
 function openChangeCover() {
-    initImageSelectorObject();
+    imageSelector = new ImageSelector();
 
     imageSelector.albumArtist = false;
     imageSelector.isRadio = true;
@@ -125,13 +125,13 @@ function openChangeCover() {
     imageSelector.open();
 }
 
-if (imageSelector.isRadio == true) {
+if (imageSelector.isRadio === true) {
     radio_name_field.val(imageSelector.defaultArtist);
     radio_url_field.val(imageSelector.defaultAlbum);
 
-    if (typeof imageSelector.imageUrl !== "undefined" && imageSelector.imageUrl != null && imageSelector.imageUrl !== "")
+    if (typeof imageSelector.imageUrl !== "undefined" && imageSelector.imageUrl !== null && imageSelector.imageUrl !== "")
         $.getJSON("/assets/modals/radio/add_radio/uploadcover.php?url=" + encodeURI(imageSelector.imageUrl), function (response) {
-            if (response.status != "success") {
+            if (response.status !== "success") {
                 error("Error! " + response.message + ".");
             }
 
@@ -139,9 +139,6 @@ if (imageSelector.isRadio == true) {
 
             radio_cover.attr('src', urlsss);
         });
-
-
-    initImageSelectorObject();
 
     secondRadioPage();
 }
