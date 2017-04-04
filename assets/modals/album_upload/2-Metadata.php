@@ -1,13 +1,14 @@
 <div class="modalHeader">Album Uploader</div>
-<div class="modalBody center mCustomScrollbar">
 
+<div class="modalBody center mCustomScrollbar">
     <div class="col-row">
         <div class="col-left">
-            <input type="text" placeholder="Album Title" title="Album Title" class="full-wide" id="metaDataAlbumTitle"/>
+            <input type="text" placeholder="Album Title" title="AlbumTitle" class="full-wide"
+                   id="metaDataAlbumTitle"/>
         </div>
         <div class="col-right">
-            <div id="metaDataTitlesList">
-            </div>
+            <input type="text" placeholder="Main Artist" title="AlbumArtist" class="full-wide"
+                   id="metaDataAlbumArtist"/>
         </div>
     </div>
 
@@ -24,8 +25,8 @@
             <tbody id="metaDataSongsTableBody"></tbody>
         </table>
     </div>
-
 </div>
+
 <div class="modalFooter">
     <button id="btnBack">Back</button>
     <button id="btnCancel">Cancel</button>

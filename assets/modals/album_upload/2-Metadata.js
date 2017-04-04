@@ -1,42 +1,69 @@
 /**
  * Created by Vittorio on 16/02/2017.
  */
-var metaDataSongsTableBody = $('#metaDataSongsTableBody');
-var metaDataTitlesList = $('#metaDataTitlesList');
-var metaDataAlbumTitle = $('#metaDataAlbumTitle');
 
-$('#btnBack').click(function () {
-    uploader.previousPage();
-});
+$(function () {
+    var metaDataSongsTableBody = $('#metaDataSongsTableBody');
+    var metaDataTitlesList = $('#metaDataTitlesList');
+    var metaDataAlbumTitle = $('#metaDataAlbumTitle');
+    var metaDataAlbumArtist = $('#metaDataAlbumArtist');
 
-$('#btnNext').click(function () {
-    if (metaDataAlbumTitle.val() === "") {
-        error("Album title is required.");
-    } else {
-        uploader.nextPage();
+    function drawTable() {
+        metaDataSongsTableBody.html('');
+        uploader.createSongsTable(metaDataSongsTableBody, true);
     }
 
-});
-
-$('#btnCancel').click(function () {
-    Uploader.abort();
-});
-
-uploader.createSongsTable(metaDataSongsTableBody, true);
-
-metaDataAlbumTitle.change(function () {
-    uploader.title = $(this).val();
-});
-
-metaDataTitlesList.html('');
-uploader.titles.forEach(function (title) {
-    var button = $("<button>" + title + "</button>");
-    button.click(function () {
-        metaDataAlbumTitle.val(title);
+    $('#btnBack').click(function () {
+        uploader.previousPage();
     });
-    metaDataTitlesList.append(button);
-});
 
-if (uploader.title !== null) {
-    metaDataAlbumTitle.val(uploader.title);
-}
+    $('#btnNext').click(function () {
+        if (metaDataAlbumTitle.val() === "") {
+            error("Album title is required.");
+        } else {
+            uploader.nextPage();
+        }
+
+    });
+
+    $('#btnCancel').click(function () {
+        Uploader.abort();
+    });
+
+
+    metaDataAlbumTitle.change(function () {
+        uploader.title = $(this).val();
+    });
+
+    if (typeof uploader.getAllArtists()[0] !== "undefined")
+        metaDataAlbumArtist.val(uploader.getAllArtists()[0]);
+
+
+    metaDataAlbumArtist.change(function () {
+        var artist = $(this).val();
+
+        uploader.tracks.forEach(function (cd) {
+            cd.forEach(function (track) {
+                    track.artists = [artist];
+                }
+            )
+        });
+
+        drawTable();
+    });
+
+// metaDataTitlesList.html('');
+// uploader.titles.forEach(function (title) {
+//     var button = $("<button>" + title + "</button>");
+//     button.click(function () {
+//         metaDataAlbumTitle.val(title);
+//     });
+//     metaDataTitlesList.append(button);
+// });
+
+    if (uploader.title !== null) {
+        metaDataAlbumTitle.val(uploader.title);
+    }
+
+    drawTable();
+});
