@@ -14,7 +14,7 @@ $(function () {
     });
 
     function extract(obj) {
-        if (typeof obj === "object")
+        if (typeof obj === "object" && obj !== undefined && obj !== null)
             return Object.keys(obj).map(function (k) {
                 return obj[k]
             });

@@ -34,10 +34,6 @@ function submit(callback) {
         data.album_removed_tracks = edit_album_deleted_tracks;
     }
 
-    if (imageSelector.imageUrl !== null) {
-        data.album_cover_url = imageSelector.imageUrl;
-    }
-
     data = JSON.stringify(data);
 
     $.post('assets/php/edit_album.php', data, function (resp) {
@@ -45,6 +41,9 @@ function submit(callback) {
 
         if (json.success === true) {
             edit_album_deleted_tracks = [];
+
+            storage.getAlbum(album_id).title = album_title;
+            paginate();
 
             alert("Album updated successfully.");
 
@@ -161,23 +160,33 @@ function openPickCoverModal() {
     imageSelector.from = 'assets/modals/edit_album/?id=' + album_id;
     imageSelector.defaultArtist = $('#album-artist').val();
     imageSelector.defaultAlbum = $('#album-title').val();
+
+    imageSelector.onDone = function () {
+        $.post(
+            '/assets/API/edit_album.php', JSON.stringify({
+                id: album_id,
+                cover: imageSelector.imageUrl
+            })
+        )
+            .done(function (data) {
+                if (data === "success") {
+                    var src = album_cover_img.attr('src') + "?date=" + +new Date().getTime();
+
+                    album_cover_img.attr('src', src);
+
+                    storage.getAlbum(album_id).cover = new Date().getTime();
+                    paginate();
+
+                } else {
+                    error(data);
+                }
+            })
+            .fail(function () {
+                error("Failed to save the cover.");
+            });
+    };
+
     imageSelector.open();
-}
-
-
-if (imageSelector.imageUrl !== null) {
-    submit(function () {
-
-        var src = album_cover_img.attr('src') + "?date=" + +new Date().getTime();
-
-        album_cover_img.attr('src', src);
-
-        console.log("injecting new cover in the album database and refreshing the list");
-
-        storage.getAlbum(album_id).cover = new Date().getTime();
-
-        paginate();
-    });
 }
 
 function appendCd() {
