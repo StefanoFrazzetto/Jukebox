@@ -322,15 +322,54 @@ abstract class FileUtils
      * specified time in seconds.
      *
      * @param string $dir The directory containing the files to remove.
-     * @param int $seconds The time in seconds.
+     * @param int $seconds the time in seconds.
+     *
+     * @throws InvalidArgumentException if the directory does not exist or
+     * if the time in seconds is less than 0.
      */
     public static function deleteFilesOlderThan($dir, $seconds)
     {
+        if (!file_exists($dir)) {
+            throw new InvalidArgumentException('The specified directory does not exist.');
+        }
+
+        if (!is_int($seconds) || $seconds < 0) {
+            throw new InvalidArgumentException('The second argument must be a positive integer.');
+        }
+
         foreach (glob($dir . '/*') as $file) {
             if (filemtime($file) < time() - $seconds && !is_dir($file)) {
                 unlink($file);
             }
         }
+    }
+
+    /**
+     * Remove all the directories located in the specified directory
+     * and their files.
+     *
+     * @param string $parent_dir The directory containing the dirs to remove.
+     * @param int $minutes the time in minutes.
+     *
+     * @throws InvalidArgumentException if the directory does not exist, is outside
+     * the document root, or if the time in seconds is less than 0.
+     */
+    public static function deleteDirectoriesOlderThan($parent_dir, $minutes)
+    {
+        $documentRoot = $_SERVER['DOCUMENT_ROOT'];
+        if (strpos($parent_dir, $documentRoot) !== 0) {
+            throw new InvalidArgumentException('The directory must be located in the document root.');
+        }
+
+        if (!file_exists($parent_dir)) {
+            throw new InvalidArgumentException('The specified directory is not valid.');
+        }
+
+        if (!is_int($minutes) || $minutes < 0) {
+            throw new InvalidArgumentException('The second argument must be a positive integer.');
+        }
+
+        OS::execute("find $parent_dir/* -type d -cmin +$minutes | xargs rm -rf");
     }
 
     /**
