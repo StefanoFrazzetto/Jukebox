@@ -18,17 +18,17 @@ class DiscRipper extends Disc
     /** @var string the path to lame log file */
     protected $lame_log_path;
 
-    /** @var string the path to the files that handles the ripping */
+    /** @var string the path to the file that handles the ripping */
     protected $handler;
 
     /** @var string the directory where the files will be moved */
-    protected $final_dir;
+    protected $destination_dir;
 
-    public function __construct($final_dir_name = '')
+    public function __construct($uploader_id = '')
     {
         parent::__construct();
-        if (!empty($final_dir_name)) {
-            $this->final_dir = Config::getPath('uploader').$final_dir_name;
+        if (!empty($uploader_id)) {
+            $this->destination_dir = Config::getPath('uploader').$uploader_id;
         }
     }
 
@@ -56,8 +56,8 @@ class DiscRipper extends Disc
      */
     public function rip()
     {
-        if (empty($this->final_dir)) {
-            throw new Exception('You must set an output directory first.');
+        if (empty($this->destination_dir)) {
+            throw new Exception('The output directory was not specified.');
         }
 
         if ($this->getStatus() != self::STATUS_IDLE && $this->getStatus() != self::STATUS_COMPLETE) {
@@ -69,21 +69,20 @@ class DiscRipper extends Disc
             'cdparanoia_log_path' => $this->cdparanoia_log_path,
             'lame_log_path'       => $this->lame_log_path,
             'ripping_dir'         => $this->input_dir,
-            'encoding_dir'        => $this->output_dir,
-            'final_dir'           => $this->final_dir,
+            'encoding_dir'        => $this->destination_dir
         ];
 
         FileUtils::remove($this->parent_dir, true);
         mkdir(dirname($this->cdparanoia_log_path), 0755, true);
         mkdir($this->input_dir, 0755, true);
         mkdir($this->output_dir, 0755, true);
-//        mkdir($this->final_dir, 0755, true);
 
         // Set the total tracks before starting the process.
         $process['total_tracks'] = $this->getTotalTracks();
 
         $pid = OS::executeWithEnv($this->handler, $arguments, true);
 
+        $process['destination_dir'] = $this->destination_dir;
         $process['status'] = self::STATUS_RIPPING;
         $process['pid'] = $pid;
 
@@ -165,15 +164,17 @@ class DiscRipper extends Disc
 
         // Calculate the process percentage
         if ($ripped != 0) {
+            $status = self::STATUS_RIPPING;
             $average = floor(($ripped + $encoded) / 2);
             $percentage = $this->calculatePercentage($average, $total_tracks);
         }
 
-        if ($encoded == $total_tracks) {
+        if ($encoded == $total_tracks && $total_tracks > 0) {
             $status = self::STATUS_COMPLETE;
             $message = 'your disc is ready';
             $percentage = 100;
         }
+
         $this->setStatusMessagePercentage($status, $message, $percentage);
     }
 
@@ -196,6 +197,12 @@ class DiscRipper extends Disc
         return $status;
     }
 
+    private function getDestinationPath()
+    {
+        $status_file = $this->getStatusFileContent();
+        return Uploader::getPath().$status_file['uploader_id'];
+    }
+
     /**
      * Return the number of encoded tracks.
      *
@@ -203,8 +210,7 @@ class DiscRipper extends Disc
      */
     public function getEncodedTracks()
     {
-        $config = new Config();
-        $path = $config->get('disc')['ripper']['output'];
+        $path = $this->getDestinationPath();
 
         return FileUtils::countFiles($path);
     }
@@ -237,5 +243,19 @@ class DiscRipper extends Disc
         }
 
         return intval(round(($val1 / $val2) * 100));
+    }
+
+    /**
+     * Removes all the directory and files user for the process.
+     */
+    public function reset()
+    {
+        FileUtils::remove($this->input_dir, true);
+        FileUtils::remove($this->status_file, false);
+
+        $destination_path = $this->getDestinationPath();
+        if (!empty($destination_path)) {
+            FileUtils::remove($this->destination_dir, true);
+        }
     }
 }
