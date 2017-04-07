@@ -61,7 +61,7 @@ class Uploader
     /**
      * @return string the path to the temp folder
      */
-    private static function getPath()
+    public static function getPath()
     {
         $config = new Config();
 
