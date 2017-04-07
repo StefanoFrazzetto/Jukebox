@@ -154,6 +154,8 @@ class Uploader
      */
     public static function getNewUploaderID()
     {
+        self::removeOldDirectories();
+
         $id = uniqid('', true);
 
         // Check if the folder already exists
@@ -165,6 +167,15 @@ class Uploader
         mkdir($dir, 0755, true);
 
         return $id;
+    }
+
+    /**
+     * Removes all the uploader directories older than 4 hours.
+     */
+    private static function removeOldDirectories()
+    {
+        $hoursInMinutes = 4 * 60;
+        FileUtils::deleteDirectoriesOlderThan(static::getPath(), $hoursInMinutes);
     }
 
     /**
