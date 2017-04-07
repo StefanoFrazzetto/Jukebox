@@ -1,6 +1,7 @@
 <?php
 
 namespace Lib;
+use InvalidArgumentException;
 
 /**
  * An easy way to keep in track of external processes.
@@ -53,6 +54,22 @@ class Process
     }
 
     /**
+     * Checks if the pid is valid.
+     *
+     * @param int $pid the pid
+     * @return bool true if it is valid, false otherwise.
+     */
+    private function isPidValid($pid)
+    {
+        // Get the max process id
+        $cmd = 'cat /proc/sys/kernel/pid_max';
+        exec($cmd, $out);
+        $max_pid = (int) $out[0];
+
+        return !(empty($pid) || ($pid < 0 || $pid > $max_pid));
+    }
+
+    /**
      * Return the process id of the process.
      *
      * @return int The process id of the process.
@@ -66,9 +83,15 @@ class Process
      * Set the process id.
      *
      * @param int $pid The process id.
+     *
+     * @throws InvalidArgumentException if the process id is not valid.
      */
     public function setPid($pid)
     {
+        if (!$this->isPidValid($pid)) {
+            throw new InvalidArgumentException('The process id is not valid.');
+        }
+
         $this->pid = $pid;
     }
 
