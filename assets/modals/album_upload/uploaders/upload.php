@@ -18,66 +18,9 @@
     <button class="right disabled" id="btnNext">Next</button>
 </div>
 
-<script src="/assets/js/dropzone.js"></script>
-<script>
-    Dropzone.autoDiscover = false;
+<?php
+require_once '../../../../vendor/autoload.php';
+use Lib\ICanHaz;
 
-    $(function () {
-
-        var btnNext = $('#btnNext');
-        var btnBack = $('#btnBack');
-
-        btnBack.click(function () {
-            uploader.previousPage();
-        });
-
-        btnNext.click(function () {
-            uploader.nextPage();
-        });
-
-        $('#btnCancel').click(function () {
-            Uploader.abort();
-        });
-
-        if (uploader.tracks.length)
-            btnNext.removeClass('disabled');
-
-        var uploadedBytes = 0;
-        var dropzone = $("#dropzone");
-
-        dropzone.on("remove", function () {
-            //console.log('it has been destroyed');
-            dropzone.dropzone.reset();
-            dropzone.dropzone.destroy();
-        });
-
-        Dropzone.options.dropzone = {
-            acceptedFiles: '.mp3,.jpg,.jpeg,.png,.gif,.wav',
-            parallelUploads: 6,
-            url: '/assets/API/uploader.php?uploader_id=' + uploader.uploaderID + '&action=upload_files'
-        };
-
-        var myDropzone = new Dropzone("#dropzone");
-
-//        myDropzone.url = '/assets/API/upload_file.php?uploader_id=' + uploader.uploaderID;
-
-        myDropzone.on("totaluploadprogress", function (uploadprogress, total, current) {
-
-            var _uploadprogress = (current + uploadedBytes) / (total + uploadedBytes) * 100;
-
-            $('#progress').width(_uploadprogress + "%");
-        });
-
-        myDropzone.on("success", function (file) {
-            uploadedBytes += file.size;
-        });
-
-        myDropzone.on("queuecomplete", function () {
-            btnNext.removeClass('disabled');
-        });
-
-        myDropzone.on("sending", function () {
-            btnNext.addClass('disabled');
-        });
-    });
-</script>
+ICanHaz::js('/assets/js/dropzone.js');
+ICanHaz::js('upload.js', false, true);

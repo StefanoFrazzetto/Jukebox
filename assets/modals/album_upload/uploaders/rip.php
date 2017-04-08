@@ -1,65 +1,37 @@
 <div class="modalHeader">Album Uploader</div>
 <div class="modalBody center">
-    <button id="ripperCheckStatus">Check</button>
-    <button id="ripperStart">Start!</button>
-    <button id="ripperStop">Stop.</button>
+
+    <p>You can import an audio CD to the Jukebox using this feature.</p>
+
+    <div id="ripperMain" style="margin: 50px">
+        <button id="ripperStart">Start</button>
+        <button id="ripperStop" class="hidden">Abort</button>
+
+        <div id="ripperSuccess" class="hidden">
+            <p>CD imported successfully!</p>
+
+            <p>
+                <button id="ripperReset">Reset</button>
+            </p>
+
+            <!--<button id="ripperCheckStatus">Check</button>-->
+        </div>
+    </div>
+
+    <hr/>
+    <div class="progressBar full-wide" style="margin: 0">
+        <div class="progress" id="ripperProgress"></div>
+    </div>
 </div>
+
 <div class="modalFooter">
     <button id="btnBack">Back</button>
     <button id="btnCancel">Cancel</button>
     <button class="right disabled" id="btnNext">Next</button>
 </div>
 
-<script>
-    $(function () {
-        var btnNext = $('#btnNext');
-        var btnBack = $('#btnBack');
+<?php
+require_once '../../../../vendor/autoload.php';
+use Lib\ICanHaz;
 
-        var ripperCheckStatus = $('#ripperCheckStatus');
-        var ripperStart = $('#ripperStart');
-        var ripperStop = $('#ripperStop');
-
-        btnBack.click(function () {
-            uploader.previousPage();
-        });
-
-        btnNext.click(function () {
-            uploader.nextPage();
-        });
-
-        ripperCheckStatus.click(function () {
-            $.getJSON('/assets/API/uploader.php?action=get_ripper_status')
-                .done(function (data) {
-                    alert(JSON.stringify(data));
-                    console.log(data);
-                })
-                .fail(function () {
-                    error("Failed to check ripper status.");
-                });
-
-        });
-
-        ripperStart.click(function () {
-            $.getJSON('/assets/API/uploader.php?action=start_ripping&uploader_id=' + uploader.uploaderID)
-                .done(function (data) {
-                    alert(data.status);
-                    console.log(data);
-                })
-                .fail(function () {
-                    error("Failed to start ripping.");
-                });
-
-        });
-
-        ripperStop.click(function () {
-            $.getJSON('/assets/API/uploader.php?action=stop_ripping')
-                .done(function (data) {
-                    alert(data.status);
-                    console.log(data);
-                })
-                .fail(function () {
-                    error("Failed to stop ripping.");
-                });
-        })
-    });
-</script>
+ICanHaz::js('rip.js', false, true);

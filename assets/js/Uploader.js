@@ -85,6 +85,14 @@ Uploader.prototype.changePage = function (page) {
 
                     uploader.covers = data.covers;
 
+                    function extract(obj) {
+                        if (typeof obj === "object" && obj !== undefined && obj !== null)
+                            return Object.keys(obj).map(function (k) {
+                                return obj[k]
+                            });
+                        return [];
+                    }
+
                     function mapCD(CD) {
                         var arr = [];
 
@@ -92,7 +100,7 @@ Uploader.prototype.changePage = function (page) {
                             //noinspection JSUnfilteredForInLoop
                             var cd_no = parseInt(x.replace(/^CD/, ''));
                             //noinspection JSUnfilteredForInLoop
-                            arr[cd_no] = CD[x];
+                            arr[cd_no] = extract(CD[x]);
                         }
 
                         return arr;

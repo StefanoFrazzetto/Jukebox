@@ -46,6 +46,11 @@ switch ($action) {
         $return['percentage'] = $ripper->getPercentage();
         break;
 
+    case 'reset_ripping':
+        $ripper = new DiscRipper();
+        $ripper->reset();
+        break;
+
     case 'start_ripping':
         try {
             $ripper = new DiscRipper($uploader_id);
