@@ -24,10 +24,14 @@ class DiscRipper extends Disc
     /** @var string the directory where the files will be moved */
     protected $destination_dir;
 
+    /** @var string the id for the current uploader session */
+    private $uploader_id;
+
     public function __construct($uploader_id = '')
     {
         parent::__construct();
         if (!empty($uploader_id)) {
+            $this->uploader_id = $uploader_id;
             $this->destination_dir = Config::getPath('uploader').$uploader_id;
         }
     }
@@ -104,7 +108,7 @@ class DiscRipper extends Disc
 
         $pid = OS::executeWithEnv($this->handler, $arguments, true);
 
-        $process['destination_dir'] = $this->destination_dir;
+        $process['uploader_id'] = $this->uploader_id;
         $process['status'] = self::STATUS_RIPPING;
         $process['pid'] = $pid;
 
@@ -266,16 +270,15 @@ class DiscRipper extends Disc
     }
 
     /**
-     * Removes all the directory and files user for the process.
+     * Removes all the directories and files user for the process.
      */
     public function reset()
     {
         // Remove all the directories for the ripper
         FileUtils::remove(self::getParentPath(), true);
 
-        $destination_path = $this->getDestinationPath();
-        if (!empty($destination_path)) {
-            FileUtils::remove($this->destination_dir, true);
+        if (isset($this->uploader_id)) {
+            FileUtils::remove(self::getDestinationPath(), true);
         }
     }
 }
