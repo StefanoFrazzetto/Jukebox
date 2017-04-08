@@ -43,24 +43,24 @@ return [
     'paths' => [
         'document_root' => $_SERVER['DOCUMENT_ROOT'],
         'albums_root'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/',
-        'tmp_uploads'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
-        'assets'        => $_SERVER['DOCUMENT_ROOT'].'/assets',
+        'tmp_uploads'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/tmp_uploads/',
+        'assets'        => $_SERVER['DOCUMENT_ROOT'].'/assets/',
         'scripts'       => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/',
         'uploader'      => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
     ],
 
     'disc' => [
         'logs'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/logs/',
-        'parent_dir'    => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/',
         'scripts'       => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/',
         'status_file'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/status.json',
-        'progress_file' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/progress.json',
         'burner'        => [
-            'logs'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/burner/logs/',
-            'input'  => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/burner/input/',
-            'output' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/burner/output/',
+            'parent'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/',
+            'logs'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/logs/',
+            'input'  => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/input/',
+            'output' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/output/',
         ],
         'ripper' => [
+            'parent'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper',
             'input'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/input/',
             'handler'        => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/rip_handler.sh',
             'cdparanoia_log' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/cdparanoia.log',
