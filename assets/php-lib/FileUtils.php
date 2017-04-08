@@ -357,7 +357,7 @@ abstract class FileUtils
     public static function deleteDirectoriesOlderThan($parent_dir, $minutes)
     {
         $documentRoot = $_SERVER['DOCUMENT_ROOT'];
-        if (strpos($parent_dir, $documentRoot) !== 0) {
+        if (!StringUtils::contains($parent_dir, $documentRoot)) {
             throw new InvalidArgumentException('The directory must be located in the document root.');
         }
 
