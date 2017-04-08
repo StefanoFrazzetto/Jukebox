@@ -45,6 +45,37 @@ abstract class FileUtils
     }
 
     /**
+     * Writes the json representation of an array into a file.
+     *
+     * @param array $content the content to write.
+     * @param string $file_path the file path.
+     * @return bool true on success, false on failure.
+     */
+    public static function writeJson($content, $file_path)
+    {
+        if (empty($path)) {
+            throw new InvalidArgumentException('You must specify a valid path.');
+        }
+
+        if (!is_array($content)) {
+            throw new InvalidArgumentException('The content must be an array.');
+        }
+
+        $json_content = array();
+        if (file_exists($file_path)) {
+            $file_contents = file_get_contents($file_path);
+            $json_content = json_decode($file_contents, true);
+        }
+
+        foreach ($content as $key => $value) {
+            $json_content[$key] = $value;
+        }
+
+        $data = json_encode($json_content);
+        return file_put_contents($file_path, $data) !== false;
+    }
+
+    /**
      * Return true if a directory is empty.
      *
      * @param string $dir The directory to check
