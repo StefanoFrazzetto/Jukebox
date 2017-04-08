@@ -104,24 +104,6 @@ abstract class Disc
             return;
         }
 
-//        $content = self::getStatusFileContent();
-//
-//        $pid = intval($content['pid']);
-//        $process = new Process();
-//        $process->setPid($pid);
-//
-//        // If the process is running, get the specific status
-//        // calculate percentage, and set a message.
-//
-//        if (!$process->status()) {
-//            // check files...
-//
-//            // Process complete
-//            $this->setStatusMessagePercentage(self::STATUS_COMPLETE, 'process complete', 100);
-//
-//            return;
-//        }
-
         $this->updateStatus();
     }
 

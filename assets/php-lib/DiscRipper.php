@@ -3,6 +3,7 @@
 namespace Lib;
 
 use Exception;
+use InvalidArgumentException;
 
 /**
  * Class DiscRipper provides access to the disc device to
@@ -86,7 +87,7 @@ class DiscRipper extends Disc
             throw new Exception('The output directory was not specified.');
         }
 
-        if ($this->getStatus() != self::STATUS_IDLE && $this->getStatus() != self::STATUS_COMPLETE) {
+        if ($this->getStatus() != self::STATUS_IDLE) {
             return false;
         }
 
@@ -101,7 +102,6 @@ class DiscRipper extends Disc
         FileUtils::remove(self::getParentPath(), true);
         mkdir(dirname($this->cdparanoia_log_path), 0755, true);
         mkdir($this->input_dir, 0755, true);
-        mkdir($this->output_dir, 0755, true);
 
         // Set the total tracks before starting the process.
         $process['total_tracks'] = $this->getTotalTracks();
@@ -155,9 +155,14 @@ class DiscRipper extends Disc
         $pid = $content['pid'];
 
         $process = new Process();
-        $process->setPid($pid);
+        try {
+            $process->setPid($pid);
+            $process->stop();
+        } catch (InvalidArgumentException $x) {}
 
-        return $process->stop();
+        self::reset();
+
+        return true;
     }
 
     /**
@@ -187,8 +192,16 @@ class DiscRipper extends Disc
         $encoded = $this->getEncodedTracks();
         $ripped = $this->getRippedTracks();
 
+        $content = self::getStatusFileContent();
+        $pid = intval($content['pid']);
+        $process = new Process();
+        try {
+            $process->setPid($pid);
+        } catch (InvalidArgumentException $x) {}
+        $process_status = $process->status();
+
         // Calculate the process percentage
-        if ($ripped != 0) {
+        if ($ripped != 0 && $process_status) {
             $status = self::STATUS_RIPPING;
             $average = floor(($ripped + $encoded) / 2);
             $percentage = $this->calculatePercentage($average, $total_tracks);
@@ -275,7 +288,10 @@ class DiscRipper extends Disc
     public function reset()
     {
         // Remove all the directories for the ripper
-        FileUtils::remove(self::getParentPath(), true);
+        $parent = self::getParentPath();
+        if (file_exists(self::getParentPath())) {
+            FileUtils::remove($parent, true);
+        }
 
         if (isset($this->uploader_id)) {
             FileUtils::remove(self::getDestinationPath(), true);
