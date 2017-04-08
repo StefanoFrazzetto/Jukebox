@@ -61,11 +61,10 @@ return [
             'output' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/burner/output/',
         ],
         'ripper' => [
-            'cdparanoia_log' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/logs/ripper/cdparanoia.log',
+            'input'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/input/',
             'handler'        => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/rip_handler.sh',
-            'lame_log'       => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/logs/ripper/lame.log',
-            'input'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/ripper/input/',
-            'output'         => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/ripper/output/',
+            'cdparanoia_log' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/cdparanoia.log',
+            'lame_log'       => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/lame.log'
         ],
     ],
 
