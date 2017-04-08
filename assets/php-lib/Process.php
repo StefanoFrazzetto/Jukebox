@@ -133,6 +133,10 @@ class Process
      */
     public function status()
     {
+        if (!$this->isPidValid($this->pid)) {
+            return false;
+        }
+
         $command = 'ps -p '.$this->pid;
         exec($command, $op);
         if (!isset($op[1])) {
