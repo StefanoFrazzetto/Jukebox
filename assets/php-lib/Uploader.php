@@ -175,7 +175,10 @@ class Uploader
     private static function removeOldDirectories()
     {
         $hoursInMinutes = 4 * 60;
+        // Delete the uploader directories
         FileUtils::deleteDirectoriesOlderThan(static::getPath(), $hoursInMinutes);
+        // Delete the ripper input directory
+        FileUtils::deleteDirectoriesOlderThan(DiscRipper::getParentPath(), $hoursInMinutes);
     }
 
     /**

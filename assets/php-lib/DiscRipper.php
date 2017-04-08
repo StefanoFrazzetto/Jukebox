@@ -270,8 +270,8 @@ class DiscRipper extends Disc
      */
     public function reset()
     {
-        FileUtils::remove($this->input_dir, true);
-        FileUtils::remove($this->status_file, false);
+        // Remove all the directories for the ripper
+        FileUtils::remove(self::getParentPath(), true);
 
         $destination_path = $this->getDestinationPath();
         if (!empty($destination_path)) {
