@@ -47,6 +47,17 @@ class DiscRipper extends Disc
     }
 
     /**
+     * Returns the path where the ripped tracks are saved.
+     *
+     * @return string the path where the ripped tracks are saved.
+     */
+    public static function getInputPath()
+    {
+        $config = new Config();
+        return $config->get('disc')['ripper']['input'];
+    }
+
+    /**
      * Start ripping a CD/DVD.
      *
      * @throws Exception if no directory was passed to the constructor.
