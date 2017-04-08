@@ -58,6 +58,17 @@ class DiscRipper extends Disc
     }
 
     /**
+     * Returns the path where the ripper directories are saved.
+     *
+     * @return string the path where the ripper directories are saved.
+     */
+    public static function getParentPath()
+    {
+        $config = new Config();
+        return $config->get('disc')['ripper']['parent'];
+    }
+
+    /**
      * Start ripping a CD/DVD.
      *
      * @throws Exception if no directory was passed to the constructor.
@@ -83,7 +94,7 @@ class DiscRipper extends Disc
             'encoding_dir'        => $this->destination_dir
         ];
 
-        FileUtils::remove($this->parent_dir, true);
+        FileUtils::remove(self::getParentPath(), true);
         mkdir(dirname($this->cdparanoia_log_path), 0755, true);
         mkdir($this->input_dir, 0755, true);
         mkdir($this->output_dir, 0755, true);
@@ -154,7 +165,6 @@ class DiscRipper extends Disc
 
         $this->handler = $paths['handler'];
         $this->input_dir = $paths['input'];
-        $this->output_dir = $paths['output'];
         $this->cdparanoia_log_path = $paths['cdparanoia_log'];
         $this->lame_log_path = $paths['lame_log'];
     }
@@ -233,8 +243,7 @@ class DiscRipper extends Disc
      */
     public function getRippedTracks()
     {
-        $config = new Config();
-        $path = $config->get('disc')['ripper']['input'];
+        $path = self::getInputPath();
 
         return FileUtils::countFiles($path);
     }
