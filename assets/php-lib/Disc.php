@@ -66,8 +66,6 @@ abstract class Disc
     /** @var string The directory where the ready to use files are saved. */
     protected $destination_dir;
 
-    /** @var string The directory containing the disc ripper/burner sub directories */
-    protected $parent_dir;
 
     /** @var int The process id */
     protected $pid;
@@ -78,7 +76,6 @@ abstract class Disc
         $this->config = $config->get('disc');
         $this->status_file = $this->config['status_file'];
 
-        $this->parent_dir = $this->config['parent_dir'];
         $this->scripts_dir = $this->config['scripts'].'/disc';
         $this->logs_dir = $this->config['logs'];
 
