@@ -28,8 +28,14 @@ class Uploader
     /** @const string the status in case of success */
     const STATUS_SUCCESS = 'success';
 
+    /** @const string the default status */
+    const STATUS_IDLE = 'idle';
+
     /** @const string the status in case of error */
     const STATUS_ERROR = 'error';
+
+    /** @const string the status when the uploader is working */
+    const STATUS_UPLOADING = 'uploading';
 
     /** @const string the status file name */
     const STATUS_FILE = 'uploader_status.json';
@@ -37,12 +43,10 @@ class Uploader
     /** @const array the array of allowed music extensions */
     const ALLOWED_MUSIC_EXTENSIONS = ['mp3'];
 
-    /** @var string the uploader temp directory */
-    private $tmp_path;
-
     /** @var int the uploader source */
     private $source = 2;
 
+    /** @var  string the uploader session id */
     private $uploader_id;
 
     private $music_brainz_info;
@@ -54,8 +58,6 @@ class Uploader
     public function __construct($media_source = '')
     {
         $this->source = $media_source;
-
-        $this->tmp_path = self::getPath();
     }
 
     /**
@@ -69,30 +71,55 @@ class Uploader
     }
 
     /**
-     * @return string JSON that indicates the status of the upload.
+     * @return string the upload status.
      */
     public static function getStatus()
     {
         $config_path = self::getPath();
+        $content = json_decode($config_path.self::STATUS_FILE, true);
 
-        return json_encode($config_path . self::STATUS_FILE);
+        return isset($content['status']) ? $content['status'] : self::STATUS_IDLE;
     }
 
     /**
      * Sets the current status in the status file.
      *
-     * @param string $json The JSON file to be saved
+     * @param string $status the uploader status
+     *
+     * @return bool true on success, false on failure.
      */
-    public static function setStatus($json)
+    public static function setStatus($status)
     {
-        if (empty($json)) {
-            throw new InvalidArgumentException('The parameter must not be empty.');
-        }
+        $data['status'] = $status;
+        $status_file = self::getPath().self::STATUS_FILE;
 
-        $status_file = self::getPath() . self::STATUS_FILE;
-        if (!file_exists($status_file)) {
-            file_put_contents($status_file, '');
-        }
+        return FileUtils::writeToJson($data, $status_file);
+    }
+
+    /**
+     * @return string the upload status.
+     */
+    public static function getUploaderId()
+    {
+        $config_path = self::getPath();
+        $content = json_decode($config_path.self::STATUS_FILE, true);
+
+        return isset($content['uploader_id']) ? $content['uploader_id'] : null;
+    }
+
+    /**
+     * Sets the session id into the status file.
+     *
+     * @param string $uploader_id the uploader id.
+     *
+     * @return bool true on success, false on failure.
+     */
+    public static function setUploaderId($uploader_id)
+    {
+        $data['uploader_id'] = $uploader_id;
+        $status_file = self::getPath().self::STATUS_FILE;
+
+        return FileUtils::writeToJson($data, $status_file);
     }
 
     /**
@@ -177,8 +204,6 @@ class Uploader
         $hoursInMinutes = 4 * 60;
         // Delete the uploader directories
         FileUtils::deleteDirectoriesOlderThan(static::getPath(), $hoursInMinutes);
-        // Delete the ripper input directory
-        FileUtils::deleteDirectoriesOlderThan(DiscRipper::getParentPath(), $hoursInMinutes);
     }
 
     /**
@@ -343,7 +368,7 @@ class Uploader
         $cover = isset($cover_info[0]) ? $cover_info[0] : null;
 
         $info = [
-            'title' => $this->getAlbumTitle(),
+            'title'  => $this->getAlbumTitle(),
             'titles' => [],
             'tracks' => [
                 "CD$cd_no" => $tracks_info,
@@ -357,7 +382,7 @@ class Uploader
 
     private function getTracksInfo()
     {
-        $tracks_info = [];
+        $tracks_info = array();
         $full_path = self::getPath() . $this->uploader_id;
 
         $finder = new Finder();
@@ -375,13 +400,15 @@ class Uploader
             $tracks_info = $this->createTracksInfoFromFiles($tracks);
         }
 
+        file_put_contents('/tmp/uploader-debug-info.log', $full_path);
+        file_put_contents('/tmp/uploader-debug-tracks.log', "Tracks: ". print_r($tracks, true) ." -- Tracks info: " . print_r($tracks_info, true));
         return $tracks_info;
     }
 
     private function createTracksInfoMusicBrainz($tracks)
     {
         $index = 1;
-        $tracks_info = [];
+        $tracks_info = array();
         $music_brainz_info = $this->getMusicBrainzInfo();
 
         foreach ($tracks as $track) {
