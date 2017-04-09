@@ -56,7 +56,7 @@ class MusicBrainz
         $this->disc_id = $disc_id;
         $query = "http://musicbrainz.org/ws/2/discid/$disc_id?inc=recordings+artist-credits&fmt=json";
 
-        $this->json = file_get_contents($query);
+        $this->json = @file_get_contents($query);
         if ($this->json === false) {
             throw new Exception('Error while contacting the MusicBrainz API: '.$this->json);
         }
