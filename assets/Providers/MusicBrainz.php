@@ -13,10 +13,9 @@ ini_set('user_agent', 'Jukebox/1.0.0 (info.freelancewd@gmail.com)');
  *
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
  *
- * @version 2.0.0
+ * @version 2.0.1
  *
  * @see http://musicbrainz.org/doc/Development/XML_Web_Service/Version_2
- * @licence GNU AGPL v3 - https://www.gnu.org/licenses/agpl-3.0.txt
  */
 class MusicBrainz
 {
@@ -123,7 +122,7 @@ class MusicBrainz
     public function getParsedTracks()
     {
         if (!is_array($this->tracks) || count($this->tracks) <= 0) {
-            return;
+            return array();
         }
 
         $temp_tracks = [];
