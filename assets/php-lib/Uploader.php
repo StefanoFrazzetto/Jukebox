@@ -61,6 +61,17 @@ class Uploader
     }
 
     /**
+     * @return string the upload status.
+     */
+    public static function getStatus()
+    {
+        $config_path = self::getPath();
+        $content = json_decode($config_path . self::STATUS_FILE, true);
+
+        return isset($content['status']) ? $content['status'] : self::STATUS_IDLE;
+    }
+
+    /**
      * @return string the path to the temp folder
      */
     public static function getPath()
@@ -68,17 +79,6 @@ class Uploader
         $config = new Config();
 
         return $config->get('paths')['uploader'];
-    }
-
-    /**
-     * @return string the upload status.
-     */
-    public static function getStatus()
-    {
-        $config_path = self::getPath();
-        $content = json_decode($config_path.self::STATUS_FILE, true);
-
-        return isset($content['status']) ? $content['status'] : self::STATUS_IDLE;
     }
 
     /**
@@ -91,9 +91,9 @@ class Uploader
     public static function setStatus($status)
     {
         $data['status'] = $status;
-        $status_file = self::getPath().self::STATUS_FILE;
+        $status_file = self::getPath() . self::STATUS_FILE;
 
-        return FileUtils::writeToJson($data, $status_file);
+        return FileUtils::writeJson($data, $status_file);
     }
 
     /**
@@ -102,7 +102,7 @@ class Uploader
     public static function getUploaderId()
     {
         $config_path = self::getPath();
-        $content = json_decode($config_path.self::STATUS_FILE, true);
+        $content = json_decode($config_path . self::STATUS_FILE, true);
 
         return isset($content['uploader_id']) ? $content['uploader_id'] : null;
     }
@@ -117,15 +117,16 @@ class Uploader
     public static function setUploaderId($uploader_id)
     {
         $data['uploader_id'] = $uploader_id;
-        $status_file = self::getPath().self::STATUS_FILE;
+        $status_file = self::getPath() . self::STATUS_FILE;
 
-        return FileUtils::writeToJson($data, $status_file);
+        return FileUtils::writeJson($data, $status_file);
     }
 
     /**
      * Uploads one or more files into the specified directory.
      *
-     * @param string $uploadFolderID The destination directory
+     * @param string $uploadFolderID The destination directory.
+     * @param null | integer $cd defines in which cd the file should be saved, when null the id3 is used or 1.
      *
      * @throws InvalidArgumentException if no argument is passed.
      * @throws UploadException          if the file was not uploaded or if the
@@ -133,7 +134,7 @@ class Uploader
      *
      * @return bool true if the operation succeeds, false otherwise.
      */
-    public static function upload($uploadFolderID)
+    public static function upload($uploadFolderID, $cd = null)
     {
         if (empty($uploadFolderID)) {
             throw new InvalidArgumentException('The upload folder ID must not be empty.');
@@ -160,8 +161,24 @@ class Uploader
         $file_name = StringUtils::cleanString($_FILES['file']['name']);
         $source_file = $_FILES['file']['tmp_name'];
 
-        // Check if the destination directory exists
+
         $destination_path = self::getPath() . $uploadFolderID;
+
+        // If a track is uploaded, attempts to store it in the correct cd.
+        if (in_array($file_extension, self::ALLOWED_MUSIC_EXTENSIONS)) {
+            // If the CD is null we will opt for an auto-mode that chooses the cd.
+            if ($cd === null) {
+                $id3 = new ID3($_FILES['file']['tmp_name']);
+
+                $cd = @$id3->getSetNumber();
+
+                if (empty($cd)) $cd = 1;
+
+                $destination_path .= "/CD$cd";
+            }
+        }
+
+        // Check if the destination directory exists
         if (!is_dir($destination_path)) {
             mkdir($destination_path, 0777, true);
         }
@@ -361,18 +378,15 @@ class Uploader
         }
 
         $this->uploader_id = $uploader_id;
-        $cd_no = isset($_SESSION['cd']) ? $_SESSION['cd'] : 1;
         $tracks_info = $this->getTracksInfo();
         $cover_info = $this->getCoverInfo();
 
         $cover = isset($cover_info[0]) ? $cover_info[0] : null;
 
         $info = [
-            'title'  => $this->getAlbumTitle(),
+            'title' => $this->getAlbumTitle(),
             'titles' => [],
-            'tracks' => [
-                "CD$cd_no" => $tracks_info,
-            ],
+            'tracks' => $tracks_info,
             'cover' => $cover,
             'covers' => $cover_info,
         ];
@@ -382,26 +396,31 @@ class Uploader
 
     private function getTracksInfo()
     {
-        $tracks_info = array();
+        $tracks_info = [];
         $full_path = self::getPath() . $this->uploader_id;
 
-        $finder = new Finder();
-        $tracks = $finder->in($full_path)->files()->name('*.mp3')->sortByName();
+        $cdFinder = new Finder();
+        $cds = $cdFinder->in($full_path)->directories()->sortByName();
 
-        if ($this->source == static::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
-            $tracks_info = $this->createTracksInfoMusicBrainz($tracks);
-        }
+        foreach ($cds as $cd) {
+            $re = '/[0-9]+$/';
+            preg_match_all($re, $cd, $matches, PREG_SET_ORDER, 0);
+            $cdNo = $matches[0][0];
 
-        if ($this->source == static::MEDIA_SOURCE_FILES) { // If the source is just files
-            $tracks_info = $this->createTracksInfoFromID3($tracks);
-        }
+            $finder = new Finder();
+            $tracks = $finder->in($full_path . "/CD$cdNo/")->files()->name('*.mp3')->sortByName();
 
-        if (empty($tracks_info)) {
-            $tracks_info = $this->createTracksInfoFromFiles($tracks);
+            if ($this->source == static::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
+                $tracks_info["CD$cdNo"] = $this->createTracksInfoMusicBrainz($tracks);
+            } else if ($this->source == static::MEDIA_SOURCE_FILES) { // If the source is just files
+                $tracks_info["CD$cdNo"] = $this->createTracksInfoFromID3($tracks);
+            } else {
+                $tracks_info["CD$cdNo"] = $this->createTracksInfoFromFiles($tracks);
+            }
         }
 
         file_put_contents('/tmp/uploader-debug-info.log', $full_path);
-        file_put_contents('/tmp/uploader-debug-tracks.log', "Tracks: ". print_r($tracks, true) ." -- Tracks info: " . print_r($tracks_info, true));
+        file_put_contents('/tmp/uploader-debug-tracks.log', "Tracks: " . print_r($tracks_info, true) . " -- Tracks info: " . print_r($tracks_info, true));
         return $tracks_info;
     }
 
