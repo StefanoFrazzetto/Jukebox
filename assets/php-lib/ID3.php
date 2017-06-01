@@ -59,13 +59,9 @@ class ID3
             // Parses the "Part of a set" string
             if (isset($this->tags['TPOS'])) {
                 $sets = $this->tags['TPOS'];
-                if (preg_match("([0-9]+)\\/([0-9]+)", $sets, $setsMatches)) {
-                    if (isset($this->tags['TPOS1'])) {
-                        $this->tags['TPOS1'] = intval($setsMatches[1][0]);
-                    }
-                    if (isset($this->tags['TPOS2'])) {
-                        $this->tags['TPOS2'] = intval($setsMatches[2][0]);
-                    }
+                if (preg_match("/([0-9]+)\/([0-9]+)/", $sets, $setsMatches)) {
+                    $this->tags['TPOS1'] = intval($setsMatches[1][0]);
+                    $this->tags['TPOS2'] = intval($setsMatches[2][0]);
                 }
             }
         }
