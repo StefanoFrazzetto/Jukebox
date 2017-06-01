@@ -162,7 +162,7 @@ Player.prototype.setVolume = function (value) {
 
     this.mediaElement.volume = value;
 
-    if (value != oldValue)
+    if (value !== oldValue)
         this.callback(this.onVolumeChange);
 };
 
@@ -258,7 +258,7 @@ Player.prototype.playSongAtIndex = function (index) {
         this.callback(this.onTrackChange);
     }
 
-    if (typeof oldSong !== "undefined" && oldSong.album_id != newSong.album_id) {
+    if (typeof oldSong !== "undefined" && oldSong.album_id !== newSong.album_id) {
         this.callback(this.onAlbumChange)
     }
 };
@@ -318,7 +318,7 @@ Player.prototype.addAlbumSongToPlaylist = function (albumId, trackNumber) {
     var self = this;
 
     this.getAlbumPlaylist(albumId, function (songs) {
-        if (typeof songs[trackNumber] != "undefined")
+        if (typeof songs[trackNumber] !== "undefined")
             self.addSongToPlaylist(songs[trackNumber]);
         else
             console.warn("Track " + trackNumber + " not found in album " + albumId);
@@ -329,10 +329,10 @@ Player.prototype.addAlbumSongToPlaylist = function (albumId, trackNumber) {
 Player.prototype.addAlbumSongsToPlaylist = function (albumId, trackNumbers) {
     var self = this;
 
-    if (typeof albumId != "number")
+    if (typeof albumId !== "number")
         return;
 
-    if (typeof trackNumbers != "object")
+    if (typeof trackNumbers !== "object")
         return;
 
     this.getAlbumPlaylist(albumId, function (songs) {
@@ -398,7 +398,7 @@ Player.getAlbumPath = function (albumId) {
 };
 
 Player.prototype.getJSON = function (url, successHandler, errorHandler) {
-    var xhr = typeof XMLHttpRequest != 'undefined'
+    var xhr = typeof XMLHttpRequest !== 'undefined'
         ? new XMLHttpRequest()
         : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);
@@ -578,7 +578,7 @@ EQ.prototype.getGain = function (band) {
 };
 
 EQ.prototype.setBands = function (bands) {
-    if (typeof bands != "object")
+    if (typeof bands !== "object")
         return;
 
     this.disconnect();
