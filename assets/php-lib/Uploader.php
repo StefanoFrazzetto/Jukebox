@@ -167,15 +167,15 @@ class Uploader
         // If a track is uploaded, attempts to store it in the correct cd.
         if (in_array($file_extension, self::ALLOWED_MUSIC_EXTENSIONS)) {
             // If the CD is null we will opt for an auto-mode that chooses the cd.
-            if ($cd === null) {
+            if (empty($cd) && $cd < 1) {
                 $id3 = new ID3($_FILES['file']['tmp_name']);
 
                 $cd = @$id3->getSetNumber();
 
                 if (empty($cd)) $cd = 1;
-
-                $destination_path .= "/CD$cd";
             }
+
+            $destination_path .= "/CD$cd";
         }
 
         // Check if the destination directory exists
