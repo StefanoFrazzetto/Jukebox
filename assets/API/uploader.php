@@ -12,6 +12,7 @@ use Symfony\Component\Finder\Finder;
 
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 $uploader_id = filter_input(INPUT_GET, 'uploader_id', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
+$cd = filter_input(INPUT_GET, 'cd', FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE);
 $media_source = filter_input(INPUT_GET, 'media_source', FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
 $json = file_get_contents('php://input');
 
@@ -33,7 +34,7 @@ switch ($action) {
 
     case 'upload_files':
         try {
-            Uploader::upload($uploader_id);
+            Uploader::upload($uploader_id, $cd);
         } catch (Exception $e) {
             $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage(), 400);
         }

@@ -9,6 +9,7 @@ function Uploader() {
     this.uploadMethod = null;
 
     this.uploaderID = null;
+    this.uploadingCD = null;
 
     this.title = null;
     this.titles = [];
@@ -340,6 +341,13 @@ Uploader.prototype.done = function () {
             alert("Unable to upload album. " + JSON.parse(error.responseText).message);
             console.log(error);
         });
+};
+
+Uploader.prototype.incrementCD = function () {
+    if (this.uploadingCD === null)
+        this.uploadingCD = 2;
+    else
+        this.uploadingCD++;
 };
 
 Uploader.abort = function () {
