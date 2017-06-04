@@ -21,9 +21,10 @@ $(function () {
     btnNextCD.click(function () {
         uploader.incrementCD();
 
-        $(this).text("Add CD" + (uploader.uploadingCD + 1));
+        $(this).text("Add CD" + (uploader.uploadingCD + 1)).addClass('disabled');
 
         myDropzone.options.url = baseUrl + '&cd=' + uploader.uploadingCD;
+        myDropzone.removeAllFiles(true);
     });
 
     $('#btnCancel').click(function () {
