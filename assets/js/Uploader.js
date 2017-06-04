@@ -284,11 +284,12 @@ Uploader.prototype.getAllArtists = function () {
 
     uploader.tracks.forEach(function (cd) {
         cd.forEach(function (track) {
-            track.artists.forEach(function (artist) {
-                if (artists.indexOf(artist) === -1) {
-                    artists.push(artist);
-                }
-            });
+            if (typeof track.artists === "object" && track.artists.length > 0)
+                track.artists.forEach(function (artist) {
+                    if (artists.indexOf(artist) === -1) {
+                        artists.push(artist);
+                    }
+                });
         });
     });
 
