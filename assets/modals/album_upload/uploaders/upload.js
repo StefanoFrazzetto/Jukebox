@@ -10,6 +10,9 @@ $(function () {
     var btnBack = $('#btnBack');
     var btnNextCD = $('#btnNextCD');
 
+    var uploadedBytes = 0;
+    var dropzone = $("#dropzone");
+
     btnBack.click(function () {
         uploader.previousPage();
     });
@@ -25,6 +28,7 @@ $(function () {
 
         myDropzone.options.url = baseUrl + '&cd=' + uploader.uploadingCD;
         myDropzone.removeAllFiles(true);
+        uploadedBytes = 0;
     });
 
     $('#btnCancel').click(function () {
@@ -35,9 +39,6 @@ $(function () {
         btnNext.removeClass('disabled');
         btnNextCD.removeClass('disabled');
     }
-
-    var uploadedBytes = 0;
-    var dropzone = $("#dropzone");
 
     dropzone.on("remove", function () {
         //console.log('it has been destroyed');
