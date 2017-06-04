@@ -227,9 +227,10 @@ Uploader.prototype.createSongsTable = function (container, editable) {
             if (editable) {
                 td3 = $("<td></td>");
 
-                track.artists.forEach(function (_, index) {
-                    td3.append(createArtistChip(index, track));
-                });
+                if (track.artists !== null)
+                    track.artists.forEach(function (_, index) {
+                        td3.append(createArtistChip(index, track));
+                    });
 
                 var add = $('<div class="chip round clickable"><i class="fa fa-plus"></i></div>');
 
@@ -284,7 +285,7 @@ Uploader.prototype.getAllArtists = function () {
 
     uploader.tracks.forEach(function (cd) {
         cd.forEach(function (track) {
-            if (typeof track.artists === "object" && track.artists.length > 0)
+            if (track.artists !== null && typeof track.artists === "object")
                 track.artists.forEach(function (artist) {
                     if (artists.indexOf(artist) === -1) {
                         artists.push(artist);
