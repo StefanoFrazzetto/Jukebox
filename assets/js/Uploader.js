@@ -203,6 +203,10 @@ Uploader.prototype.createSongsTable = function (container, editable) {
 
     uploader.tracks.forEach(function (cd) {
         cd.forEach(function (track, no) {
+            if (typeof track.title !== "string" || track.title === "") {
+                track.title = "Track " + (no + 1);
+            }
+
             var tr = $("<tr>");
 
             var td1 = $("<td>" + (no + 1) + "</td>");
