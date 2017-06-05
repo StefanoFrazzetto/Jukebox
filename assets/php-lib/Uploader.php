@@ -432,7 +432,7 @@ class Uploader
 
         foreach ($tracks as $track) {
             $track_info = $music_brainz_info[$index];
-            $tracks_info[$index] = [
+            $tracks_info[] = [
                 'number' => $index,
                 'title' => $track_info['title'],
                 'url' => basename($track),

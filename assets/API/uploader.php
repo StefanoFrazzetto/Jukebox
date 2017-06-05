@@ -54,7 +54,7 @@ switch ($action) {
 
     case 'start_ripping':
         try {
-            $ripper = new DiscRipper($uploader_id);
+            $ripper = new DiscRipper($uploader_id, $cd);
             if (!$ripper->rip()) {
                 $return = Uploader::createStatus(Uploader::STATUS_ERROR, 'the disc drive is busy');
             }

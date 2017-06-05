@@ -28,12 +28,24 @@ class DiscRipper extends Disc
     /** @var string the id for the current uploader session */
     private $uploader_id;
 
-    public function __construct($uploader_id = '')
+    public function __construct($uploader_id = '', $cd = null)
     {
         parent::__construct();
+        if (empty($cd)) {
+            $cd = 1;
+        } else if (!is_int($cd) || $cd < 1) {
+            throw new Exception("The parameter passes for the cd ($cd) is not valid.");
+        }
+
         if (!empty($uploader_id)) {
             $this->uploader_id = $uploader_id;
-            $this->destination_dir = Config::getPath('uploader').$uploader_id;
+            $path = Config::getPath('uploader') . $uploader_id . "/CD$cd";
+
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            $this->destination_dir = $path;
         }
     }
 
@@ -49,28 +61,6 @@ class DiscRipper extends Disc
         }
 
         return $this->disc_id;
-    }
-
-    /**
-     * Returns the path where the ripped tracks are saved.
-     *
-     * @return string the path where the ripped tracks are saved.
-     */
-    public static function getInputPath()
-    {
-        $config = new Config();
-        return $config->get('disc')['ripper']['input'];
-    }
-
-    /**
-     * Returns the path where the ripper directories are saved.
-     *
-     * @return string the path where the ripper directories are saved.
-     */
-    public static function getParentPath()
-    {
-        $config = new Config();
-        return $config->get('disc')['ripper']['parent'];
     }
 
     /**
@@ -110,12 +100,24 @@ class DiscRipper extends Disc
 
         $process['uploader_id'] = $this->uploader_id;
         $process['status'] = self::STATUS_RIPPING;
+        $process['destination_dir'] = $this->destination_dir;
         $process['pid'] = $pid;
 
         // If it returns false, it means that it was not possible to create the file,
         // therefore the directory was not created, therefore the script did not create
         // the necessary folders.
         return $this->createStatusFile($process) && $pid != 0;
+    }
+
+    /**
+     * Returns the path where the ripper directories are saved.
+     *
+     * @return string the path where the ripper directories are saved.
+     */
+    public static function getParentPath()
+    {
+        $config = new Config();
+        return $config->get('disc')['ripper']['parent'];
     }
 
     /**
@@ -163,6 +165,28 @@ class DiscRipper extends Disc
         self::reset();
 
         return true;
+    }
+
+    /**
+     * Removes all the directories and files user for the process.
+     */
+    public function reset()
+    {
+        // Remove all the directories for the ripper
+        $parent = self::getParentPath();
+        if (file_exists(self::getParentPath())) {
+            FileUtils::remove($parent, true);
+        }
+
+        if (isset($this->uploader_id)) {
+            FileUtils::remove(self::getDestinationPath(), true);
+        }
+    }
+
+    private function getDestinationPath()
+    {
+        $status_file = $this->getStatusFileContent();
+        return $status_file['destination_dir'];
     }
 
     /**
@@ -235,12 +259,6 @@ class DiscRipper extends Disc
         return $status;
     }
 
-    private function getDestinationPath()
-    {
-        $status_file = $this->getStatusFileContent();
-        return Uploader::getPath().$status_file['uploader_id'];
-    }
-
     /**
      * Return the number of encoded tracks.
      *
@@ -266,6 +284,17 @@ class DiscRipper extends Disc
     }
 
     /**
+     * Returns the path where the ripped tracks are saved.
+     *
+     * @return string the path where the ripped tracks are saved.
+     */
+    public static function getInputPath()
+    {
+        $config = new Config();
+        return $config->get('disc')['ripper']['input'];
+    }
+
+    /**
      * Return the percentage using 2 values.
      *
      * @param int|float $val1 the partial value
@@ -280,21 +309,5 @@ class DiscRipper extends Disc
         }
 
         return intval(round(($val1 / $val2) * 100));
-    }
-
-    /**
-     * Removes all the directories and files user for the process.
-     */
-    public function reset()
-    {
-        // Remove all the directories for the ripper
-        $parent = self::getParentPath();
-        if (file_exists(self::getParentPath())) {
-            FileUtils::remove($parent, true);
-        }
-
-        if (isset($this->uploader_id)) {
-            FileUtils::remove(self::getDestinationPath(), true);
-        }
     }
 }
