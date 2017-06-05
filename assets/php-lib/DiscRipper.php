@@ -34,7 +34,7 @@ class DiscRipper extends Disc
         if (empty($cd)) {
             $cd = 1;
         } else if (!is_int($cd) || $cd < 1) {
-            throw new Exception("The parameter passes for the cd ($cd) is not valid.");
+            throw new Exception("The parameter passes for the cd (" . var_export($cd, true) . ") is not valid.");
         }
 
         if (!empty($uploader_id)) {
@@ -82,11 +82,11 @@ class DiscRipper extends Disc
         }
 
         $arguments = [
-            'device'              => $this->device_path,
+            'device' => $this->device_path,
             'cdparanoia_log_path' => $this->cdparanoia_log_path,
-            'lame_log_path'       => $this->lame_log_path,
-            'ripping_dir'         => $this->input_dir,
-            'encoding_dir'        => $this->destination_dir
+            'lame_log_path' => $this->lame_log_path,
+            'ripping_dir' => $this->input_dir,
+            'encoding_dir' => $this->destination_dir
         ];
 
         FileUtils::remove(self::getParentPath(), true);
@@ -160,7 +160,8 @@ class DiscRipper extends Disc
         try {
             $process->setPid($pid);
             $process->stop();
-        } catch (InvalidArgumentException $x) {}
+        } catch (InvalidArgumentException $x) {
+        }
 
         self::reset();
 
@@ -181,6 +182,8 @@ class DiscRipper extends Disc
         if (isset($this->uploader_id)) {
             FileUtils::remove(self::getDestinationPath(), true);
         }
+
+        FileUtils::remove($this->status_file);
     }
 
     private function getDestinationPath()
@@ -221,7 +224,8 @@ class DiscRipper extends Disc
         $process = new Process();
         try {
             $process->setPid($pid);
-        } catch (InvalidArgumentException $x) {}
+        } catch (InvalidArgumentException $x) {
+        }
         $process_status = $process->status();
 
         // Calculate the process percentage
