@@ -427,17 +427,24 @@ class Uploader
     private function createTracksInfoMusicBrainz($tracks)
     {
         $index = 1;
-        $tracks_info = array();
+        $tracks_info = [];
         $music_brainz_info = $this->getMusicBrainzInfo();
 
         foreach ($tracks as $track) {
-            $track_info = $music_brainz_info[$index];
+            if (isset($music_brainz_info[$index])) {
+                $title = $music_brainz_info[$index]['title'];
+                $artists = $music_brainz_info[$index]['artists'];
+            } else {
+                $title = "Track $index";
+                $artists = [];
+            }
+
             $tracks_info[] = [
                 'number' => $index,
-                'title' => $track_info['title'],
+                'title' => $title,
                 'url' => basename($track),
                 'length' => FileUtils::getTrackLength($track),
-                'artists' => $track_info['artists'],
+                'artists' => $artists,
             ];
 
             $index++;
