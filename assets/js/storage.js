@@ -38,7 +38,7 @@ var storage = {
             var where = [];
 
             what.forEach(function (elem) {
-                if (typeof Type != "undefined")
+                if (typeof Type !== "undefined")
                     elem = Type.read(elem);
 
                 where[elem.id] = elem;
@@ -94,14 +94,14 @@ var storage = {
     },
 
     getArtist: function (id) {
-        if (typeof this.artists[id] != "undefined")
+        if (typeof this.artists[id] !== "undefined")
             return this.artists[id];
         else
             return null;
     },
 
     getRadio: function (id) {
-        if (typeof this.radios[id] != "undefined")
+        if (typeof this.radios[id] !== "undefined")
             return this.radios[id];
         else
             return null;
@@ -117,7 +117,7 @@ var storage = {
     },
 
     makeArtistsString: function (artists) {
-        if (typeof artists != "object")
+        if (typeof artists !== "object")
             return '';
 
         var artists_names = [];
@@ -240,7 +240,7 @@ var storage = {
     deleteRadio: function (id) {
         if (confirm("Are you sure?")) {
             $.getJSON('assets/API/delete_radio.php?id=' + id).done(function (response) {
-                if (response.status == "success") {
+                if (response.status === "success") {
                     $('.aRadio[data-id="' + id + '"]').remove();
                 }
                 else {
@@ -290,7 +290,7 @@ Song.prototype.read = function (data) {
 };
 
 Song.prototype.getUrl = function () {
-    return '/jukebox/' + this.album_id + '/' + this.url;
+    return '/jukebox/' + this.album_id + '/CD' + this.cd + '/' + this.url;
 };
 
 Song.prototype.getArtistsNames = function () {

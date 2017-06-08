@@ -2,6 +2,7 @@
 
 require_once '../../vendor/autoload.php';
 
+use Lib\Config;
 use Lib\Cover;
 use Lib\Database;
 use Lib\FileUtils;
@@ -38,8 +39,7 @@ class EditAlbum
                 $cover->saveToAlbum($album_id);
             }
 
-            $tracks_no = count($array['album_tracks']);
-            $data = ['title' => $array['album_title'], 'artist' => $array['album_artist'], 'tracks_no' => $tracks_no, 'tracks' => stripslashes(json_encode($array['album_tracks']))];
+            $data = ['title' => $array['album_title']];
 
             // file_put_contents("/tmp/EDIT_ALBUM-SAVE.txt", json_encode($data));
 

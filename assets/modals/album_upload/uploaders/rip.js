@@ -4,6 +4,7 @@
 $(function () {
     var btnNext = $('#btnNext');
     var btnBack = $('#btnBack');
+    var btnNextCD = $('#btnNextCD');
 
     var ripperCheckStatus = $('#ripperCheckStatus');
     var ripperStart = $('#ripperStart');
@@ -62,6 +63,7 @@ $(function () {
     function getStatus(callback) {
         $.getJSON('/assets/API/uploader.php?action=get_ripper_status')
             .done(function (data) {
+                //noinspection JSUnresolvedVariable
                 callback(data.status, data.percentage);
             })
             .fail(function () {
@@ -92,7 +94,7 @@ $(function () {
 
     // START
     ripperStart.click(function () {
-        $.getJSON('/assets/API/uploader.php?action=start_ripping&uploader_id=' + uploader.uploaderID)
+        $.getJSON('/assets/API/uploader.php?action=start_ripping&uploader_id=' + uploader.uploaderID + '&cd=' + uploader.uploadingCD)
             .done(function (data) {
                 if (data.status === "success") {
                     startProgress();
@@ -138,6 +140,15 @@ $(function () {
 
     // RESET
     ripperReset.click(function () {
+        reset();
+    });
+
+    // NEW CD
+    btnNextCD.click(function () {
+        uploader.incrementCD();
+
+        $(this).text("Add CD" + (uploader.uploadingCD + 1));
+
         reset();
     });
 

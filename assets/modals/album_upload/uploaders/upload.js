@@ -4,9 +4,14 @@
 Dropzone.autoDiscover = false;
 
 $(function () {
+    var baseUrl = '/assets/API/uploader.php?uploader_id=' + uploader.uploaderID + '&action=upload_files';
 
     var btnNext = $('#btnNext');
     var btnBack = $('#btnBack');
+    var btnNextCD = $('#btnNextCD');
+
+    var uploadedBytes = 0;
+    var dropzone = $("#dropzone");
 
     btnBack.click(function () {
         uploader.previousPage();
@@ -16,15 +21,24 @@ $(function () {
         uploader.nextPage();
     });
 
+    btnNextCD.click(function () {
+        uploader.incrementCD();
+
+        $(this).text("Add CD" + (uploader.uploadingCD + 1)).addClass('disabled');
+
+        myDropzone.options.url = baseUrl + '&cd=' + uploader.uploadingCD;
+        myDropzone.removeAllFiles(true);
+        uploadedBytes = 0;
+    });
+
     $('#btnCancel').click(function () {
         Uploader.abort();
     });
 
-    if (uploader.tracks.length)
+    if (uploader.tracks.length) {
         btnNext.removeClass('disabled');
-
-    var uploadedBytes = 0;
-    var dropzone = $("#dropzone");
+        btnNextCD.removeClass('disabled');
+    }
 
     dropzone.on("remove", function () {
         //console.log('it has been destroyed');
@@ -35,7 +49,7 @@ $(function () {
     Dropzone.options.dropzone = {
         acceptedFiles: '.mp3,.jpg,.jpeg,.png,.gif,.wav',
         parallelUploads: 6,
-        url: '/assets/API/uploader.php?uploader_id=' + uploader.uploaderID + '&action=upload_files'
+        url: baseUrl
     };
 
     var myDropzone = new Dropzone("#dropzone");
@@ -55,9 +69,11 @@ $(function () {
 
     myDropzone.on("queuecomplete", function () {
         btnNext.removeClass('disabled');
+        btnNextCD.removeClass('disabled');
     });
 
     myDropzone.on("sending", function () {
         btnNext.addClass('disabled');
+        btnNextCD.addClass('disabled');
     });
 });

@@ -16,6 +16,7 @@
     <button id="btnBack">Back</button>
     <button id="btnCancel">Cancel</button>
     <button class="right disabled" id="btnNext">Next</button>
+    <button class="right disabled" id="btnNextCD">Add CD2</button>
 </div>
 
 <?php

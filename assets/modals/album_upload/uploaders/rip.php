@@ -11,6 +11,7 @@
             <p>CD imported successfully!</p>
 
             <p>
+                <button id="btnNextCD">Add CD2</button>
                 <button id="ripperReset">Reset</button>
             </p>
 

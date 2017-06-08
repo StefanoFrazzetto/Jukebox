@@ -9,6 +9,7 @@ function Uploader() {
     this.uploadMethod = null;
 
     this.uploaderID = null;
+    this.uploadingCD = null;
 
     this.title = null;
     this.titles = [];
@@ -202,6 +203,10 @@ Uploader.prototype.createSongsTable = function (container, editable) {
 
     uploader.tracks.forEach(function (cd) {
         cd.forEach(function (track, no) {
+            if (typeof track.title !== "string" || track.title === "") {
+                track.title = "Track " + (no + 1);
+            }
+
             var tr = $("<tr>");
 
             var td1 = $("<td>" + (no + 1) + "</td>");
@@ -226,9 +231,10 @@ Uploader.prototype.createSongsTable = function (container, editable) {
             if (editable) {
                 td3 = $("<td></td>");
 
-                track.artists.forEach(function (_, index) {
-                    td3.append(createArtistChip(index, track));
-                });
+                if (track.artists !== null)
+                    track.artists.forEach(function (_, index) {
+                        td3.append(createArtistChip(index, track));
+                    });
 
                 var add = $('<div class="chip round clickable"><i class="fa fa-plus"></i></div>');
 
@@ -283,11 +289,12 @@ Uploader.prototype.getAllArtists = function () {
 
     uploader.tracks.forEach(function (cd) {
         cd.forEach(function (track) {
-            track.artists.forEach(function (artist) {
-                if (artists.indexOf(artist) === -1) {
-                    artists.push(artist);
-                }
-            });
+            if (track.artists !== null && typeof track.artists === "object")
+                track.artists.forEach(function (artist) {
+                    if (artists.indexOf(artist) === -1) {
+                        artists.push(artist);
+                    }
+                });
         });
     });
 
@@ -340,6 +347,13 @@ Uploader.prototype.done = function () {
             alert("Unable to upload album. " + JSON.parse(error.responseText).message);
             console.log(error);
         });
+};
+
+Uploader.prototype.incrementCD = function () {
+    if (this.uploadingCD === null)
+        this.uploadingCD = 2;
+    else
+        this.uploadingCD++;
 };
 
 Uploader.abort = function () {
