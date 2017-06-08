@@ -33,6 +33,7 @@ foreach ($artists_ids as $artist_id) {
     </div>
 
     <div class="modalBody" id="details" data-mcs-theme="dark">
+        <input type="hidden" value="<?php echo $album->getId() ?>" id="currentAlbumId">
         <img id="album_cover_img" src="<?php echo $album->getCoverUrl() ?>"/>
 
         <table class="mCustomScrollbar songsTable" id="albumDetails" data-album="<?php echo $album->getId() ?>">
