@@ -75,7 +75,7 @@ if (isJukebox()) {
                 <div id="play"></div>
                 <div id="fwd" class="crcbtn"></div>
                 <div id="menu-btn" class="crcbtn"></div>
-                <div id="playlist" class="crcbtn" onclick="modal.openPage('assets/modals/playlist.php')"></div>
+                <div id="playlist" class="crcbtn" onclick="modal.openPage('assets/modals/playlist')"></div>
 
             </div>
 
