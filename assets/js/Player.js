@@ -472,6 +472,9 @@ function EQ(context, input, output) {
     this.bandsList = this.getBands(2);
     this.filteredBands = this.getFilteredBands(this.bandsList);
     this.connected = false;
+
+    this.onUpdate = null;
+
     // CONTAINER NODE
     this.container = null;
 }
@@ -569,8 +572,30 @@ EQ.prototype.disconnect = function () {
     this.connected = false;
 };
 
+EQ.prototype.getBandsGains = function () {
+    var gains = [];
+
+    this.filteredBands.forEach(function (band) {
+        gains.push(band.gain.value);
+    });
+
+    return gains;
+};
+
 EQ.prototype.changeGain = function (value, band) {
     this.filteredBands[band].gain.value = parseFloat(value);
+    if (typeof this.onUpdate === "function") this.onUpdate(this.getBandsGains());
+};
+
+EQ.prototype.changeGains = function (gains) {
+    var eq = this;
+    gains.forEach(function (gain, index) {
+        eq.filteredBands[index].gain.value = parseFloat(gain);
+    });
+
+    // This function is used only once, and in that scenario it is not required that the onUpdate event is fired.
+    // Enable this if used elsewhere.
+    // if (typeof this.onUpdate === "function") this.onUpdate(this.getBandsGains());
 };
 
 EQ.prototype.getGain = function (band) {

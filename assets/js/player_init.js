@@ -89,6 +89,14 @@ function initPlayer() {
     };
 
     sliderv.slider('value', player.getVolume() * 100);
+
+    if (typeof localStorage !== "undefined") {
+        player.EQ.onUpdate = function (bands) {
+            localStorage.setItem("eqGains", JSON.stringify(bands));
+        };
+
+        player.EQ.changeGains(JSON.parse(localStorage.getItem("eqGains")));
+    }
     //endregion Event Bindings
 
     //region Random Functions
