@@ -66,7 +66,7 @@ var modal = {
     },
 
     openPage: function (page) {
-        this.loaderGifElement.show();
+        this.enableStatusLoading();
         this.modalLoaderElement.html('');
 
         var _this = this;
@@ -99,11 +99,7 @@ var modal = {
                         }
                     });
 
-                    _this.loaderGifElement.fadeOut(animation_medium, function () {
-                        _this.loaderGifElement.hide();
-                    });
-
-
+                    _this.disableStatusLoading();
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     _this.modalLoaderElement.html('<div class="modalHeader">Error!</div><div class="modalBody"><strong>' + errorThrown + '<strong></div>');
@@ -119,5 +115,17 @@ var modal = {
 
     enable: function () {
         modalElement.removeClass("disabled");
+    },
+
+    enableStatusLoading: function () {
+        this.loaderGifElement.show();
+        this.modalLoaderElement.hide();
+    },
+
+    disableStatusLoading: function () {
+        this.loaderGifElement.fadeOut(animation_medium, function () {
+            modal.loaderGifElement.hide();
+            modal.modalLoaderElement.show();
+        });
     }
 };
