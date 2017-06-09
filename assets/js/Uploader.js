@@ -201,7 +201,10 @@ Uploader.prototype.createSongsTable = function (container, editable) {
         return artistChip;
     }
 
-    uploader.tracks.forEach(function (cd) {
+    uploader.tracks.forEach(function (cd, cdNo) {
+        if (uploader.tracks.length > 1)
+            $("<tr><th colspan='4'>CD" + cdNo + "</th></tr>").appendTo(container);
+
         cd.forEach(function (track, no) {
             if (typeof track.title !== "string" || track.title === "") {
                 track.title = "Track " + (no + 1);
