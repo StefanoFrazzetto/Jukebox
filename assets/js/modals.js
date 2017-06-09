@@ -34,7 +34,7 @@ var modal = {
 
         top = Math.floor(top);
 
-        if (top != this.last_top) {
+        if (top !== this.last_top) {
             this.last_top = top;
 
             //modal.css('top', top + "px");
@@ -45,7 +45,7 @@ var modal = {
 
         }
 
-        console.log("WOOFF!");
+        console.log("Watchdog executed!");
     },
 
     close: function () {
@@ -57,7 +57,7 @@ var modal = {
             _this.modalLoaderElement.html('');
             _this.loaderGifElement.show();
 
-            if (_this.onModalClosed != null) {
+            if (_this.onModalClosed !== null) {
                 _this.onModalClosed();
                 _this.onModalClosed = null;
             }
