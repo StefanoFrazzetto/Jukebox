@@ -74,6 +74,7 @@ Uploader.prototype.changePage = function (page) {
             }
             break;
         case 2: // Edit names
+            modal.enableStatusLoading();
             $.getJSON(this.getDataJsonUrl())
                 .done(function (data) {
                     uploader.title = data.title;
@@ -111,6 +112,9 @@ Uploader.prototype.changePage = function (page) {
                 })
                 .fail(function (a, b) {
                     error(b);
+                })
+                .always(function () {
+                    modal.disableStatusLoading();
                 });
 
             break;
