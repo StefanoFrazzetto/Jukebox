@@ -67,28 +67,12 @@ function checkWifiNetwork() {
             error("Failed to fetch the current WiFi network. You might need to change the network configuration locally.");
         })
         .always(function () {
-            enableInteractions();
+            modal.disableStatusLoading();
         });
 }
 
-function enableInteractions() {
-    var btn = $('.saveBtn');
-    btn.attr('disabled', false);
-    btn.removeClass('disabled');
-    btn.val('Save');
-    modal.enable();
-}
-
-function disableInteractions() {
-    modal.disable();
-    var btn = $('.saveBtn');
-    btn.attr('disabled', true);
-    btn.addClass('disabled');
-    btn.val('Wait...');
-}
-
 $('#network_settings_form').submit(function (e) {
-    disableInteractions();
+    modal.enableStatusLoading();
 
     e.preventDefault();
     var data = $(this).serialize();
@@ -129,7 +113,7 @@ $('#network_settings_form').submit(function (e) {
         }
 
         if (network_type.val() !== 2) {
-            enableInteractions();
+            modal.disableStatusLoading();
         }
     });
 });
