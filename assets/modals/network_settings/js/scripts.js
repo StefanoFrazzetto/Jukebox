@@ -55,9 +55,9 @@ function checkWifiNetwork() {
     $.getJSON('/assets/modals/network_settings/wifi/wifi_connected.php')
         .done(function (data) {
             console.log(data);
-            if (data == null) {
+            if (data === null) {
                 error("Failed to connect to '" + wifi_essid.val() + "'. Currently connected to no WiFi network.");
-            } else if (data.ESSID == wifi_essid.val()) {
+            } else if (data.ESSID === wifi_essid.val()) {
                 alert("Connected successfully to '" + data.ESSID + "'.")
             } else {
                 error("Failed to connect to the selected network. I am connected to '" + data.ESSID + "'.");
@@ -102,13 +102,13 @@ $('#network_settings_form').submit(function (e) {
         timeout: 20000,
         data: data
     }).done(function (data) {
-        if (data == "success")
+        if (data === "success")
             requestStatus = 'success';
         else {
             requestError = "An error occurred while saving. Check the logs for more.";
             console.log(data);
         }
-    }).fail(function (a, b, c) {
+    }).fail(function (a, b) {
         if (b === 'timeout') {
             requestStatus = 'timeout';
         } else {
@@ -117,18 +117,18 @@ $('#network_settings_form').submit(function (e) {
         }
 
     }).always(function () {
-        if (requestStatus == "fail") {
+        if (requestStatus === "fail") {
             error(requestError);
         }
-        else if (network_type.val() == 2) {
+        else if (network_type.val() === 2) {
             checkWifiNetwork();
-        } else if (requestStatus == "timeout") {
+        } else if (requestStatus === "timeout") {
             error("Request timed out.");
         } else {
             alert("Connected successfully.");
         }
 
-        if (network_type.val() != 2) {
+        if (network_type.val() !== 2) {
             enableInteractions();
         }
     });
@@ -138,7 +138,7 @@ function loadConfigurationFromJson(data) {
     $.each(data, function (key, value) {
         var thing = $('#' + key);
 
-        if (value == 'on') {
+        if (value === 'on') {
             thing.prop('checked', true);
         } else {
             thing.val(value);
@@ -151,7 +151,7 @@ function loadConfigurationFromJson(data) {
     //noinspection JSUnresolvedVariable
     var val = data.network_type;
 
-    if (typeof val != "undefined" && (val == 2 || val == 1)) {
+    if (typeof val !== "undefined" && (val === 2 || val === 1)) {
         toggleManualField();
     }
 }
@@ -172,7 +172,7 @@ $.getJSON('/assets/config/network_settings.json')
     .done(function (data) {
         loadConfigurationFromJson(data);
 
-        if (typeof selectedNetwork != "undefined") {//noinspection JSUnresolvedVariable
+        if (typeof selectedNetwork !== "undefined") {//noinspection JSUnresolvedVariable
             network_type.val(2);
             network_type.triggerHandler('change');
 
