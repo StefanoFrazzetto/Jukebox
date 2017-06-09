@@ -95,7 +95,9 @@ function initPlayer() {
             localStorage.setItem("eqGains", JSON.stringify(bands));
         };
 
-        player.EQ.changeGains(JSON.parse(localStorage.getItem("eqGains")));
+        var gains = JSON.parse(localStorage.getItem("eqGains"));
+
+        if (gains) player.EQ.changeGains(gains);
     }
     //endregion Event Bindings
 
@@ -133,7 +135,7 @@ function initPlayer() {
             return addZero(minutes) + ':' + addZero(seconds);
         }
 
-        // Updates the seekbar
+        // Updates the seek bar
         var percentage = (100 / player.getCurrentSongDuration()) * time;
         slider.slider('value', percentage);
 
