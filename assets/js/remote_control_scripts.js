@@ -34,7 +34,7 @@ function playingStatusChangedEvent() {
 }
 
 function albumChangedEvent() {
-    if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id != null) {
+    if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id !== null) {
         var album = storage.getAlbum(playerStatus.album_id);
 
         if (!album) {
@@ -102,7 +102,7 @@ function trackChangedEvent() {
 
 function radioChangeEvent() {
     var radio = storage.getRadio(playerStatus.isRadio);
-    if (radio == false)
+    if (radio === false)
         return;
     cover.attr('src', radio.cover);
     $('#artist').html(radio.name);
@@ -110,7 +110,7 @@ function radioChangeEvent() {
 }
 
 function updateTrackProgress() {
-    if (typeof playerStatus.duration != "undefined") {
+    if (typeof playerStatus.duration === "undefined") {
         var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
 
         if (percentage > 100) {
@@ -124,7 +124,7 @@ function updateTrackProgress() {
 }
 
 function updatePlayButton() {
-    if (playerStatus.playing == true) {
+    if (playerStatus.playing === true) {
         $('#play-pause').find('i').removeClass('fa-play').addClass('fa-pause');
         startTimer();
     } else {
@@ -165,7 +165,7 @@ function handleSearch() {
         results_container.append(makeSearchResult(album))
     });
 
-    if (typeof storage.radios !== 'undefined' && storage.radios.length != 0)
+    if (typeof storage.radios !== 'undefined' && storage.radios.length !== 0)
         storage.radios.forEach(function (radio) {
             if (radio.name.toLowerCase().indexOf(value) !== -1) {
                 results_container.append(makeSearchResult(radio, true));
@@ -252,7 +252,7 @@ function getDeltaTime(callback) {
     oReq.open("POST", getRemoteServerUrl());
     oReq.setRequestHeader('accept', 'text/time');
     oReq.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState === 4 && this.status === 200) {
             var now = new Date().getTime();
 
             latency = now - d;
@@ -276,7 +276,7 @@ function loadAlbumPlaylist(id, callback) {
 
     $.getJSON(address)
         .done(function (data) {
-            if (data == null) {
+            if (data === null) {
                 error("Unable to find album with id: " + id + ". It might have been deleted");
                 return;
             }
@@ -292,10 +292,10 @@ function loadAlbumPlaylist(id, callback) {
 }
 
 function getAlbumDetails(id, callback) {
-    if (id == null || typeof id == "undefined")
+    if (id === null || typeof id === "undefined")
         return;
 
-    if (storage.getAlbum(id) == null) {
+    if (storage.getAlbum(id) === null) {
         storage.loadAll(function () {
             loadAlbumPlaylist(id, callback);
         });
@@ -325,27 +325,27 @@ function updateRemoteStatus(r) {
 
     playerStatus = r;
 
-    if (oldPlayingStatus.playing != r.playing) {
+    if (oldPlayingStatus.playing !== r.playing) {
         playingStatusChangedEvent();
     }
 
-    if (oldPlayingStatus.album_id != r.album_id) {
+    if (oldPlayingStatus.album_id !== r.album_id) {
         albumChangedEvent();
     }
 
-    if (oldPlayingStatus.isRadio != r.isRadio && r.isRadio != false) {
+    if (oldPlayingStatus.isRadio !== r.isRadio && r.isRadio !== false) {
         radioChangeEvent();
     }
 
-    if (oldPlayingStatus.track_no != r.track_no) {
+    if (oldPlayingStatus.track_id !== r.track_id) {
         trackChangedEvent();
     }
 
-    if (oldPlayingStatus.currentTime != r.currentTime) {
+    if (oldPlayingStatus.currentTime !== r.currentTime) {
         updateTrackProgress();
     }
 
-    if (oldPlayingStatus.volume != r.volume) {
+    if (oldPlayingStatus.volume !== r.volume) {
         volumeChangeEvent();
     }
 
@@ -356,7 +356,7 @@ function updateRemoteStatus(r) {
         var icon = $('#volume-icon');
 
         icon.removeClass();
-        if (r.volume == 0) {
+        if (r.volume === 0) {
             icon.addClass("fa fa-volume-off");
         } else if (r.volume < .5) {
             icon.addClass("fa fa-volume-down");
