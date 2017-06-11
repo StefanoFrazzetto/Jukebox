@@ -110,15 +110,13 @@ function radioChangeEvent() {
 }
 
 function updateTrackProgress() {
-    if (typeof playerStatus.duration === "undefined") {
+    if (typeof playerStatus.duration !== "undefined") {
         var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
 
         if (percentage > 100) {
             percentage = 100;
         }
-    } else {
-        percentage = 0;
-    }
+    } else percentage = 0;
 
     $('#trackProgress').width(percentage + "%");
 }
@@ -291,6 +289,7 @@ function loadAlbumPlaylist(id, callback) {
         });
 }
 
+//noinspection JSUnusedGlobalSymbols
 function getAlbumDetails(id, callback) {
     if (id === null || typeof id === "undefined")
         return;
