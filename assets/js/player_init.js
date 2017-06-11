@@ -39,9 +39,7 @@ function initPlayer() {
     prev_btn.click(function () {
         player.previous();
     });
-
-    sliderv.slider('value', player.getVolume() * 100);
-// endregion Clicks
+    // endregion Clicks
 
     //region Event Bindings
     player.onWaiting = function () {
@@ -86,6 +84,10 @@ function initPlayer() {
             play_btn.css('background-image', 'url(/assets/img/buttons/pause.png)');
         else
             play_btn.css('background-image', 'url(/assets/img/buttons/playButton.png)');
+    };
+
+    player.onVolumeChange = function () {
+        sliderv.slider('value', player.getVolume() * 100);
     };
 
     sliderv.slider('value', player.getVolume() * 100);

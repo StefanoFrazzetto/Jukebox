@@ -5,7 +5,7 @@ var evtSource = new EventSource(url, {withCredentials: true});
 var errorCount = 0;
 
 evtSource.onerror = function (e) {
-    if (errorCount == 0)
+    if (errorCount === 0)
         alert("EventSource failed." + JSON.stringify(e));
     errorCount++
 };
@@ -64,7 +64,7 @@ handleSSE('play_radio', function () {
 handleSSE('set_volume', function (value) {
     var volume = parseFloat(value.value);
 
-    if (volume)
+    if (volume && volume !== player.getVolume())
         player.setVolume(volume);
 });
 
