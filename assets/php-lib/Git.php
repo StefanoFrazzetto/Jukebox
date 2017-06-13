@@ -11,7 +11,7 @@ use InvalidArgumentException;
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
  *
  * @version 1.2.0
- * @licence GNU AGPL v3 - https://www.gnu.org/licences/agpl-3.0.txt
+ * @licence GNU GPL v3 - https://www.gnu.org/licences/gpl-3.0.txt
  */
 class Git
 {
@@ -31,9 +31,9 @@ class Git
     }
 
     /**
-     * Forces the pull from the specified branch (default is origin/master).
+     * Force the pull from the specified branch (default is origin/master).
      *
-     * @param string $branch - the branch to force pull
+     * @param string $branch  the branch to force pull
      */
     private function forcePull($branch = 'origin/master')
     {
@@ -42,14 +42,14 @@ class Git
     }
 
     /**
-     * Returns an array containing the result associated with the flag used.
+     * Return an array containing the result associated with the flag used.
      * There is no default flag, so the default result will contain only the local arrays.
      *
      * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
      *
-     * @param string $flag - the flag and/or additional parameters to pass (default returns the local branches)
+     * @param string $flag  the flag and/or additional parameters to pass (default returns the local branches)
      *
-     * @return array - the array containing the local or remote branches
+     * @return array        the array containing the local or remote branches
      */
     public static function branch($flag = '')
     {
@@ -59,7 +59,7 @@ class Git
         $branches_parsed = [];
 
         foreach ($branches as $key => $branch) {
-            if (strpos($branch, 'detached') !== false) {
+            if (StringUtils::contains($branch, 'detached')) {
                 unset($branches[$key]);
             } else {
                 preg_match('/\\w+$/', $branch, $matched);
@@ -74,30 +74,30 @@ class Git
     }
 
     /**
-     * Changes the current branch to $branch_name forcing the checkout.
+     * Change the current branch to $branch_name forcing the checkout.
      *
-     * @param string $branch_name - the branch to checkout
+     * @param string $branch_name       the branch to checkout
      *
      * @throws InvalidArgumentException if no argument is provided
      *
-     * @return bool - true on success, false otherwise
+     * @return bool                     true on success, false if the branch does not exist
      */
     public static function checkout($branch_name)
     {
-        $res = shell_exec("git checkout $branch_name --force");
-        if (strpos($res, 'error') !== false && isset($branch_name)) {
-            return true;
-        } else {
-            return false;
+        if (empty($branch_name)) {
+            throw new InvalidArgumentException('The branch name cannot be empty');
         }
+
+        $res = shell_exec("git checkout $branch_name --force");
+        return !StringUtils::contains($res, 'error');
     }
 
     /**
-     * Returns the last commits message for the current branch.
+     * Return the last commits message for the current branch.
      *
-     * @param int $count - the number of commits
+     * @param int $count    the number of commits
      *
-     * @return array - the array of commits messages
+     * @return array        the array of commits messages
      */
     public static function log($count = 5)
     {
@@ -113,26 +113,28 @@ class Git
      * The branch must be fully merged in its upstream branch, or in HEAD if no upstream was set with
      * --track or --set-upstream.
      *
-     * @param string $branch_name - the branch to delete
-     * @param bool   $force       - set whether to force the deletion or not
+     * @param string $branch_name       the branch to delete
+     * @param bool   $force             whether to force the deletion or not
      *
-     * @return bool - true if the process was successful, false if the branch does not exist
+     * @throws InvalidArgumentException if the branch name is empty
+     *
+     * @return bool                     true if the branch was deleted, false if the branch does not exist
      */
     public function delete($branch_name, $force = false)
     {
-        $cmd = "git branch -d $branch_name";
+        if (empty($branch_name)) {
+            throw new InvalidArgumentException('The branch name cannot be empty');
+        }
 
         if ($force) {
             // -D = Shortcut for --delete --force
             $cmd = "git branch -D $branch_name";
+        } else {
+            $cmd = "git branch -d $branch_name";
         }
 
         $res = shell_exec($cmd);
-        if (strpos($res, 'error') !== false && isset($branch_name)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !StringUtils::contains($res, 'error');
     }
 
     /**
@@ -143,11 +145,7 @@ class Git
     public function prune()
     {
         $res = shell_exec('git remote prune origin');
-        if (strpos($res, 'Pruning origin') !== false) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils::contains($res, 'Pruning origin');
     }
 
     /**
@@ -158,22 +156,18 @@ class Git
      *
      * @return bool - true if no error occurs, false otherwise
      */
-    public function pull($branch = '', $force = false)
+    public function pull($branch, $force = false)
     {
-        $branch = $branch == '' ? $this->_current_branch : $branch;
+        $branch = is_null($branch) ? $this->_current_branch : $branch;
 
         if (!$force) {
             $cmd = "git pull origin $branch";
         } else {
             $cmd = "git fetch --all && git reset --hard origin/$branch";
         }
-
         $res = shell_exec($cmd);
-        if (strpos($res, 'done') !== false || strpos($res, 'up-to-date') !== false) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return StringUtils::contains($res, ['done', 'up-to-date']);
     }
 
     /**
@@ -181,7 +175,7 @@ class Git
      *
      * @throws Exception if cmd returns unexpected values
      *
-     * @return bool TRUE if is up to date and FALSE if an update is required
+     * @return bool true if is up to date, false if an update is required
      */
     public function isUpToDate()
     {
