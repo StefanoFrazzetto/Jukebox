@@ -10,7 +10,7 @@ use InvalidArgumentException;
  *
  * @author Stefano Frazzetto - https://github.com/StefanoFrazzetto
  *
- * @version 1.2.0
+ * @version 1.3.0
  * @licence GNU GPL v3 - https://www.gnu.org/licences/gpl-3.0.txt
  */
 class Git
