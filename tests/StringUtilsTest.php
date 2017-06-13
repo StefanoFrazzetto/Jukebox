@@ -53,6 +53,43 @@ class StringUtilsTest extends JukeboxTestClass
         StringUtils::contains($content, $check);
     }
 
+    public function testContains5()
+    {
+        $this->expectException(Exception::class);
+
+        $content = 'some content';
+        $check = '';
+        StringUtils::contains($content, $check);
+    }
+
+    public function testContainsNeedleArray1() {
+        $haystack = 'this that something else';
+        $needles = ['this', 'else'];
+
+        $this->assertTrue(StringUtils::contains($haystack, $needles));
+    }
+
+    public function testContainsNeedleArray2() {
+        $haystack = 'this that something else';
+        $needles = ['this', 'else'];
+
+        $this->assertTrue(StringUtils::contains($haystack, $needles, false));
+    }
+
+    public function testContainsNeedleArray3() {
+        $haystack = 'this that something else';
+        $needles = ['this', 'else'];
+
+        $this->assertTrue(StringUtils::contains($haystack, $needles, true));
+    }
+
+    public function testContainsNeedleArray4() {
+        $haystack = 'this that something';
+        $needles = ['this', 'else'];
+
+        $this->assertFalse(StringUtils::contains($haystack, $needles, true));
+    }
+
     public function testArrayContains1()
     {
         $content = ['string' => 'This is a test string'];

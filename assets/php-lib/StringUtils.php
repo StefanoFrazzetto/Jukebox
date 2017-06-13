@@ -32,25 +32,38 @@ abstract class StringUtils
      *
      * @see strpos()
      *
-     * @param string $haystack The string to search in.
-     * @param string $needle   If needle is not a string, it is converted to an integer
-     *                         and applied as the ordinal value of a character.
-     * @param int    $offset
-     *                         If specified, search will start this number of characters
-     *                         counted from the beginning of the string. Unlike strrpos() and strripos(),
-     *                         the offset cannot be negative.
+     * @param string        $haystack   The string to search in.
+     * @param string|array  $needle     If needle is not a string, it is converted to an integer
+     *                                  and applied as the ordinal value of a character.
+     * @param bool          $strict
+     *                                  If the needle argument is an array and strict is set to true,
+     *                                  true will be returned only if the haystack contains all the elements
+     *                                  passed in the needle array.
      *
      * @throws Exception if the needle is empty.
      *
      * @return bool true if the string was found, false otherwise.
      */
-    public static function contains($haystack, $needle, $offset = 0)
+    public static function contains($haystack, $needle, $strict = false)
     {
         if (empty($needle)) {
             throw new Exception('The needle cannot be empty.');
         }
 
-        return strpos($haystack, $needle, $offset) !== false ? true : false;
+        $found = 0;
+        if (is_array($needle)) {
+            foreach ($needle as $element) {
+                if (strpos($haystack, $element) !== false) {
+                    $found++;
+                }
+            }
+        } else {
+            if (strpos($haystack, $needle) !== false) {
+                $found++;
+            }
+        }
+
+        return $strict ? $found >= count($needle) : $found >= 1;
     }
 
     /**
