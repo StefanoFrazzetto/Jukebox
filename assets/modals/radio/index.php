@@ -25,7 +25,7 @@ $radios = Radio::getAllRadios();
             <div class="badge badge-left edit"><i class="fa fa-pencil"></i></div>
             <span><?php echo $radio->getName() ?></span>
         </div>
-    <?php 
+    <?php
 } ?>
 
 </div>

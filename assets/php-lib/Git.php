@@ -33,7 +33,7 @@ class Git
     /**
      * Force the pull from the specified branch (default is origin/master).
      *
-     * @param string $branch  the branch to force pull
+     * @param string $branch the branch to force pull
      */
     private function forcePull($branch = 'origin/master')
     {
@@ -47,9 +47,9 @@ class Git
      *
      * @link https://git-scm.com/book/en/v2/Git-Branching-Branch-Management
      *
-     * @param string $flag  the flag and/or additional parameters to pass (default returns the local branches)
+     * @param string $flag the flag and/or additional parameters to pass (default returns the local branches)
      *
-     * @return array        the array containing the local or remote branches
+     * @return array the array containing the local or remote branches
      */
     public static function branch($flag = '')
     {
@@ -76,11 +76,11 @@ class Git
     /**
      * Change the current branch to $branch_name forcing the checkout.
      *
-     * @param string $branch_name       the branch to checkout
+     * @param string $branch_name the branch to checkout
      *
      * @throws InvalidArgumentException if no argument is provided
      *
-     * @return bool                     true on success, false if the branch does not exist
+     * @return bool true on success, false if the branch does not exist
      */
     public static function checkout($branch_name)
     {
@@ -89,15 +89,16 @@ class Git
         }
 
         $res = shell_exec("git checkout $branch_name --force");
+
         return !StringUtils::contains($res, 'error');
     }
 
     /**
      * Return the last commits message for the current branch.
      *
-     * @param int $count    the number of commits
+     * @param int $count the number of commits
      *
-     * @return array        the array of commits messages
+     * @return array the array of commits messages
      */
     public static function log($count = 5)
     {
@@ -113,12 +114,12 @@ class Git
      * The branch must be fully merged in its upstream branch, or in HEAD if no upstream was set with
      * --track or --set-upstream.
      *
-     * @param string $branch_name       the branch to delete
-     * @param bool   $force             whether to force the deletion or not
+     * @param string $branch_name the branch to delete
+     * @param bool   $force       whether to force the deletion or not
      *
      * @throws InvalidArgumentException if the branch name is empty
      *
-     * @return bool                     true if the branch was deleted, false if the branch does not exist
+     * @return bool true if the branch was deleted, false if the branch does not exist
      */
     public function delete($branch_name, $force = false)
     {
@@ -134,6 +135,7 @@ class Git
         }
 
         $res = shell_exec($cmd);
+
         return !StringUtils::contains($res, 'error');
     }
 
@@ -145,6 +147,7 @@ class Git
     public function prune()
     {
         $res = shell_exec('git remote prune origin');
+
         return StringUtils::contains($res, 'Pruning origin');
     }
 

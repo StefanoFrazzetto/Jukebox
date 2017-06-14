@@ -55,16 +55,16 @@ return [
         'status_file'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/status.json',
         'burner'        => [
             'parent'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/',
-            'logs'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/logs/',
-            'input'  => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/input/',
-            'output' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/output/',
+            'logs'     => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/logs/',
+            'input'    => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/input/',
+            'output'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/burner/output/',
         ],
         'ripper' => [
             'parent'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper',
-            'input'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/input/',
-            'handler'        => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/rip_handler.sh',
-            'cdparanoia_log' => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/cdparanoia.log',
-            'lame_log'       => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/lame.log'
+            'input'           => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/input/',
+            'handler'         => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/rip_handler.sh',
+            'cdparanoia_log'  => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/cdparanoia.log',
+            'lame_log'        => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/lame.log',
         ],
     ],
 

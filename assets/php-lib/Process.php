@@ -1,6 +1,7 @@
 <?php
 
 namespace Lib;
+
 use InvalidArgumentException;
 
 /**
@@ -57,6 +58,7 @@ class Process
      * Checks if the pid is valid.
      *
      * @param int $pid the pid
+     *
      * @return bool true if it is valid, false otherwise.
      */
     private function isPidValid($pid)

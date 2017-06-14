@@ -19,7 +19,7 @@ class Cover
         if (isset($url) && !empty($url)) {
             return $this->loadImageFromUrl($url);
         } else {
-            throw new Exception("No url provided.");
+            throw new Exception('No url provided.');
         }
     }
 
@@ -48,7 +48,7 @@ class Cover
 
     public function saveToAlbum($id)
     {
-        $path = $_SERVER['DOCUMENT_ROOT'] . "/jukebox/$id";
+        $path = $_SERVER['DOCUMENT_ROOT']."/jukebox/$id";
 
         $this->saveAlbumImagesToFolder($path);
     }

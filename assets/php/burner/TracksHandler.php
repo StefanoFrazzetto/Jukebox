@@ -25,10 +25,10 @@ class TracksHandler
     /**
      * Create the "Burner" using albums: initialise $DiscWriter and $_albums[ALBUM_ID]['size'];.
      *
-     * @param string $type the type of compilation to burn (playlist or albums).
-     * @param array|string $values the values passed from the modal (json containing the tracks
-     *                              or an array of album ids).
-     * @param string $output_format the output format for the current cd (mp3 or wav).
+     * @param string       $type          the type of compilation to burn (playlist or albums).
+     * @param array|string $values        the values passed from the modal (json containing the tracks
+     *                                    or an array of album ids).
+     * @param string       $output_format the output format for the current cd (mp3 or wav).
      */
     public function __construct($type, $values, $output_format)
     {
@@ -82,7 +82,7 @@ class TracksHandler
     {
         $audio_cd = false;
         $cd_no = 1;
-        $cds = array();
+        $cds = [];
         $playlist_index = 1;
 
         // Check if the user wants to burn an audio CD.
@@ -108,7 +108,7 @@ class TracksHandler
 
             // Updated on 31/10/2016
             // Some files were incorrectly parsed due to special chars
-            $track['title'] = sprintf('%02d', $playlist_index) . '-' . StringUtils::cleanString($track['title']);
+            $track['title'] = sprintf('%02d', $playlist_index).'-'.StringUtils::cleanString($track['title']);
 
             $playlist_index++;
 
@@ -133,7 +133,6 @@ class TracksHandler
 
             $cds[$cd_no][] = $track;
 
-
             $conf = new Config();
             $albums_root = $conf->get('paths')['albums_root'];
             $track_path = $albums_root.$track['album_id'].'/'.$track['url'];
@@ -155,15 +154,15 @@ class TracksHandler
     /**
      *    Burn many albums at once.
      *
-     * @param array $albums the array containing the album ids.
+     * @param array  $albums        the array containing the album ids.
      * @param string $output_format the CD output format (mp3 or wav).
      */
     private function manyAlbums($albums, $output_format)
     {
-        $tracks = array();
+        $tracks = [];
 
         foreach ($albums as $album_id) {
-            $album_path = BurnerHandler::$_burner_folder . '/' . $album_id;
+            $album_path = BurnerHandler::$_burner_folder.'/'.$album_id;
             $size = FileUtils::getDirectorySize($album_path);
             $Songs = Song::getSongsInAlbum($album_id);
 
@@ -171,14 +170,14 @@ class TracksHandler
                 continue;
             }
 
-            $tmp_array = array();
+            $tmp_array = [];
             foreach ($Songs as $song) {
                 $song_id = $song->getId();
                 $tmp_array[$song_id] = ([
                     'album_id' => $album_id,
-                    'title' => $song->getTitle(),
-                    'url' => $song->getUrl(),
-                    'cd' => $song->getCd()
+                    'title'    => $song->getTitle(),
+                    'url'      => $song->getUrl(),
+                    'cd'       => $song->getCd(),
                 ]);
             }
 
@@ -191,8 +190,8 @@ class TracksHandler
     public static function getTracksJSON()
     {
         $content = file_get_contents(BurnerHandler::$_burner_tracks_json);
-        if ($content === FALSE) {
-            return null;
+        if ($content === false) {
+            return;
         }
 
         return json_decode($content, true);
@@ -214,7 +213,8 @@ class TracksHandler
     {
         $indexes = array_filter(array_keys($this->_cds), 'is_int');
 
-        $index = (int)$indexes[0];
+        $index = (int) $indexes[0];
+
         return $this->_cds[$index]['size'] / 1000;
     }
 }

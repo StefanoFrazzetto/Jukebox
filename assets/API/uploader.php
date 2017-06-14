@@ -2,7 +2,7 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__.'/../../vendor/autoload.php';
 
 use Lib\Config;
 use Lib\DiscRipper;
@@ -107,7 +107,6 @@ switch ($action) {
             } else {
                 $return['album_id'] = $albumId;
             }
-
         } catch (Exception $e) {
             $return = Uploader::createStatus(Uploader::STATUS_ERROR, $e->getMessage(), 400);
         }

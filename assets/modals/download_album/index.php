@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 04/04/2017
- * Time: 19:12
+ * Time: 19:12.
  */
-
 require_once '../../../vendor/autoload.php';
 
 use Lib\ICanHaz;
@@ -19,8 +18,7 @@ function page()
 
     if ($album == null) {
         exit('No such album.');
-    }
-    ?>
+    } ?>
     <style>
         #progressBar {
             text-align: center;
@@ -51,7 +49,7 @@ function page()
         <img style="float: right;" src="<?php echo $album->getCoverUrl() ?>"/>
         <div class="download-box">
             <div class="text" id="album-size">Album
-                size: <?php echo round($album->getAlbumFolderSize()) . ' MB'; ?></div>
+                size: <?php echo round($album->getAlbumFolderSize()).' MB'; ?></div>
             <div class="text" id="album-tracks">Tracks: <?php echo $album->getSongsCount(); ?></div>
             <div class="text" id="album-cds">CDs: <?php echo $album->getCdCount() ?></div>
             <br>

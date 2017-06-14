@@ -122,7 +122,7 @@ class MusicBrainz
     public function getParsedTracks()
     {
         if (!is_array($this->tracks) || count($this->tracks) <= 0) {
-            return array();
+            return [];
         }
 
         $temp_tracks = [];

@@ -64,15 +64,15 @@ use Lib\Wifi;
             $wifi = new Wifi();
 
             $network = $wifi->getConnectedNetwork();
-            $wifiPassword = "";
-            $wifiEssid = "";
+            $wifiPassword = '';
+            $wifiEssid = '';
 
             if ($network !== null) {
-                echo "<span>Connected to \"" . $network["ESSID"] . "\"</span>";
-                $wifiPassword = $wifi->getNetworkByEssid($network["ESSID"]);
+                echo '<span>Connected to "'.$network['ESSID'].'"</span>';
+                $wifiPassword = $wifi->getNetworkByEssid($network['ESSID']);
 
                 $wifiPassword = Wifi::decodePassword($wifiPassword['password'], $wifiPassword['salt']);
-                $wifiEssid = $network["ESSID"];
+                $wifiEssid = $network['ESSID'];
             }
 
             ?>

@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 04/04/2017
- * Time: 16:56
+ * Time: 16:56.
  */
-
 require_once '../../vendor/autoload.php';
 
 use Lib\FileUtils;
@@ -16,7 +15,7 @@ function editAlbum($data)
     $id = null;
 
     if (!isset($data->id)) {
-        throw new Exception("Album ID not provided.");
+        throw new Exception('Album ID not provided.');
     } else {
         $id = $data->id;
     }
@@ -24,7 +23,7 @@ function editAlbum($data)
     $album = Album::getAlbum($id);
 
     if ($album == null) {
-        throw new Exception("Album ID not found in database.");
+        throw new Exception('Album ID not found in database.');
     }
 
     if (isset($data->cover)) {
@@ -45,7 +44,7 @@ try {
 
     editAlbum($data);
 
-    echo "success";
+    echo 'success';
 } catch (Exception $e) {
     echo $e->getMessage();
 }

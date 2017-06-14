@@ -32,13 +32,13 @@ abstract class StringUtils
      *
      * @see strpos()
      *
-     * @param string        $haystack   The string to search in.
-     * @param string|array  $needle     If needle is not a string, it is converted to an integer
-     *                                  and applied as the ordinal value of a character.
-     * @param bool          $strict
-     *                                  If the needle argument is an array and strict is set to true,
-     *                                  true will be returned only if the haystack contains all the elements
-     *                                  passed in the needle array.
+     * @param string       $haystack The string to search in.
+     * @param string|array $needle   If needle is not a string, it is converted to an integer
+     *                               and applied as the ordinal value of a character.
+     * @param bool         $strict
+     *                               If the needle argument is an array and strict is set to true,
+     *                               true will be returned only if the haystack contains all the elements
+     *                               passed in the needle array.
      *
      * @throws Exception if the needle is empty.
      *
