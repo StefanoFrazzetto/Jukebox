@@ -5,7 +5,7 @@ wifi_interface=$(ls /sys/class/net | grep -v 'eth0\|lo\|tunl0')
 INTERFACE_FILE=/etc/network/interfaces
 WPA_SUPPLICANT=/etc/wpa_supplicant.conf
 DNS_CONF=/etc/resolv.conf
-LOG_FILE=/var/www/html/logs/connection-script.log
+LOG_FILE=/var/www/html/logs/network.log
 
 # Logs the message to the log file
 echo -e "\n\n" >> "$LOG_FILE"
