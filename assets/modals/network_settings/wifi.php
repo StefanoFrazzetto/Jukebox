@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Vittorio
  * Date: 18/03/2017
- * Time: 15:01
+ * Time: 15:01.
  */
-
 include_once '../../../vendor/autoload.php';
 
 use Lib\ICanHaz;

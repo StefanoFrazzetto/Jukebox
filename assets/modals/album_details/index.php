@@ -6,7 +6,6 @@ use Lib\ICanHaz;
 use Lib\MusicClasses\Album;
 use Lib\MusicClasses\Artist;
 
-
 $albumID = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 $album = Album::getAlbum($albumID);

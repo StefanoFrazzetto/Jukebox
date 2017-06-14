@@ -15,8 +15,8 @@ class Wifi
 
     public function __construct()
     {
-        $this->CONFIG_FOLDER = __DIR__ . '/../config/';
-        $this->CONFIG_FIlE = $this->CONFIG_FOLDER . 'wifiDB.json';
+        $this->CONFIG_FOLDER = __DIR__.'/../config/';
+        $this->CONFIG_FIlE = $this->CONFIG_FOLDER.'wifiDB.json';
 
         if (!file_exists($this->CONFIG_FOLDER)) {
             mkdir($this->CONFIG_FOLDER, 777);
@@ -36,7 +36,7 @@ class Wifi
 
     private function loadFile()
     {
-        $data = file_get_contents(__DIR__ . '/../config/wifiDB.json');
+        $data = file_get_contents(__DIR__.'/../config/wifiDB.json');
         $this->wifiConfig = json_decode($data, true);
     }
 
@@ -53,8 +53,13 @@ class Wifi
         $a = $i['signal'];
         $b = $j['signal'];
 
-        if ($a == $b) return 0;
-        if ($a > $b) return -1;
+        if ($a == $b) {
+            return 0;
+        }
+        if ($a > $b) {
+            return -1;
+        }
+
         return 1;
     }
 
@@ -63,18 +68,18 @@ class Wifi
         if (isset($this->wifiConfig[$essid])) {
             return $this->wifiConfig[$essid];
         } else {
-            return null;
+            return;
         }
     }
 
     public function saveNetwork($ssid, $protocol, $encryption, $encryption_type, $password)
     {
         $this->updateNetwork([
-            "ESSID" => $ssid,
-            "Protocol" => $protocol,
-            "encryption" => $encryption,
-            "encryption_type" => $encryption_type,
-            "password" => $password
+            'ESSID'           => $ssid,
+            'Protocol'        => $protocol,
+            'encryption'      => $encryption,
+            'encryption_type' => $encryption_type,
+            'password'        => $password,
         ]);
     }
 
@@ -102,14 +107,14 @@ class Wifi
 
     private static function createSalt($essid)
     {
-        $salt = base64_encode(sha1(microtime() . md5($essid)));
+        $salt = base64_encode(sha1(microtime().md5($essid)));
 
         return $salt;
     }
 
     private static function encodePassword($password, $salt)
     {
-        $password = base64_encode($password . $salt);
+        $password = base64_encode($password.$salt);
 
         return $password;
     }
@@ -125,7 +130,7 @@ class Wifi
     {
         $interface = self::getInterface();
 
-        $cmd = __DIR__ . '/../cmd/wifi_scan.sh';
+        $cmd = __DIR__.'/../cmd/wifi_scan.sh';
 
         if (!file_exists($cmd)) {
             throw new Exception('wifi_scan.sh not found!');
@@ -205,7 +210,7 @@ class Wifi
 
         $conn = $this->getConnectedNetwork();
 
-        uasort($networks, array('self', 'compare'));
+        uasort($networks, ['self', 'compare']);
 
         if ($conn !== null) {
             $conn_essid = $conn['ESSID'];
@@ -216,7 +221,7 @@ class Wifi
                 $networks[$conn_essid] = $conn;
             }
 
-            $networks = array($conn_essid => $networks[$conn_essid]) + $networks;
+            $networks = [$conn_essid => $networks[$conn_essid]] + $networks;
         }
 
         return $networks;
@@ -241,7 +246,7 @@ class Wifi
     {
         $interface = self::getInterface();
 
-        $output = shell_exec('sudo iwconfig ' . $interface);
+        $output = shell_exec('sudo iwconfig '.$interface);
 
         preg_match('/ESSID:"(.*)" /', $output, $matches);
 

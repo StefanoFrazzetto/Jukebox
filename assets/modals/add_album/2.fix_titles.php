@@ -104,7 +104,7 @@ $error = false;
         ?>
         <div class="box-btn center" id="nextCD">Add CD2</div>
         <div class="box-btn pull-right" id="submit">Next</div>
-    <?php 
+    <?php
     } ?>
 </div>
 <script>

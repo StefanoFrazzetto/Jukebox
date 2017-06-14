@@ -6,7 +6,7 @@ use Exception;
 use InvalidArgumentException;
 
 // Remove this.
-ini_set('error_log', __DIR__ . '/../../logs/network-errors.log');
+ini_set('error_log', __DIR__.'/../../logs/network-errors.log');
 
 class Network
 {
@@ -37,21 +37,21 @@ class Network
         }
 
         if ($this->interface === 'ethernet') {
-            $this->run_term('ethernet ' . $this->getDhcpParams());
+            $this->run_term('ethernet '.$this->getDhcpParams());
         }
 
         if ($this->interface === 'wifi') {
-            $this->run_term('wifi ' . $this->getDhcpParams() . ' ' . $this->getWifiParams());
+            $this->run_term('wifi '.$this->getDhcpParams().' '.$this->getWifiParams());
         }
 
         if ($this->interface === 'hotspot') {
-            $this->run_term('hotspot ' . $this->getHotspotParams());
+            $this->run_term('hotspot '.$this->getHotspotParams());
         }
     }
 
     private function run_term($string)
     {
-        $path = __DIR__ . '/../cmd/network_setup.sh';
+        $path = __DIR__.'/../cmd/network_setup.sh';
 
         return shell_exec("sudo $path $string");
     }
@@ -77,7 +77,7 @@ class Network
 
     private function getWifiParams()
     {
-        require_once __DIR__ . '/Wifi.php';
+        require_once __DIR__.'/Wifi.php';
 
         $wifi = new Wifi();
 
@@ -135,22 +135,22 @@ class Network
         }
 
         if ($this->interface === 'ethernet') {
-            echo 'ethernet ' . $this->getDhcpParams();
+            echo 'ethernet '.$this->getDhcpParams();
         }
 
         if ($this->interface === 'wifi') {
-            echo 'wifi ' . $this->getDhcpParams() . ' ' . $this->getWifiParams();
+            echo 'wifi '.$this->getDhcpParams().' '.$this->getWifiParams();
         }
 
         if ($this->interface === 'hotspot') {
-            echo 'hotspot ' . $this->getHotspotParams();
+            echo 'hotspot '.$this->getHotspotParams();
         }
     }
 
     public function load_network()
     {
-        $file = __DIR__ . '/../config/network_settings.json';
-        $default_file = __DIR__ . '/../config/default_network_settings.json';
+        $file = __DIR__.'/../config/network_settings.json';
+        $default_file = __DIR__.'/../config/default_network_settings.json';
 
         if (file_exists($file)) {
             $json = file_get_contents($file);

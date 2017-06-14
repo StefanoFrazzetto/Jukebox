@@ -26,7 +26,7 @@
                  style="border-radius: 5px; box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.40);"
             />
         </p>
-    <?php 
+    <?php
     } ?>
 </div>
 

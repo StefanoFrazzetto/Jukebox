@@ -66,7 +66,6 @@ abstract class Disc
     /** @var string The directory where the ready to use files are saved. */
     protected $destination_dir;
 
-
     /** @var int The process id */
     protected $pid;
 

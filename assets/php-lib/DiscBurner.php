@@ -21,14 +21,14 @@ class DiscBurner extends Disc
      * Burn the tracks compilation or an album to the disc.
      *
      * @param string $tracks_directory the directory containing the
-     * tracks to burn.
-     * @param int $output_format the output format for the CD/DVD.
-     *
-     * @return true if the process is started, false in case of
-     * errors.
+     *                                 tracks to burn.
+     * @param int    $output_format    the output format for the CD/DVD.
      *
      * @throws Exception if there are no tracks to burn in the directory
-     * or if the output format does not match the allowed ones.
+     *                   or if the output format does not match the allowed ones.
+     *
+     * @return true if the process is started, false in case of
+     *              errors.
      */
     public function burn($tracks_directory, $output_format)
     {
@@ -48,6 +48,7 @@ class DiscBurner extends Disc
         }
 
         $this->burnDisc($tracks_directory, $output_format);
+
         return true;
     }
 
@@ -58,7 +59,7 @@ class DiscBurner extends Disc
     }
 
     /**
-     * @param string $directory the directory containing the tracks.
+     * @param string $directory     the directory containing the tracks.
      * @param string $output_format the tracks output format.
      */
     private function burnDisc($directory, $output_format)
@@ -66,12 +67,12 @@ class DiscBurner extends Disc
         $conf = new Config();
         $output_log_dir = $conf->get('disc')['burner']['logs'];
 
-        $script = $this->scripts_dir . 'burner-handler.sh';
+        $script = $this->scripts_dir.'burner-handler.sh';
         $arguments = [
             'input_directory' => $directory,
-            'device' => $this->device_path,
-            'output_format' => $output_format,
-            'output_log_dir' => $output_log_dir
+            'device'          => $this->device_path,
+            'output_format'   => $output_format,
+            'output_log_dir'  => $output_log_dir,
         ];
 
         OS::executeWithEnv($script, $arguments, true);

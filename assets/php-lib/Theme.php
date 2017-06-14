@@ -12,7 +12,7 @@ use JsonSerializable;
  * Date: 23-Nov-16
  * Time: 19:05.
  */
-require __DIR__ . '/../php-lib/Database.php';
+require __DIR__.'/../php-lib/Database.php';
 
 class Theme implements JsonSerializable
 {
@@ -204,7 +204,7 @@ class Theme implements JsonSerializable
 
         file_put_contents(self::THEME_FILE, $theme);
 
-        $script = __DIR__ . '/../nodejs/sass.js';
+        $script = __DIR__.'/../nodejs/sass.js';
 
         exec("node $script");
 
@@ -241,7 +241,9 @@ class Theme implements JsonSerializable
 
     /**
      * Deletes a theme, provided the theme's id.
+     *
      * @param $id int theme id
+     *
      * @return bool true on success, false on fail
      */
     public static function deleteThemeById($id)
@@ -281,14 +283,14 @@ class Theme implements JsonSerializable
     private function updateToDb($db)
     {
         return $db->update('themes', [
-            'name' => $this->name,
-            'text_color' => $this->text_color,
-            'background_color' => $this->background_color,
+            'name'                       => $this->name,
+            'text_color'                 => $this->text_color,
+            'background_color'           => $this->background_color,
             'background_color_highlight' => $this->background_color_highlight,
-            'border_color' => $this->border_color,
-            'overlays' => $this->overlays,
-            'highlight_color' => $this->highlight_color,
-            'dark_accents' => $this->dark_accents,
+            'border_color'               => $this->border_color,
+            'overlays'                   => $this->overlays,
+            'highlight_color'            => $this->highlight_color,
+            'dark_accents'               => $this->dark_accents,
         ], " WHERE id = $this->id");
     }
 
@@ -301,14 +303,14 @@ class Theme implements JsonSerializable
     {
         return $db->insert('themes',
             [
-                'name' => $this->name,
-                'text_color' => $this->text_color,
-                'background_color' => $this->background_color,
+                'name'                       => $this->name,
+                'text_color'                 => $this->text_color,
+                'background_color'           => $this->background_color,
                 'background_color_highlight' => $this->background_color_highlight,
-                'border_color' => $this->border_color,
-                'overlays' => $this->overlays,
-                'highlight_color' => $this->highlight_color,
-                'dark_accents' => $this->dark_accents,
+                'border_color'               => $this->border_color,
+                'overlays'                   => $this->overlays,
+                'highlight_color'            => $this->highlight_color,
+                'dark_accents'               => $this->dark_accents,
             ]
         );
     }
@@ -316,16 +318,16 @@ class Theme implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'text_color' => $this->text_color,
-            'background_color' => $this->background_color,
+            'id'                         => $this->id,
+            'name'                       => $this->name,
+            'text_color'                 => $this->text_color,
+            'background_color'           => $this->background_color,
             'background_color_highlight' => $this->background_color_highlight,
-            'border_color' => $this->border_color,
-            'overlays' => $this->overlays,
-            'highlight_color' => $this->highlight_color,
-            'dark_accents' => $this->dark_accents,
-            'read_only' => $this->isReadOnly,];
+            'border_color'               => $this->border_color,
+            'overlays'                   => $this->overlays,
+            'highlight_color'            => $this->highlight_color,
+            'dark_accents'               => $this->dark_accents,
+            'read_only'                  => $this->isReadOnly, ];
     }
 
     //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
@@ -483,5 +485,6 @@ class Theme implements JsonSerializable
 
         $db->delete('themes', "id = $this->id");
     }
+
     //</editor-fold>
 }

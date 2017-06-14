@@ -5,7 +5,7 @@ require_once '../../vendor/autoload.php';
 use Lib\Config;
 use Lib\FileUtils;
 
-$target_dir = Config::getPath('tmp_uploads') . 'images/';
+$target_dir = Config::getPath('tmp_uploads').'images/';
 $file = $_FILES['file'];
 
 if (!(file_exists($target_dir))) {
@@ -13,14 +13,14 @@ if (!(file_exists($target_dir))) {
 }
 
 // Delete files older than 2 hours.
-foreach (glob($target_dir . '*') as $file_directory) {
+foreach (glob($target_dir.'*') as $file_directory) {
     // Delete the file if older than 2 hours.
     if (filemtime($file_directory) < time() - 7200) {
         unlink($file_directory);
     }
 }
 
-$target_file = $target_dir . sha1(microtime()) . basename($file['name']);
+$target_file = $target_dir.sha1(microtime()).basename($file['name']);
 $uploadOk = 1;
 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
 // Check if image file is a actual image or fake image

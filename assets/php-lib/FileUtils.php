@@ -18,10 +18,10 @@ abstract class FileUtils
      * Create a file.
      *
      * @param string $file_path The file path
-     * @param mixed $content The content to be written
-     * @param bool $append If set to true, appends the content rather than deleting the
+     * @param mixed  $content   The content to be written
+     * @param bool   $append    If set to true, appends the content rather than deleting the
      *                          previous file content
-     * @param bool $json If set to true, the content is encoded to json format
+     * @param bool   $json      If set to true, the content is encoded to json format
      *
      * @return bool true if the operation succeeds, false otherwise.
      */
@@ -47,8 +47,9 @@ abstract class FileUtils
     /**
      * Writes the json representation of an array into a file.
      *
-     * @param array $content the content to write.
+     * @param array  $content   the content to write.
      * @param string $file_path the file path.
+     *
      * @return bool true on success, false on failure.
      */
     public static function writeJson($content, $file_path)
@@ -61,7 +62,7 @@ abstract class FileUtils
             throw new InvalidArgumentException('The content must be an array.');
         }
 
-        $json_content = array();
+        $json_content = [];
         if (file_exists($file_path)) {
             $file_contents = file_get_contents($file_path);
             $json_content = json_decode($file_contents, true);
@@ -72,6 +73,7 @@ abstract class FileUtils
         }
 
         $data = json_encode($json_content);
+
         return file_put_contents($file_path, $data) !== false;
     }
 
@@ -90,7 +92,7 @@ abstract class FileUtils
             throw new InvalidArgumentException('The directory does not exist');
         }
 
-        if (count(glob($dir . '/*', GLOB_NOSORT)) === 0) {
+        if (count(glob($dir.'/*', GLOB_NOSORT)) === 0) {
             return true;
         } else {
             return false;
@@ -101,7 +103,7 @@ abstract class FileUtils
      * Removes an index from a json file.
      *
      * @param string $json_file the path to the json file.
-     * @param string $index the index to remove.
+     * @param string $index     the index to remove.
      *
      * @throws Exception if the json file does not exist.
      *
@@ -146,9 +148,9 @@ abstract class FileUtils
     /**
      * Move (rename) file(s).
      *
-     * @param string $source The source file or directory to move.
+     * @param string $source      The source file or directory to move.
      * @param string $destination The destination file or directory.
-     * @param bool $force If set to true, do not prompt before overriding.
+     * @param bool   $force       If set to true, do not prompt before overriding.
      *                            The default value is false.
      *
      * @return bool True if the operation is successful, false otherwise.
@@ -170,9 +172,9 @@ abstract class FileUtils
     /**
      * Moves the content of one folder to another one file(s).
      *
-     * @param string $source The source directory to move.
+     * @param string $source      The source directory to move.
      * @param string $destination The destination directory.
-     * @param bool $force If set to true, do not prompt before overriding.
+     * @param bool   $force       If set to true, do not prompt before overriding.
      *                            The default value is false.
      *
      * @return bool True if the operation is successful, false otherwise.
@@ -181,8 +183,9 @@ abstract class FileUtils
     {
         $flags = '-v';
 
-        if ($force)
+        if ($force) {
             $flags .= ' -f';
+        }
 
         $cmd = "mv $flags $source* $destination";
 
@@ -192,9 +195,9 @@ abstract class FileUtils
     /**
      * Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.
      *
-     * @param string $source The source file or directory.
+     * @param string $source      The source file or directory.
      * @param string $destination The destination file or directory.
-     * @param bool $force If an existing destination file cannot be opened,
+     * @param bool   $force       If an existing destination file cannot be opened,
      *                            remove it and try again.
      *
      * @return bool True if the operation is successful, false otherwise.
@@ -215,9 +218,9 @@ abstract class FileUtils
     /**
      * Remove files that match an extension.
      *
-     * @param string $path The directory where the file(s) are located.
-     * @param string $ext The file(s) extension.
-     * @param bool $recursive If set to true, remove the files recursively.
+     * @param string $path      The directory where the file(s) are located.
+     * @param string $ext       The file(s) extension.
+     * @param bool   $recursive If set to true, remove the files recursively.
      *
      * @return bool true if the operation was successful, false otherwise.
      */
@@ -231,8 +234,8 @@ abstract class FileUtils
     /**
      * Remove files or directories.
      *
-     * @param string $path The file or directory path.
-     * @param bool $recursive If set to true, remove directories and their contents
+     * @param string $path      The file or directory path.
+     * @param bool   $recursive If set to true, remove directories and their contents
      *                          recursively.
      *
      * @return bool true if the operation was successful, false otherwise.
@@ -276,7 +279,7 @@ abstract class FileUtils
      * with that extension will be counted.
      *
      * @param string $directory The directory where the files should be counted.
-     * @param string $ext The optional extension of the files.
+     * @param string $ext       The optional extension of the files.
      *
      * @return int The number of files.
      */
@@ -288,7 +291,7 @@ abstract class FileUtils
             $ext = '*';
         }
 
-        return count(glob($directory . "/*.$ext", GLOB_NOSORT));
+        return count(glob($directory."/*.$ext", GLOB_NOSORT));
     }
 
     /**
@@ -307,9 +310,10 @@ abstract class FileUtils
         }
 
         $bytes = 0;
-        foreach (glob(rtrim($path, '/') . '/*', GLOB_NOSORT) as $each) {
+        foreach (glob(rtrim($path, '/').'/*', GLOB_NOSORT) as $each) {
             $bytes += is_file($each) ? filesize($each) : self::getDirectorySize($each);
         }
+
         return $bytes / 1024;
     }
 
@@ -329,6 +333,7 @@ abstract class FileUtils
         }
 
         $bytes = filesize($path);
+
         return $bytes / 1024;
     }
 
@@ -352,11 +357,11 @@ abstract class FileUtils
      * Remove all files in the directory that are older than the
      * specified time in seconds.
      *
-     * @param string $dir The directory containing the files to remove.
-     * @param int $seconds the time in seconds.
+     * @param string $dir     The directory containing the files to remove.
+     * @param int    $seconds the time in seconds.
      *
      * @throws InvalidArgumentException if the directory does not exist or
-     * if the time in seconds is less than 0.
+     *                                  if the time in seconds is less than 0.
      */
     public static function deleteFilesOlderThan($dir, $seconds)
     {
@@ -368,7 +373,7 @@ abstract class FileUtils
             throw new InvalidArgumentException('The second argument must be a positive integer.');
         }
 
-        foreach (glob($dir . '/*') as $file) {
+        foreach (glob($dir.'/*') as $file) {
             if (filemtime($file) < time() - $seconds && !is_dir($file)) {
                 unlink($file);
             }
@@ -380,10 +385,10 @@ abstract class FileUtils
      * and their files.
      *
      * @param string $parent_dir The directory containing the dirs to remove.
-     * @param int $minutes the time in minutes.
+     * @param int    $minutes    the time in minutes.
      *
      * @throws InvalidArgumentException if the directory does not exist, is outside
-     * the document root, or if the time in seconds is less than 0.
+     *                                  the document root, or if the time in seconds is less than 0.
      */
     public static function deleteDirectoriesOlderThan($parent_dir, $minutes)
     {
@@ -409,7 +414,9 @@ abstract class FileUtils
      * i.e. <code>/var/www/html/index.php -> /index.php</code>
      *
      * @param $path string path to convert.
+     *
      * @throws Exception if the path is not inside the DOCUMENT_ROOT.
+     *
      * @return string host url.
      */
     public static function pathToHostUrl($path)
@@ -427,6 +434,7 @@ abstract class FileUtils
      * Performs the operations of #pathToHostUrl() only if necessary.
      *
      * @param $path string non-normalised url.
+     *
      * @return string string normalised url.
      */
     public static function normaliseUrl($path)
@@ -435,7 +443,7 @@ abstract class FileUtils
 
         // Prevents unix path to be passed to the program
         if (strpos($path, '/') === 0) {
-            $path = $_SERVER['DOCUMENT_ROOT'] . substr($path, 0);
+            $path = $_SERVER['DOCUMENT_ROOT'].substr($path, 0);
         }
 
         return $path;

@@ -4,7 +4,7 @@ require_once '../../vendor/autoload.php';
 
 use Lib\Wifi;
 
-ini_set('error_log', __DIR__ . '/../../logs/set-network-errors.log');
+ini_set('error_log', __DIR__.'/../../logs/set-network-errors.log');
 
 $output = $_POST;
 
@@ -16,8 +16,7 @@ if ($output['network_type'] == 2) {
 
     $network = $wifi->getNetworkByEssid($ssid);
 
-    if ($network == null) // not stored in the WiFi database
-    {
+    if ($network == null) { // not stored in the WiFi database
         $wifi->saveNetwork($ssid, $output['protocol'], $output['encryption'], $output['encryption_type'], $output['password']);
     }
 }
@@ -29,4 +28,4 @@ unset($output['protocol'], $output['password'], $output['encryption'], $output['
 $json = json_encode($output);
 file_put_contents('../config/network_settings.json', $json);
 
-require __DIR__ . '/set_network.php';
+require __DIR__.'/set_network.php';

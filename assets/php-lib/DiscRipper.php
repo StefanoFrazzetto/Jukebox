@@ -33,13 +33,13 @@ class DiscRipper extends Disc
         parent::__construct();
         if (empty($cd)) {
             $cd = 1;
-        } else if (!is_int($cd) || $cd < 1) {
-            throw new Exception("The parameter passes for the cd (" . var_export($cd, true) . ") is not valid.");
+        } elseif (!is_int($cd) || $cd < 1) {
+            throw new Exception('The parameter passes for the cd ('.var_export($cd, true).') is not valid.');
         }
 
         if (!empty($uploader_id)) {
             $this->uploader_id = $uploader_id;
-            $path = Config::getPath('uploader') . $uploader_id . "/CD$cd";
+            $path = Config::getPath('uploader').$uploader_id."/CD$cd";
 
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
@@ -82,11 +82,11 @@ class DiscRipper extends Disc
         }
 
         $arguments = [
-            'device' => $this->device_path,
+            'device'              => $this->device_path,
             'cdparanoia_log_path' => $this->cdparanoia_log_path,
-            'lame_log_path' => $this->lame_log_path,
-            'ripping_dir' => $this->input_dir,
-            'encoding_dir' => $this->destination_dir
+            'lame_log_path'       => $this->lame_log_path,
+            'ripping_dir'         => $this->input_dir,
+            'encoding_dir'        => $this->destination_dir,
         ];
 
         FileUtils::remove(self::getParentPath(), true);
@@ -117,6 +117,7 @@ class DiscRipper extends Disc
     public static function getParentPath()
     {
         $config = new Config();
+
         return $config->get('disc')['ripper']['parent'];
     }
 
@@ -189,6 +190,7 @@ class DiscRipper extends Disc
     private function getDestinationPath()
     {
         $status_file = $this->getStatusFileContent();
+
         return $status_file['destination_dir'];
     }
 
@@ -295,6 +297,7 @@ class DiscRipper extends Disc
     public static function getInputPath()
     {
         $config = new Config();
+
         return $config->get('disc')['ripper']['input'];
     }
 
