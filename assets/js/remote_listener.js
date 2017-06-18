@@ -46,6 +46,10 @@ handleSSE('refresh', function () {
     document.location.reload(true);
 });
 
+handleSSE('reload', function () {
+    reload();
+});
+
 handleSSE('play_album', function (data) {
     player.playAlbum(parseInt(data.album_id));
 });
