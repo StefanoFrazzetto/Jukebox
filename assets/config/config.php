@@ -53,7 +53,7 @@ return [
         'logs'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/logs/',
         'scripts'       => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/',
         'status_file'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/status.json',
-        'ripper' => [
+        'ripper'        => [
             'parent'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper',
             'input'           => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/input/',
             'handler'         => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/rip_handler.sh',
