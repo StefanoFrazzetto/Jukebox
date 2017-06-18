@@ -8,6 +8,9 @@ if (typeof uploader === "undefined")
     uploader = new Uploader();
 
 uploader.uploadMethods.forEach(function (method, key) {
+    if (isJukebox && method.codeName === 'files')
+        return;
+
     var methodHtml = $("<div class='selector'></div>");
 
     methodHtml.append("<i class='fa fa-5x fa-" + method.icon + "'></i>");
