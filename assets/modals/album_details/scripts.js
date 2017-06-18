@@ -27,36 +27,5 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-    //region Burner
-    $('#burner_single_album').click(function () {
-        burner_show_compilation_btn = true;
-
-        try {
-            if (burner_compilation === true) {
-                try {
-                    // If the albums IDs array exists
-                    // put the album ID if not already there.
-                    if ($.inArray(album_id, input_content_values) === -1) {
-                        input_content_values.push(currentAlbumId);
-                    }
-                } catch (err) {
-                    // Albums IDs array does not exist yet.
-                    input_type_value = "albums";
-                    input_content_values = [];
-                    input_content_values.push(currentAlbumId);
-                }
-            } else {
-                input_type_value = "albums";
-                input_content_values = [currentAlbumId];
-            }
-        } catch (e) {
-            input_type_value = "albums";
-            input_content_values = [currentAlbumId];
-        }
-
-        modal.openPage('assets/modals/burner.php');
-    });
-    //endregion
-
     player.callback(player.onTrackChange);
 });

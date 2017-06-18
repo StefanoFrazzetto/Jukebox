@@ -100,8 +100,6 @@ foreach ($artists_ids as $artist_id) {
         <div class="box-btn" onclick="modal.openPage('assets/modals/download_album/?id=<?php echo $albumID ?>')">
             Download
         </div>
-        <div class="box-btn" id="burner_single_album">Burn Album</div>
-        <!-- <div class="box-btn" id="burner_addto_compilation">Add to burning compilation</div> -->
         <div class="box-btn" onclick="player.addAlbumToPlaylist(<?php echo $albumID ?>)">Add to Playlist</div>
     </div>
 <?php

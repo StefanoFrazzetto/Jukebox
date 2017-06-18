@@ -34,7 +34,6 @@ ICanHaz::css('style.css');
         <div class="box-btn disabled" onclick="">Save Playlist</div>
         <div class="box-btn disabled" onclick="">Load Playlist</div>
         <div class="box-btn disabled" onclick="">Download</div>
-        <div class="box-btn disabled" onclick="">Burn CD</div>
         <div class="box-btn" onclick="player.removeAllTracksFromPlaylist()">Remove all tracks</div>
     </div>
 

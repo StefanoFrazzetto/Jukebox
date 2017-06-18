@@ -53,7 +53,7 @@ if (isJukebox()) {
                     <div id="ripper" class="crcbtn" onclick="modal.openPage('assets/modals/rip/rip_pre.php')"></div>
                     <div id="eq_button" class="crcbtn" onclick="modal.openPage('assets/modals/eq/index.php')"></div>
                     <div id="radio" class="crcbtn" onclick="modal.openPage('assets/modals/radio/index.php')"></div>
-                    <div id="burn" class="crcbtn" onclick="modal.openPage('assets/modals/burner.php')"></div>
+                    <div id="burn" class="crcbtn" onclick="alert('Burner not available anymore.');"></div>
                 </div>
 
                 <div id="marquee">

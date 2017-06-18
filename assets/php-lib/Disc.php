@@ -12,7 +12,6 @@ namespace Lib;
 abstract class Disc
 {
     const STATUS_IDLE = 'idle';
-    const STATUS_BURNING = 'burning';
     const STATUS_RIPPING = 'ripping';
     const STATUS_ENCODING = 'encoding';
     const STATUS_NORMALIZING = 'normalizing';
@@ -91,9 +90,8 @@ abstract class Disc
     /**
      * Return the current status of the disc device.
      *
-     * If a process id related to ripping or burning exists,
-     * the specific status associated with the current operation is
-     * returned, otherwise it means that the process is complete.
+     * The specific status indicating the current operation is
+     * returned, otherwise the process can be considered complete.
      */
     protected function setCurrentStatus()
     {
@@ -104,20 +102,6 @@ abstract class Disc
         }
 
         $this->updateStatus();
-    }
-
-    protected function getStatusFileContent()
-    {
-        $file_content = file_get_contents($this->status_file);
-
-        return json_decode($file_content, true);
-    }
-
-    protected function setStatusMessagePercentage($status, $message, $percentage)
-    {
-        $this->setStatus($status);
-        $this->setMessage($message);
-        $this->setPercentage($percentage);
     }
 
     abstract protected function updateStatus();
@@ -212,6 +196,20 @@ abstract class Disc
     protected function setPercentage($percentage)
     {
         $this->percentage = $percentage;
+    }
+
+    protected function getStatusFileContent()
+    {
+        $file_content = file_get_contents($this->status_file);
+
+        return json_decode($file_content, true);
+    }
+
+    protected function setStatusMessagePercentage($status, $message, $percentage)
+    {
+        $this->setStatus($status);
+        $this->setMessage($message);
+        $this->setPercentage($percentage);
     }
 
     /**
