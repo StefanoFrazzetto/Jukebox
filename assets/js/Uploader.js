@@ -346,6 +346,8 @@ Uploader.prototype.done = function () {
                     ]
 
                 }).show();
+
+                if (typeof sendEvent === "function") sendEvent("reload");
             } else {
                 error("Failed to upload the album. " + data.message);
             }

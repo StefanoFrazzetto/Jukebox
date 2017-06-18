@@ -35,5 +35,5 @@
 require_once '../../../vendor/autoload.php';
 use Lib\ICanHaz;
 
-ICanHaz::js('4-Confirm.js', false, true);
+ICanHaz::js(['4-Confirm.js', '/assets/js/remote_client.js'], false, true);
 ?>
