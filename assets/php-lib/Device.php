@@ -9,18 +9,18 @@ namespace Lib;
  * apache and ssh settings, etc.
  *
  * @author Stefano Frazzetto
+ *
  * @version 1.0.0
- * @package Lib
  */
 class Device
 {
     /** @var Database $database the database */
     private $database;
 
-    /** @var  string the absolute path to the albums storage */
+    /** @var string the absolute path to the albums storage */
     private $albums_storage_path;
 
-    /** @var  string the absolute path to the web-server directory */
+    /** @var string the absolute path to the web-server directory */
     private $document_root;
 
     public function __construct()
@@ -43,7 +43,7 @@ class Device
     private function fixApacheConfig()
     {
         $PHP_INI_TARGET = '/etc/php5/apache2/conf.d/.user.ini';
-        $PHP_INI_SOURCE = $this->document_root . '/installation/.user.ini';
+        $PHP_INI_SOURCE = $this->document_root.'/installation/.user.ini';
 
         $res_copy = OS::executeWithResult("sudo cp -f $PHP_INI_SOURCE $PHP_INI_TARGET");
         $res_perm = OS::executeWithResult("sudo chmod 777 $PHP_INI_TARGET");

@@ -417,7 +417,7 @@ class Uploader
 
             if ($this->source == static::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
                 $tracks_info["CD$cdNo"] = $this->createTracksInfoMusicBrainz($tracks);
-            } else{ // If the source is just files
+            } else { // If the source is just files
                 $tracks_info["CD$cdNo"] = $this->createTracksInfoFromID3($tracks);
             }
         }
@@ -481,7 +481,7 @@ class Uploader
     {
         $tracks_info = [];
         $fail = 0;
-        $max_fail = ceil((count($tracks) * 15)/100); // 20% of the total tracks
+        $max_fail = ceil((count($tracks) * 15) / 100); // 20% of the total tracks
 
         foreach ($tracks as $track) {
             $id3 = new ID3($track);
