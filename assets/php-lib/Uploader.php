@@ -220,8 +220,12 @@ class Uploader
     private static function removeOldDirectories()
     {
         $hoursInMinutes = 4 * 60;
-        // Delete the uploader directories
-        FileUtils::deleteDirectoriesOlderThan(static::getPath(), $hoursInMinutes);
+        try {
+            // Delete old uploader directories
+            FileUtils::deleteDirectoriesOlderThan(static::getPath(), $hoursInMinutes);
+        } catch (InvalidArgumentException $e) {
+            // Should never happen.
+        }
     }
 
     /**
