@@ -137,12 +137,10 @@ abstract class FileUtils
      */
     public static function emptyDirectory($dir_path)
     {
-        $hidden_files = OS::execute("find $dir_path -name ._\\* -print0 | xargs -0 rm -f");
-        $files_and_directories = OS::execute("rm -rf $dir_path/*");
+        OS::execute("find $dir_path -name ._\\* -print0 | xargs -0 rm -f");
+        OS::execute("rm -rf $dir_path/*");
 
-        $res = StringUtils::contains($hidden_files, 'error') && StringUtils::contains($files_and_directories, 'error');
-
-        return $res;
+        return self::countFiles($dir_path) === 0;
     }
 
     /**
