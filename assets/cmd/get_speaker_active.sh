@@ -1,1 +1,0 @@
-gpio read 0
