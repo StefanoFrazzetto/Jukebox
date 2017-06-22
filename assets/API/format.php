@@ -4,7 +4,6 @@ require_once '../../vendor/autoload.php';
 
 use Lib\Device;
 
-
 if (isset($_GET['operation'])) {
     $fail = 'Error! It was not possible to perform the requested action.';
 
