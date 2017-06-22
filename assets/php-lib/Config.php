@@ -30,7 +30,7 @@ class Config
 
     public function __construct()
     {
-        $config_dir = '../config/';
+        $config_dir = __DIR__.'/../config/';
 
         // Loads the static configuration file
         $this->static_conf = include $config_dir.'config.php';
