@@ -346,7 +346,11 @@ abstract class FileUtils
      */
     public static function getTrackLength($track_path)
     {
-        $cmd = "mp3info -p '%S' $track_path | grep -o '[0-9]*'";
+        if (StringUtils::contains($track_path, '.mp3')) {
+            $cmd = "mp3info -p '%S' $track_path | grep -o '[0-9]*'";
+        } else {
+            $cmd = "soxi -D $track_path | grep -o '[0-9.]*'";
+        }
 
         return intval(OS::execute($cmd));
     }
