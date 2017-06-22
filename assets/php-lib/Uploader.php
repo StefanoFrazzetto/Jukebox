@@ -417,10 +417,8 @@ class Uploader
 
             if ($this->source == static::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
                 $tracks_info["CD$cdNo"] = $this->createTracksInfoMusicBrainz($tracks);
-            } elseif ($this->source == static::MEDIA_SOURCE_FILES) { // If the source is just files
+            } else{ // If the source is just files
                 $tracks_info["CD$cdNo"] = $this->createTracksInfoFromID3($tracks);
-            } else {
-                $tracks_info["CD$cdNo"] = $this->createTracksInfoFromFiles($tracks);
             }
         }
 
@@ -483,12 +481,13 @@ class Uploader
     {
         $tracks_info = [];
         $fail = 0;
+        $max_fail = ceil((count($tracks) * 15)/100); // 20% of the total tracks
+
         foreach ($tracks as $track) {
             $id3 = new ID3($track);
             if (!$id3->hasTags()) { // If the tracks does not have id3 tags
                 $fail++;
-                if ($fail > 3) { // If 3 or more tracks have no ID3, skips the process
-                    $tracks_info = [];
+                if ($fail >= $max_fail) { // If 3 or more tracks have no ID3, skips the process
                     break;
                 }
                 continue;
@@ -505,6 +504,11 @@ class Uploader
                 'length'  => FileUtils::getTrackLength($track),
                 'artists' => [$id3->getLeadArtist()],
             ];
+        }
+
+        // If the max fail count is reached, use file names
+        if ($fail >= $max_fail) {
+            $tracks_info = $this->createTracksInfoFromFiles($tracks);
         }
 
         return $tracks_info;
