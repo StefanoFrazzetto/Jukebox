@@ -6,7 +6,7 @@ use Lib\Device;
 
 final class DeviceTest extends JukeboxTestClass
 {
-    /** @var  Device $device the device class instance */
+    /** @var Device $device the device class instance */
     private $device;
 
     public function setUp()
@@ -42,13 +42,15 @@ final class DeviceTest extends JukeboxTestClass
      * Return a private method making it public.
      *
      * @param string $name the method name
+     *
      * @return ReflectionMethod the method
      */
-    private static function getPrivateMethod($name) {
+    private static function getPrivateMethod($name)
+    {
         $class = new ReflectionClass(Device::class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
+
         return $method;
     }
-
 }
