@@ -76,7 +76,8 @@ class Device
         $res_perm = $this->fixPermissions();
         $res_apache = $this->fixApacheConfig();
 
-        Database::resetDatabase();
+        $database = new Database();
+        $database->resetDatabase();
         $res_erase = FileUtils::emptyDirectory($this->albums_storage_path);
 
         return $res_perm && $res_apache && $res_erase;
