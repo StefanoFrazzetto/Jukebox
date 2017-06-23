@@ -93,7 +93,7 @@ class Database extends PDO
     {
         $this->_host = '127.0.0.1';
         $this->_database = 'test';
-        $this->_username = 'root';
+        $this->_username = 'travis';
         $this->_password = '';
     }
 
