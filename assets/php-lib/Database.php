@@ -81,7 +81,7 @@ class Database extends PDO
             $this->setTravisConfig();
         }
 
-        $this->_installation_dir_path = $config->get('paths')['installation'];
+        $this->_installation_dir_path = __DIR__.'/../../installation/';
 
         $this->__init($use_default);
     }
