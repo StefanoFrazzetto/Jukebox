@@ -11,7 +11,7 @@ use PDOException;
  * Database class provides the basic methods to access the database.
  *
  * @author Stefano Frazzetto
- * @package Lib
+ *
  * @version 1.4.0
  */
 class Database extends PDO
@@ -58,7 +58,7 @@ class Database extends PDO
     private $_password;
 
     /**
-     * @var string $_installation_dir_path The path to the installation dir
+     * @var string The path to the installation dir
      */
     private $_installation_dir_path;
 
@@ -117,9 +117,8 @@ class Database extends PDO
             if ($use_default) {
                 $this->query("USE $this->_database");
             }
-
         } catch (PDOException $e) {
-            error_log('Connection failed: ' . $e->getMessage());
+            error_log('Connection failed: '.$e->getMessage());
         }
     }
 
@@ -127,14 +126,15 @@ class Database extends PDO
      * Return true if the database exists, false otherwise.
      *
      * @param string $db_name the database name
+     *
      * @return bool true if the database exists, false otherwise
      */
     private function databaseExists($db_name)
     {
-        $stmt = $this->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :DB_NAME");
-        $stmt->execute(array('DB_NAME' => $db_name));
+        $stmt = $this->prepare('SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :DB_NAME');
+        $stmt->execute(['DB_NAME' => $db_name]);
 
-        return (bool)$stmt->fetchColumn();
+        return (bool) $stmt->fetchColumn();
     }
 
     /**
@@ -173,7 +173,7 @@ class Database extends PDO
      * @param $file string the sql file to run
      *
      * @throws Exception if the file name is not specified or does
-     * not exist.
+     *                   not exist.
      *
      * @return array|bool query result
      */
@@ -270,11 +270,11 @@ class Database extends PDO
     {
         $array_fields = array_keys($array);
 
-        $fields = '(' . implode(',', $array_fields) . ')';
-        $val_holders = '(:' . implode(', :', $array_fields) . ')';
+        $fields = '('.implode(',', $array_fields).')';
+        $val_holders = '(:'.implode(', :', $array_fields).')';
 
         $sql = "INSERT INTO $table";
-        $sql .= $fields . ' VALUES ' . $val_holders;
+        $sql .= $fields.' VALUES '.$val_holders;
 
         $stmt = $this->prepare($sql);
 
@@ -300,8 +300,8 @@ class Database extends PDO
      * Select $columns from $table with additional $query.
      *
      * @param string $columns The columns to select. Default is *.
-     * @param string $table The table where to perform the select from. Default is albums.
-     * @param string $query The additional query: WHERE ...
+     * @param string $table   The table where to perform the select from. Default is albums.
+     * @param string $query   The additional query: WHERE ...
      *
      * @return array|null
      */
@@ -340,12 +340,12 @@ class Database extends PDO
 
         foreach ($array as $key => $value) {
             $value = addslashes($value);
-            $sql .= $key . '=' . "'$value'" . ',';
+            $sql .= $key.'='."'$value'".',';
         }
 
         $sql = rtrim($sql, ',');
 
-        $sql .= ' WHERE ' . $where;
+        $sql .= ' WHERE '.$where;
 
         $stmt = $this->prepare($sql);
 
@@ -385,7 +385,7 @@ class Database extends PDO
         $sql = rtrim($sql, ',');
 
         if ($where != '') {
-            $sql .= ' WHERE ' . $where;
+            $sql .= ' WHERE '.$where;
         }
 
         $stmt = $this->prepare($sql);
