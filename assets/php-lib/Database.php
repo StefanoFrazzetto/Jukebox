@@ -8,9 +8,13 @@ use PDO;
 use PDOException;
 
 /**
- *  Database class provides the basic methods to access the database.
+ * Database class provides the basic methods to access the database.
+ *
+ * @author Stefano Frazzetto
+ * @package Lib
+ * @version 1.4.0
  */
-class Database
+class Database extends PDO
 {
     /**
      * @var string The default table containing the albums
@@ -20,32 +24,22 @@ class Database
      * @var string The default table containing the radio station
      */
     public static $_table_radio_stations = 'radio_stations';
-
     /**
      * @var string The default table containing the artists
      */
     public static $_table_artist = 'artists';
-
     /**
      * @var string The default table containing the songs
      */
     public static $_table_songs = 'songs';
-
     /**
      * @var string The default table containing the artists for each song
      */
     public static $_table_song_artists = 'song_artists';
-
     /**
      * @var Database The single database instance
      */
     private static $_instance;
-
-    /**
-     * @var PDO The database connection
-     */
-    private $_connection;
-
     /**
      * @var string The database host
      */
@@ -64,22 +58,161 @@ class Database
     private $_password;
 
     /**
+     * @var string $_installation_dir_path The path to the installation dir
+     */
+    private $_installation_dir_path;
+
+    /**
      * Database constructor creates the database instance using the dynamic configurations file.
      * If the file does not contain the database configuration, it will try to use the static (default)
-     * database as fallback.
+     * database.
+     *
+     * @param bool $use_default if set to false, no database will be selected (USE database).
      */
-    public function __construct()
+    public function __construct($use_default = true)
     {
         $config = new Config();
-        $this->_host = $config->get('database')['host'];
-        $this->_database = $config->get('database')['name'];
-        $this->_username = $config->get('database')['user'];
-        $this->_password = $config->get('database')['password'];
+        if (getenv('TRAVIS') !== true) { // If env is not Travis-CI
+            $this->_host = $config->get('database')['host'];
+            $this->_database = $config->get('database')['name'];
+            $this->_username = $config->get('database')['user'];
+            $this->_password = $config->get('database')['password'];
+        } else { // Otherwise use Travis config
+            $this->setTravisConfig();
+        }
+
+        $this->_installation_dir_path = $config->get('paths')['installation'];
+
+        $this->__init($use_default);
+    }
+
+    /**
+     * Set the database variables for Travis-CI environment.
+     */
+    private function setTravisConfig()
+    {
+        $this->_host = '127.0.0.1';
+        $this->_database = 'test';
+        $this->_username = 'root';
+        $this->_password = '';
+    }
+
+    /**
+     * Initialize the database connection.
+     *
+     * If the database does not exist, it is created and then used.
+     *
+     * @param bool $use_default if set to false, no database will be selected (USE database).
+     */
+    private function __init($use_default)
+    {
+        try {
+            parent::__construct("mysql:host=$this->_host;charset=utf8mb4", $this->_username, $this->_password);
+            $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            if (!$this->databaseExists($this->_database)) {
+                $this->createDatabase();
+            }
+
+            if ($use_default) {
+                $this->query("USE $this->_database");
+            }
+
+        } catch (PDOException $e) {
+            error_log('Connection failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Return true if the database exists, false otherwise.
+     *
+     * @param string $db_name the database name
+     * @return bool true if the database exists, false otherwise
+     */
+    private function databaseExists($db_name)
+    {
+        $stmt = $this->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :DB_NAME");
+        $stmt->execute(array('DB_NAME' => $db_name));
+
+        return (bool)$stmt->fetchColumn();
+    }
+
+    /**
+     * Crates a new database. If no database name is specified, the default database will be created.
+     *
+     * @param string $db the name of the database to create
+     *
+     * @return array|bool
+     */
+    public function createDatabase($db = '')
+    {
+        if ($db == '') {
+            $db = $this->_database;
+        }
+
+        $res_create_db = $this->query("CREATE DATABASE IF NOT EXISTS $db");
+        $this->query("USE $db");
+        $res_create_schema = $this->createSchema();
+
+        return $res_create_db && $res_create_schema;
+    }
+
+    /**
+     * Create the database schema using the SQL files in the installation dir.
+     */
+    private function createSchema()
+    {
+        $sql_folder = $this->_installation_dir_path;
+        $this->executeFile($sql_folder.'base_schema.sql');
+        $this->executeFile($sql_folder.'themes.sql');
+    }
+
+    /**
+     * Runs a .sql file.
+     *
+     * @param $file string the sql file to run
+     *
+     * @throws Exception if the file name is not specified or does
+     * not exist.
+     *
+     * @return array|bool query result
+     */
+    public function executeFile($file)
+    {
+        if (empty($file) || !file_exists($file)) {
+            throw new Exception("File '$file' not found");
+        }
+
+        $sql = file_get_contents($file);
+
+        return $this->rawQuery($sql);
+    }
+
+    /**
+     * Execute a raw query on the database.
+     *
+     * @param string $query - the query to be executed
+     *
+     * @return array|bool An <b>array</b> containing the objects from the query or
+     *                    <b>false</b> if the query was unsuccessful.
+     */
+    public function rawQuery($query)
+    {
+        if (!isset($query)) {
+            return false;
+        }
 
         try {
-            $this->_connection = new PDO("mysql:host=$this->_host;dbname=$this->_database;charset=utf8mb4", $this->_username, $this->_password);
+            $stmt = $this->prepare($query);
+            $stmt->execute();
+
+            if ($stmt === false) {
+                return false;
+            }
+
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            echo 'Connection failed: '.$e->getMessage();
+            return false;
         }
     }
 
@@ -98,28 +231,23 @@ class Database
     /**
      * Drops the main database and recreates it. WARNING: all data will be LOST.
      */
-    public static function resetDatabase()
+    public function resetDatabase()
     {
-        $db = new self();
+        $db = new self(false);
 
         $db->dropDatabase();
         $db->createDatabase();
-
-        $db = new self();
-
-        // TODO: remove hard-coded vars.
-        $sql_folder = __DIR__.'/../../installation/';
-
-        $db->executeFile($sql_folder.'base_schema.sql');
-        $db->executeFile($sql_folder.'themes.sql');
     }
 
     /**
-     * Drops a database the database. Removes the default db if none specified.
+     * Drop a database.
      *
-     * @param string $db database name to drop
+     * If no database is specified, the default one will be dropped.
      *
-     * @return array|bool result
+     * @param string $db the name of database to drop
+     *
+     * @return bool true if the database is dropped or does not
+     *              exist, false otherwise.
      */
     public function dropDatabase($db = '')
     {
@@ -127,81 +255,7 @@ class Database
             $db = $this->_database;
         }
 
-        return $this->rawQuery("DROP DATABASE $db");
-    }
-
-    /**
-     * Execute a raw query on the database.
-     *
-     * @param string $query - the query to be executed
-     *
-     * @return array|bool An <b>array</b> containing the objects from the query or
-     *                    <b>false</b> if the query was unsuccessful.
-     */
-    public function rawQuery($query)
-    {
-        if (!isset($query)) {
-            return false;
-        }
-
-        try {
-            $stmt = $this->getConnection()->prepare($query);
-            $stmt->execute();
-
-            if ($stmt === false) {
-                return false;
-            }
-
-            return $stmt->fetchAll(PDO::FETCH_OBJ);
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
-
-    /**
-     * @return PDO The database connection.
-     */
-    public function getConnection()
-    {
-        return $this->_connection;
-    }
-
-    /**
-     * Crates a new database. If no database name is specified, the default database will be created.
-     *
-     * @param string $db the name of the database to create
-     *
-     * @return array|bool
-     */
-    public function createDatabase($db = '')
-    {
-        if ($db == '') {
-            $db = $this->_database;
-        }
-
-        return $this->rawQuery("CREATE DATABASE $db");
-    }
-
-    /**
-     * Runs a .sql file.
-     *
-     * @param $file string the sql file to run
-     *
-     * @throws Exception if the file is absent
-     *
-     * @return array|bool query result
-     */
-    public function executeFile($file)
-    {
-        if (empty($file)) {
-            throw new Exception('No filename specified');
-        }
-        if (!file_exists($file)) {
-            throw new Exception("File '$file' not found");
-        }
-        $sql = file_get_contents($file);
-
-        return $this->rawQuery($sql);
+        return !$this->databaseExists($db) ?: $this->rawQuery("DROP DATABASE IF EXISTS $db");
     }
 
     /**
@@ -216,14 +270,13 @@ class Database
     {
         $array_fields = array_keys($array);
 
-        $fields = '('.implode(',', $array_fields).')';
-        $val_holders = '(:'.implode(', :', $array_fields).')';
+        $fields = '(' . implode(',', $array_fields) . ')';
+        $val_holders = '(:' . implode(', :', $array_fields) . ')';
 
         $sql = "INSERT INTO $table";
-        $sql .= $fields.' VALUES '.$val_holders;
+        $sql .= $fields . ' VALUES ' . $val_holders;
 
-        $stmt = $this->_connection;
-        $stmt = $stmt->prepare($sql);
+        $stmt = $this->prepare($sql);
 
         foreach ($array as $key => $value) {
             $value = addslashes($value);
@@ -240,15 +293,15 @@ class Database
      */
     public function getLastInsertedID()
     {
-        return $this->_connection->lastInsertId();
+        return $this->lastInsertId();
     }
 
     /**
      * Select $columns from $table with additional $query.
      *
      * @param string $columns The columns to select. Default is *.
-     * @param string $table   The table where to perform the select from. Default is albums.
-     * @param string $query   The additional query: WHERE ...
+     * @param string $table The table where to perform the select from. Default is albums.
+     * @param string $query The additional query: WHERE ...
      *
      * @return array|null
      */
@@ -261,7 +314,7 @@ class Database
         $sql = "SELECT $columns FROM $table ";
         $sql .= $query;
 
-        $stmt = $this->_connection->prepare($sql);
+        $stmt = $this->prepare($sql);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_CLASS);
 
@@ -287,15 +340,14 @@ class Database
 
         foreach ($array as $key => $value) {
             $value = addslashes($value);
-            $sql .= $key.'='."'$value'".',';
+            $sql .= $key . '=' . "'$value'" . ',';
         }
 
         $sql = rtrim($sql, ',');
 
-        $sql .= ' WHERE '.$where;
+        $sql .= ' WHERE ' . $where;
 
-        $stmt = $this->_connection;
-        $stmt = $stmt->prepare($sql);
+        $stmt = $this->prepare($sql);
 
         foreach ($array as $key => $value) {
             $stmt->bindValue(":$key", $value);
@@ -333,11 +385,10 @@ class Database
         $sql = rtrim($sql, ',');
 
         if ($where != '') {
-            $sql .= ' WHERE '.$where;
+            $sql .= ' WHERE ' . $where;
         }
 
-        $stmt = $this->_connection;
-        $stmt = $stmt->prepare($sql);
+        $stmt = $this->prepare($sql);
 
         return $stmt->execute();
     }
@@ -354,7 +405,7 @@ class Database
     {
         $sql = "SELECT COUNT(*) FROM $table WHERE $where";
 
-        $stmt = $this->_connection->prepare($sql);
+        $stmt = $this->prepare($sql);
 
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_NUM);
@@ -385,7 +436,7 @@ class Database
         $sql .= $where;
 
         try {
-            $stmt = $this->getConnection()->prepare($sql);
+            $stmt = $this->prepare($sql);
 
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -421,7 +472,7 @@ class Database
             $sql = "TRUNCATE TABLE $tables";
 
             try {
-                $stmt = $this->getConnection()->prepare($sql);
+                $stmt = $this->prepare($sql);
 
                 return $stmt->execute();
             } catch (PDOException $e) {
