@@ -72,7 +72,7 @@ class Database extends PDO
     public function __construct($use_default = true)
     {
         $config = new Config();
-        if (getenv('TRAVIS') !== true) { // If env is not Travis-CI
+        if (!getenv('TRAVIS')) { // If env is not Travis-CI
             $this->_host = $config->get('database')['host'];
             $this->_database = $config->get('database')['name'];
             $this->_username = $config->get('database')['user'];
