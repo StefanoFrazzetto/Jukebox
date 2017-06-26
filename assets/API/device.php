@@ -5,7 +5,6 @@ require_once '../../vendor/autoload.php';
 use Lib\Speakers;
 
 if (isset($_GET['action'])) {
-
     switch ($_GET['action']) {
 
         case 'speakers_on':
@@ -18,5 +17,4 @@ if (isset($_GET['action'])) {
 
         default:
     }
-
 }
