@@ -1,4 +1,9 @@
 <?php
+
+require_once '../../vendor/autoload.php';
+
+use Lib\Speakers;
+
 function get_string_between($string, $start, $end)
 {
     $string = ' '.$string;
@@ -29,7 +34,7 @@ function factory($raw_materials)
 
 function getSpeakerStatus()
 {
-    return boolval(intval(shell_exec('../cmd/get_speaker_active.sh')));
+    return Speakers::getStatus();
 }
 
 ?>
@@ -119,9 +124,9 @@ function getSpeakerStatus()
     <script>
         $('#speakers').on("change", function () {
             if (!this.checked) {
-                $.ajax('assets/cmd/exec.php?cmd=int_speakers_off');
+                $.ajax('assets/API/device.php?action=speakers_off');
             } else {
-                $.ajax('assets/cmd/exec.php?cmd=int_speakers_on');
+                $.ajax('assets/API/device.php?action=speakers_on');
             }
         });
     </script>
