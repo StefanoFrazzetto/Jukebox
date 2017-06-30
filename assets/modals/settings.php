@@ -53,8 +53,8 @@ function getSpeakerStatus()
                 <span class="onoffswitch-switch"></span>
             </label>
         </div>
-        <button onclick="$.ajax('assets/cmd/exec.php?cmd=reboot');">Reboot</button>
-        <button onclick="$.ajax('assets/cmd/exec.php?cmd=eject');">Eject</button>
+        <button onclick="$.ajax('assets/API/device.php?action=reboot');">Reboot</button>
+        <button onclick="$.ajax('assets/API/device.php?action=eject');">Eject</button>
         <button onclick="$.ajax('assets/php/calibrate_screen.php');">Calibrate Screen</button>
         <button onclick="modal.openPage('assets/modals/update');">Update</button>
         <button onclick="modal.openPage('assets/modals/theme');">Theme</button>

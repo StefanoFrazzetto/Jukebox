@@ -32,6 +32,22 @@ class Device
         $this->document_root = $config->get('paths')['document_root'];
     }
 
+    public static function shutdown()
+    {
+        OS::execute('sudo poweroff');
+    }
+
+    public static function reboot()
+    {
+        OS::execute('sudo reboot');
+    }
+
+    public static function eject()
+    {
+        $device = OS::execute("lsblk | grep rom | cut -d' ' -f1");
+        OS::execute("eject $device");
+    }
+
     /**
      * Fix apache config.
      *

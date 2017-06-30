@@ -2,6 +2,7 @@
 
 require_once '../../vendor/autoload.php';
 
+use Lib\Device;
 use Lib\Speakers;
 
 if (isset($_GET['action'])) {
@@ -13,6 +14,14 @@ if (isset($_GET['action'])) {
 
         case 'speakers_off':
             Speakers::turnOff();
+            break;
+
+        case 'shutdown':
+            Device::shutdown();
+            break;
+
+        case 'reboot':
+            Device::reboot();
             break;
 
         default:
