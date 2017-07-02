@@ -144,6 +144,27 @@ abstract class FileUtils
     }
 
     /**
+     * Count files in a directory.
+     * If a file extension is passed as second parameter, only the files
+     * with that extension will be counted.
+     *
+     * @param string $directory The directory where the files should be counted.
+     * @param string $ext The optional extension of the files.
+     *
+     * @return int The number of files.
+     */
+    public static function countFiles($directory, $ext = '')
+    {
+        $directory = rtrim($directory, '/');
+
+        if (empty($ext)) {
+            $ext = '*';
+        }
+
+        return count(glob($directory . "/*.$ext", GLOB_NOSORT));
+    }
+
+    /**
      * Move (rename) file(s).
      *
      * @param string $source      The source file or directory to move.
@@ -269,27 +290,6 @@ abstract class FileUtils
         }
 
         return $dirs;
-    }
-
-    /**
-     * Count files in a directory.
-     * If a file extension is passed as second parameter, only the files
-     * with that extension will be counted.
-     *
-     * @param string $directory The directory where the files should be counted.
-     * @param string $ext       The optional extension of the files.
-     *
-     * @return int The number of files.
-     */
-    public static function countFiles($directory, $ext = '')
-    {
-        $directory = rtrim($directory, '/');
-
-        if (empty($ext)) {
-            $ext = '*';
-        }
-
-        return count(glob($directory."/*.$ext", GLOB_NOSORT));
     }
 
     /**
@@ -443,8 +443,11 @@ abstract class FileUtils
     {
         $path = stripslashes($path);
 
-        // Prevents unix path to be passed to the program
-        if (strpos($path, '/') === 0) {
+        if (strpos($path, '//') === 0) {
+            // Normalises URLs like //url.com
+            $path = 'http:' . $path;
+        } else if (strpos($path, '/') === 0) {
+            // Prevents unix path to be passed to the program
             $path = $_SERVER['DOCUMENT_ROOT'].substr($path, 0);
         }
 
