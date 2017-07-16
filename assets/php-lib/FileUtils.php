@@ -149,7 +149,7 @@ abstract class FileUtils
      * with that extension will be counted.
      *
      * @param string $directory The directory where the files should be counted.
-     * @param string $ext The optional extension of the files.
+     * @param string $ext       The optional extension of the files.
      *
      * @return int The number of files.
      */
@@ -161,7 +161,7 @@ abstract class FileUtils
             $ext = '*';
         }
 
-        return count(glob($directory . "/*.$ext", GLOB_NOSORT));
+        return count(glob($directory."/*.$ext", GLOB_NOSORT));
     }
 
     /**
@@ -445,8 +445,8 @@ abstract class FileUtils
 
         if (strpos($path, '//') === 0) {
             // Normalises URLs like //url.com
-            $path = 'http:' . $path;
-        } else if (strpos($path, '/') === 0) {
+            $path = 'http:'.$path;
+        } elseif (strpos($path, '/') === 0) {
             // Prevents unix path to be passed to the program
             $path = $_SERVER['DOCUMENT_ROOT'].substr($path, 0);
         }
