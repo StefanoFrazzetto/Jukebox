@@ -164,7 +164,7 @@
           if (/(^| )dz-message($| )/.test(child.className)) {
             messageElement = child;
             child.className = "dz-message";
-            continue;
+
           }
         }
         if (!messageElement) {
@@ -323,13 +323,14 @@
         var node, _i, _len, _ref, _results;
         if (file.previewElement) {
           file.previewElement.classList.add("dz-error");
-          if (typeof message !== "String" && message.error) {
-            message = message.error;
+            if (typeof message !== "string" && message.message) {
+                message = message.message;
           }
           _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             node = _ref[_i];
+              console.error("Error with file", file, message);
             _results.push(node.textContent = message);
           }
           return _results;
@@ -1460,7 +1461,7 @@
           regex = _ref[_i];
           if (regex.test(navigator.userAgent)) {
             capableBrowser = false;
-            continue;
+
           }
         }
       }
