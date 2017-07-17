@@ -1,6 +1,6 @@
 <?php
 
-require_once 'JukeboxTestClass.php';
+require_once '../JukeboxTestClass.php';
 
 use Lib\StringUtils;
 
