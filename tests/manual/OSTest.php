@@ -14,7 +14,7 @@ final class OSTest extends JukeboxTestClass
 
     public function testStartService()
     {
-//        $this->assertTrue(OS::startService('fail2ban'));
+        //        $this->assertTrue(OS::startService('fail2ban'));
     }
 
     public function testServiceRunning()
