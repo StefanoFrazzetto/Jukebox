@@ -148,7 +148,11 @@ class ID3
      */
     public function getTrackNumber()
     {
-        return intval($this->tags['TRCK']);
+        if (isset($this->tags['TRCK'])) {
+            return intval($this->tags['TRCK']);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -232,7 +236,11 @@ class ID3
      */
     public function getAlbum()
     {
-        return $this->tags['TALB'];
+        if (isset($this->tags['TALB'])) {
+            return $this->tags['TALB'];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -243,7 +251,11 @@ class ID3
      */
     public function getLeadArtist()
     {
-        return $this->tags['TPE1'];
+        if (isset($this->tags['TPE1'])) {
+            return $this->tags['TPE1'];
+        } else {
+            return null;
+        }
     }
 
     /**
