@@ -151,7 +151,7 @@ class ID3
         if (isset($this->tags['TRCK'])) {
             return intval($this->tags['TRCK']);
         } else {
-            return null;
+            return;
         }
     }
 
@@ -239,7 +239,7 @@ class ID3
         if (isset($this->tags['TALB'])) {
             return $this->tags['TALB'];
         } else {
-            return null;
+            return;
         }
     }
 
@@ -254,7 +254,7 @@ class ID3
         if (isset($this->tags['TPE1'])) {
             return $this->tags['TPE1'];
         } else {
-            return null;
+            return;
         }
     }
 
