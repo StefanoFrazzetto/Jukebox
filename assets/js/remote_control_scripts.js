@@ -11,6 +11,7 @@ var playlistSection = $('#playlist-section');
 var menuSection = $('#menu-section');
 var results_container = $('#results');
 var cover = $('#cover');
+var trackDiv = $('#track');
 
 // The margin imposed by the css layout
 var margin = parseInt(remoteControls.css('padding-left'));
@@ -93,11 +94,15 @@ function trackChangedEvent() {
     else
         stopTimer();
 
-    var div = $('#playlist-section').find('tbody');
+    var tbody = $('#playlist-section').find('tbody');
 
-    div.children('.active').removeClass('active');
+    tbody.children('.active').removeClass('active');
 
-    div.children('[data-track-id="' + playerStatus.track_id + '"]').addClass("active");
+    var row = tbody.children('[data-track-id="' + playerStatus.track_id + '"]').addClass("active");
+
+    var text = row.find("td:eq(1)").html();
+
+    trackDiv.html(text);
 }
 
 function radioChangeEvent() {
@@ -524,10 +529,5 @@ $(document).ready(function () {
 });
 
 $(window).resize(function () {
-    var height = remoteControls.outerHeight();
-    margin = parseInt(remoteControls.css('padding-left'));
-
-    $('#remote-controls-placeholder').outerHeight(height);
-
     cover.height(cover.width());
 });

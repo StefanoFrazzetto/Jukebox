@@ -32,7 +32,8 @@ use Lib\ICanHaz;
         </div>
 
         <div id="body">
-            <div id="cover-container"><img src="/assets/img/album-placeholder.png" id="cover" class="cover-picture"/>
+            <div id="cover-container">
+                <img src="/assets/img/album-placeholder.png" id="cover" class="cover-picture"/>
             </div>
 
             <div id="remote-controls">
@@ -42,6 +43,7 @@ use Lib\ICanHaz;
                 <div id="cover-label">
                     <div id="artist"></div>
                     <div id="title"></div>
+                    <div id="track"></div>
                 </div>
 
                 <div class="progressBar thin">
@@ -54,7 +56,6 @@ use Lib\ICanHaz;
                 </div>
 
                 <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
-
             </div>
         </div>
 
