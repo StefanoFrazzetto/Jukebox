@@ -49,7 +49,6 @@ class ImageFetcher
 //        $images[] = $this->getYoutube($this->_search_query);
         }
 
-
         foreach ($images as $website) {
             $images_array = array_merge($images_array, $website);
         }
