@@ -308,7 +308,12 @@ class Uploader
 
         $content->cover = FileUtils::normaliseUrl($content->cover);
 
-        $album->setCover($content->cover);
+        try {
+            $album->setCover($content->cover);
+        } catch (Exception $exception) {
+            $album->setCover(null);
+            error_log("Failed to set cover to album " . $album->getId() . " because " . $exception->getMessage());
+        }
 
         // Let's grab all the juicy stuff.
         if (!FileUtils::moveContents(self::getPath().$uploader_id.'/', $album->getAlbumPath(), true)) {
@@ -481,7 +486,7 @@ class Uploader
      * tags. If ID3 is not available in the track, then basic information
      * from the file is retrieved.
      *
-     * @param array $tracks the array of tracks paths
+     * @param Finder $tracks the array of tracks paths
      *
      * @return array containing the tracks information
      */
