@@ -36,15 +36,19 @@ class ImageFetcher
 
     public function getAll()
     {
-        //        $images[] = $this->getYoutube($this->_search_query);
-        $images['covershut'] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 15);
+        $images = [];
+        $images_array = [];
+
+        if (Network::isConnected()) {
+            $images['covershut'] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 15);
+            $images['allmusic'] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 4);
+            $images['slothradio'] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$$this->album", 2);
 //        $images[] = $this->getFrom("http://www.seekacover.com/cd/$this->_search_query", 2);
-        $images['allmusic'] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 4);
 //        $images[] = $this->getFrom("https://www.google.co.uk/search?q=$this->_search_query&tbm=isch&tbs=isz:l", 10);
 //        $images["discogs"] = $this->getFrom("https://www.discogs.com/search/?q=$this->_search_query&type=all", 10);
-        $images['slothradio'] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$$this->album", 2);
+//        $images[] = $this->getYoutube($this->_search_query);
+        }
 
-        $images_array = [];
 
         foreach ($images as $website) {
             $images_array = array_merge($images_array, $website);
