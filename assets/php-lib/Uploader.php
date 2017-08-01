@@ -312,7 +312,7 @@ class Uploader
             $album->setCover($content->cover);
         } catch (Exception $exception) {
             $album->setCover(null);
-            error_log("Failed to set cover to album " . $album->getId() . " because " . $exception->getMessage());
+            error_log('Failed to set cover to album '.$album->getId().' because '.$exception->getMessage());
         }
 
         // Let's grab all the juicy stuff.
