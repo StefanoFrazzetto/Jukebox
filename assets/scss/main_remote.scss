@@ -235,13 +235,20 @@ body {
   padding: 5px;
 }
 
-/* SMARTPHONES PORTRAIT */
-@media only screen and (min-width: 300px) {
+// responsive layouts
 
+$smartphones-portrait: 300px;
+$smartphones-landscape: 480px;
+$tablet-portrait: 768px;
+$tablet-landscape: 1024px;
+
+/* SMARTPHONES PORTRAIT */
+@media only screen and (min-width: $smartphones-portrait) and (max-width: $tablet-landscape) {
+  // these are the default options
 }
 
 /* SMARTPHONES LANDSCAPE */
-@media only screen and (min-width: 480px) {
+@media only screen and (min-width: $smartphones-landscape) and (max-width: $tablet-portrait) {
 
   #container {
     max-width: 100%;
@@ -275,11 +282,11 @@ body {
 }
 
 /* TABLETS PORTRAIT */
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: $tablet-portrait) and (max-width: $tablet-landscape) {
 
 }
 
 /* TABLET LANDSCAPE / DESKTOP */
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: $tablet-landscape) {
 
 }
