@@ -50,17 +50,10 @@ class Wifi
 
     private static function compare($i, $j)
     {
-        $a = $i['signal'];
-        $b = $j['signal'];
+        $a = isset($i['signal']) ? $i['signal'] : 0;
+        $b = isset($j['signal']) ? $j['signal'] : 0;
 
-        if ($a == $b) {
-            return 0;
-        }
-        if ($a > $b) {
-            return -1;
-        }
-
-        return 1;
+        return ($a > $b) ? -1 : (($a < $b) ? 1 : 0);
     }
 
     public function getNetworkByEssid($essid)
