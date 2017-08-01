@@ -11,7 +11,7 @@ if (!isset($_SESSION['started']) || !$_SESSION['started']) {
 
     $network = new Network();
 
-    if (!$network->isConnected()) {
+    if (!Network::isConnected()) {
         try {
             $network->load_network();
             $network->connect();

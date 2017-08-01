@@ -213,7 +213,7 @@ class Network
         }
     }
 
-    public function isConnected()
+    public static function isConnected()
     {
         $connected = @fsockopen('www.google.com', 443);
 

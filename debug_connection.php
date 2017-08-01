@@ -6,6 +6,7 @@
  * Time: 18:49.
  */
 require 'vendor/autoload.php';
+
 use Lib\Network;
 use Lib\Wifi;
 
@@ -13,7 +14,7 @@ $network = new Network();
 
 $start = microtime();
 
-if ($network->isConnected()) {
+if (Network::isConnected()) {
     $fin = microtime();
     echo '<h1>CONNECTED. Ping '.($fin - $start).' μs</h1>';
 } else {
