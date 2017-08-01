@@ -234,7 +234,7 @@ class Wifi
      */
     public static function getInterface()
     {
-        return trim(shell_exec("ls /sys/class/net | grep -v 'eth0\|lo\|tunl0'"), "\n ");
+        return trim(shell_exec("ls /sys/class/net | grep -e 'wlan*' | xargs"), "\n ");
     }
 
     private static function has($haystack, $needle)
