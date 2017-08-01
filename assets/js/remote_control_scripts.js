@@ -467,10 +467,7 @@ menuSection.slider.toggle = function () {
 //endregion
 
 $(document).ready(function () {
-    var height = remoteControls.outerHeight();
     margin = parseInt(remoteControls.css('padding-left'));
-
-    $('#remote-controls-placeholder').outerHeight(height);
 
     cover.height(cover.width());
 

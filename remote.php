@@ -23,7 +23,7 @@ use Lib\ICanHaz;
                 <i class="fa fa-bars"></i>
             </div>
             <div id="remote-search-bar">
-                <input id="remote-search-field" type="text" class="full-wide" placeholder="Search..."/>
+                <input id="remote-search-field" class="full-wide" placeholder="Search..."/>
                 <div id="results"></div>
             </div>
             <div id="remote-playlist-btn">
@@ -31,33 +31,33 @@ use Lib\ICanHaz;
             </div>
         </div>
 
-        <div id="cover-container">
-            <img src="/assets/img/album-placeholder.png" id="cover" class="cover-picture"/>
+        <div id="body">
+            <div id="cover-container"><img src="/assets/img/album-placeholder.png" id="cover" class="cover-picture"/>
+            </div>
+
+            <div id="remote-controls">
+
+                <div id="log" class="hidden"></div>
+
+                <div id="cover-label">
+                    <div id="artist"></div>
+                    <div id="title"></div>
+                </div>
+
+                <div class="progressBar thin">
+                    <div class="progress" id="trackProgress"></div>
+                </div>
+
+                <div class="holo-btn" onclick="sendEvent('previous')"><i class="fa fa-step-backward"></i></div>
+
+                <div class="holo-btn big" onclick="sendEvent('play/pause')" id="play-pause"><i class="fa fa-pause"></i>
+                </div>
+
+                <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
+
+            </div>
         </div>
 
-        <div id="remote-controls-placeholder"></div>
-
-        <div id="remote-controls">
-
-            <div id="log" class="hidden"></div>
-
-            <div id="cover-label">
-                <div id="artist"></div>
-                <div id="title"></div>
-            </div>
-
-            <div class="progressBar thin">
-                <div class="progress" id="trackProgress"></div>
-            </div>
-
-            <div class="holo-btn" onclick="sendEvent('previous')"><i class="fa fa-step-backward"></i></div>
-
-            <div class="holo-btn big" onclick="sendEvent('play/pause')" id="play-pause"><i class="fa fa-pause"></i>
-            </div>
-
-            <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
-
-        </div>
     </div>
     <div id="playlist-section">
         <table id="remote-playlist-table" class="cooltable small">
