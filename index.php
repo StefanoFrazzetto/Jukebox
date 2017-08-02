@@ -1,5 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
+
 use Lib\ICanHaz;
 
 if (isJukebox()) {
@@ -44,7 +45,7 @@ if (isJukebox()) {
                     <div id="power" class="crcbtn"></div>
                     <div id="settings" class="crcbtn" onclick="modal.openPage('assets/modals/settings.php')"></div>
                     <div id="network_settings" class="crcbtn"
-                         onclick="modal.openPage('assets/modals/bluetooth.php')"></div>
+                         onclick="alert('Bluetooth is not available yet.');"></div>
                     <div id="qr" class="crcbtn" onclick="modal.openPage('assets/modals/qrcode.php')"></div>
                     <div id="trash" class="crcbtn" onclick="storage.deleteAlbum(album_id);"></div>
                     <div id="add" class="crcbtn"></div>
