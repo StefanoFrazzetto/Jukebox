@@ -11,7 +11,9 @@ var playlistSection = $('#playlist-section');
 var menuSection = $('#menu-section');
 var results_container = $('#results');
 var cover = $('#cover');
-var trackDiv = $('#track');
+var trackDiv = $('.track');
+var artistDiv = $('.artist');
+var titleDiv = $('.title');
 
 // The margin imposed by the css layout
 var margin = parseInt(remoteControls.css('padding-left'));
@@ -44,8 +46,8 @@ function albumChangedEvent() {
         }
 
         cover.attr('src', album.getFullCoverUrl());
-        $('#artist').html(album.getArtistsNames());
-        $('#title').html(album.title);
+        artistDiv.html(album.getArtistsNames());
+        titleDiv.html(album.title);
 
         loadAlbumPlaylist(album.id, function (songs) {
             populatePlaylist(songs);
@@ -110,8 +112,8 @@ function radioChangeEvent() {
     if (radio === false)
         return;
     cover.attr('src', radio.cover);
-    $('#artist').html(radio.name);
-    $('#title').html("Radio station");
+    artistDiv.html(radio.name);
+    titleDiv.html("Radio station");
 }
 
 function updateTrackProgress() {

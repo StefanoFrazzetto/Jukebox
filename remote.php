@@ -36,26 +36,35 @@ use Lib\ICanHaz;
                 <img src="/assets/img/album-placeholder.png" id="cover" class="cover-picture"/>
             </div>
 
+            <div id="cover-label">
+                <div class="artist"></div>
+                <div class="title"></div>
+                <div class="track"></div>
+            </div>
+
             <div id="remote-controls">
 
                 <div id="log" class="hidden"></div>
 
-                <div id="cover-label">
-                    <div id="artist"></div>
-                    <div id="title"></div>
-                    <div id="track"></div>
+                <div id="info-label">
+                    <div class="artist"></div>
+                    <div class="title"></div>
+                    <div class="track"></div>
                 </div>
 
                 <div class="progressBar thin">
                     <div class="progress" id="trackProgress"></div>
                 </div>
 
-                <div class="holo-btn" onclick="sendEvent('previous')"><i class="fa fa-step-backward"></i></div>
+                <div id="buttons">
+                    <div class="holo-btn" onclick="sendEvent('previous')"><i class="fa fa-step-backward"></i></div>
 
-                <div class="holo-btn big" onclick="sendEvent('play/pause')" id="play-pause"><i class="fa fa-pause"></i>
+                    <div class="holo-btn big" onclick="sendEvent('play/pause')" id="play-pause"><i
+                                class="fa fa-pause"></i>
+                    </div>
+
+                    <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
                 </div>
-
-                <div class="holo-btn" onclick="sendEvent('next')"><i class="fa fa-step-forward"></i></div>
             </div>
         </div>
 
@@ -77,7 +86,7 @@ use Lib\ICanHaz;
     </div>
     <div id="menu-section">
         <ul class="multiselect">
-            <li class="text-center">
+            <li class="text-center" id="volume-group">
                 <i class="fa fa-volume-up" id="volume-icon"></i>
                 <div id="volume-slider" class="progressBar thin"></div>
             </li>

@@ -14,6 +14,9 @@
 $remote-margin: 35px;
 $remote-margin-smaller: $remote-margin / 2;
 $remote-upper-bar-height: 45px;
+$sidebar-width: 350px;
+$lower-bar-height: 105px;
+$volume-bar-width: 250px;
 
 body {
   margin: 0;
@@ -44,16 +47,16 @@ body {
   position: relative;
 
   #remote-menu-btn, #remote-playlist-btn {
-    width: $remote-upper-bar-height;
+    width: $remote-margin;
     height: $remote-upper-bar-height;
+    line-height: 39px;
     position: absolute;
-    top: 0;
 
     $padding: 5px;
 
     padding: $padding;
 
-    font-size: ($remote-upper-bar-height -$padding) / 2 + 8px;
+    font-size: ($remote-upper-bar-height - $padding) / 2 + 8px;
 
     vertical-align: middle;
 
@@ -70,7 +73,7 @@ body {
 
   #remote-search-bar {
     position: relative;
-    margin: 0 $remote-upper-bar-height;
+    margin: 0 $remote-margin;
 
     baseline-shift: 2px;
     input {
@@ -191,14 +194,18 @@ body {
   position: relative;
 }
 
-#cover-label div {
+#info-label div, #cover-label div {
   text-align: center;
   width: 100%;
 }
 
-#cover-label {
+#info-label {
   margin-top: $remote-margin / 4;
   margin-bottom: $remote-margin / 2;
+}
+
+#cover-label {
+  display: none;
 }
 
 #cover {
@@ -217,7 +224,7 @@ body {
   width: 100%;
 }
 
-#artist {
+.artist {
   font-size: x-large;
 }
 
@@ -243,12 +250,12 @@ $tablet-portrait: 768px;
 $tablet-landscape: 1024px;
 
 /* SMARTPHONES PORTRAIT */
-@media only screen and (min-width: $smartphones-portrait) and (max-width: $tablet-landscape) {
+@media only screen and (min-width: $smartphones-portrait) and (max-width: $tablet-landscape - 1) {
   // these are the default options
 }
 
 /* SMARTPHONES LANDSCAPE */
-@media only screen and (min-width: $smartphones-landscape) and (max-width: $tablet-portrait) {
+@media only screen and (min-width: $smartphones-landscape) and (max-width: $tablet-portrait - 1) {
 
   #container {
     max-width: 100%;
@@ -282,11 +289,126 @@ $tablet-landscape: 1024px;
 }
 
 /* TABLETS PORTRAIT */
-@media only screen and (min-width: $tablet-portrait) and (max-width: $tablet-landscape) {
+@media only screen and (min-width: $tablet-portrait) {
+  #cover-container {
+    padding: $remote-margin;
+  }
 
+  #body {
+    width: $sidebar-width;
+    //margin-bottom: $lower-bar-height;
+  }
+
+  #container {
+    overflow: visible;
+  }
+
+  #cover-label {
+    display: block;
+    padding-right: $remote-margin;
+    padding-left: $remote-margin;
+  }
+
+  #info-label {
+    display: none;
+  }
+
+  #remote-controls {
+    position: fixed;
+    bottom: 0;
+    height: $lower-bar-height;
+
+    background-color: $background_color;
+  }
+
+  #playlist-section {
+    position: absolute;
+    left: $sidebar-width !important;
+    top: $remote-upper-bar-height + $remote-margin;
+
+    width: calc(100% - #{$sidebar-width + $remote-margin});
+
+    height: calc(95vh - #{$lower-bar-height + $remote-upper-bar-height + $remote-margin * 2});
+    overflow: auto;
+
+    background-color: transparent;
+    opacity: 1;
+    padding: 0;
+    border: none;
+
+    hr {
+      display: none;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  #remote-playlist-btn {
+    display: none;
+  }
+
+  .holo-btn {
+    $smaller-size: 50px;
+    width: $smaller-size;
+    height: $smaller-size;
+    line-height: $smaller-size;
+    font-size: $smaller-size / 2;
+  }
 }
 
 /* TABLET LANDSCAPE / DESKTOP */
 @media only screen and (min-width: $tablet-landscape) {
+  $lower-bar-height: 70px;
 
+  #body {
+    //margin-bottom: $lower-bar-height;
+  }
+
+  #menu-section {
+    width: 25%;
+  }
+
+  #playlist-section {
+    height: calc(100vh - #{$lower-bar-height + $remote-upper-bar-height + $remote-margin * 2});;
+  }
+
+  #remote-controls {
+    height: $lower-bar-height;
+
+    .progressBar {
+      position: absolute;
+      top: 25%;
+      left: $sidebar-width;
+      width: calc(100% - #{$sidebar-width + $volume-bar-width});
+    }
+
+    #buttons {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding-right: $remote-margin;
+      width: $sidebar-width;
+    }
+  }
+
+  #volume-group {
+    position: fixed;
+    background-color: $background_color;
+    display: block;
+    padding-left: $remote-margin;
+    padding-right: $remote-margin;
+    bottom: 18px;
+    right: 0;
+    border: none;
+    width: $volume-bar-width;
+    cursor: auto;
+
+    i {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+    }
+  }
 }
