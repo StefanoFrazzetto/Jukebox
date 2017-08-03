@@ -2,8 +2,8 @@
 
 require_once '../../vendor/autoload.php';
 
-use Lib\Device;
 use Lib\Speakers;
+use Lib\System;
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -17,11 +17,19 @@ if (isset($_GET['action'])) {
             break;
 
         case 'shutdown':
-            Device::shutdown();
+            System::shutdown();
             break;
 
         case 'reboot':
-            Device::reboot();
+            System::reboot();
+            break;
+
+        case 'getSocTemp':
+            return System::getSoctemp();
+            break;
+
+        case 'runUpdate':
+            return System::update() && System::upgrade();
             break;
 
         default:

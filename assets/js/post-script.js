@@ -308,14 +308,14 @@ pwr_btn.click(function () {
             {
                 text: "Shutdown",
                 callback: function () {
-                    $.ajax('assets/API/device.php?action=shutdown');
+                    $.ajax('assets/API/system.php?action=shutdown');
                     // How many times I pressed it by mistake, and realized I was stupid.
                 }
             },
             {
                 text: "Restart",
                 callback: function () {
-                    $.ajax('assets/API/device.php?action=reboot');
+                    $.ajax('assets/API/system.php?action=reboot');
                 }
             },
             "Cancel"

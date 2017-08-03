@@ -2,16 +2,16 @@
 
 require_once __DIR__.'/../JukeboxTestClass.php';
 
-use Lib\Device;
+use Lib\System;
 
 final class DeviceTest extends JukeboxTestClass
 {
-    /** @var Device $device the device class instance */
+    /** @var System $device the device class instance */
     private $device;
 
     public function setUp()
     {
-        $this->device = new Device();
+        $this->device = new System();
     }
 
     public function testFixApacheIni()
@@ -47,7 +47,7 @@ final class DeviceTest extends JukeboxTestClass
      */
     private static function getPrivateMethod($name)
     {
-        $class = new ReflectionClass(Device::class);
+        $class = new ReflectionClass(System::class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
 
