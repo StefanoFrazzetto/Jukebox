@@ -41,13 +41,14 @@ return [
      * | Paths to the most important directories.
      */
     'paths' => [
-        'document_root' => $_SERVER['DOCUMENT_ROOT'],
-        'albums_root'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/',
-        'tmp_uploads'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/tmp_uploads/',
-        'assets'        => $_SERVER['DOCUMENT_ROOT'].'/assets/',
-        'scripts'       => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/',
-        'uploader'      => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
-        'installation'  => $_SERVER['DOCUMENT_ROOT'].'/installation/',
+        'document_root'         => $_SERVER['DOCUMENT_ROOT'],
+        'albums_root'           => $_SERVER['DOCUMENT_ROOT'].'/jukebox/',
+        'downloads_directory'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/downloads/',
+        'tmp_uploads'           => $_SERVER['DOCUMENT_ROOT'].'/jukebox/tmp_uploads/',
+        'assets'                => $_SERVER['DOCUMENT_ROOT'].'/assets/',
+        'scripts'               => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/',
+        'uploader'              => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
+        'installation'          => $_SERVER['DOCUMENT_ROOT'].'/installation/',
     ],
 
     'disc' => [
