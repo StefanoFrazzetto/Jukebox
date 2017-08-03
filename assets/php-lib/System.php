@@ -37,7 +37,7 @@ class System
      *
      * @return string
      */
-    public static function getSoctemp(int $decimals = 1)
+    public static function getSoctemp($decimals = 1)
     {
         $temp = trim(OS::execute('cat /etc/armbianmonitor/datasources/soctemp'));
         $temp = floatval($temp) / 1000;
