@@ -38,7 +38,7 @@ class System
     public static function getSoctemp()
     {
         $temp = trim(OS::execute('cat /etc/armbianmonitor/datasources/soctemp'));
-        $temp = floatval($temp)/1000;
+        $temp = floatval($temp) / 1000;
         $temp = number_format($temp, 2, '.', '');
 
         return $temp;
@@ -50,7 +50,7 @@ class System
     public static function getPmictemp()
     {
         $temp = trim(OS::execute('cat /etc/armbianmonitor/datasources/pmictemp'));
-        $temp = floatval($temp)/1000;
+        $temp = floatval($temp) / 1000;
         $temp = number_format($temp, 2, '.', '');
 
         return $temp;
