@@ -3,6 +3,7 @@
 require_once '../../vendor/autoload.php';
 
 use Lib\Speakers;
+use Lib\System;
 
 function get_string_between($string, $start, $end)
 {
@@ -109,8 +110,7 @@ function getSpeakerStatus()
         </div>
 
         <?php
-        $temp = exec('cat /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/temp1_input');
-        $temp = intval($temp) / 1000;
+        $temp = System::getSoctemp();
         ?>
 
         <p>CPU Temp</p>
