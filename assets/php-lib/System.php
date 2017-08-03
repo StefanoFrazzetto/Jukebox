@@ -33,13 +33,15 @@ class System
     }
 
     /**
+     * @param int $decimals [optional] Sets the number of decimal points.
+     *
      * @return string
      */
-    public static function getSoctemp()
+    public static function getSoctemp(int $decimals = 1)
     {
         $temp = trim(OS::execute('cat /etc/armbianmonitor/datasources/soctemp'));
         $temp = floatval($temp) / 1000;
-        $temp = number_format($temp, 2, '.', '');
+        $temp = number_format($temp, $decimals, '.', '');
 
         return $temp;
     }
