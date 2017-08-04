@@ -310,8 +310,8 @@ abstract class FileUtils
         }
 
         $bytes = 0;
-        if($path!==false && $path!='' && file_exists($path)){
-            foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
+        if ($path !== false && $path != '' && file_exists($path)) {
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
                 $bytes += $object->getSize();
             }
         }
