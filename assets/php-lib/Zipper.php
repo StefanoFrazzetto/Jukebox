@@ -2,7 +2,6 @@
 
 namespace Lib;
 
-
 use Exception;
 use InvalidArgumentException;
 use Lib\MusicClasses\Album;
@@ -12,10 +11,10 @@ use RecursiveIteratorIterator;
 use ZipArchive;
 
 /**
- * Class Zipper
+ * Class Zipper.
  *
- * @package Lib
  * @author Stefano Frazzetto
+ *
  * @version 2.0.0
  */
 class Zipper
@@ -31,27 +30,28 @@ class Zipper
     private static $DOWNLOADS_DIRECTORY;
 
     /**
-     * @var string $ZIP_LOCK the absolute path to the zip lock file
+     * @var string the absolute path to the zip lock file
      */
     private static $ZIP_LOCK;
 
     /**
-     * @var int $FILE_EXPIRE_TIME the time after which an album must be zipped again (1 day)
+     * @var int the time after which an album must be zipped again (1 day)
      */
     private static $FILE_EXPIRE_TIME = 86400;
 
     /**
-     * @var int $albumID the id of the album to zip
+     * @var int the id of the album to zip
      */
     private $albumID;
 
     /**
-     * @var string $outputFilePath the zip file name
+     * @var string the zip file name
      */
     private $outputFilePath;
 
     /**
      * Zipper constructor.
+     *
      * @param int $albumID the album id
      *
      * @throws InvalidArgumentException if the album does not exist.
@@ -66,9 +66,9 @@ class Zipper
         $config = new Config();
         $paths = $config->get('paths');
 
-        $this->albumDirectoryPath = $paths['albums_root'] . $albumID;
+        $this->albumDirectoryPath = $paths['albums_root'].$albumID;
         self::$DOWNLOADS_DIRECTORY = $paths['downloads_directory'];
-        self::$ZIP_LOCK = self::$DOWNLOADS_DIRECTORY . 'zip_check';
+        self::$ZIP_LOCK = self::$DOWNLOADS_DIRECTORY.'zip_check';
 
         // Check if the album directory exists
         if (!file_exists($this->albumDirectoryPath)) {
@@ -85,11 +85,11 @@ class Zipper
         $Album = Album::getAlbum($albumID);
         $title = $Album->getTitle();
         $artists = $Album->getArtistsName();
-        $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', '_', implode($artists, '-')) .
-            '-' . preg_replace('/[^A-Za-z0-9\-]/', '_', $title) . '.zip';
+        $outputFileName = preg_replace('/[^A-Za-z0-9\-]/', '_', implode($artists, '-')).
+            '-'.preg_replace('/[^A-Za-z0-9\-]/', '_', $title).'.zip';
 
         $this->albumID = intval($albumID);
-        $this->outputFilePath = self::$DOWNLOADS_DIRECTORY . $outputFileName;
+        $this->outputFilePath = self::$DOWNLOADS_DIRECTORY.$outputFileName;
     }
 
     /**
@@ -116,7 +116,7 @@ class Zipper
             return 0;
         }
 
-        return (int)floor($album_dir_size / $zip_file_size) * 100;
+        return (int) floor($album_dir_size / $zip_file_size) * 100;
     }
 
     /**
@@ -130,9 +130,9 @@ class Zipper
     /**
      * Create the zipped file.
      *
-     * @return bool|string true on success, otherwise an error explaining the cause of the problem.
-     *
      * @throws Exception if the file cannot be created.
+     *
+     * @return bool|string true on success, otherwise an error explaining the cause of the problem.
      */
     public function createZip()
     {
@@ -232,6 +232,6 @@ class Zipper
 
         $relative_file_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $this->outputFilePath);
 
-        return 'http://' . $_SERVER['HTTP_HOST'] . $relative_file_path;
+        return 'http://'.$_SERVER['HTTP_HOST'].$relative_file_path;
     }
 }

@@ -15,7 +15,7 @@ if (isset($action) && isset($albumID)) {
             try {
                 $zipper = new Zipper($albumID);
                 $zipper->createZip();
-                $output = "<br/><a href='" . $zipper->getDownloadURL() . "'><button>Download Album</button></a>";
+                $output = "<br/><a href='".$zipper->getDownloadURL()."'><button>Download Album</button></a>";
             } catch (Exception $e) {
                 $output = $e->getMessage();
             }
