@@ -5,6 +5,8 @@ namespace Lib;
 use Exception;
 use FilesystemIterator;
 use InvalidArgumentException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * FileUtils provide static methods to access, create, modify, and delete
@@ -308,8 +310,10 @@ abstract class FileUtils
         }
 
         $bytes = 0;
-        foreach (glob(rtrim($path, '/').'/*', GLOB_NOSORT) as $each) {
-            $bytes += is_file($each) ? filesize($each) : self::getDirectorySize($each);
+        if($path!==false && $path!='' && file_exists($path)){
+            foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
+                $bytes += $object->getSize();
+            }
         }
 
         return $bytes / 1024;
