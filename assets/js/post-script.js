@@ -328,8 +328,10 @@ $('#albumCover').click(function () {
         modal.openPage('/assets/modals/radio');
         return;
     }
-    if (typeof(album_id) !== 'undefined')
-        modal.openPage('assets/modals/album_details?id=' + album_id);
+    if (typeof(player.getCurrentAlbumId()) !== 'undefined')
+        modal.openPage('assets/modals/album_details?id=' + player.getCurrentAlbumId());
+    else
+        console.error("Unable to retrieve current album id.");
 });
 
 previous.hide(); // This will hide the previous button, since we are at page 1 for reasons.
