@@ -4,7 +4,7 @@ var jukebox_connection = null;
 
 var jukebox_connected = false;
 
-var jukeboxStatus = [];
+var jukeboxStatus = {};
 
 var clients = [];
 
@@ -50,8 +50,7 @@ http.createServer(function (req, res) {
     }
 
     function optimiseStatusPayload(oldJukeboxStatus, jukeboxStatus) {
-        return jukeboxStatus;
-        //return compareObjects(oldJukeboxStatus, jukeboxStatus);
+        return compareObjects(oldJukeboxStatus, jukeboxStatus);
     }
 
     function compareObjects(a, b) {
@@ -63,18 +62,22 @@ http.createServer(function (req, res) {
             throw new TypeError("Second parameter must be an object, found", typeof b);
         }
 
+        if (a === null && b === null) {
+            return {};
+        }
+
+        if (a === null) {
+            return b;
+        }
+
+        // that was some bad ass error avoidance, mate!
+
         const diff = {};
 
-        console.log(typeof a);
-
-        const aKeys = Object.keys(a);
         const bKeys = Object.keys(b);
 
-        // TODO intersection
-        const missingKeys = aKeys.filter(function (n) {
-            return bKeys.indexOf(n) > -1;
-        });
-
+        // Recursive compare of objects. Worst code ever.
+        // You better look away for you own sanity.
         bKeys.forEach(function (key) {
             if (typeof a[key] === "object" && typeof b[key] === "object") {
                 const comp = compareObjects(a[key], b[key]);
@@ -84,9 +87,16 @@ http.createServer(function (req, res) {
                 diff[key] = b[key];
         });
 
-        missingKeys.forEach(function (t) {
-            diff[t] = null;
-        });
+        // Differential?
+        // const aKeys = Object.keys(a);
+        //
+        // const missingKeys = aKeys.filter(function (n) {
+        //     return bKeys.indexOf(n) > -1;
+        // });
+        //
+        // missingKeys.forEach(function (t) {
+        //     diff[t] = null;
+        // });
 
         return diff;
     }
@@ -247,14 +257,18 @@ http.createServer(function (req, res) {
     function handleExternalEventRequest() {
         console.log('[@] Incoming remote SSE request from ' + req.connection.remoteAddress + '...');
 
-        if (typeof res.keepAliveHandler !== "undefined")
+        // noinspection JSUnresolvedVariable
+        if (typeof res.keepAliveHandler !== "undefined") { // noinspection JSUnresolvedVariable
             clearInterval(res.keepAliveHandler);
+        }
 
+        // noinspection JSUndefinedPropertyAssignment
         res.keepAliveHandler = setInterval(function () {
             sendKeepAlive(res);
         }, 1000);
 
         // send headers
+        // noinspection JSUnresolvedVariable
         headers['Access-Control-Allow-Origin'] = req.headers.origin;
         res.writeHead(200, headers);
 
@@ -273,6 +287,7 @@ http.createServer(function (req, res) {
                 clients.splice(i, 1);
             }
 
+            // noinspection JSUnresolvedVariable
             clearInterval(res.keepAliveHandler);
         });
     }

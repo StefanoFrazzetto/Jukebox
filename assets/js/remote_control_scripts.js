@@ -29,6 +29,7 @@ function startTimer() {
 function stopTimer() {
     clearInterval(clockTimerHandle);
 }
+
 //endregion
 
 //region Event Handlers
@@ -63,14 +64,20 @@ function albumChangedEvent() {
         div.html('');
 
         songs.forEach(function (song, index) {
-            var asd = $("<tr data-track-id='" + song.id + "'><td>" + (index + 1) + "</td><td>" + song.title + "</td><td>" + timestamp(song.length) + "</td></tr>");
+            var tr = $("<tr>").attr("data-track-id", song.id);
 
-            asd.click(function (e) {
+            var td1 = $("<td>").html(index + 1);
+            var td2 = $("<td>").html(song.title);
+            var td3 = $("<td>").html(timestamp(song.length));
+
+            tr.append(td1, td2, td3);
+
+            tr.click(function (e) {
                 sendEvent('play_song', {song_no: index});
                 e.preventDefault();
             });
 
-            div.append(asd);
+            div.append(tr);
         })
     }
 
@@ -117,7 +124,7 @@ function radioChangeEvent() {
 }
 
 function updateTrackProgress() {
-    if (typeof playerStatus.duration !== "undefined") {
+    if (typeof playerStatus.duration !== "undefined" && playerStatus.duration !== null) {
         var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
 
         if (percentage > 100) {
@@ -234,6 +241,7 @@ function handleSearch() {
         return div;
     }
 }
+
 //endregion
 
 //region Time formatter
@@ -249,6 +257,7 @@ function timestamp(time) {
     var seconds = Math.floor(time - minutes * 60);
     return addZero(minutes) + ':' + addZero(seconds);
 }
+
 //endregion
 
 //region Loaders
@@ -329,31 +338,42 @@ function getLocalCurrentTime() {
 function updateRemoteStatus(r) {
     var oldPlayingStatus = playerStatus;
 
-    playerStatus = r;
+    function checkChange(key) {
+        if (typeof r[key] !== "undefined" && oldPlayingStatus[key] !== r[key]) {
+            playerStatus[key] = r[key];
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    if (oldPlayingStatus.playing !== r.playing) {
+    if (checkChange('playing')) {
         playingStatusChangedEvent();
     }
 
-    if (oldPlayingStatus.album_id !== r.album_id) {
+    if (checkChange('album_id')) {
         albumChangedEvent();
     }
 
-    if (oldPlayingStatus.isRadio !== r.isRadio && r.isRadio !== false) {
+    if (checkChange('isRadio') && r.isRadio !== false) {
         radioChangeEvent();
     }
 
-    if (oldPlayingStatus.track_id !== r.track_id) {
+    if (checkChange('track_id')) {
         trackChangedEvent();
     }
 
-    if (oldPlayingStatus.currentTime !== r.currentTime) {
+    if (checkChange('current_time')) {
         updateTrackProgress();
     }
 
-    if (oldPlayingStatus.volume !== r.volume) {
+    if (checkChange('volume')) {
         volumeChangeEvent();
     }
+
+    Object.keys(r).forEach(function (t) {
+        playerStatus[t] = r[t];
+    });
 
     function volumeChangeEvent() {
         $('#debug-volume').val(r.volume);
@@ -371,6 +391,7 @@ function updateRemoteStatus(r) {
         }
     }
 }
+
 //endregion
 
 //region Touch events
