@@ -4,13 +4,13 @@ function getParameterByName(name, url) {
     if (!url) url = req.url;
     name = name.replace(/[\[\]]/g, "\\$&");
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
+        results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function sendHeaderSuccess(res){
+function sendHeaderSuccess(res) {
     res.writeHead(200, {
         'Accept-Ranges': 'none',
         'Content-Type': 'audio/mpeg',
@@ -24,20 +24,20 @@ function sendHeaderSuccess(res){
         'icy-name': 'Radio name',
         'icy-genre': 'Genre',
         'icy-pub': '1',
-        'icy-br': '128'        
+        'icy-br': '128'
     });
 }
 
-console.log('Starting server...');
+console.log('[@] Starting radio proxy server...');
 
 http.createServer(function (req, res) {
-    console.log('Client connecting...');
+    console.log('[@] Client connecting from ' + req.connection.remoteAddress + '...');
 
     var port = parseInt(getParameterByName('port', req.url));
     var address = getParameterByName('address', req.url);
     var request = getParameterByName('request', req.url);
 
-    if (!(port && address && request)){
+    if (!(port && address && request)) {
         port = 80;
         address = 'media-sov.musicradio.com';
         request = "/HeartPlymouthMP3";
@@ -46,10 +46,10 @@ http.createServer(function (req, res) {
     var client, net = require('net');
 
     client = new net.Socket();
-    
+
     client.connect(port, address, function () {
         //console.log("req");
-        console.log("Sending request");
+        console.log("[@] Sending request");
         var raw_request = "GET " + request + " HTTP/1.0 \n \n\n";
         // Icy-MetaData: 1 // use that to get metadata. Metadata shouldn't be sent to the audio stream, or it will be read as music, and the some nice noises will come out on the other side.
         return client.write(raw_request.toString('utf-8'));
@@ -74,13 +74,13 @@ http.createServer(function (req, res) {
         res.write(data);
     });
 
-    client.on('error', function(err) {
-        console.log(err);
+    client.on('error', function (err) {
+        console.log('[!]', err);
         res.end();
     });
 
     req.on('close', function () {
-        console.log('Connection Closed');
+        console.log('[@] Connection Closed from ' + req.connection.remoteAddress);
         client.destroy();
     });
 

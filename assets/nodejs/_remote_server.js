@@ -1,18 +1,19 @@
-var http = require('http');
+const http = require('http');
 
 var jukebox_connection = null;
 
 var jukebox_connected = false;
 
-var jukebox_status = [];
+var jukeboxStatus = [];
 
 var clients = [];
+
+console.log("[@] Starting remote server...");
 
 // Functions to send Sever Sent Events
 // <editor-fold desc="Events" defaultstate="collapsed">
 function sendEventJson(res, name, data) {
-
-    var data_string = JSON.stringify(data);
+    const data_string = JSON.stringify(data);
     sendVeryRawEvent(res, name, data_string);
 }
 
@@ -21,12 +22,13 @@ function sendRawEvent(name, raw_data) {
 }
 
 function sendVeryRawEvent(res, name, raw_data) {
-    if (res == null)
+    if (res === null)
         return;
     res.write("event: " + name + "\n");
     res.write('data: ' + raw_data);
     res.write("\n\n");
 }
+
 // </editor-fold>
 
 // Server where the jukebox interface connects to
@@ -38,13 +40,55 @@ http.createServer(function (req, res) {
         sendKeepAlive(jukebox_connection);
     }
 
-    function broadcastStatusToClients() {
+    function broadcastStatusToClients(oldJukeboxStatus, jukeboxStatus) {
         clients.forEach(function (client) {
-            if (client == null)
+            if (client === null)
                 return;
 
-            sendEventJson(client, "status", jukebox_status);
+            sendEventJson(client, "status", optimiseStatusPayload(oldJukeboxStatus, jukeboxStatus));
         })
+    }
+
+    function optimiseStatusPayload(oldJukeboxStatus, jukeboxStatus) {
+        return jukeboxStatus;
+        //return compareObjects(oldJukeboxStatus, jukeboxStatus);
+    }
+
+    function compareObjects(a, b) {
+        if (typeof a !== "object") {
+            throw new TypeError("First parameter must be an object, found", typeof a)
+        }
+
+        if (typeof b !== "object") {
+            throw new TypeError("Second parameter must be an object, found", typeof b);
+        }
+
+        const diff = {};
+
+        console.log(typeof a);
+
+        const aKeys = Object.keys(a);
+        const bKeys = Object.keys(b);
+
+        // TODO intersection
+        const missingKeys = aKeys.filter(function (n) {
+            return bKeys.indexOf(n) > -1;
+        });
+
+        bKeys.forEach(function (key) {
+            if (typeof a[key] === "object" && typeof b[key] === "object") {
+                const comp = compareObjects(a[key], b[key]);
+                if (Object.keys(comp).length !== 0)
+                    diff[key] = comp;
+            } else if (b[key] !== a[key])
+                diff[key] = b[key];
+        });
+
+        missingKeys.forEach(function (t) {
+            diff[t] = null;
+        });
+
+        return diff;
     }
 
     switch (getConnectionType(req)) {
@@ -70,23 +114,30 @@ http.createServer(function (req, res) {
             res.setHeader('Access-Control-Allow-Origin', '*');
 
             try {
-                jukebox_status = JSON.parse(jsonString);
+                const oldJukeboxStatus = jukeboxStatus;
+
+                jukeboxStatus = JSON.parse(jsonString);
+
+                res.end();
+
+                try {
+                    broadcastStatusToClients(oldJukeboxStatus, jukeboxStatus);
+                } catch (e) {
+                    console.error("[!] Failed to broadcast new status to clients.");
+                    console.error(e.stack);
+                }
+
+
             } catch (e) {
-                console.log("Failed to parse json");
+                console.error("[!] Failed to parse json", e);
+                console.error("   ", jsonString);
                 sendError(res, 400, "Bad request. Unable to parse JSON.");
-                return;
             }
-
-            res.end();
-
-            broadcastStatusToClients();
-
-            console.log("Finished handleSetStatusRequest.");
         });
     }
 
     function handleInternalEventRequest() {
-        console.log('Incoming connection...');
+        console.log('[@] Incoming jukebox connection from ' + req.connection.remoteAddress + '...');
 
         clearInterval(keepAliveHandler);
 
@@ -102,15 +153,18 @@ http.createServer(function (req, res) {
         jukebox_connected = true;
 
         req.on('close', function (err) {
-            console.log('Connection Closed');
+            console.log('[@] Connection Closed');
             console.log(err);
             jukebox_connected = false;
             jukebox_connection = null;
             clearInterval(keepAliveHandler);
         });
+
+        console.log("[@] Jukebox connected!");
     }
 
 }).listen(4201);
+console.log("[@] Listening for jukebox client...");
 // </editor-fold>
 
 // Server where the remote controls connect to
@@ -119,7 +173,7 @@ http.createServer(function (req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     if (!jukebox_connected) {
-        console.log("No jukebox connected");
+        console.log("[~] No jukebox connected");
         sendError(res, 412, "No jukebox currently connected.");
         return;
     }
@@ -149,13 +203,13 @@ http.createServer(function (req, res) {
 
         res.setHeader('connection', 'close');
 
-        var buff = new Buffer(JSON.stringify(jukebox_status));
+        var buff = new Buffer(JSON.stringify(jukeboxStatus));
 
         res.setHeader('Content-Length', buff.length);
 
         res.end(buff);
 
-        console.log("Finished handleGetStatusRequest.");
+        console.log("[@] Finished handleGetStatusRequest.");
     }
 
     function handleSendEventRequest() {
@@ -171,7 +225,7 @@ http.createServer(function (req, res) {
             try {
                 var data = JSON.parse(jsonString);
             } catch (e) {
-                console.log("Failed to parse json");
+                console.log("[!] Failed to parse json");
                 sendError(res, 422, "Unprocessable Entity. Given an invalid json.");
                 return;
             }
@@ -180,11 +234,9 @@ http.createServer(function (req, res) {
                 data.data = [];
             }
 
-            console.log(data.name, data.data);
-
             sendRawEvent(data.name, JSON.stringify(data.data));
 
-            console.log("Finished handleSendEventRequest.");
+            console.log('[@] Received \'', data.name, data.data, "' from", req.connection.remoteAddress);
         });
     }
 
@@ -193,9 +245,10 @@ http.createServer(function (req, res) {
     }
 
     function handleExternalEventRequest() {
-        console.log('Incoming remote connection...');
+        console.log('[@] Incoming remote SSE request from ' + req.connection.remoteAddress + '...');
 
-        clearInterval(res.keepAliveHandler);
+        if (typeof res.keepAliveHandler !== "undefined")
+            clearInterval(res.keepAliveHandler);
 
         res.keepAliveHandler = setInterval(function () {
             sendKeepAlive(res);
@@ -209,14 +262,14 @@ http.createServer(function (req, res) {
         clients.push(res);
 
         // sends the first jukebox status
-        sendEventJson(res, "status", jukebox_status);
+        sendEventJson(res, "status", jukeboxStatus);
 
         req.on('close', function () {
-            console.log('Remote connection Closed');
+            console.log('[@] Remote client connection closed from ' + req.connection.remoteAddress);
 
             var i = clients.indexOf("b");
 
-            if (i != -1) {
+            if (i !== -1) {
                 clients.splice(i, 1);
             }
 
@@ -224,21 +277,22 @@ http.createServer(function (req, res) {
         });
     }
 }).listen(4202);
+
 // </editor-fold>
 
 function sendKeepAlive(res) {
-    if (res != null)
+    if (res !== null)
         res.write(".\n");
 }
 
 function getConnectionType(req) {
-    if (req.headers.accept == 'text/event-stream') {
+    if (req.headers.accept === 'text/event-stream') {
         return 'sse';
-    } else if (req.headers.accept == 'text/time') {
+    } else if (req.headers.accept === 'text/time') {
         return 'time';
-    } else if (req.method == 'POST') {
+    } else if (req.method === 'POST') {
         return 'post';
-    } else if (req.method == 'GET') {
+    } else if (req.method === 'GET') {
         return 'get';
     } else {
         return 'other';
@@ -246,9 +300,13 @@ function getConnectionType(req) {
 }
 
 function sendError(res, code, message) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.writeHead(code, message);
-    res.end(message);
+    try {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.writeHead(code, message);
+        res.end(message);
+    } catch (e) {
+        console.error("[!] Failed to send error message.", e);
+    }
 }
 
 var headers = {
