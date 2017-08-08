@@ -48,8 +48,13 @@ $isDarkTheme: false;
 // UI elements colors
 $input_color: $background_color_highlight; //#3a3a3a;
 
-// Niggas... ehr Blacks
+// Generated Colors
 
+// Secondary colors
+$text_color_secondary: mix($text_color, $background_color);
+$highlight_color_50: rgba($highlight_color, 0.5);
+
+// Blacks
 $black_20: rgba(0, 0, 0, 0.1); // 2
 $black_50: rgba(0, 0, 0, 0.2); // 5
 $black_80: rgba(0, 0, 0, 0.3); // 8
@@ -63,5 +68,3 @@ $black_80: rgba(0, 0, 0, 0.3); // 8
 // Whites
 $white_10: rgba(255, 255, 255, 0.10);
 
-// BLUES
-$highlight_color_50: rgba($highlight_color, 0.5);

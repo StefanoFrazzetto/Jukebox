@@ -242,6 +242,15 @@ body {
   padding: 5px;
 }
 
+.title {
+  font-style: italic;
+  color: $text_color_secondary;
+}
+
+.track {
+  margin-top: 5px;
+}
+
 // responsive layouts
 
 $smartphones-portrait: 300px;
