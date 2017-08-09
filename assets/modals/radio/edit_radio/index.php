@@ -5,7 +5,11 @@
  * Date: 15-Oct-16
  * Time: 17:02.
  */
-require '../../../php-lib/Radio.php';
+
+
+require_once '../../../../vendor/autoload.php';
+
+use Lib\Radio;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
@@ -30,11 +34,11 @@ if ($radio == null) {
 
         <div class="col-left">
             <label for="radioName">Tile</label>
-            <p><input id="radioName" name="radioName" type="text" class="full-wide"
+            <p><input id="radioName" name="radioName" class="full-wide"
                       value="<?php echo $radio->getName() ?>"/></p>
             <hr/>
             <label for="radioUrl">URL</label>
-            <p><input id="radioUrl" name="radioUrl" type="text" class="full-wide"
+            <p><input id="radioUrl" name="radioUrl" class="full-wide"
                       value="<?php echo $radio->getUrl() ?>"/>
             </p>
         </div>

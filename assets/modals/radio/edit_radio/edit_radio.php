@@ -1,5 +1,9 @@
 <?php
 
+require_once '../../../../vendor/autoload.php';
+
+use Lib\Radio;
+
 header('Content-Type: application/json');
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -28,8 +32,6 @@ function success($radio)
 if ($id == null) {
     error('Invalid ID provided');
 }
-
-require '../../../php-lib/Radio.php';
 
 $radio = Radio::loadRadio($id);
 
