@@ -14,6 +14,7 @@ function Player() {
     }
 
     if (this.audioApiSupported) {
+        // noinspection JSClosureCompilerSyntax
         this.context = new AudioContext();
         this.mediaElement = document.getElementById('player');
         this.inputNode = this.context.createMediaElementSource(this.mediaElement);
@@ -431,28 +432,26 @@ Player.prototype.callback = function (callback, doesTriggerOnChange) {
 };
 
 Player.prototype.export = function () {
-
-    if (this.isRadio)
-        return {
-            isRadio: this.isRadio,
+    return this.isRadio
+        ? {
+            isRadio: true,
             playing: this.isPlaying(),
             volume: this.getVolume(),
+            currentRadio: this.currentRadio,
             currentTime: this.getCurrentTime(),
             timestamp: new Date().getTime()
-        };
-    else
-        return {
+        } : {
             album_id: this.getCurrentAlbumId(),
-            track_no: this.track_no,
             track_id: this.getCurrentSongId(),
-            playing: this.isPlaying(),
             repeat: this.repeat,
             shuffle: this.shuffle,
             currentTime: this.getCurrentTime(),
             duration: this.getCurrentSongDuration(),
+            playing: this.isPlaying(),
             volume: this.getVolume(),
-            isRadio: this.isRadio,
-            timestamp: new Date().getTime()
+            timestamp: new Date().getTime(),
+            playlist: this.tracks,
+            isRadio: false
         }
 
 };
