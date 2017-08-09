@@ -304,8 +304,8 @@ Song.prototype.getHHMMSS = function () {
 Song.readMany = function (rawSongs) {
     var songs = [];
 
-    rawSongs.forEach(function (rawSong) {
-        songs.push(Song.read(rawSong));
+    Object.keys(rawSongs).forEach(function (key) {
+        songs[parseInt(key)] = Song.read(rawSongs[key]);
     });
 
     return songs;
