@@ -54,6 +54,7 @@ var modal = {
         _this.abortRequest();
 
         _this.modalElement.hide(animation_medium, function () {
+            $('#modalBody').mCustomScrollbar("destroy");
             _this.modalLoaderElement.html('');
             _this.loaderGifElement.show();
 
@@ -89,6 +90,8 @@ var modal = {
 
                         $('#modalBody').mCustomScrollbar({
                             theme: "dark"
+                        }).on('remove', function () {
+                            $('#modalBody').mCustomScrollbar("destroy");
                         });
 
                         try {
