@@ -131,6 +131,6 @@ class Config
      */
     private function saveDynamicConfig()
     {
-        file_put_contents($this->dynamic_conf_file, json_encode($this->dynamic_config));
+        file_put_contents($this->dynamic_conf_file, json_encode($this->dynamic_config, JSON_PRETTY_PRINT));
     }
 }
