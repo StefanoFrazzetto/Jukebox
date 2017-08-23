@@ -5,11 +5,11 @@
   "main": "index.php",
   "author": "Vittorio Iocolano",
   "license": "BSD-2-Clause",
-  "devDependencies": {
+  "devDependencies": {},
+  "engines": {
+    "request": "~2.81.0",
+    "node": ">= 0.10.21",
     "node-sass": "~3.4.2",
     "nodemon": "~1.9.1"
-  },
-  "engines": {
-    "node": ">= 0.10.21"
   }
 }
