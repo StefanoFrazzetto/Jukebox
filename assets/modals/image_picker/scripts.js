@@ -22,21 +22,41 @@ $(function () {
     }
 
     function createCovers(data) {
-        // Convert objects to arrays
-        data = extract(data);
-        imageSelector.presetCovers = extract(imageSelector.presetCovers);
+        function createCoverContainer() {
+            return $("<div class='cover-container'>");
+        }
 
-        // Adds the preset covers at the beginning of the results
-        data = imageSelector.presetCovers.concat(data.reverse());
+        function createCover(id, src) {
+            return $("<img class='covers cover-picture' id='cover-" + id + "' src='" + src + "'>")
+        }
+
+        function createDefaultCover() {
+            return createCoverContainer()
+                .append(
+                    createCover('default', '/assets/img/album-placeholder.png')
+                )
+        }
 
         // If the array is not empty
-        if (data.length === 0) {
+        if (data === null) {
+            covers.append(createDefaultCover());
+        } else if (data.length === 0) {
             covers.html("No images found. Check your connection.");
         } else {
+            // Convert objects to arrays
+            data = extract(data);
+            imageSelector.presetCovers = extract(imageSelector.presetCovers);
+
+            // Adds the preset covers at the beginning of the results
+            data = imageSelector.presetCovers.concat(data.reverse());
+
+            // Default cover
+            covers.append(createDefaultCover());
+
             // Append the cover to #covers
             $.each(data, function (key, value) {
-                var imageHtml = $("<img class='covers cover-picture' id='cover-" + key + "' src='" + value + "'>");
-                var containerHtml = $("<div class='cover-container'></div>");
+                var imageHtml = createCover(key, value);
+                var containerHtml = createCoverContainer();
 
                 imageHtml.on('error', function () {
                     $(this).parent().remove();
@@ -52,9 +72,10 @@ $(function () {
 
         // Bind the onclick event to each cover
         $('img.covers').on('click', function () {
+            const cover = $(this);
             covers.find('.active').removeClass("active");
-            $(this).addClass("active");
-            imageURL = $(this).attr('src');
+            cover.addClass("active");
+            imageURL = cover.attr('id') !== 'cover-default' ? cover.attr('src') : null;
             submit_btn.removeClass('disabled');
         });
     }
@@ -140,6 +161,9 @@ $(function () {
 
     if (imageSelector.presetCovers.length !== 0)
         createCovers([]);
+    else
+        createCovers(null);
+
 });
 
 

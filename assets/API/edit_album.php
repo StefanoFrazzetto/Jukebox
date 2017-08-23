@@ -17,7 +17,7 @@ function editAlbum($data)
     if (!isset($data->id)) {
         throw new Exception('Album ID not provided.');
     } else {
-        $id = $data->id;
+        $id = intval($data->id);
     }
 
     $album = Album::getAlbum($id);
@@ -26,8 +26,8 @@ function editAlbum($data)
         throw new Exception('Album ID not found in database.');
     }
 
-    if (isset($data->cover)) {
-        $cover = FileUtils::normaliseUrl($data->cover);
+    if (property_exists((object)$data, 'cover')) {
+        $cover = $data->cover !== null ? FileUtils::normaliseUrl($data->cover) : null;
 
         $album->setCover($cover);
     }
@@ -46,5 +46,5 @@ try {
 
     echo 'success';
 } catch (Exception $e) {
-    echo $e->getMessage();
+    echo 'Failed to update album because: ' . $e->getMessage();
 }
