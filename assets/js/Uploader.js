@@ -17,6 +17,8 @@ function Uploader() {
     this.tracks = [];
 
     this.cover = null;
+
+    this.onDone = null;
 }
 
 Uploader.prototype.continue = function () {
@@ -220,7 +222,7 @@ Uploader.prototype.createSongsTable = function (container, editable) {
             var td2 = $("<td></td>");
 
             if (editable) {
-                var input = $("<input type='text' class='full-wide'/>");
+                var input = $("<input class='full-wide'/>");
                 input.val(track.title);
 
                 td2.append(input);
@@ -355,6 +357,10 @@ Uploader.prototype.done = function () {
         .fail(function (error) {
             alert("Unable to upload album. " + JSON.parse(error.responseText).message);
             console.log(error);
+        })
+        .always(function () {
+            if (typeof uploader.onDone === "function")
+                uploader.onDone();
         });
 };
 

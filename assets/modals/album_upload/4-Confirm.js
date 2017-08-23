@@ -7,6 +7,14 @@ $('#btnBack').click(function () {
 });
 
 $('#btnConfirm').click(function () {
+    var btn = $(this);
+
+    uploader.onDone = function () {
+        btn.removeClass('disabled');
+    };
+
+    btn.addClass('disabled');
+
     uploader.done();
 });
 
