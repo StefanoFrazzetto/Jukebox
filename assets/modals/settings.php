@@ -7,7 +7,7 @@ use Lib\System;
 
 function get_string_between($string, $start, $end)
 {
-    $string = ' ' . $string;
+    $string = ' '.$string;
     $ini = strpos($string, $start);
 
     if ($ini == 0) {
@@ -47,8 +47,8 @@ function getSpeakerStatus()
         <div class="onoffswitch inline" id="speakers_div">
             <input type="checkbox" name="dhcp" class="onoffswitch-checkbox"
                    id="speakers" <?php if (getSpeakerStatus()) {
-                echo 'checked';
-            } ?>>
+    echo 'checked';
+} ?>>
             <label class="onoffswitch-label" for="speakers">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
