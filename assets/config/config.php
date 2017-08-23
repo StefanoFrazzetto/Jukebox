@@ -84,8 +84,8 @@ return [
      * | Default ports for the various http servers.
      */
     'ports' => [
-        'webui' => 80,
+        'webui'  => 80,
         'remote' => 4202,
-        'radio' => 4242,
+        'radio'  => 4242,
     ],
 ];

@@ -31,6 +31,4 @@ if (isset($_GET['set'], $_GET['value'])) {
     exit;
 }
 
-echo json_encode(["invalid request"]);
-
-
+echo json_encode(['invalid request']);
