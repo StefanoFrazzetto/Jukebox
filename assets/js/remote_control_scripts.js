@@ -38,61 +38,39 @@ function playingStatusChangedEvent() {
 }
 
 function albumChangedEvent() {
-    if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id !== null) {
+    if (typeof playerStatus.album_id !== "undefined" && playerStatus.album_id !== null && playerStatus.album_id === parseInt(playerStatus.album_id, 10) && playerStatus.album_id > 0) {
         var album = storage.getAlbum(playerStatus.album_id);
-
-        if (!album) {
-            error("Unable to load the album");
-            return;
-        }
 
         cover.attr('src', album.getFullCoverUrl());
         artistDiv.html(album.getArtistsNames());
         titleDiv.html(album.title);
+    }
+    else console.log("Sorry, album id not provided");
+}
 
-        loadAlbumPlaylist(album.id, function (songs) {
-            populatePlaylist(songs);
-            trackChangedEvent();
+function playlistChangeEvent(songs) {
+    var div = $('#playlist-section').find('tbody');
+
+    div.html('');
+
+    songs.forEach(function (song, index) {
+        var tr = $("<tr>").attr("data-track-id", song.id);
+
+        var td1 = $("<td>").html(song.track_no);
+        var td2 = $("<td>").html(song.title);
+        var td3 = $("<td>").html(song.getHHMMSS());
+
+        tr.append(td1, td2, td3);
+
+        tr.click(function (e) {
+            sendEvent('play_song', {song_no: index});
+            e.preventDefault();
         });
-    }
-    else
-        console.log("Sorry, album id not provided");
 
-    function populatePlaylist(songs) {
-        var div = $('#playlist-section').find('tbody');
+        div.append(tr);
+    });
 
-        div.html('');
-
-        songs.forEach(function (song, index) {
-            var tr = $("<tr>").attr("data-track-id", song.id);
-
-            var td1 = $("<td>").html(index + 1);
-            var td2 = $("<td>").html(song.title);
-            var td3 = $("<td>").html(timestamp(song.length));
-
-            tr.append(td1, td2, td3);
-
-            tr.click(function (e) {
-                sendEvent('play_song', {song_no: index});
-                e.preventDefault();
-            });
-
-            div.append(tr);
-        })
-    }
-
-    function addZero(value) {
-        if (value < 10)
-            return '0' + value;
-        else
-            return value;
-    }
-
-    function timestamp(time) {
-        var minutes = Math.floor(time / 60);
-        var seconds = Math.floor(time - minutes * 60);
-        return addZero(minutes) + ':' + addZero(seconds);
-    }
+    trackChangedEvent();
 }
 
 function trackChangedEvent() {
@@ -369,6 +347,15 @@ function updateRemoteStatus(r) {
 
     if (checkChange('volume')) {
         volumeChangeEvent();
+    }
+
+    if (checkChange('playlist')) {
+        try {
+            r.playlist = Song.readMany(r.playlist);
+            playlistChangeEvent(r.playlist);
+        } catch (e) {
+            console.error("Error while parsing songs.");
+        }
     }
 
     Object.keys(r).forEach(function (t) {

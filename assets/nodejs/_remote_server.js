@@ -53,13 +53,13 @@ http.createServer(function (req, res) {
         return compareObjects(oldJukeboxStatus, jukeboxStatus);
     }
 
-    function compareObjects(a, b) {
+    function compareObjects(a, b, partial) {
         if (typeof a !== "object") {
-            throw new TypeError("First parameter must be an object, found", typeof a)
+            throw new TypeError("First parameter must be an object, found " + typeof a)
         }
 
         if (typeof b !== "object") {
-            throw new TypeError("Second parameter must be an object, found", typeof b);
+            throw new TypeError("Second parameter must be an object, found " + typeof b);
         }
 
         if (a === null && b === null) {
@@ -70,18 +70,33 @@ http.createServer(function (req, res) {
             return b;
         }
 
+        if (typeof partial === "undefined") {
+            partial = false;
+        }
+
+        if (typeof partial !== "boolean") {
+            throw new TypeError("Third parameter must be a boolean, found " + typeof partial);
+        }
+
         // that was some bad ass error avoidance, mate!
 
         const diff = {};
-
         const bKeys = Object.keys(b);
+
+        if (partial) {
+            return JSON.stringify(b) !== JSON.stringify(a) ? b : null;
+        }
+
+        function da(fuq) {
+            return typeof fuq === "object" && fuq !== null;
+        }
 
         // Recursive compare of objects. Worst code ever.
         // You better look away for you own sanity.
         bKeys.forEach(function (key) {
-            if (typeof a[key] === "object" && typeof b[key] === "object") {
-                const comp = compareObjects(a[key], b[key]);
-                if (Object.keys(comp).length !== 0)
+            if (da(a[key]) && da(b[key])) {
+                const comp = compareObjects(a[key], b[key], true);
+                if (comp !== null)
                     diff[key] = comp;
             } else if (b[key] !== a[key])
                 diff[key] = b[key];
