@@ -268,7 +268,7 @@ Player.prototype.playRadio = function (radio) {
     this.reset();
     this.isRadio = true;
 
-    var url = 'http://' + window.location.hostname + ':4242/?address=' + radio.url.host + '&request=' + radio.url.path + '&port=' + radio.url.port;
+    var url = 'http://' + window.location.hostname + ':' + window.ports.radio + '/?address=' + radio.url.host + '&request=' + radio.url.path + '&port=' + radio.url.port;
 
     this.currentRadio = radio;
     this.callback(this.onRadioChange);

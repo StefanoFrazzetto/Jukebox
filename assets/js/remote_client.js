@@ -13,5 +13,5 @@ function sendEvent(name, data) {
 }
 
 function getRemoteServerUrl() {
-    return 'http://' + document.domain + ':4202/';
+    return 'http://' + document.domain + ':' + window.ports.remote + '/';
 }

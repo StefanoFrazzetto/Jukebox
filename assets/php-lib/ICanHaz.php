@@ -74,6 +74,17 @@ abstract class ICanHaz
             $merged_content = [];
         }
 
+        // Scary thing that will inject a variable with the remote port
+        $requiring_ports = [
+            '/var/www/html/assets/js/remote_client.js',
+            '/var/www/html/assets/js/Player.js'
+        ];
+
+        if (count(array_intersect($files, $requiring_ports)) > 0) {
+            $ports = json_encode((new Config())->get('ports'));
+            echo $taggify(null, "window.ports = JSON.parse('$ports');", true, true);
+        }
+
         foreach ($files as &$file) {
             if (!file_exists($file)) {
                 continue;
@@ -109,13 +120,13 @@ abstract class ICanHaz
             if ($hard) {
                 echo implode($merged_content), $taggify(false, false, true, false);
             } else {
-                $cache_file = md5(implode($files)).'.'.$extension;
+                $cache_file = md5(implode($files)) . '.' . $extension;
 
                 $last_time = max($times);
 
-                if (!file_exists(self::getCacheFolder().$cache_file) or filemtime(self::getCacheFolder().$cache_file) != $last_time) {
-                    file_put_contents(self::getCacheFolder().$cache_file, $merged_content);
-                    touch(self::getCacheFolder().$cache_file, $last_time);
+                if (!file_exists(self::getCacheFolder() . $cache_file) or filemtime(self::getCacheFolder() . $cache_file) != $last_time) {
+                    file_put_contents(self::getCacheFolder() . $cache_file, $merged_content);
+                    touch(self::getCacheFolder() . $cache_file, $last_time);
                 }
 
                 echo $taggify("/assets/cached_resource/$cache_file?$last_time");
@@ -145,7 +156,7 @@ abstract class ICanHaz
 
         foreach ($files as &$file) {
             if ($file[0] === '/') {
-                $file = $_SERVER['DOCUMENT_ROOT'].$file;
+                $file = $_SERVER['DOCUMENT_ROOT'] . $file;
             }
 
             if (!file_exists($file)) {
@@ -167,7 +178,7 @@ abstract class ICanHaz
      */
     public static function versionify(&$file)
     {
-        $file = $file.'?'.filemtime($file);
+        $file = $file . '?' . filemtime($file);
     }
 
     /**
@@ -177,7 +188,7 @@ abstract class ICanHaz
      */
     public static function getCacheFolder()
     {
-        return $_SERVER['DOCUMENT_ROOT'].'/assets/cached_resource/';
+        return $_SERVER['DOCUMENT_ROOT'] . '/assets/cached_resource/';
     }
 
     /**
