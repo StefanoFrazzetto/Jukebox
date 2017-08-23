@@ -311,6 +311,7 @@ class Song implements JsonSerializable
 
         if (!is_int($artist)) {
             var_dump($artist);
+
             throw new \InvalidArgumentException("Artist is neither an int or a Artist instance. Maybe it's not saved? ".$artist);
         }
 

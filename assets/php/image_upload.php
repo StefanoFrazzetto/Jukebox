@@ -52,7 +52,7 @@ if ($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpe
 // Check if $uploadOk is set to 0 by an error
 if ($uploadOk == 0) {
     echo json_encode(['status' => 'error', 'message' => $message]);
-// if everything is ok, try to upload file
+    // if everything is ok, try to upload file
 } else {
     if (move_uploaded_file($file['tmp_name'], $target_file)) {
         echo json_encode(['status' => 'success', 'cover_path' => $target_file, 'cover_url' => FileUtils::pathToHostUrl($target_file)]);

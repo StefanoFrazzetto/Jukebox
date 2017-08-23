@@ -46,8 +46,8 @@ if ($album->getId() != null) {
     foreach ($tracks as $track) {
         $song = Song::newSongFromJson((object) $track, $id);
 
-//        error_log(json_encode($song));
-//        error_log(json_encode($track));
+        //        error_log(json_encode($song));
+        //        error_log(json_encode($track));
         $song->save();
         $song->addArtist($_artist->getId());
     }
