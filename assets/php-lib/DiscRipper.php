@@ -158,6 +158,7 @@ class DiscRipper extends Disc
         $pid = $content['pid'];
 
         $process = new Process();
+
         try {
             $process->setPid($pid);
             $process->stop();
@@ -224,6 +225,7 @@ class DiscRipper extends Disc
         $content = self::getStatusFileContent();
         $pid = intval($content['pid']);
         $process = new Process();
+
         try {
             $process->setPid($pid);
         } catch (InvalidArgumentException $x) {

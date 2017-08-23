@@ -22,7 +22,7 @@ class Album implements JsonSerializable
      */
     const ALBUMS_TABLE = 'albums';
 
-//    const LAST_PLAYED_FILE = __DIR__ . '/../../config/lastid';
+    //    const LAST_PLAYED_FILE = __DIR__ . '/../../config/lastid';
     const LAST_PLAYED_FILE = '/var/www/html/assets/config/lastid';
 
     /**

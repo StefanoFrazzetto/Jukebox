@@ -73,6 +73,7 @@ class Zipper
         // Check if the album directory exists
         if (!file_exists($this->albumDirectoryPath)) {
             error_log("Trying to zip non existent album with ID $albumID");
+
             throw new InvalidArgumentException('Error. The album does not exist.');
         }
 

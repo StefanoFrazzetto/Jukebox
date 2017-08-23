@@ -117,7 +117,7 @@ class Theme implements JsonSerializable
         }
 
         return $themes;
-//        return [
+        //        return [
 //            new Theme("Dark & Blue", '#f5f5f5', '#1e1e1e', '#2a2a2a', '#48485a', '#323232', '#03a9f4', false),
 //            new Theme("Dark & Green", '#f5f5f5', '#1e1e1e', '#2a2a2a', '#48485a', '#323232', '#1db954', false),
 //            new Theme("Dark & Red", '#F0F0F0', '#050505', '#141414', '#282828', '#141414', '#EB1400', true),
