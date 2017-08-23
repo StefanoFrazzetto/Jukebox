@@ -175,6 +175,22 @@ hr {
   }
 }
 
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center, .center {
+  text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
 .selector {
   @extend %ui_element;
 
