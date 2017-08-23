@@ -1,4 +1,5 @@
 <?php require_once 'vendor/autoload.php';
+
 use Lib\ICanHaz;
 
 ?>
@@ -40,7 +41,7 @@ ICanHaz::js([
 ?>
 
 <script type="text/javascript">
-    Uploader.start();
+    modal.openPage('/assets/modals/ports/');
 </script>
 
 </body>

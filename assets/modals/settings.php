@@ -7,7 +7,7 @@ use Lib\System;
 
 function get_string_between($string, $start, $end)
 {
-    $string = ' '.$string;
+    $string = ' ' . $string;
     $ini = strpos($string, $start);
 
     if ($ini == 0) {
@@ -47,20 +47,20 @@ function getSpeakerStatus()
         <div class="onoffswitch inline" id="speakers_div">
             <input type="checkbox" name="dhcp" class="onoffswitch-checkbox"
                    id="speakers" <?php if (getSpeakerStatus()) {
-    echo 'checked';
-} ?>>
+                echo 'checked';
+            } ?>>
             <label class="onoffswitch-label" for="speakers">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
             </label>
         </div>
+        <button onclick="modal.openPage('assets/modals/ports/index.php');">Ports</button>
         <button onclick="$.ajax('assets/API/device.php?action=reboot');">Reboot</button>
         <button onclick="$.ajax('assets/API/device.php?action=eject');">Eject</button>
         <button onclick="$.ajax('assets/php/calibrate_screen.php');">Calibrate Screen</button>
         <button onclick="modal.openPage('assets/modals/update');">Update</button>
         <button onclick="modal.openPage('assets/modals/theme');">Theme</button>
         <button onclick="location.reload();">Refresh</button>
-        <button onclick="location.reload();"><a href="/assets/test_player/">Mixer</a></button>
         <button class="nuclear" onclick="modal.openPage('assets/modals/format.php');">Factory Reset</button>
     </div>
 
