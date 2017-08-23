@@ -76,4 +76,16 @@ return [
         'user'     => 'root',
         'password' => 'password1000',
     ],
+
+    /*
+     * |----------------------------------------------
+     * | Ports
+     * |----------------------------------------------
+     * | Default ports for the various http servers.
+     */
+    'ports' => [
+        'webui' => 80,
+        'remote' => 4202,
+        'radio' => 4242,
+    ],
 ];
