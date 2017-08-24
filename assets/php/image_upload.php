@@ -9,7 +9,7 @@ $target_dir = Config::getPath('tmp_uploads').'images/';
 $file = $_FILES['file'];
 
 if (!(file_exists($target_dir))) {
-    mkdir($target_dir);
+    mkdir($target_dir, 0777, true);
 }
 
 // Delete files older than 2 hours.
