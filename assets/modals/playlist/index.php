@@ -10,16 +10,16 @@ ICanHaz::css('style.css');
         Playlist
     </div>
 
-    <div class="modalBody mCustomScrollbar playlistModals" data-mcs-theme="dark">
-        <table class=" songsTable">
+    <div class="modalBody mCustomScrollbar playlistModals " data-mcs-theme="dark">
+        <table class="cooltable small">
             <thead>
             <tr class="th">
-                <th class="">Track</th>
-                <th class="">Artist</th>
-                <th class="">Album</th>
-                <th></th>
-                <th>Length</th>
-                <th></th>
+                <th>Track</th>
+                <th>Artist</th>
+                <th>Album</th>
+
+                <th colspan="3">Length</th>
+
             </tr>
             </thead>
             <tbody id="playlistDetails">
