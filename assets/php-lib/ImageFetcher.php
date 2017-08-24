@@ -25,13 +25,13 @@ class ImageFetcher
      * Gets the artist and album, and creates the search query.
      *
      * @param string $artist - the artist
-     * @param string $album - the album
+     * @param string $album  - the album
      */
     public function __construct($artist, $album)
     {
         $this->artist = $this->sanitise($artist);
         $this->album = $this->sanitise($album);
-        $this->_search_query = $this->artist . '+' . $this->album;
+        $this->_search_query = $this->artist.'+'.$this->album;
     }
 
     private function sanitise($string)
