@@ -85,7 +85,7 @@ $(function () {
         var artist = $('#artist').val();
         var album = $('#album').val();
 
-        if (artist !== '' && album !== '') {
+        if (artist !== '' || album !== '') {
             $('#loading-img').css('display', 'block');
             covers.find('> p').css('display', 'block');
 
@@ -135,7 +135,7 @@ $(function () {
 
     if (imageSelector.albumArtist === false) {
         var cont = searchImage;
-        cont.find('#album').hide().val(' ');
+        cont.find('#album').hide().val('');
         cont.find('#artist').addClass("large");
     }
 

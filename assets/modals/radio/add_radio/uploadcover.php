@@ -18,7 +18,8 @@ $covers_path = '/jukebox/radio-covers/';
 $absolute_path = '/var/www/html'.$covers_path;
 
 try {
-    FileUtils::deleteFilesOlderThan($absolute_path, 86400);
+    if (file_exists($absolute_path))
+        FileUtils::deleteFilesOlderThan($absolute_path, 86400);
 
     $file = file_get_contents($url);
     $ext = $ext = pathinfo($url, PATHINFO_EXTENSION);

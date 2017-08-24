@@ -25,13 +25,21 @@ class ImageFetcher
      * Gets the artist and album, and creates the search query.
      *
      * @param string $artist - the artist
-     * @param string $album  - the album
+     * @param string $album - the album
      */
     public function __construct($artist, $album)
     {
-        $this->artist = str_replace(' ', '+', $artist);
-        $this->album = str_replace(' ', '+', $album);
-        $this->_search_query = $this->artist.'+'.$this->album;
+        $this->artist = $this->sanitise($artist);
+        $this->album = $this->sanitise($album);
+        $this->_search_query = $this->artist . '+' . $this->album;
+    }
+
+    private function sanitise($string)
+    {
+        $string = str_replace('\'', '', $string);
+        // Not doing this additional normalisation seems to give more related results.
+        // $string = str_replace(' ', '+', $string);
+        return urlencode($string);
     }
 
     public function getAll()
@@ -42,7 +50,7 @@ class ImageFetcher
         if (Network::isConnected()) {
             $images['covershut'] = $this->getFrom("http://www.covershut.com/cover-tags.html?covertags=$this->_search_query&search=Search", 15);
             $images['allmusic'] = $this->getFrom("http://www.allmusic.com/search/albums/$this->_search_query", 4);
-            $images['slothradio'] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$$this->album", 2);
+            $images['slothradio'] = $this->getFrom("http://covers.slothradio.com/?adv=&artist=$this->artist&album=$this->album", 7);
             //        $images[] = $this->getFrom("http://www.seekacover.com/cd/$this->_search_query", 2);
 //        $images[] = $this->getFrom("https://www.google.co.uk/search?q=$this->_search_query&tbm=isch&tbs=isz:l", 10);
 //        $images["discogs"] = $this->getFrom("https://www.discogs.com/search/?q=$this->_search_query&type=all", 10);
@@ -100,6 +108,11 @@ class ImageFetcher
      */
     private function removeUselessImages(&$images_array)
     {
+        $blacklist = [
+            '//cdn-gce.allmusic.com/images/no_image/album_100x100.png',
+            'http://slothradio.com/images/Amazon-48x48.png',
+        ];
+
         foreach ($images_array as $key => $url) {
             if (preg_match('(data:image|paypal)', $url) === 1 || preg_match('(png|jpg)', $url) == 0) {
                 unset($images_array[$key]);
@@ -107,5 +120,7 @@ class ImageFetcher
         }
 
         $images_array = array_values(array_unique($images_array));
+
+        $images_array = array_diff($images_array, $blacklist);
     }
 }
