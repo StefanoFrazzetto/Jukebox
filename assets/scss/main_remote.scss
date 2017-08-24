@@ -26,7 +26,6 @@ body {
   background-color: $background_color;
   font-size: $font_size;
   text-rendering: optimizeLegibility;
-  min-height: 100vh;
 }
 
 * {
@@ -417,7 +416,7 @@ $tablet-landscape: 1024px;
     i {
       position: absolute;
       top: 5px;
-      left: 10px;
+      left: 5px;
     }
   }
 }
