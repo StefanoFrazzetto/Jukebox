@@ -6,6 +6,12 @@
     border-radius: 5px;
 }
 
+.tableContainer {
+    width: 520px;
+    max-height: 300px;
+    overflow: hidden;
+}
+
 .addTrackToPlaylist {
     color: white;
     cursor: pointer;
