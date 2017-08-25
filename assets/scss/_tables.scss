@@ -101,12 +101,12 @@ table.cooltable {
       td {
         background: $color_odd;
       }
-      &:hover td, &.active td {
+      &:hover td, &.active td, &.playing td {
         background: $color_highlight;
       }
     }
 
-    &:hover td, &.active td {
+    &:hover td, &.active td, &.playing td {
       background: $color_highlight;
       color: $text_color;
       border-top: 1px solid $background_color;
