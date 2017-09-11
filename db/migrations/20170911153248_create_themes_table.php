@@ -29,15 +29,15 @@ class CreateThemesTable extends AbstractMigration
     public function change()
     {
         $table = $this->table('themes', ['engine' => 'MyISAM']);
-        $table->addColumn('name', 'string', array('limit' => 25))
-            ->addColumn('text_color', 'char', array('limit' => 7))
-            ->addColumn('background_color', 'char', array('limit' => 7))
-            ->addColumn('background_color_highlight', 'char', array('limit' => 7))
-            ->addColumn('border_color', 'char', array('limit' => 7))
-            ->addColumn('overlays', 'char', array('limit' => 7))
-            ->addColumn('highlight_color', 'char', array('limit' => 7))
+        $table->addColumn('name', 'string', ['limit' => 25])
+            ->addColumn('text_color', 'char', ['limit' => 7])
+            ->addColumn('background_color', 'char', ['limit' => 7])
+            ->addColumn('background_color_highlight', 'char', ['limit' => 7])
+            ->addColumn('border_color', 'char', ['limit' => 7])
+            ->addColumn('overlays', 'char', ['limit' => 7])
+            ->addColumn('highlight_color', 'char', ['limit' => 7])
             ->addColumn('dark_accents', 'boolean')
-            ->addColumn('read_only', 'boolean', array('default' => 0))
+            ->addColumn('read_only', 'boolean', ['default' => 0])
             ->create();
     }
 }
