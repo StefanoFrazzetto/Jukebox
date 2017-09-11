@@ -58,7 +58,7 @@ abstract class OS
     {
         $status = self::execute("sudo service $service_name status");
 
-        return StringUtils::contains($status, 'not running') ? false : true;
+        return StringUtils::contains($status, 'active (running)');
     }
 
     /**
