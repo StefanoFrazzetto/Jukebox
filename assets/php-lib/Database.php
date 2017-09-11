@@ -168,7 +168,7 @@ class Database extends PDO
      */
     public function migrate()
     {
-        return OS::executeWithResult('vendor/bin/phinx migrate');
+        return OS::executeWithResult($_SERVER['DOCUMENT_ROOT'].'/vendor/bin/phinx migrate');
     }
 
     /**
