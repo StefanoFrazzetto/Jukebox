@@ -6,6 +6,7 @@
  * Time: 18:29.
  */
 require_once '../../../vendor/autoload.php';
+
 use Lib\Git;
 
 ?>
@@ -55,6 +56,7 @@ use Lib\Git;
 
 </div>
 <div class="modalFooter">
+    <button id="spam_update_button">Update every few seconds</button>
     <button class="right" id="rebase_button">Rebase</button>
     <button class="right" id="delete_button">Delete</button>
     <select id="branch" title="Select a branch and perform an action with the buttons" class="right">
