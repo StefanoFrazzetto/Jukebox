@@ -49,6 +49,7 @@ return [
         'scripts'               => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/',
         'uploader'              => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
         'installation'          => $_SERVER['DOCUMENT_ROOT'].'/installation/',
+        'phinx_config'          => $_SERVER['DOCUMENT_ROOT'].'/phinx.yml',
     ],
 
     'disc' => [
@@ -71,10 +72,10 @@ return [
      * | Database configuration variables.
      */
     'database' => [
-        'host'     => 'localhost',
-        'name'     => 'jukebox',
-        'user'     => 'root',
-        'password' => 'password1000',
+        'host'          => 'localhost',
+        'name'          => 'jukebox',
+        'user'          => 'root',
+        'password'      => 'password1000',
     ],
 
     /*

@@ -16,6 +16,7 @@ use PDOException;
  */
 class Database extends PDO
 {
+    private $config;
     /**
      * @var string The default table containing the albums
      */
@@ -71,12 +72,12 @@ class Database extends PDO
      */
     public function __construct($use_default = true)
     {
-        $config = new Config();
+        $this->config = new Config();
         if (!getenv('TRAVIS')) { // If env is not Travis-CI
-            $this->_host = $config->get('database')['host'];
-            $this->_database = $config->get('database')['name'];
-            $this->_username = $config->get('database')['user'];
-            $this->_password = $config->get('database')['password'];
+            $this->_host = $this->config->get('database')['host'];
+            $this->_database = $this->config->get('database')['name'];
+            $this->_username = $this->config->get('database')['user'];
+            $this->_password = $this->config->get('database')['password'];
         } else { // Otherwise use Travis config
             $this->setTravisConfig();
         }
@@ -168,7 +169,8 @@ class Database extends PDO
      */
     public function migrate()
     {
-        return OS::executeWithResult($_SERVER['DOCUMENT_ROOT'].'/vendor/bin/phinx migrate');
+        $phinx_config = $this->config->get('paths')['phinx_config'];
+        return OS::executeWithResult($_SERVER['DOCUMENT_ROOT']."/vendor/bin/phinx migrate -c $phinx_config");
     }
 
     /**
