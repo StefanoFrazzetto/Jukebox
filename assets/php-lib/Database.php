@@ -95,7 +95,6 @@ class Database extends PDO
      */
     private function setPhinxVariables()
     {
-
         $phinx = $this->config->get('phinx');
 
         putenv("PHINX_DB_HOST=$this->_host");
@@ -184,6 +183,7 @@ class Database extends PDO
     public function migrate()
     {
         $phinx_config = $this->config->get('phinx')['config'];
+
         return OS::execute($_SERVER['DOCUMENT_ROOT']."/vendor/bin/phinx migrate -c $phinx_config");
     }
 
