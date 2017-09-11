@@ -83,14 +83,28 @@ class Database extends PDO
         }
 
         // Set environment variables for Phinx
-        putenv("PHINX_DB_HOST=$this->_host");
-        putenv("PHINX_DB_NAME=$this->_database");
-        putenv("PHINX_DB_USERNAME=$this->_username");
-        putenv("PHINX_DB_PASSWORD=$this->_password");
+        $this->setPhinxVariables();
 
         $this->_installation_dir_path = __DIR__.'/../../installation/';
 
         $this->__init($use_default);
+    }
+
+    /**
+     * Set the environment variables used by Phinx.
+     */
+    private function setPhinxVariables()
+    {
+
+        $phinx = $this->config->get('phinx');
+
+        putenv("PHINX_DB_HOST=$this->_host");
+        putenv("PHINX_DB_NAME=$this->_database");
+        putenv("PHINX_DB_USERNAME=$this->_username");
+        putenv("PHINX_DB_PASSWORD=$this->_password");
+        putenv('PHINX_DB_MIGRATIONS_PATH='.$phinx['migrations']);
+        putenv('PHINX_DB_SEEDS_PATH='.$phinx['seeds']);
+        putenv('PHINX_DEFAULT_DB='.$phinx['default_db']);
     }
 
     /**
@@ -169,8 +183,8 @@ class Database extends PDO
      */
     public function migrate()
     {
-        $phinx_config = $this->config->get('paths')['phinx_config'];
-        return OS::executeWithResult($_SERVER['DOCUMENT_ROOT']."/vendor/bin/phinx migrate -c $phinx_config");
+        $phinx_config = $this->config->get('phinx')['config'];
+        return OS::execute($_SERVER['DOCUMENT_ROOT']."/vendor/bin/phinx migrate -c $phinx_config");
     }
 
     /**

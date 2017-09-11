@@ -49,7 +49,6 @@ return [
         'scripts'               => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/',
         'uploader'              => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
         'installation'          => $_SERVER['DOCUMENT_ROOT'].'/installation/',
-        'phinx_config'          => $_SERVER['DOCUMENT_ROOT'].'/phinx.yml',
     ],
 
     'disc' => [
@@ -63,6 +62,13 @@ return [
             'cdparanoia_log'  => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/cdparanoia.log',
             'lame_log'        => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/lame.log',
         ],
+    ],
+
+    'phinx' => [
+        'default_db'  => 'production',
+        'config'      => $_SERVER['DOCUMENT_ROOT'].'/phinx.yml',
+        'migrations'  => $_SERVER['DOCUMENT_ROOT'].'/db/migrations',
+        'seeds'       => $_SERVER['DOCUMENT_ROOT'].'/db/seeds',
     ],
 
     /*
