@@ -81,6 +81,12 @@ class Database extends PDO
             $this->setTravisConfig();
         }
 
+        // Set environment variables for Phinx
+        putenv("PHINX_DB_HOST=$this->_host");
+        putenv("PHINX_DB_NAME=$this->_database");
+        putenv("PHINX_DB_USERNAME=$this->_username");
+        putenv("PHINX_DB_PASSWORD=$this->_password");
+
         $this->_installation_dir_path = __DIR__.'/../../installation/';
 
         $this->__init($use_default);
@@ -152,13 +158,25 @@ class Database extends PDO
 
         $res_create_db = $this->query("CREATE DATABASE IF NOT EXISTS $db");
         $this->query("USE $db");
-        $res_create_schema = $this->createSchema();
+        $res_migrate = $this->migrate();
 
-        return $res_create_db && $res_create_schema;
+        return $res_create_db && $res_migrate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function migrate()
+    {
+        return OS::executeWithResult('vendor/bin/phinx migrate');
     }
 
     /**
      * Create the database schema using the SQL files in the installation dir.
+     *
+     * TODO: remove after creating the migrations
+     *
+     * @deprecated
      */
     private function createSchema()
     {
