@@ -3,7 +3,6 @@
 
 require_once '../../vendor/autoload.php';
 
-
 use Lib\Logger;
 
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -38,7 +37,7 @@ switch ($action) {
     case 'list': // Display all the log files in the directory /var/log/
     default:
         foreach ($logger->listLogs() as $file) {
-            $output .= "<a href='?action=view&file=$file'>" . $file . "</a> \n";
+            $output .= "<a href='?action=view&file=$file'>".$file."</a> \n";
         }
 }
 

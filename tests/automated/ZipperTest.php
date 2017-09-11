@@ -54,5 +54,4 @@ final class ZipperTest extends JukeboxTestClass
 
         rmdir(self::TEST_DIR);
     }
-
 }

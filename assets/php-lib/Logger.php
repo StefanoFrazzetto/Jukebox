@@ -2,7 +2,6 @@
 
 namespace Lib;
 
-
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
@@ -23,13 +22,13 @@ class Logger
         $this->finder = $finder->ignoreUnreadableDirs()->in(self::LOGS_DIRECTORY_PATH)->files()->followLinks();
     }
 
-
     /**
      * Return the archives in the logs directory.
      *
      * @return Finder the archives in the logs directory.
      */
-    public function listArchives() {
+    public function listArchives()
+    {
         $archives = new Finder();
         $archives->ignoreUnreadableDirs()->in(self::LOGS_DIRECTORY_PATH)->files()->followLinks()->name('*.zip');
 
@@ -39,7 +38,8 @@ class Logger
     /**
      * Remove archives.
      */
-    private function removeOldArchives() {
+    private function removeOldArchives()
+    {
         $archives = self::listArchives();
 
         if (iterator_count($archives) <= 3) {
@@ -64,16 +64,16 @@ class Logger
 
         $logs = self::listLogs();
         $zip = new ZipArchive();
-        $filename = date("d_m_Y_gis") . '.zip';
+        $filename = date('d_m_Y_gis').'.zip';
 
         // Try to create the zip file in the logs directory
-        if ($zip->open(self::LOGS_DIRECTORY_PATH.'/'.$filename, ZipArchive::CREATE) !== TRUE) {
+        if ($zip->open(self::LOGS_DIRECTORY_PATH.'/'.$filename, ZipArchive::CREATE) !== true) {
             throw new RuntimeException('Cannot create zip file');
         }
 
         foreach ($logs as $log) { // Add the logs
             if (is_readable($log)) {
-                $new_filename = substr($log,strrpos($log,'/') + 1);
+                $new_filename = substr($log, strrpos($log, '/') + 1);
                 $zip->addFile($log, $new_filename);
             }
         }
@@ -86,7 +86,7 @@ class Logger
     }
 
     /**
-     * List the logs in the directory /var/www/html/logs
+     * List the logs in the directory /var/www/html/logs.
      *
      * // TODO implement symlink creation to /var/log in the install scripts
      *
@@ -104,6 +104,7 @@ class Logger
      * Clear the specific log file.
      *
      * @param string $filePath the log file path
+     *
      * @return bool true on success, false otherwise.
      */
     public static function clearLog($filePath)
@@ -119,7 +120,8 @@ class Logger
      * Return the content of a log file.
      *
      * @param string $filePath the log file path
-     * @throws Exception if the file path is outside the web dir
+     *
+     * @throws Exception                if the file path is outside the web dir
      * @throws InvalidArgumentException if the file does not exist
      *
      * @return string the file content
