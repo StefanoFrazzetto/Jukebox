@@ -9,6 +9,7 @@ header('Content-Type: application/json');
 
 require_once '../../vendor/autoload.php';
 
+use Lib\Database;
 use Lib\Git;
 
 $git = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
@@ -50,16 +51,20 @@ switch ($git) {
 
         break;
     case 'pull':
-        $g->pull(null, true);
+        if (!$g->pull(null, true)) {
+            $return['status'] = 'error';
+            break;
+        }
+
+        $db = new Database();
+
+        if (!$db->migrate()) {
+            $return['status'] = 'error';
+            break;
+        }
+
         $return['status'] = 'success';
-        break;
-    case 'branch':
-        $return['status'] = 'success';
-        $return['data'] = Git::branch('-a');
-        break;
-    case 'current_branch':
-        $return['status'] = 'success';
-        $return['data'] = $g->getCurrentBranch();
+
         break;
     case 'up_to_date':
         $return['status'] = 'success';
