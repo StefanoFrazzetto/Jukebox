@@ -170,7 +170,7 @@ class Git
         }
         $res = shell_exec($cmd);
 
-        return StringUtils::contains($res, ['done', 'up-to-date']);
+        return StringUtils::contains($res, ['done', 'up-to-date', 'HEAD is now']);
     }
 
     /**

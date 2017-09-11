@@ -14,7 +14,7 @@ use Lib\Git;
 
 $git = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
 
-$return = ['status' => 'error'];
+$return = ['status' => 'error', 'message' => ''];
 
 $g = new Git();
 
@@ -53,6 +53,7 @@ switch ($git) {
     case 'pull':
         if (!$g->pull(null, true)) {
             $return['status'] = 'error';
+            $return['message'] = 'Failed to retrieve the updates.';
             break;
         }
 
@@ -60,6 +61,7 @@ switch ($git) {
 
         if (!$db->migrate()) {
             $return['status'] = 'error';
+            $return['message'] = 'The database migration failed';
             break;
         }
 
