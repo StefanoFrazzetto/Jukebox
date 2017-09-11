@@ -170,6 +170,7 @@ class Database extends PDO
     public function migrate()
     {
         $phinx_config = $this->config->get('paths')['phinx_config'];
+
         return OS::executeWithResult($_SERVER['DOCUMENT_ROOT']."/vendor/bin/phinx migrate -c $phinx_config");
     }
 
