@@ -15,6 +15,7 @@ abstract class OS
      * Start a service.
      *
      * @param string $name the service name
+     *
      * @return bool true if the service was started, false otherwise.
      */
     public static function startService($name)
@@ -26,6 +27,7 @@ abstract class OS
      * Stop a service.
      *
      * @param string $name the service name
+     *
      * @return bool true if the service was stopped, false otherwise.
      */
     public static function stopService($name)
@@ -34,9 +36,10 @@ abstract class OS
     }
 
     /**
-     * Restart a service
+     * Restart a service.
      *
      * @param string $name the service name
+     *
      * @return bool true if the service was restarted, false otherwise.
      */
     public static function restartService($name)
@@ -48,6 +51,7 @@ abstract class OS
      * Return true the service is running, otherwise false.
      *
      * @param string $service_name the service name
+     *
      * @return bool
      */
     public static function isServiceRunning($service_name)
@@ -73,7 +77,7 @@ abstract class OS
      * Execute a command and returns its output.
      * The argument(s) can be passed as string or array.
      *
-     * @param string $command The command to execute
+     * @param string       $command   The command to execute
      * @param string|array $arguments The argument(s) to pass
      *
      * @return string A string containing the output of the command.
@@ -91,7 +95,7 @@ abstract class OS
     /**
      * Execute a command and return if it was successful or not.
      *
-     * @param string $command The command or script to execute.
+     * @param string       $command   The command or script to execute.
      * @param string|array $arguments The argument(s) to pass along with the command.
      *
      * @return bool true if the command/script has been executed successfully,
@@ -139,9 +143,9 @@ abstract class OS
      * Executes a command using the env passed as an array.
      * The arguments must be passed as an associative array.
      *
-     * @param string $command The command or script to execute
-     * @param string $arguments The arguments to be set in the environment
-     * @param bool $background The command/script is executed in background if this
+     * @param string $command    The command or script to execute
+     * @param string $arguments  The arguments to be set in the environment
+     * @param bool   $background The command/script is executed in background if this
      *                           flag is set to true. The default is false.
      *
      * @return int The process id of the command/script.
@@ -170,9 +174,9 @@ abstract class OS
      * Executes a command without returning its output.
      * It's possible to set whether the command should run in background or not.
      *
-     * @param string $command The command to execute
-     * @param string $arguments The arguments to pass along with the command
-     * @param bool $background Flag to set whether the task should run in
+     * @param string $command    The command to execute
+     * @param string $arguments  The arguments to pass along with the command
+     * @param bool   $background Flag to set whether the task should run in
      *                           background or not.
      */
     public static function executeWithoutOutput($command, $arguments = '', $background = false)
@@ -196,7 +200,7 @@ abstract class OS
      * and/or stderr should be stored.
      *
      * @param string $command The command to be executed
-     * @param string $output The full path to the location file where
+     * @param string $output  The full path to the location file where
      *                        the output should be redirected.
      *
      * @return int The process id of the command/script.
