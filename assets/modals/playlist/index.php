@@ -17,9 +17,8 @@ ICanHaz::css('style.css');
                 <th>Track</th>
                 <th>Artist</th>
                 <th>Album</th>
-
-                <th colspan="3">Length</th>
-
+                <th>Length</th>
+                <th></th>
             </tr>
             </thead>
             <tbody id="playlistDetails">

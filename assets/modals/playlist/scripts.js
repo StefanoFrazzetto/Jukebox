@@ -5,7 +5,7 @@ function updateBigPlaylist() {
         playlistDetails.html("");
 
         player.tracks.forEach(function (song, key) {
-            var remove = $('<td><i class="fa fa-trash removeTrackFromPlaylist"></i></td>').click(function (e) {
+            var remove = $('<td class="text-center"><i class="fa fa-trash removeTrackFromPlaylist"></i></td>').click(function (e) {
                 player.removeSongFromPlaylistAtIndex(key);
                 e.stopPropagation();
             });
@@ -13,9 +13,8 @@ function updateBigPlaylist() {
             $("<tr></tr>")
                 .append("<td>" + song.title + "</td>")
                 .append("<td>" + song.getArtistsNames() + "</td>")
-                .append("<td>" + storage.getAlbum(song.album_id).title + "</td>")
-                .append("<td><img class='album_thumb' src='" + storage.getAlbum(song.album_id).getCoverUrl() + "'/></td>")
-                .append("<td>" + song.getHHMMSS() + "</td>")
+                .append("<td class='albumRow'>" + storage.getAlbum(song.album_id).title + "<img class='album_thumb right' src=" + storage.getAlbum(song.album_id).getCoverUrl() + "/></td>")
+                .append("<td class='text-center'>" + song.getHHMMSS() + "</td>")
                 .append(remove)
                 .addClass('trackRow')
                 .click(function () {
