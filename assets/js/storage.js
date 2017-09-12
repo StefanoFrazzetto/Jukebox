@@ -106,6 +106,17 @@ var storage = {
         else
             return null;
     },
+
+    getVersionId: function () {
+        var count = 0;
+
+        this.albums.forEach(function (t) {
+            if (t !== undefined) count++;
+        });
+
+        const last = this.albums.length - 1;
+        return this.albums[last].id + "-" + count;
+    },
     //endregion Getters
 
     //region Stringifiers

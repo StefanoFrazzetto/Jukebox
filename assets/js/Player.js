@@ -432,28 +432,28 @@ Player.prototype.callback = function (callback, doesTriggerOnChange) {
 };
 
 Player.prototype.export = function () {
-    return this.isRadio
-        ? {
-            isRadio: true,
-            playing: this.isPlaying(),
-            volume: this.getVolume(),
-            currentRadio: this.currentRadio,
-            currentTime: this.getCurrentTime(),
-            timestamp: new Date().getTime()
-        } : {
-            album_id: this.getCurrentAlbumId(),
-            track_id: this.getCurrentSongId(),
-            repeat: this.repeat,
-            shuffle: this.shuffle,
-            currentTime: this.getCurrentTime(),
-            duration: this.getCurrentSongDuration(),
-            playing: this.isPlaying(),
-            volume: this.getVolume(),
-            timestamp: new Date().getTime(),
-            playlist: this.tracks,
-            isRadio: false
-        }
+    const a = {
+        playing: this.isPlaying(),
+        volume: this.getVolume(),
+        storageId: storage.getVersionId(),
+        timestamp: new Date().getTime()
+    };
 
+    const b = this.isRadio ? {
+        isRadio: true,
+        currentRadio: this.currentRadio
+    } : {
+        isRadio: false,
+        album_id: this.getCurrentAlbumId(),
+        track_id: this.getCurrentSongId(),
+        repeat: this.repeat,
+        shuffle: this.shuffle,
+        currentTime: this.getCurrentTime(),
+        duration: this.getCurrentSongDuration(),
+        playlist: this.tracks
+    };
+
+    return Object.assign({}, a, b);
 };
 //endregion Utils
 
