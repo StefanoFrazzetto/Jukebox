@@ -101,6 +101,11 @@ function radioChangeEvent() {
     titleDiv.html("Radio station");
 }
 
+function storageChangedEvent() {
+    console.log("Detected changes in albums storage.");
+    storage.loadAll();
+}
+
 function updateTrackProgress() {
     if (typeof playerStatus.duration !== "undefined" && playerStatus.duration !== null) {
         var percentage = getLocalCurrentTime() / playerStatus.duration * 100;
@@ -343,6 +348,10 @@ function updateRemoteStatus(r) {
 
     if (checkChange('current_time')) {
         updateTrackProgress();
+    }
+
+    if (oldPlayingStatus.storageId !== undefined && checkChange('storageId')) {
+        storageChangedEvent();
     }
 
     if (checkChange('volume')) {
