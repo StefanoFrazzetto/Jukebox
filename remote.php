@@ -104,7 +104,13 @@ use Lib\ICanHaz;
     </div>
 </div>
 
-<?php ICanHaz::js(['assets/js/jquery.min.js', 'assets/js/jquery-ui.min.js', 'assets/js/remote_client.js', 'assets/js/remote_control_scripts.js'], true); ?>
+<?php ICanHaz::js([
+    'assets/js/Arrays.js',
+    'assets/js/jquery.min.js',
+    'assets/js/jquery-ui.min.js',
+    'assets/js/remote_client.js',
+    'assets/js/remote_control_scripts.js'],
+    true); ?>
 
 </body>
 </html>

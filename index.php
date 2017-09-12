@@ -219,6 +219,7 @@ function isJukebox()
 
 $scripts = [
     'assets/js/vars.js',
+    'assets/js/Arrays.js',
     'assets/js/alerts.js',
     'assets/js/jquery.min.js',
     'assets/js/jquery-ui.min.js',

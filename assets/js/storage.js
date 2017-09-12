@@ -108,14 +108,7 @@ var storage = {
     },
 
     getVersionId: function () {
-        var count = 0;
-
-        this.albums.forEach(function (t) {
-            if (t !== undefined) count++;
-        });
-
-        const last = this.albums.length - 1;
-        return this.albums[last].id + "-" + count;
+        return this.albums.last().id + "-" + this.albums.count();
     },
     //endregion Getters
 
@@ -239,6 +232,7 @@ var storage = {
                             modal.close();
                             delete storage.albums[id];
                             storage.albumsFiltered = storage.albums.slice();
+                            if (typeof sendEvent === "function") sendEvent("reload");
                             paginate();
                         });
                     }

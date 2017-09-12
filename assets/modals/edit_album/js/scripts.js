@@ -6,18 +6,6 @@ var album_id = $('#album-id').val();
 var album_cover_img = $('#album_cover_img');
 var edit_tracks = $('#edit-tracks');
 
-// Moves element of an array to a new position
-Array.prototype.move = function (old_index, new_index) {
-    if (new_index >= this.length) {
-        var k = new_index - this.length;
-        while ((k--) + 1) {
-            this.push(undefined);
-        }
-    }
-    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-    return this; // for testing purposes
-};
-
 function submit(callback) {
     var album_id = $('#album-id').val();
     var album_artist = $('#album-artist').val();
@@ -75,7 +63,7 @@ edit_tracks.find('.edit').click(function (e) {
     var track_no = parseInt(li.attr('data-id'));
     var title_cont = li.find('.title');
 
-    var input = $('<input type="text" />');
+    var input = $('<input/>');
 
     var title_original = title_cont.text();
 
