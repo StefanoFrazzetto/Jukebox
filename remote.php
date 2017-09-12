@@ -109,7 +109,7 @@ use Lib\ICanHaz;
     'assets/js/jquery.min.js',
     'assets/js/jquery-ui.min.js',
     'assets/js/remote_client.js',
-    'assets/js/remote_control_scripts.js'],
+    'assets/js/remote_control_scripts.js', ],
     true); ?>
 
 </body>
