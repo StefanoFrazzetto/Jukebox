@@ -30,7 +30,7 @@ class CreateSongArtistsTable extends AbstractMigration
     {
         $table = $this->table('song_artists', ['engine' => 'MyISAM', ['id' => false, 'primary_key' => ['user_id', 'follower_id']]]);
         $table->addColumn('song_id', 'integer', ['limit' => 10, 'signed' => false])
-            ->addColumn('album_id', 'integer', ['limit' => 10, 'signed' => false])
+            ->addColumn('artist_id', 'integer', ['limit' => 10, 'signed' => false])
             ->create();
     }
 }
