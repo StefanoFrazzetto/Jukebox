@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: stefano
  * Date: 12/09/17
- * Time: 12:52
+ * Time: 12:52.
  */
 
 namespace Lib;
-
 
 use Exception;
 use InvalidArgumentException;
@@ -15,7 +14,7 @@ use Symfony\Component\Finder\Finder;
 
 class Updater
 {
-    /** @var  string $updates_dir the directory containing the updates */
+    /** @var string $updates_dir the directory containing the updates */
     private $updates_dir;
 
     /** The log level for the updater. Max log level is 2 */
@@ -52,15 +51,17 @@ class Updater
      * Launch the update file.
      *
      * @param $file
-     * @return array
+     *
      * @throws Exception
+     *
+     * @return array
      */
     private function readUpdateFile($file)
     {
         $encoded_file_content = file_get_contents($file);
-        if (!$encoded_file_content)
+        if (!$encoded_file_content) {
             throw new Exception('Cannot read the update file');
-
+        }
         $file_content = json_decode($encoded_file_content, true);
 
         $aptitude_commands = $file_content['aptitude'];
@@ -79,6 +80,7 @@ class Updater
      * section of the update file.
      *
      * @param array $aptitude_commands
+     *
      * @return array
      */
     private function aptitude($aptitude_commands)
@@ -89,7 +91,7 @@ class Updater
 
         $res = [];
         foreach ($aptitude_commands as $action => $args) {
-            $arguments = implode(" ", $args);
+            $arguments = implode(' ', $args);
             $cmd = "sudo apt-get $action $arguments -y";
             $res[] = $this->execute($cmd);
         }
@@ -101,13 +103,14 @@ class Updater
      * Execute the raw commands contained in the update file.
      *
      * @param array $commands the raw commands to execute
+     *
      * @return array @see execute
      */
     private function raw($commands)
     {
         $res = [];
         foreach ($commands as $command) {
-            $cmd = !empty($commands) ? $command : "Nothing to execute";
+            $cmd = !empty($commands) ? $command : 'Nothing to execute';
             $res[] = $this->execute($cmd);
         }
 
@@ -118,6 +121,7 @@ class Updater
      * Execute the command and create the output response.
      *
      * @param string $cmd the command to execute
+     *
      * @return array the array containing status, command, and message from the command
      */
     private function execute($cmd)
@@ -128,7 +132,7 @@ class Updater
             exec($cmd.' 2>&1', $output, $return_code);
         } else {
             $return_code = 0;
-            $output = "Nothing to execute.";
+            $output = 'Nothing to execute.';
         }
 
         switch (self::LOG_LEVEL) {
@@ -149,5 +153,4 @@ class Updater
 
         return $res;
     }
-
 }
