@@ -3,7 +3,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateThemesTable extends AbstractMigration
+class CreateSongArtistsTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,16 +28,9 @@ class CreateThemesTable extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('themes', ['engine' => 'MyISAM', 'signed' => false]);
-        $table->addColumn('name', 'string', ['limit' => 25])
-            ->addColumn('text_color', 'char', ['limit' => 7])
-            ->addColumn('background_color', 'char', ['limit' => 7])
-            ->addColumn('background_color_highlight', 'char', ['limit' => 7])
-            ->addColumn('border_color', 'char', ['limit' => 7])
-            ->addColumn('overlays', 'char', ['limit' => 7])
-            ->addColumn('highlight_color', 'char', ['limit' => 7])
-            ->addColumn('dark_accents', 'boolean')
-            ->addColumn('read_only', 'boolean', ['default' => 0])
+        $table = $this->table('song_artists', ['engine' => 'MyISAM', ['id' => false, 'primary_key' => ['user_id', 'follower_id']]]);
+        $table->addColumn('song_id', 'integer', ['limit' => 10, 'signed' => false])
+            ->addColumn('album_id', 'integer', ['limit' => 10, 'signed' => false])
             ->create();
     }
 }

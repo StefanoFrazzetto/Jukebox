@@ -1,9 +1,10 @@
 <?php
 
 
+use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-class CreateThemesTable extends AbstractMigration
+class CreateSongsTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,16 +29,13 @@ class CreateThemesTable extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('themes', ['engine' => 'MyISAM', 'signed' => false]);
-        $table->addColumn('name', 'string', ['limit' => 25])
-            ->addColumn('text_color', 'char', ['limit' => 7])
-            ->addColumn('background_color', 'char', ['limit' => 7])
-            ->addColumn('background_color_highlight', 'char', ['limit' => 7])
-            ->addColumn('border_color', 'char', ['limit' => 7])
-            ->addColumn('overlays', 'char', ['limit' => 7])
-            ->addColumn('highlight_color', 'char', ['limit' => 7])
-            ->addColumn('dark_accents', 'boolean')
-            ->addColumn('read_only', 'boolean', ['default' => 0])
+        $table = $this->table('songs', ['engine' => 'MyISAM', 'signed' => false]);
+        $table->addColumn('album_id', 'integer', ['limit' => 10, 'signed' => false])
+            ->addColumn('cd', 'integer', ['limit' => MysqlAdapter::INT_TINY, 'signed' => false, 'default' => 1])
+            ->addColumn('track_no', 'integer', ['limit' => MysqlAdapter::INT_TINY, 'signed' => false])
+            ->addColumn('length', 'integer', ['limit' => MysqlAdapter::INT_TINY, 'signed' => false])
+            ->addColumn('title', 'string', ['limit' => 255, 'collation' => 'utf8_unicode_ci'])
+            ->addColumn('url', 'string', ['limit' => 255, 'collation' => 'utf8_unicode_ci'])
             ->create();
     }
 }
