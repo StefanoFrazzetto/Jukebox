@@ -31,7 +31,7 @@ class CreateRadioStationsTable extends AbstractMigration
         $table = $this->table('radio_stations', ['engine' => 'MyISAM', 'signed' => false]);
         $table->addColumn('name', 'string', ['limit' => 50])
             ->addColumn('url', 'text')
-            ->addColumn('cover_cached_token', 'int', ['limit' => 11, 'default' => 0])
+            ->addColumn('cover_cached_token', 'integer', ['limit' => 11, 'default' => 0])
             ->create();
     }
 }
