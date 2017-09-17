@@ -68,7 +68,15 @@ class Album implements JsonSerializable
      */
     public function __construct()
     {
-        $this->albums_root = Config::getPath('albums_root');
+        $this->albums_root = self::getAlbumsRoot();
+    }
+
+    /**
+     * @return string the path to the albums root
+     */
+    public static function getAlbumsRoot()
+    {
+        return Config::getPath('albums_root');
     }
 
     /**
@@ -89,6 +97,24 @@ class Album implements JsonSerializable
         }
 
         return $albums;
+    }
+
+    /**
+     * @return int[] all the ids of the albums in the database
+     */
+    public static function getAllAlbumsId()
+    {
+        $db = new Database();
+
+        $db_object = $db->select('id', self::ALBUMS_TABLE);
+
+        $ids = [];
+
+        foreach ($db_object as $album) {
+            $ids[] = intval($album->id);
+        }
+
+        return $ids;
     }
 
     /**
