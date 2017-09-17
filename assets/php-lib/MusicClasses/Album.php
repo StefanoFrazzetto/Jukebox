@@ -100,6 +100,16 @@ class Album implements JsonSerializable
     }
 
     /**
+     * @return int the number of albums in the database.
+     */
+    public static function getAlbumsCount()
+    {
+        $db = new Database();
+
+        return $db->count(self::ALBUMS_TABLE, '1');
+    }
+
+    /**
      * @return int[] all the ids of the albums in the database
      */
     public static function getAllAlbumsId()
@@ -268,7 +278,7 @@ class Album implements JsonSerializable
      * @return int id of the album
      * @throws Exception
      */
-    public static function importJson($source, $json = null, $nestedTracks = false, $removeOnFinish = false)
+    public static function importJson($source, $json = null, $nestedTracks = false, $removeOnFinish = true)
     {
         if (!is_dir($source)) {
             throw new Exception("Source is not a directory.");
@@ -305,7 +315,7 @@ class Album implements JsonSerializable
             throw new Exception('Failed to save the new album to database.');
         }
 
-        $tracks = $nestedTracks ? self::extractTracksFromCd($content->tracks) : $content->tracks;
+        $tracks = $nestedTracks ? self::extractTracksFromCd($content->tracks) : self::extractTracks($content->tracks);
 
         $album->addSongs($tracks);
 
@@ -363,6 +373,17 @@ class Album implements JsonSerializable
         }
 
         return $tracks;
+    }
+
+    private static function extractTracks($tracks)
+    {
+        $songs = [];
+
+        foreach ($tracks as $track) {
+            $songs[] = Song::newSongFromJson($track);
+        }
+
+        return $songs;
     }
 
 
@@ -573,10 +594,10 @@ class Album implements JsonSerializable
     {
         $array = $this->jsonSerialize();
 
-        $array['artistsNames'] = $this->getArtistsName();
-        $array['songs'] = $this->makeSongsExportable($this->getSongs());
+        $array['artists'] = $this->getArtistsName();
+        $array['tracks'] = $this->makeSongsExportable($this->getSongs());
 
-        unset($array['id'], $array['cover']);
+        unset($array['id'], $array['cover'], $array['hits'], $array['last_played']);
 
         return json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
@@ -594,7 +615,7 @@ class Album implements JsonSerializable
 
             unset ($exportedSong['id'], $exportedSong['album_id']);
 
-            $exportedSong['artistsNames'] = Artist::idsToNames($song->getArtistsIds());
+            $exportedSong['artists'] = Artist::idsToNames($song->getArtistsIds());
 
             $exportedSongs[] = $exportedSong;
         }

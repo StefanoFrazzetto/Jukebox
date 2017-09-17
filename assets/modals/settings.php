@@ -7,7 +7,7 @@ use Lib\System;
 
 function get_string_between($string, $start, $end)
 {
-    $string = ' '.$string;
+    $string = ' ' . $string;
     $ini = strpos($string, $start);
 
     if ($ini == 0) {
@@ -47,8 +47,8 @@ function getSpeakerStatus()
         <div class="onoffswitch inline" id="speakers_div">
             <input type="checkbox" name="dhcp" class="onoffswitch-checkbox"
                    id="speakers" <?php if (getSpeakerStatus()) {
-    echo 'checked';
-} ?>>
+                echo 'checked';
+            } ?>>
             <label class="onoffswitch-label" for="speakers">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
@@ -61,6 +61,7 @@ function getSpeakerStatus()
         <button onclick="modal.openPage('assets/modals/update');">Update</button>
         <button onclick="modal.openPage('assets/modals/theme');">Theme</button>
         <button onclick="location.reload();">Refresh</button>
+        <button onclick="scanAlbums()">Restore Albums</button>
         <button class="nuclear" onclick="modal.openPage('assets/modals/format.php');">Factory Reset</button>
     </div>
 
@@ -129,5 +130,21 @@ function getSpeakerStatus()
                 $.ajax('assets/API/device.php?action=speakers_on');
             }
         });
+
+        function scanAlbums() {
+            $.getJSON('/assets/API/import_album.php')
+                .done(function (data) {
+                    if (data.scanned_albums > 0) {
+                        alert(data.scanned_albums + " albums found. " + data.created_albums + " successfully imported.");
+                        reload();
+                    }
+                    else
+                        alert("No albums found.");
+                })
+                .fail(function (error) {
+                    alert("Failed to scan for albums");
+                    console.error(error);
+                });
+        }
     </script>
 </div>
