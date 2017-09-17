@@ -3,6 +3,7 @@
 namespace Lib\MusicClasses;
 
 use Exception;
+use InvalidArgumentException;
 use JsonSerializable;
 use Lib\Config;
 use Lib\Cover;
@@ -24,6 +25,8 @@ class Album implements JsonSerializable
 
     //    const LAST_PLAYED_FILE = __DIR__ . '/../../config/lastid';
     const LAST_PLAYED_FILE = '/var/www/html/assets/config/lastid';
+
+    const DATA_FILE = 'jukebox.json';
 
     /**
      * @var int database id
@@ -218,8 +221,119 @@ class Album implements JsonSerializable
             $this->stored = true;
         }
 
+        if (!file_exists($this->getAlbumPath()))
+            mkdir($this->getAlbumPath(), 0777, true);
+
+        $this->saveJson();
+
         return true;
     }
+
+    public function saveJson()
+    {
+        file_put_contents($this->getAlbumPath() . self::DATA_FILE, json_encode($this->toExportableJson(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    }
+
+    /**
+     * @param $source string The source file of the album
+     * @param $json string The json containing the metadata of the album
+     * @param bool $nestedTracks Are the tracks nested in a CD object?
+     * @param bool $removeOnFinish Remove the original directory on finish?
+     * @return int id of the album
+     * @throws Exception
+     */
+    public static function importJson($source, $json = null, $nestedTracks = false, $removeOnFinish = false)
+    {
+        if (!is_dir($source)) {
+            throw new Exception("Source is not a directory.");
+        }
+
+        if ($json == null) {
+            $json = file_get_contents($source . self::DATA_FILE);
+        }
+
+        if (empty($json)) {
+            throw new InvalidArgumentException('Json not provided.');
+        }
+
+        $content = json_decode($json);
+
+        if (empty($content)) {
+            throw new Exception(json_last_error_msg());
+        }
+
+        if (empty($content->title)) {
+            throw new Exception('Album title required.');
+        }
+
+        $album = new Album();
+
+        $album->setTitle($content->title);
+
+        if (!$album->save()) {
+            throw new Exception('Failed to save the new album to database.');
+        }
+
+        $tracks = $nestedTracks ? self::extractTracksFromCd($content->tracks) : $content->tracks;
+
+        $album->addSongs($tracks);
+
+        if (isset($content->cover) && $content->cover != null)
+            try {
+                $content->cover = FileUtils::normaliseUrl($content->cover);
+                $album->setCover($content->cover);
+            } catch (Exception $exception) {
+                $album->setCover(null);
+                error_log('Failed to set cover to album ' . $album->getId() . ' because ' . $exception->getMessage());
+            }
+
+        // Let's grab all the juicy stuff.
+        if (!FileUtils::moveContents($source, $album->getAlbumPath(), true)) {
+            throw new Exception('Failed to move files.');
+        }
+
+        // Save the importable json file
+        $album->saveJson();
+
+        // Take the garbage out.
+        if ($removeOnFinish)
+            FileUtils::remove($source, true);
+
+        // Job done, people, let's go home!
+        return $album->getId(); // Now just pretend it might return something else, okay?
+    }
+
+    /**
+     * Flattens a multidimensional [cd][trackNo] array of {@link stdObjects},
+     * into a linear queue of ad-hoc defined {@link Song} objects,
+     * storing the CD index within the dedicated structure,
+     * preparing the aforementioned for being processed by further facilities.
+     * <p>
+     * Nevertheless, creates artists on-the-fly, if the are missing from the local database,
+     * adding a reference inside the {@link Song} object.
+     * <p><p>
+     * Hot stuff, man.
+     *
+     * @param $cds array
+     *
+     * @return Song[]
+     */
+    private static function extractTracksFromCd($cds)
+    {
+        $tracks = [];
+
+        foreach ($cds as $cdIndex => $cd_tracks) {
+            if (is_array($cd_tracks)) {
+                foreach ($cd_tracks as $track) {
+                    $track->cd = $cdIndex;
+                    $tracks[] = Song::newSongFromJson($track);
+                }
+            }
+        }
+
+        return $tracks;
+    }
+
 
     /**
      * Updates statistics about the last album played and so on.

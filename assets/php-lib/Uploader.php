@@ -6,7 +6,6 @@ use Exception;
 use Exceptions\UploadException;
 use InvalidArgumentException;
 use Lib\MusicClasses\Album;
-use Lib\MusicClasses\Song;
 use Providers\MusicBrainz;
 use Symfony\Component\Finder\Finder;
 
@@ -281,83 +280,9 @@ class Uploader
      */
     public function createAlbumFromJson($json, $uploader_id)
     {
-        if (empty($json)) {
-            throw new InvalidArgumentException('Json not provided.');
-        }
+        $source = self::getPath() . $uploader_id . '/';
 
-        $content = json_decode($json);
-        if (empty($content)) {
-            throw new Exception(json_last_error_msg());
-        }
-
-        if (empty($content->title)) {
-            throw new Exception('Album title required.');
-        }
-
-        $album = new Album();
-        $album->setTitle($content->title);
-
-        if (!$album->save()) {
-            throw new Exception('Failed to save the new album to database.');
-        }
-
-        $tracks = self::extractTracksFromCd($content->tracks);
-
-        $album->addSongs($tracks);
-
-        mkdir($album->getAlbumPath());
-
-        $content->cover = FileUtils::normaliseUrl($content->cover);
-
-        if (isset($content->cover) && $content->cover != null)
-            try {
-                $album->setCover($content->cover);
-            } catch (Exception $exception) {
-                $album->setCover(null);
-                error_log('Failed to set cover to album ' . $album->getId() . ' because ' . $exception->getMessage());
-            }
-
-        // Let's grab all the juicy stuff.
-        if (!FileUtils::moveContents(self::getPath() . $uploader_id . '/', $album->getAlbumPath(), true)) {
-            throw new Exception('Failed to move files.');
-        }
-
-        // Take the garbage out.
-        FileUtils::remove(self::getPath() . $uploader_id, true);
-
-        // Job done, people, let's go home!
-        return $album->getId(); // Now just pretend it might return something else, okay?
-    }
-
-    /**
-     * Flattens a multidimensional [cd][trackNo] array of {@link stdObjects},
-     * into a linear queue of ad-hoc defined {@link Song} objects,
-     * storing the CD index within the dedicated structure,
-     * preparing the aforementioned for being processed by further facilities.
-     * <p>
-     * Nevertheless, creates artists on-the-fly, if the are missing from the local database,
-     * adding a reference inside the {@link Song} object.
-     * <p><p>
-     * Hot stuff, man.
-     *
-     * @param $cds array
-     *
-     * @return Song[]
-     */
-    private static function extractTracksFromCd($cds)
-    {
-        $tracks = [];
-
-        foreach ($cds as $cdIndex => $cd_tracks) {
-            if (is_array($cd_tracks)) {
-                foreach ($cd_tracks as $track) {
-                    $track->cd = $cdIndex;
-                    $tracks[] = Song::newSongFromJson($track);
-                }
-            }
-        }
-
-        return $tracks;
+        return Album::importJson($source, $json, true, true);
     }
 
     /**
