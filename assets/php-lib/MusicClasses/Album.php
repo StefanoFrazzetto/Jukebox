@@ -257,8 +257,9 @@ class Album implements JsonSerializable
             $this->stored = true;
         }
 
-        if (!file_exists($this->getAlbumPath()))
+        if (!file_exists($this->getAlbumPath())) {
             mkdir($this->getAlbumPath(), 0777, true);
+        }
 
         $this->saveJson();
 
@@ -267,29 +268,31 @@ class Album implements JsonSerializable
 
     public function saveJson()
     {
-        file_put_contents($this->getAlbumPath() . self::DATA_FILE, $this->toExportableJson());
+        file_put_contents($this->getAlbumPath().self::DATA_FILE, $this->toExportableJson());
     }
 
     /**
      * @param $source string The source file of the album
      * @param $json string The json containing the metadata of the album
-     * @param bool $nestedTracks Are the tracks nested in a CD object?
+     * @param bool $nestedTracks   Are the tracks nested in a CD object?
      * @param bool $removeOnFinish Remove the original directory on finish?
-     * @return int id of the album
+     *
      * @throws Exception
+     *
+     * @return int id of the album
      */
     public static function importJson($source, $json = null, $nestedTracks = false, $removeOnFinish = true)
     {
         if (!is_dir($source)) {
-            throw new Exception("Source is not a directory.");
+            throw new Exception('Source is not a directory.');
         }
 
         if ($json == null) {
-            $jsonFile = $source . self::DATA_FILE;
+            $jsonFile = $source.self::DATA_FILE;
 
-            if (!file_exists($jsonFile))
+            if (!file_exists($jsonFile)) {
                 throw new Exception("$jsonFile not found when importing the album.");
-
+            }
             $json = file_get_contents($jsonFile);
         }
 
@@ -307,7 +310,7 @@ class Album implements JsonSerializable
             throw new Exception('Album title required.');
         }
 
-        $album = new Album();
+        $album = new self();
 
         $album->setTitle($content->title);
 
@@ -319,14 +322,15 @@ class Album implements JsonSerializable
 
         $album->addSongs($tracks);
 
-        if (isset($content->cover) && $content->cover != null)
+        if (isset($content->cover) && $content->cover != null) {
             try {
                 $content->cover = FileUtils::normaliseUrl($content->cover);
                 $album->setCover($content->cover);
             } catch (Exception $exception) {
                 $album->setCover(null);
-                error_log('Failed to set cover to album ' . $album->getId() . ' because ' . $exception->getMessage());
+                error_log('Failed to set cover to album '.$album->getId().' because '.$exception->getMessage());
             }
+        }
 
         // Let's grab all the juicy stuff.
         if (!FileUtils::moveContents($source, $album->getAlbumPath(), true)) {
@@ -337,8 +341,9 @@ class Album implements JsonSerializable
         $album->saveJson();
 
         // Take the garbage out.
-        if ($removeOnFinish)
+        if ($removeOnFinish) {
             FileUtils::remove($source, true);
+        }
 
         // Job done, people, let's go home!
         return $album->getId(); // Now just pretend it might return something else, okay?
@@ -385,7 +390,6 @@ class Album implements JsonSerializable
 
         return $songs;
     }
-
 
     /**
      * Updates statistics about the last album played and so on.
@@ -494,7 +498,7 @@ class Album implements JsonSerializable
      */
     public function getCoverPath()
     {
-        return $this->albums_root . "$this->id/cover.jpg";
+        return $this->albums_root."$this->id/cover.jpg";
     }
 
     /**
@@ -502,7 +506,7 @@ class Album implements JsonSerializable
      */
     public function getThumbPath()
     {
-        return $this->albums_root . "$this->id/cover.jpg";
+        return $this->albums_root."$this->id/cover.jpg";
     }
 
     /**
@@ -548,7 +552,7 @@ class Album implements JsonSerializable
     {
         $database = new Database();
 
-        FileUtils::remove(Config::getPath('albums_root') . $this->id, true);
+        FileUtils::remove(Config::getPath('albums_root').$this->id, true);
 
         foreach ($this->getSongs() as $song) {
             $song->delete();
@@ -578,12 +582,12 @@ class Album implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'artists' => $this->getArtists(),
-            'hits' => $this->getHits(),
+            'id'          => $this->getId(),
+            'title'       => $this->getTitle(),
+            'artists'     => $this->getArtists(),
+            'hits'        => $this->getHits(),
             'last_played' => $this->getLastPlayed(),
-            'cover' => $this->getCoverID()
+            'cover'       => $this->getCoverID(),
         ];
     }
 
@@ -604,6 +608,7 @@ class Album implements JsonSerializable
 
     /**
      * @param $songs Song[] the songs to make exportable
+     *
      * @return array an associative array containing the exportable songs
      */
     private function makeSongsExportable($songs)
@@ -613,7 +618,7 @@ class Album implements JsonSerializable
         foreach ($songs as $song) {
             $exportedSong = $song->jsonSerialize();
 
-            unset ($exportedSong['id'], $exportedSong['album_id']);
+            unset($exportedSong['id'], $exportedSong['album_id']);
 
             $exportedSong['artists'] = Artist::idsToNames($song->getArtistsIds());
 
@@ -705,7 +710,7 @@ class Album implements JsonSerializable
 
         $file = $thumb ? 'thumb' : 'cover';
 
-        return "/jukebox/$this->id/$file.jpg?" . $this->getCoverID();
+        return "/jukebox/$this->id/$file.jpg?".$this->getCoverID();
     }
 
     /**
@@ -717,7 +722,7 @@ class Album implements JsonSerializable
     {
         $db = new Database();
 
-        $result = $db->select('tracks', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+        $result = $db->select('tracks', self::ALBUMS_TABLE, 'WHERE `id` = '.$this->id);
 
         //$result = $result;
 
@@ -740,14 +745,14 @@ class Album implements JsonSerializable
      */
     public function getAlbumFolderSize()
     {
-        $kb = FileUtils::getDirectorySize($this->albums_root . $this->getId());
+        $kb = FileUtils::getDirectorySize($this->albums_root.$this->getId());
 
         return empty($kb) ? null : $kb / 1000;
     }
 
     public function getAlbumPath()
     {
-        return $this->albums_root . $this->getId() . '/';
+        return $this->albums_root.$this->getId().'/';
     }
 
     /**
@@ -759,7 +764,7 @@ class Album implements JsonSerializable
     {
         $db = new Database();
 
-        $result = $db->select('artist', self::ALBUMS_TABLE, 'WHERE `id` = ' . $this->id);
+        $result = $db->select('artist', self::ALBUMS_TABLE, 'WHERE `id` = '.$this->id);
 
         $artist = $result[0]->artist;
 
