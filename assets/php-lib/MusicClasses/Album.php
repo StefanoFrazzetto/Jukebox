@@ -257,7 +257,7 @@ class Album implements JsonSerializable
 
     public function saveJson()
     {
-        file_put_contents($this->getAlbumPath() . self::DATA_FILE, json_encode($this->toExportableJson(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        file_put_contents($this->getAlbumPath() . self::DATA_FILE, $this->toExportableJson());
     }
 
     /**
@@ -275,7 +275,12 @@ class Album implements JsonSerializable
         }
 
         if ($json == null) {
-            $json = file_get_contents($source . self::DATA_FILE);
+            $jsonFile = $source . self::DATA_FILE;
+
+            if (!file_exists($jsonFile))
+                throw new Exception("$jsonFile not found when importing the album.");
+
+            $json = file_get_contents($jsonFile);
         }
 
         if (empty($json)) {
@@ -573,7 +578,7 @@ class Album implements JsonSerializable
 
         unset($array['id'], $array['cover']);
 
-        return json_encode($array);
+        return json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 
     /**
