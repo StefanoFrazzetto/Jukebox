@@ -94,7 +94,7 @@ class Song implements JsonSerializable
      */
     public static function getLength($file)
     {
-        $length = shell_exec('mp3info -p "%S" '.$file);
+        $length = shell_exec('mp3info -p "%S" ' . $file);
 
         intval($length);
 
@@ -271,7 +271,7 @@ class Song implements JsonSerializable
 
         $arr = [ // I AM A PIRATE!
             'album_id' => $this->album_id, 'cd' => $this->cd, 'track_no' => $this->track_no,
-            'title'    => $this->title, 'url' => $this->url, 'length' => $this->length,
+            'title' => $this->title, 'url' => $this->url, 'length' => $this->length,
         ];
 
         if ($this->created) {
@@ -312,7 +312,7 @@ class Song implements JsonSerializable
         if (!is_int($artist)) {
             var_dump($artist);
 
-            throw new \InvalidArgumentException("Artist is neither an int or a Artist instance. Maybe it's not saved? ".$artist);
+            throw new \InvalidArgumentException("Artist is neither an int or a Artist instance. Maybe it's not saved? " . $artist);
         }
 
         if ($this->created) {
@@ -337,7 +337,7 @@ class Song implements JsonSerializable
      */
     public function getID3Tags()
     {
-        $cmd = 'id3v2 -R "'.$this->getFullUrl().'"';
+        $cmd = 'id3v2 -R "' . $this->getFullUrl() . '"';
 
         $output = shell_exec($cmd);
 
@@ -363,7 +363,7 @@ class Song implements JsonSerializable
         if ($this->created) {
             return "/jukebox/$this->album_id/$this->url";
         } else {
-            return $this->file_path.'/'.$this->url;
+            return $this->file_path . '/' . $this->url;
         }
     }
 
@@ -376,7 +376,7 @@ class Song implements JsonSerializable
     {
         $this->created = false;
 
-        $file = __DIR__.$this->getFullUrl();
+        $file = __DIR__ . $this->getFullUrl();
 
         if (file_exists($file)) {
             unlink($file);
@@ -432,7 +432,7 @@ class Song implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id'    => $this->id, 'album_id' => $this->album_id, 'cd' => $this->cd, 'track_no' => $this->track_no,
+            'id' => $this->id, 'album_id' => $this->album_id, 'cd' => $this->cd, 'track_no' => $this->track_no,
             'title' => $this->title, 'artists' => $this->getArtistsIds(), 'url' => $this->url, 'length' => $this->length,
         ];
     }
@@ -444,8 +444,18 @@ class Song implements JsonSerializable
      */
     public function getArtistsIds()
     {
+        return $this->getArtistsAttribute('artist_id');
+    }
+
+    /**
+     * Return an arrays with the required artist attribute of the song.
+     *
+     * @return array
+     */
+    private function getArtistsAttribute($attribute)
+    {
         $db = new Database();
-        $results = $db->select('artist_id', self::SONG_ARTISTS_TABLE, "WHERE song_id = $this->id");
+        $results = $db->select($attribute, self::SONG_ARTISTS_TABLE, "WHERE song_id = $this->id");
 
         if (!is_array($results)) {
             return [];
@@ -546,7 +556,7 @@ class Song implements JsonSerializable
     {
         $addZeros = function ($digit) {
             if ($digit < 10) {
-                $digit = '0'.$digit;
+                $digit = '0' . $digit;
             }
 
             return $digit;
@@ -555,6 +565,6 @@ class Song implements JsonSerializable
         $minutes = floor($this->length / 60);
         $seconds = $this->length - $minutes * 60;
 
-        return $addZeros($minutes).':'.$addZeros($seconds);
+        return $addZeros($minutes) . ':' . $addZeros($seconds);
     }
 }
