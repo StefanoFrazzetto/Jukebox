@@ -216,13 +216,14 @@ class Artist implements JsonSerializable
 
     /**
      * @param $ids int[] array of ids to be converted to strings
+     *
      * @return string[] an array with artists names
      */
     public static function idsToNames($ids)
     {
-        if (!is_array($ids))
+        if (!is_array($ids)) {
             throw new \InvalidArgumentException('Argument must be an array.');
-
+        }
         $array = [];
 
         foreach ($ids as $id) {

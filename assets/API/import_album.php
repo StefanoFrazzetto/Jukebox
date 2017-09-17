@@ -12,12 +12,12 @@ class ImportManager
     public static function importAllMissingAlbums()
     {
         $stats = [
-            'total_albums' => Album::getAlbumsCount(),
+            'total_albums'   => Album::getAlbumsCount(),
             'scanned_albums' => count(static::findMissingAlbums()),
         ];
 
         foreach (self::findMissingAlbums() as $album) {
-            Album::importJson(Album::getAlbumsRoot() . $album . '/', null, false, true);
+            Album::importJson(Album::getAlbumsRoot().$album.'/', null, false, true);
         }
 
         $stats['created_albums'] = Album::getAlbumsCount() - $stats['total_albums'];
@@ -50,9 +50,10 @@ class ImportManager
         $filtered_dirs = [];
 
         foreach ($dirs as $dir) {
-            $path = Album::getAlbumsRoot() . $dir . '/' . Album::DATA_FILE;
-            if (file_exists($path))
+            $path = Album::getAlbumsRoot().$dir.'/'.Album::DATA_FILE;
+            if (file_exists($path)) {
                 $filtered_dirs[] = intval($dir);
+            }
         }
 
         return $filtered_dirs;
