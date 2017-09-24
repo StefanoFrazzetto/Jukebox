@@ -231,6 +231,7 @@ $scripts = [
     'assets/js/jquery.mCustomScrollbar.concat.min.js',
     'assets/js/ImageSelector.js',
     'assets/js/Uploader.js',
+    'assets/js/dropzone.js',
     'assets/js/post-script.js',
 ];
 

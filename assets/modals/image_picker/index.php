@@ -53,7 +53,6 @@ include '../../../vendor/autoload.php';
 
 use Lib\ICanHaz;
 
-ICanHaz::js('/assets/js/dropzone.js');
 ICanHaz::js('scripts.js', false, true);
 
 ?>

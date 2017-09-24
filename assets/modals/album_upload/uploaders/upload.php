@@ -21,7 +21,7 @@
 
 <?php
 require_once '../../../../vendor/autoload.php';
+
 use Lib\ICanHaz;
 
-ICanHaz::js('/assets/js/dropzone.js');
 ICanHaz::js('upload.js', false, true);
