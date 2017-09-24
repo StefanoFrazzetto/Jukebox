@@ -40,8 +40,9 @@ $(function () {
         // If the array is not empty
         if (data === null) {
             covers.append(createDefaultCover());
-        } else if (data.length === 0) {
-            covers.html("No images found. Check your connection.");
+        } else if (data.length === 0 && imageSelector.presetCovers.length === 0) {
+            covers.html("<p>No images found. Check your connection or refine the search parameters.</p>");
+            covers.append(createDefaultCover());
         } else {
             // Convert objects to arrays
             data = extract(data);
