@@ -359,7 +359,7 @@ Uploader.prototype.done = function () {
             console.log(error);
         })
         .always(function () {
-            if (typeof uploader.onDone === "function")
+            if (typeof uploader !== 'undefined' && typeof uploader.onDone === "function")
                 uploader.onDone();
         });
 };
