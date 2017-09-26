@@ -85,7 +85,7 @@ class Database extends PDO
         // Set environment variables for Phinx
         $this->setPhinxVariables();
 
-        $this->_installation_dir_path = __DIR__ . '/../../installation/';
+        $this->_installation_dir_path = __DIR__.'/../../installation/';
 
         $this->__init($use_default);
     }
@@ -112,9 +112,9 @@ class Database extends PDO
         putenv("PHINX_DB_NAME=$this->_database");
         putenv("PHINX_DB_USERNAME=$this->_username");
         putenv("PHINX_DB_PASSWORD=$this->_password");
-        putenv('PHINX_DB_MIGRATIONS_PATH=' . $phinx['migrations']);
-        putenv('PHINX_DB_SEEDS_PATH=' . $phinx['seeds']);
-        putenv('PHINX_DEFAULT_DB=' . $phinx['default_db']);
+        putenv('PHINX_DB_MIGRATIONS_PATH='.$phinx['migrations']);
+        putenv('PHINX_DB_SEEDS_PATH='.$phinx['seeds']);
+        putenv('PHINX_DEFAULT_DB='.$phinx['default_db']);
     }
 
     /**
@@ -138,7 +138,7 @@ class Database extends PDO
                 $this->query("USE $this->_database");
             }
         } catch (PDOException $e) {
-            error_log('Connection failed: ' . $e->getMessage());
+            error_log('Connection failed: '.$e->getMessage());
         }
     }
 
@@ -154,7 +154,7 @@ class Database extends PDO
         $stmt = $this->prepare('SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :DB_NAME');
         $stmt->execute(['DB_NAME' => $db_name]);
 
-        return (bool)$stmt->fetchColumn();
+        return (bool) $stmt->fetchColumn();
     }
 
     /**
@@ -186,7 +186,7 @@ class Database extends PDO
     {
         $phinx_config = $this->config->get('phinx')['config'];
 
-        return OS::executeWithResult($_SERVER['DOCUMENT_ROOT'] . "/vendor/bin/phinx migrate -c $phinx_config");
+        return OS::executeWithResult($_SERVER['DOCUMENT_ROOT']."/vendor/bin/phinx migrate -c $phinx_config");
     }
 
     /**
@@ -202,11 +202,13 @@ class Database extends PDO
     }
 
     /**
-     * Check if a table exists
+     * Check if a table exists.
      *
      * @param $table_name
-     * @return bool
+     *
      * @throws Exception
+     *
+     * @return bool
      */
     public function tableExists($table_name)
     {
@@ -217,7 +219,7 @@ class Database extends PDO
         $res = $this->select(
             'COUNT(*)',
             'information_schema.tables',
-            'WHERE table_schema = \'' . $this->_database . '\' AND table_name = \''. $table_name .'\' LIMIT 1;',
+            'WHERE table_schema = \''.$this->_database.'\' AND table_name = \''.$table_name.'\' LIMIT 1;',
             PDO::FETCH_NUM
         );
 
@@ -300,11 +302,11 @@ class Database extends PDO
     {
         $array_fields = array_keys($array);
 
-        $fields = '(' . implode(',', $array_fields) . ')';
-        $val_holders = '(:' . implode(', :', $array_fields) . ')';
+        $fields = '('.implode(',', $array_fields).')';
+        $val_holders = '(:'.implode(', :', $array_fields).')';
 
         $sql = "INSERT INTO $table";
-        $sql .= $fields . ' VALUES ' . $val_holders;
+        $sql .= $fields.' VALUES '.$val_holders;
 
         $stmt = $this->prepare($sql);
 
@@ -329,14 +331,14 @@ class Database extends PDO
     /**
      * Select data from a table.
      *
-     * @param string $columns the columns to select
-     * @param string $table the table containing the data
-     * @param string $query the additional query
-     * @param int $fetch_style
+     * @param string $columns     the columns to select
+     * @param string $table       the table containing the data
+     * @param string $query       the additional query
+     * @param int    $fetch_style
      *
      * @return array
      */
-    public function select($columns = '*', $table, $query = 'WHERE 1', $fetch_style = PDO::FETCH_CLASS)
+    public function select($columns, $table, $query = 'WHERE 1', $fetch_style = PDO::FETCH_CLASS)
     {
         if (is_array($columns)) {
             $columns = implode(', ', $columns);
@@ -346,6 +348,7 @@ class Database extends PDO
         $sql .= $query;
 
         $stmt = $this->prepare($sql);
+
         return $stmt->execute() === false ? [] : $stmt->fetchAll($fetch_style);
     }
 
@@ -368,12 +371,12 @@ class Database extends PDO
 
         foreach ($array as $key => $value) {
             $value = addslashes($value);
-            $sql .= $key . '=' . "'$value'" . ',';
+            $sql .= $key.'='."'$value'".',';
         }
 
         $sql = rtrim($sql, ',');
 
-        $sql .= ' WHERE ' . $where;
+        $sql .= ' WHERE '.$where;
 
         $stmt = $this->prepare($sql);
 
@@ -413,7 +416,7 @@ class Database extends PDO
         $sql = rtrim($sql, ',');
 
         if ($where != '') {
-            $sql .= ' WHERE ' . $where;
+            $sql .= ' WHERE '.$where;
         }
 
         $stmt = $this->prepare($sql);
@@ -521,8 +524,8 @@ class Database extends PDO
     private function createSchema()
     {
         $sql_folder = $this->_installation_dir_path;
-        $this->executeFile($sql_folder . 'base_schema.sql');
-        $this->executeFile($sql_folder . 'themes.sql');
+        $this->executeFile($sql_folder.'base_schema.sql');
+        $this->executeFile($sql_folder.'themes.sql');
     }
 
     /**
