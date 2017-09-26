@@ -3,6 +3,7 @@
   "date": "12-09-2017 14:16",
   "aptitude": {
     "install": [
+      "nano"
     ],
     "autoremove": [
     ]

@@ -49,7 +49,7 @@ return [
         'scripts'               => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/',
         'uploader'              => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
         'installation'          => $_SERVER['DOCUMENT_ROOT'].'/installation/',
-        'updater_migrations'    => $_SERVER['DOCUMENT_ROOT'].'/updater/',
+        'updater'               => $_SERVER['DOCUMENT_ROOT'].'/updater/',
     ],
 
     'disc' => [
