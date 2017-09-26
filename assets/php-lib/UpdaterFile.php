@@ -7,7 +7,6 @@ use InvalidArgumentException;
 
 class UpdaterFile
 {
-
     /** The log level for the updater. Max log level is 2 */
     const LOG_LEVEL = 2;
 
@@ -17,7 +16,7 @@ class UpdaterFile
     /** @var string $file_path */
     private $file_path;
 
-    /** @var  string $file_name */
+    /** @var string $file_name */
     private $file_name;
 
     /** @var string $start_time */
@@ -26,13 +25,13 @@ class UpdaterFile
     /** @var string $end_time */
     private $end_time;
 
-    /** @var  array $update_content the content of the update file */
+    /** @var array $update_content the content of the update file */
     private $update_content;
 
     /** @var bool $is_valid flag whether the file is valid or not */
     private $is_valid;
 
-    /** @var  bool $STATUS_SUCCESS */
+    /** @var bool $STATUS_SUCCESS */
     private $STATUS_SUCCESS = false;
 
     public function __construct($updateFile)
@@ -84,7 +83,7 @@ class UpdaterFile
     }
 
     /**
-     * Read the update file
+     * Read the update file.
      *
      * @throws Exception
      */
@@ -108,13 +107,15 @@ class UpdaterFile
 
     private static function getCurrentTime()
     {
-        return date("Y-m-d H:i:s");
+        return date('Y-m-d H:i:s');
     }
 
     /**
      * Execute the update file.
-     * @return array
+     *
      * @throws Exception
+     *
+     * @return array
      */
     public function execute()
     {
@@ -193,7 +194,7 @@ class UpdaterFile
         $res = ['success' => true];
 
         if (!empty($cmd)) {
-            exec($cmd . ' 2>&1', $output, $return_code);
+            exec($cmd.' 2>&1', $output, $return_code);
         } else {
             $return_code = 0;
             $output = 'Nothing to execute.';
@@ -224,12 +225,14 @@ class UpdaterFile
      * Get the version from the beginning of a file name.
      *
      * @param string $fileName file name
+     *
      * @return string
      */
     public static function getVersionFromName($fileName)
     {
-        $matches = array();
+        $matches = [];
         preg_match('/^[0-9]+/', $fileName, $matches);
+
         return $matches[0];
     }
 }

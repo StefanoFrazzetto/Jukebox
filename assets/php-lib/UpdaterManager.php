@@ -2,15 +2,12 @@
 
 namespace Lib;
 
-
 use Exception;
 use Symfony\Component\Finder\Finder;
 
 /**
  * Class UpdaterManager handles the software updates using the update files
  * provided in the updater directory.
- *
- * @package Lib
  */
 class UpdaterManager
 {
@@ -20,7 +17,7 @@ class UpdaterManager
     /** @var */
     const UPDATER_TABLE_NAME = 'updaterlog';
 
-    /** @var string  the directory containing the migrations */
+    /** @var string the directory containing the migrations */
     private $updatesPath;
 
     /** @var bool $errors */
@@ -96,8 +93,10 @@ class UpdaterManager
      * Add the update to the database.
      *
      * @param UpdaterFile $updaterFile
-     * @return bool
+     *
      * @throws Exception
+     *
+     * @return bool
      */
     private function addToDatabase(UpdaterFile $updaterFile)
     {
@@ -107,10 +106,10 @@ class UpdaterManager
 
         $database = new Database();
         $data = [
-            'version' => $updaterFile->getVersion(),
-            'file_name' => $updaterFile->getFileName(),
+            'version'    => $updaterFile->getVersion(),
+            'file_name'  => $updaterFile->getFileName(),
             'start_time' => $updaterFile->getStartTime(),
-            'end_time'  => $updaterFile->getEndTime()
+            'end_time'   => $updaterFile->getEndTime(),
         ];
 
         return $database->insert(static::UPDATER_TABLE_NAME, $data);
@@ -139,9 +138,9 @@ class UpdaterManager
     /**
      * Retrieve the update files.
      *
-     * @return array if duplicate files are found
-     *
      * @throws Exception
+     *
+     * @return array if duplicate files are found
      */
     private function getUpdateFiles()
     {
@@ -171,11 +170,13 @@ class UpdaterManager
      * Check if an update file file name is valid.
      *
      * @param string $fileName file name
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isValidMigrationFileName($fileName)
     {
-        $matches = array();
+        $matches = [];
+
         return preg_match(static::UPDATER_FILE_NAME_PATTERN, basename($fileName), $matches);
     }
 }
