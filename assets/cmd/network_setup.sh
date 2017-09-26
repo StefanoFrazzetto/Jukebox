@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wifi_interface=$(ls /sys/class/net | grep -e 'wlan*' | xargs)
+wifi_interface=$(ls /sys/class/net | grep -e '^wlan' | xargs)
 
 INTERFACE_FILE=/etc/network/interfaces
 WPA_SUPPLICANT=/etc/wpa_supplicant.conf
