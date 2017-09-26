@@ -6,10 +6,9 @@
       "nano"
     ],
     "autoremove": [
-      "nano"
     ]
   },
   "raw": [
-    "echo 'testing the updater' > /tmp/updater_test.txt"
+    "echo 'Updater created!' > /tmp/updater_test.txt"
   ]
 }
