@@ -58,11 +58,17 @@ handleSSE('play_song', function (data) {
     player.playSongAtIndex(parseInt(data.song_no));
 });
 
-handleSSE('play_radio', function () {
-    alert("Hey, this needs to be fixed!");
-    // TODO FIX RADIO
-    //player.playRadio(JSON.stringify(data.radio_url), data.radio_name);
-    //player.playRadio(storage.getRadio(data.radio_id));
+handleSSE('play_radio', function (data) {
+    try {
+        player.playRadio(data.radio_id);
+    } catch (e) {
+        try {
+            player.playRadio(Radio.read(data.radio))
+        } catch (e) {
+            error("Failed to play radio!");
+            console.error(data);
+        }
+    }
 });
 
 handleSSE('set_volume', function (value) {
@@ -85,9 +91,3 @@ player.onChange = function () {
 function updateStatusHandler() {
     sendPlayerStatus();
 }
-
-setInterval(function () {
-    sendPlayerStatus();
-}, 5000);
-
-sendPlayerStatus();
