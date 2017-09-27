@@ -45,7 +45,7 @@ $(function () {
         var updating = $('#updating');
         updating.show();
 
-        $.getJSON('/assets/API/git.php?action=pull')
+        $.getJSON('/assets/API/updater.php?action=update')
             .done(function (done) {
                 if (done.success) {
                     updateTried = true;

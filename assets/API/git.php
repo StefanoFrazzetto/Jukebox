@@ -8,7 +8,7 @@ require_once '../../vendor/autoload.php';
 
 use Lib\Git;
 
-$action = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
+$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 $branch = filter_input(INPUT_GET, 'branch', FILTER_SANITIZE_STRING);
 $return = ['success' => true, 'message' => ''];
 
@@ -32,7 +32,6 @@ switch ($action) {
         $git->delete($branch);
 
         $branches = Git::branch();
-
         if (in_array($branch, $branches)) {
             $return['success'] = false;
             $return['message'] = 'Attempted to delete the branch, but it\'s still there';
