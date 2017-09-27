@@ -19,6 +19,7 @@ switch ($action) {
         }
 
         Git::checkout($branch);
+        $git = new Git();
         if ($actual_branch = $git->getCurrentBranch() != $branch) {
             $return['success'] = false;
             $return['message'] = "Attempted to change branch, but failed still on '$actual_branch'";
