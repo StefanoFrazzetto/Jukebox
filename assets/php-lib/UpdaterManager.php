@@ -8,6 +8,8 @@ use Symfony\Component\Finder\Finder;
 /**
  * Class UpdaterManager handles the software updates using the update files
  * provided in the updater directory.
+ *
+ * // TODO: use another database.
  */
 class UpdaterManager
 {
