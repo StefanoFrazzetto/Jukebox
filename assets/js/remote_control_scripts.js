@@ -93,12 +93,14 @@ function trackChangedEvent() {
 }
 
 function radioChangeEvent() {
-    var radio = storage.getRadio(playerStatus.isRadio);
-    if (radio === false)
-        return;
-    cover.attr('src', radio.cover);
+    if (playerStatus.isRadio === false) return;
+
+    var radio = storage.getRadio(playerStatus.radio_id);
+
+    cover.attr('src', radio.getFullCoverUrl());
+
     artistDiv.html(radio.name);
-    titleDiv.html("Radio station");
+    titleDiv.html("Radio Station");
 }
 
 function storageChangedEvent() {
@@ -182,13 +184,11 @@ function handleSearch() {
             else
                 sendEvent('play_radio', {
                     radio_id: parseInt(album.id),
-                    radio_url: album.url,
-                    radio_name: album.name
+                    radio: album
                 });
 
             e.preventDefault();
         });
-
 
         var img = $('<img>');
 
@@ -209,12 +209,7 @@ function handleSearch() {
 
         artist.addClass('artist');
 
-        if (!is_radio)
-            img.attr('src', '/jukebox/' + album.id + '/thumb.jpg');
-        else
-        //noinspection JSUnresolvedVariable
-            img.attr('src', album.thumb);
-
+        img.attr('src', album.getCoverUrl());
 
         div.append(img);
 
@@ -338,7 +333,11 @@ function updateRemoteStatus(r) {
         albumChangedEvent();
     }
 
-    if (checkChange('isRadio') && r.isRadio !== false) {
+    if (checkChange('radio_id') && r.isRadio === true) {
+        radioChangeEvent();
+    }
+
+    if (checkChange('isRadio') && r.isRadio === true) {
         radioChangeEvent();
     }
 
