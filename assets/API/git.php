@@ -1,83 +1,67 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Vittorio
- * Date: 10/01/2017
- * Time: 09:56.
- */
+
+// Handles git actions
+
 header('Content-Type: application/json');
 
 require_once '../../vendor/autoload.php';
 
-use Lib\Database;
+
 use Lib\Git;
 
-$git = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
+$action = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
+$branch = filter_input(INPUT_GET, 'branch', FILTER_SANITIZE_STRING);
+$return = ['success' => true, 'message' => ''];
 
-$return = ['status' => 'error', 'message' => ''];
-
-$g = new Git();
-
-switch ($git) {
+switch ($action) {
     case 'checkout':
-        $branch = filter_input(INPUT_GET, 'branch', FILTER_SANITIZE_STRING);
-
-        if ($branch === false || $branch === null) {
+        if (empty($branch)) {
             $branch = 'master';
         }
 
         Git::checkout($branch);
-
-        if ($actual_branch = $g->getCurrentBranch() == $branch) {
-            $return['status'] = 'success';
-        } else {
-            $return['status'] = 'error';
+        if ($actual_branch = $git->getCurrentBranch() != $branch) {
+            $return['success'] = false;
             $return['message'] = "Attempted to change branch, but failed still on '$actual_branch'";
         }
 
         break;
+
     case 'delete':
         $branch = filter_input(INPUT_GET, 'branch', FILTER_SANITIZE_STRING);
-        $g->delete($branch);
+        $git = new Git();
+        $git->delete($branch);
 
         $branches = Git::branch();
 
         if (in_array($branch, $branches)) {
-            $return['status'] = 'error';
+            $return['success'] = false;
             $return['message'] = 'Attempted to delete the branch, but it\'s still there';
-        } else {
-            $return['status'] = 'success';
         }
 
         break;
+
+
     case 'pull':
-        if (!$g->pull(null, true)) {
-            $return['status'] = 'error';
+        $git = new Git();
+        if (!$git->pull(null, true)) {
+            $return['success'] = false;
             $return['message'] = 'Failed to retrieve the updates.';
             break;
         }
-
-        $db = new Database();
-
-        if (!$db->migrate()) {
-            $return['status'] = 'error';
-            $return['message'] = 'The database migration failed';
-            break;
-        }
-
-        $return['status'] = 'success';
-
         break;
+
     case 'up_to_date':
-        $return['status'] = 'success';
-        $return['data'] = $g->isUpToDate();
+        $git = new Git();
+        $return['upToDate'] = $git->isUpToDate();
         break;
+
     case 'log':
-        $return['status'] = 'success';
-        $return['data'] = Git::log(20);
+        $return['logs'] = Git::log(20);
         break;
+
     default:
-        $return['message'] = 'Invalid git command';
+        $return = ['success' => false, 'message' => 'Invalid git command'];
 }
 
 echo json_encode($return);

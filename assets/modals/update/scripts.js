@@ -9,10 +9,11 @@ $(function () {
         $('#up-to-date, #not-up-to-date, #error').hide();
         $('#loader').show();
 
-        $.getJSON('/assets/API/git.php?git=up_to_date')
+        $.getJSON('/assets/API/git.php?action=up_to_date')
             .done(function (data) {
-                if (data.status === "success") {
-                    if (data.data) { // up to date
+                console.log(data);
+                if (data.success) {
+                    if (data.upToDate) { // up to date
                         $('#up-to-date').show();
                         updateTried = false;
                     } else { // not up to date
@@ -44,9 +45,9 @@ $(function () {
         var updating = $('#updating');
         updating.show();
 
-        $.getJSON('/assets/API/git.php?git=pull')
+        $.getJSON('/assets/API/git.php?action=pull')
             .done(function (done) {
-                if (done.status === "success") {
+                if (done.success) {
                     updateTried = true;
                     checkForUpdates();
                 } else {
@@ -63,10 +64,10 @@ $(function () {
     }
 
     function loadChangeList() {
-        $.getJSON('/assets/API/git.php?git=log')
+        $.getJSON('/assets/API/git.php?action=log')
             .done(function (data) {
                 var cont = $('#changes').html('');
-                data.data.forEach(function (entry) {
+                data.logs.forEach(function (entry) {
                     cont.append("<li>" + entry + "</li>");
                 })
             })
@@ -91,9 +92,9 @@ $(function () {
     }
 
     function changeBranch(branch_name) {
-        $.getJSON('/assets/API/git.php?git=checkout&branch=' + branch_name)
+        $.getJSON('/assets/API/git.php?action=checkout&branch=' + branch_name)
             .done(function (data) {
-                if (data.status === 'success') {
+                if (data.success) {
                     alert("Checked out to " + branch_name + " successfully!");
                     checkForUpdates();
                 } else {
@@ -106,9 +107,9 @@ $(function () {
     }
 
     function deleteBranch(branch_name) {
-        $.getJSON('/assets/API/git.php?git=delete&branch=' + branch_name)
+        $.getJSON('/assets/API/git.php?action=delete&branch=' + branch_name)
             .done(function (data) {
-                if (data.status === 'success') {
+                if (data.success) {
                     alert("Deleted " + branch_name + " successfully!");
                     //noinspection JSValidateTypes
                     $("#branch").children().filter(function () {
@@ -136,10 +137,10 @@ $(function () {
             $('#up-to-date, #not-up-to-date, #error').hide();
             $('#loader').show();
 
-            $.getJSON('/assets/API/git.php?git=up_to_date')
+            $.getJSON('/assets/API/git.php?action=up_to_date')
                 .done(function (data) {
-                    if (data.status === "success") {
-                        if (data.data) { // up to date
+                    if (data.success) {
+                        if (data.upToDate) { // up to date
 
                         } else { // not up to date
                             update();
