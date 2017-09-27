@@ -6,7 +6,6 @@ header('Content-Type: application/json');
 
 require_once '../../vendor/autoload.php';
 
-
 use Lib\Git;
 
 $action = filter_input(INPUT_GET, 'git', FILTER_SANITIZE_STRING);
@@ -40,7 +39,6 @@ switch ($action) {
         }
 
         break;
-
 
     case 'pull':
         $git = new Git();
