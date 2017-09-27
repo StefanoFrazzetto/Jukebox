@@ -44,6 +44,16 @@ class UpdaterManager
     }
 
     /**
+     * Check if there were errors during the initialization.
+     *
+     * @return bool
+     */
+    public function hasErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
      * Run the updates.
      *
      * @throws Exception if the updaters is not ready
