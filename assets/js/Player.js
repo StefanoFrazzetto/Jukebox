@@ -265,12 +265,21 @@ Player.prototype.playSongAtIndex = function (index) {
 };
 
 Player.prototype.playRadio = function (radio) {
+    if (radio instanceof Radio)
+        this.currentRadio = radio;
+    else if (radio === parseInt(radio, 10))
+        this.currentRadio = storage.getRadio(radio);
+    else
+        throw new TypeError('Radio is neither a Radio instance or an int.');
+
+    if (!(this.currentRadio instanceof Radio) || this.currentRadio === undefined || this.currentRadio === null)
+        throw new Error('Failed to fetch radio with parameter "' + radio + '"');
+
     this.reset();
     this.isRadio = true;
 
-    var url = 'http://' + window.location.hostname + ':' + window.ports.radio + '/?address=' + radio.url.host + '&request=' + radio.url.path + '&port=' + radio.url.port;
+    var url = 'http://' + window.location.hostname + ':' + window.ports.radio + '/?address=' + this.currentRadio.url.host + '&request=' + this.currentRadio.url.path + '&port=' + this.currentRadio.url.port;
 
-    this.currentRadio = radio;
     this.callback(this.onRadioChange);
     this.playUrl(url);
 };
@@ -441,7 +450,7 @@ Player.prototype.export = function () {
 
     const b = this.isRadio ? {
         isRadio: true,
-        currentRadio: this.currentRadio
+        radio_id: this.currentRadio.id
     } : {
         isRadio: false,
         album_id: this.getCurrentAlbumId(),
