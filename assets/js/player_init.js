@@ -214,5 +214,3 @@ function initPlayer() {
 
     //endregion Random Functions
 }
-
-initPlayer();

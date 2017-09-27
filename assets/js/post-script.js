@@ -69,9 +69,10 @@ function paginate() {
     });
 }
 
-function reload() {
+function reload(callback) {
     storage.loadAll(function () {
         paginate();
+        if (typeof callback === "function") callback();
     });
 }
 
@@ -262,6 +263,7 @@ function toggleDropdownMenu() {
         showDropdownMenu();
     }
 }
+
 next.click(function () { //Next button click event
     page++;
     paginate();
@@ -348,8 +350,19 @@ $(document).mouseup(function (e) {
 $(document).ready(function () {
     getHowManyAlbumsToShow(); //Pretty much self self explanatory
 
+    // We now load the remote script via ajax
     $.getScript('/assets/js/storage.js', function () {
-        reload(); //We now load the remote script via ajax
+        // Load the albums
+        reload(function () {
+            // And initialize the player after all the albums are loaded.
+            initPlayer();
+
+            setInterval(function () {
+                sendPlayerStatus();
+            }, 5000);
+
+            sendPlayerStatus();
+        });
     });
 
     // Handles window resize event to paginate the view.
