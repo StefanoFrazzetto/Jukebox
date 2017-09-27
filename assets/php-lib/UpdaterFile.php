@@ -131,7 +131,7 @@ class UpdaterFile
         }
 
         // Set the end time
-        $this->end_time = static::getCurrentTime();
+        $this->end_time = StringUtils::getCurrentDatetime();
 
         return $res;
     }
