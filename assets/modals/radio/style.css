@@ -1,6 +1,7 @@
 .cover-container {
     width: 146px;
     height: 146px;
+    cursor: pointer;
 }
 
 .aRadio span {
