@@ -19,7 +19,7 @@ final class UpdaterManagerTest extends JukeboxTestClass
     {
         $updaterManager = new \Lib\UpdaterManager(true);
 
-        $this->assertTrue($updaterManager->run());
+        $this->assertTrue($updaterManager->runSystemUpdates());
     }
 
     public function testFileCreated()

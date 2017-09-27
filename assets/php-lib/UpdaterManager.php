@@ -58,7 +58,7 @@ class UpdaterManager
      *
      * @throws Exception if the updaters is not ready
      */
-    public function run()
+    public function runSystemUpdates()
     {
         if ($this->errors) {
             throw new Exception('Cannot run the updater');
