@@ -1,8 +1,7 @@
 <?php
 
-use Lib\StringUtils;
 
-require_once __DIR__ . '/../JukeboxTestClass.php';
+require_once __DIR__.'/../JukeboxTestClass.php';
 
 final class UpdaterManagerTest extends JukeboxTestClass
 {
@@ -43,16 +42,16 @@ final class UpdaterManagerTest extends JukeboxTestClass
         $datetime = date('YmdHis');
         $testfile_path = static::TEST_DIR.static::TEST_FILE_NAME;
         $fake_update = [
-            'author' => 'Stefano Frazzetto',
-            'date' => $datetime,
+            'author'   => 'Stefano Frazzetto',
+            'date'     => $datetime,
             'aptitude' => [
                 'autoremove' => ['nano'],
-                'install' => ['nano']
+                'install'    => ['nano'],
             ],
-            'raw' => ["echo '[$datetime] Running automated updater test' > $testfile_path"]
+            'raw' => ["echo '[$datetime] Running automated updater test' > $testfile_path"],
         ];
 
-        $updateFile = $updates_path . $datetime."_test_update.json";
+        $updateFile = $updates_path.$datetime.'_test_update.json';
         $write = file_put_contents($updateFile, json_encode($fake_update));
         if ($write === false) {
             throw new Exception('Cannot write the update file');
