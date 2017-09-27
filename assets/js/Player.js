@@ -259,7 +259,7 @@ Player.prototype.playSongAtIndex = function (index) {
         this.callback(this.onTrackChange);
     }
 
-    if (typeof oldSong !== "undefined" && oldSong.album_id !== newSong.album_id) {
+    if (typeof oldSong === "undefined" || oldSong.album_id !== newSong.album_id) {
         this.callback(this.onAlbumChange)
     }
 };
