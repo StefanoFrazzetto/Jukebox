@@ -414,7 +414,7 @@ Radio.prototype.getCoverUrl = function () {
         return storage.cover_placeholder;
 };
 
-Radio.prototype.getCoverUrl = function () {
+Radio.prototype.getFullCoverUrl = function () {
     if (this.cover !== null)
         return "/jukebox/radio-covers/" + this.id + "/cover.jpg?" + this.cover;
     else
