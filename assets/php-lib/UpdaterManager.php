@@ -26,8 +26,13 @@ class UpdaterManager
     /** @var array $updates */
     private $updates;
 
-    public function __construct()
+    /** @var  bool $debug_mode true if running automated tests */
+    private $debug_mode = false;
+
+    public function __construct($debug_mode = false)
     {
+        $this->debug_mode = $debug_mode;
+
         try {
             $this->setup();
             $this->updates = $this->getUpdateFiles();
@@ -61,7 +66,8 @@ class UpdaterManager
                 $update->execute(); // execute the update if it's valid
 
                 if ($update->wasSuccessful()) {
-                    $ret = $this->addToDatabase($update); // add to the database
+                    // Add the update to the database only if not in debug mode
+                    $ret = !$this->debug_mode ? $this->addToDatabase($update) : true;
                 } else {
                     $this->errors = true;
                     break;
