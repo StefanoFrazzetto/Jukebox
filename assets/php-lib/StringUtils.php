@@ -34,7 +34,7 @@ abstract class StringUtils
      */
     public static function getCurrentDatetime()
     {
-        return date("Y-m-d H:i:s");
+        return date('Y-m-d H:i:s');
     }
 
     /**
