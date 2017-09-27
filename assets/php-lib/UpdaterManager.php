@@ -54,6 +54,47 @@ class UpdaterManager
     }
 
     /**
+     * Run all the updates.
+     *
+     * Pulls from git, runs the database migrations, and updates the system.
+     *
+     * @return array containing success (bool) and a message (string) containing the errors
+     */
+    public function run()
+    {
+        $success = false;
+        $messages = "";
+
+        // GIT
+        $git = new Git();
+        $git_res = $git->pull(null, true);
+        if (!$git_res) {
+            $messages .= "Failed to retrieve the updates";
+        }
+
+        // Database
+        $database = new Database();
+        $db_res = $database->migrate();
+        if (!$db_res) {
+            $messages .= " Failed to run the database migrations";
+        }
+
+        // System
+        if ($this->hasErrors()) {
+            $messages .= " Failed to run the system updater";
+        } else {
+            $sys_res = $this->runSystemUpdates();
+            $success = $git_res && $db_res && $sys_res;
+        }
+
+        if (!$success) {
+            error_log("Failed to run the updater: $messages");
+        }
+
+        return ['status' => $success, 'message' => $messages];
+    }
+
+    /**
      * Run the updates.
      *
      * @throws Exception if the updaters is not ready
@@ -122,10 +163,10 @@ class UpdaterManager
 
         $database = new Database();
         $data = [
-            'version'    => $updaterFile->getVersion(),
-            'file_name'  => $updaterFile->getFileName(),
+            'version' => $updaterFile->getVersion(),
+            'file_name' => $updaterFile->getFileName(),
             'start_time' => $updaterFile->getStartTime(),
-            'end_time'   => $updaterFile->getEndTime(),
+            'end_time' => $updaterFile->getEndTime(),
         ];
 
         return $database->insert(static::UPDATER_TABLE_NAME, $data);
