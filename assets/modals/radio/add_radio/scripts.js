@@ -16,6 +16,9 @@ function addNewRadio() {
         .done(function (response) {
             if (response.status === 'success') {
                 alert('Radio successfully added!');
+                const radio = Radio.read(response.radio);
+
+                storage.radios[radio.id] = radio;
             } else {
                 console.log(response);
                 alert("ERROR! Radio station not saved successfully!");
@@ -93,8 +96,6 @@ function secondRadioPage() {
 
         $.getJSON(request)
             .done(function (response) {
-                console.log(response);
-
                 radio_name_field.val(response['icy-name']);
             })
             .fail(function (z, zz, zzz) {
@@ -125,7 +126,7 @@ function openChangeCover() {
     imageSelector.open();
 }
 
-if (imageSelector.isRadio === true) {
+if (imageSelector !== undefined && imageSelector.isRadio === true) {
     radio_name_field.val(imageSelector.defaultArtist);
     radio_url_field.val(imageSelector.defaultAlbum);
 

@@ -6,24 +6,21 @@ use Lib\Radio;
 
 header('Content-Type: application/json');
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-$url = $_GET['url'];
-$name = $_GET['name'];
-$cover = $_GET['cover'];
+$url = filter_input(INPUT_GET, 'url', FILTER_SANITIZE_STRING);
+$name = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
+$cover = filter_input(INPUT_GET, 'cover', FILTER_SANITIZE_STRING);
 
 $radio = new Radio($name, $url);
 
 $result = $radio->save();
 
-if ($cover != '/assets/img/album-placeholder.png') {
-    $radio->addCover('/var/www/html'.$cover);
+if ($cover && $cover != '/assets/img/album-placeholder.png') {
+    $radio->addCover('/var/www/html' . $cover);
 }
 
-if (!$result) {
-    echo '{"status": "error"}';
-} else {
-    echo '{"status": "success"}';
-}
+$return = [
+    'status' => !$result ? 'error' : 'success',
+    'radio' => $radio
+];
+
+echo json_encode($return);
