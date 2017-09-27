@@ -357,11 +357,13 @@ $(document).ready(function () {
             // And initialize the player after all the albums are loaded.
             initPlayer();
 
-            setInterval(function () {
-                sendPlayerStatus();
-            }, 5000);
+            if (isJukebox) {
+                setInterval(function () {
+                    sendPlayerStatus();
+                }, 5000);
 
-            sendPlayerStatus();
+                sendPlayerStatus();
+            }
         });
     });
 
