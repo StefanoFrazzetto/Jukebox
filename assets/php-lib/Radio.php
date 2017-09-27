@@ -110,7 +110,8 @@ class Radio implements JsonSerializable
     {
         $database = new Database();
 
-        rmdir(self::covers_path.$id);
+        if (file_exists(self::covers_path . $id))
+            rmdir(self::covers_path . $id);
 
         return $database->delete(self::radio_table, "`id` = $id");
     }
@@ -158,11 +159,11 @@ class Radio implements JsonSerializable
 
     public function addCover($url)
     {
-        require __DIR__.'/Cover.php';
+        require __DIR__ . '/Cover.php';
 
         $cover = new Cover($url);
 
-        $where = self::covers_path.$this->id;
+        $where = self::covers_path . $this->id;
 
         mkdir($where);
 
@@ -223,7 +224,7 @@ class Radio implements JsonSerializable
 
     public function getCoverToken()
     {
-        $where = self::covers_path.$this->id.'/cover.jpg';
+        $where = self::covers_path . $this->id . '/cover.jpg';
 
         if (file_exists($where)) {
             return $this->coverToken;
@@ -250,10 +251,10 @@ class Radio implements JsonSerializable
             $file_name = '/thumb.jpg';
         }
 
-        $where = self::covers_path.$this->id.$file_name;
+        $where = self::covers_path . $this->id . $file_name;
 
         if (file_exists($where)) {
-            return self::relative_path.$this->id.$file_name.'?'.$this->coverToken;
+            return self::relative_path . $this->id . $file_name . '?' . $this->coverToken;
         } else {
             return '/assets/img/album-placeholder.png';
         }
