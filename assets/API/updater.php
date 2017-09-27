@@ -2,6 +2,8 @@
 
 // Handles the updates
 
+require_once '../../vendor/autoload.php';
+
 use Lib\UpdaterManager;
 
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
