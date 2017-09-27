@@ -29,7 +29,7 @@ class CreateUpdaterTable extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('updaterlog', ['engine' => 'MyISAM', ['id' => false, 'primary_key' => 'version']]);
+        $table = $this->table('updaterlog', ['engine' => 'MyISAM', 'id' => false, 'primary_key' => 'version']);
         $table->addColumn('version', 'integer', ['limit' => MysqlAdapter::INT_BIG])
             ->addColumn('file_name', 'string')
             ->addColumn('start_time', 'datetime')
