@@ -15,12 +15,12 @@ $radio = new Radio($name, $url);
 $result = $radio->save();
 
 if ($cover && $cover != '/assets/img/album-placeholder.png') {
-    $radio->addCover('/var/www/html' . $cover);
+    $radio->addCover('/var/www/html'.$cover);
 }
 
 $return = [
     'status' => !$result ? 'error' : 'success',
-    'radio' => $radio
+    'radio'  => $radio,
 ];
 
 echo json_encode($return);
