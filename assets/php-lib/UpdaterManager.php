@@ -26,7 +26,7 @@ class UpdaterManager
     /** @var array $updates */
     private $updates;
 
-    /** @var  bool $debug_mode true if running automated tests */
+    /** @var bool $debug_mode true if running automated tests */
     private $debug_mode = false;
 
     public function __construct($debug_mode = false)
