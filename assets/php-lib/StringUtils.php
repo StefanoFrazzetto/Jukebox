@@ -28,6 +28,16 @@ abstract class StringUtils
     }
 
     /**
+     * Return the current datetime.
+     *
+     * @return string the current date time as Y-m-d H:i:s
+     */
+    public static function getCurrentDatetime()
+    {
+        return date("Y-m-d H:i:s");
+    }
+
+    /**
      * Check if a string contains another string.
      *
      * @see strpos()

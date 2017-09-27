@@ -105,11 +105,6 @@ class UpdaterFile
         $this->is_valid = true;
     }
 
-    private static function getCurrentTime()
-    {
-        return date('Y-m-d H:i:s');
-    }
-
     /**
      * Execute the update file.
      *
@@ -124,7 +119,7 @@ class UpdaterFile
         }
 
         // Set the start time
-        $this->start_time = static::getCurrentTime();
+        $this->start_time = StringUtils::getCurrentDatetime();
 
         $res = [];
         if (isset($this->update_content['aptitude'])) {
