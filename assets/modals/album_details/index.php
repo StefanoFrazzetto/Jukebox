@@ -55,7 +55,7 @@ foreach ($artists_ids as $artist_id) {
                         if ($differentCDs) {
                             if ($track->getCd() != $CD) {
                                 $CD = $track->getCd();
-                                echo "<tr class='th'><th colspan='3' data-cd='", $CD, "' class='CDth'>CD ", $CD, "<span class='addTrackToPlaylist'>+</span></th></tr>";
+                                echo "<tr class='th'><th colspan='3' data-cd='", $CD, "' class='CDth'>CD ", $CD, "<span class='addTrackToPlaylist mini-button' title='Add cd to playlist'><i class='fa fa-plus'></i></span></th></tr>";
                             }
 
                             $CDMap[$CD][] = $key;
@@ -69,7 +69,8 @@ foreach ($artists_ids as $artist_id) {
                             </td>
                             <td class="playlist_title">
                                 <?php echo $track->getTitle(); ?>
-                                <span class="addTrackToPlaylist">+</span>
+                                <span class="addTrackToPlaylist mini-button" title="Add track to playlist"><i
+                                            class="fa fa-plus"></i></span>
                             </td>
                             <td class="duration">
                                 <?php echo $track->getTimeString(); ?>
