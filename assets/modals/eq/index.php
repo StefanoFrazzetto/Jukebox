@@ -28,4 +28,4 @@ ICanHaz::css('style.css');
         Equaliser
     </div>
 
-<?php ICanHaz::js('script.js'); ?>
+<?php ICanHaz::js('script.js', false, true); ?>

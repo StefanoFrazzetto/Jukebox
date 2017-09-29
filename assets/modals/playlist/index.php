@@ -36,4 +36,4 @@ ICanHaz::css('style.css');
         <div class="box-btn" onclick="player.removeAllTracksFromPlaylist()">Remove all tracks</div>
     </div>
 
-<?php ICanHaz::js('scripts.js');
+<?php ICanHaz::js('scripts.js', false, true);

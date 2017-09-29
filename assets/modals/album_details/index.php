@@ -108,5 +108,5 @@ foreach ($artists_ids as $artist_id) {
 
 
 ICanHaz::css('/assets/modals/album_details/style.css');
-ICanHaz::js('scripts.js', true);
+ICanHaz::js('scripts.js', true, true);
 ?>

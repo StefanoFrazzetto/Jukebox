@@ -76,5 +76,5 @@ function page()
 
 page();
 
-ICanHaz::js(['/assets/js/progressbar.min.js', 'scripts.js'], true);
+ICanHaz::js(['/assets/js/progressbar.min.js', 'scripts.js'], true, true);
 ICanHaz::css('../album_details/style.css');

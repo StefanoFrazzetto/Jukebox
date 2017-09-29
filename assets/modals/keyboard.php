@@ -58,7 +58,8 @@
 </div>
 
 <?php
+
 use Lib\ICanHaz;
 
-ICanHaz::js(['assets/js/keyboard.js', 'assets/js/draggable.js']);
+ICanHaz::js(['assets/js/keyboard.js', 'assets/js/draggable.js'], true, true);
 ?>

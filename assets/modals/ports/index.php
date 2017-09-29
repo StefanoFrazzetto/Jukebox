@@ -37,4 +37,4 @@ $ports = (new Config())->get('ports');
 
 <?php
 
-ICanHaz::js('scripts.js');
+ICanHaz::js('scripts.js', false, true);
