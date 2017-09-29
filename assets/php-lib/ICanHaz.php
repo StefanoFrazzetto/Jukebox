@@ -64,8 +64,9 @@ abstract class ICanHaz
     {
         $files = self::normalise($files);
 
-        if (count($files) == 1)
+        if (count($files) == 1) {
             $merge = false;
+        }
 
         if ($merge) {
             if ($hard) {
