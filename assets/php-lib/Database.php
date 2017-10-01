@@ -12,7 +12,7 @@ use PDOException;
  *
  * @author Stefano Frazzetto
  *
- * @version 1.4.0
+ * @version 2.1.0
  */
 class Database extends PDO
 {
@@ -59,11 +59,6 @@ class Database extends PDO
     private $_password;
 
     /**
-     * @var string The path to the installation dir
-     */
-    private $_installation_dir_path;
-
-    /**
      * Database constructor creates the database instance using the dynamic configurations file.
      * If the file does not contain the database configuration, it will try to use the static (default)
      * database.
@@ -84,8 +79,6 @@ class Database extends PDO
 
         // Set environment variables for Phinx
         $this->setPhinxVariables();
-
-        $this->_installation_dir_path = __DIR__.'/../../installation/';
 
         $this->__init($use_default);
     }
@@ -512,20 +505,6 @@ class Database extends PDO
         }
 
         throw new InvalidArgumentException('Either a string or an array of string must be provided as parameter');
-    }
-
-    /**
-     * Create the database schema using the SQL files in the installation dir.
-     *
-     * TODO: remove after creating the migrations
-     *
-     * @deprecated
-     */
-    private function createSchema()
-    {
-        $sql_folder = $this->_installation_dir_path;
-        $this->executeFile($sql_folder.'base_schema.sql');
-        $this->executeFile($sql_folder.'themes.sql');
     }
 
     /**
