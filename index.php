@@ -43,7 +43,7 @@ if (isJukebox()) {
             <div id="mask">
                 <div id="dropdownModal">
                     <div id="power" class="crcbtn"></div>
-                    <div id="settings" class="crcbtn" onclick="modal.openPage('assets/modals/settings.php')"></div>
+                    <div id="settings" class="crcbtn" onclick="modal.openSettings('settings.php')"></div>
                     <div id="network_settings" class="crcbtn"
                          onclick="alert('Bluetooth is not available yet.');"></div>
                     <div id="qr" class="crcbtn" onclick="modal.openPage('assets/modals/qrcode.php')"></div>
@@ -213,9 +213,9 @@ if (isJukebox()) {
 
 <?php
 function isJukebox()
-    {
-        return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
-    }
+{
+    return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
+}
 
 $scripts = [
     'assets/js/vars.js',

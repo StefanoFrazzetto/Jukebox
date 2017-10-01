@@ -65,9 +65,27 @@ var modal = {
 
     },
 
-    openPage: function (page) {
+    open: function (page, options) {
+        this.openPage('/assets/modals/' + page, options);
+    },
+
+    openPage: function (page, options) {
         this.enableStatusLoading();
         this.modalLoaderElement.html('');
+
+        if (typeof options !== "undefined") {
+            if (options.isSettings = true)
+                this.enableSettingStatus();
+            else
+                this.disableSettingsStatus();
+
+            if (options.sidebar !== undefined) {
+                this.sidebar = this.generateSidebar(options.sidebar);
+            }
+        } else {
+            this.disableSettingsStatus();
+            this.sidebar = undefined;
+        }
 
         var _this = this;
 
@@ -86,8 +104,19 @@ var modal = {
                     _this.modalLoaderElement.show();
 
                     _this.modalLoaderElement.dequeue().fadeIn(animation_medium, function () {
+                        const modalBody = $('.modalBody');
 
-                        $('#modalBody').find('.mCustomScrollbar').mCustomScrollbar({
+                        if (typeof _this.sidebar !== 'undefined') {
+                            var div = $('<div class="barsContainer">');
+
+                            _this.sidebar.appendTo(div);
+                            modalBody.detach().appendTo(div);
+
+                            $('.modalHeader').after(div);
+                        }
+
+
+                        modalBody.find('.mCustomScrollbar').mCustomScrollbar({
                             theme: "dark"
                         }).on('remove', function () {
                             $(this).mCustomScrollbar('destroy');
@@ -129,5 +158,90 @@ var modal = {
             modal.loaderGifElement.hide();
             modal.modalLoaderElement.show();
         });
+    },
+
+    enableSettingStatus: function () {
+        modalElement.addClass("bigger sidebar");
+    },
+
+    disableSettingsStatus: function () {
+        modalElement.removeClass("bigger sidebar");
+    },
+
+    openSettings: function (page) {
+        const sidebar = [
+            {
+                name: "Home",
+                openSettings: "settings.php",
+                icon: "home"
+            },
+            {
+                name: "Stats",
+                openSettings: "stats",
+                icon: "heartbeat"
+            },
+            {
+                name: "EQ",
+                openSettings: "eq",
+                icon: "sliders fa-rotate-90"
+            },
+            {
+                name: "Network",
+                openSettings: "network_settings/",
+                icon: "wifi"
+            },
+            {
+                name: "Bluetooth",
+                icon: "bluetooth"
+            },
+
+            {
+                name: "Updates",
+                openSettings: "update",
+                icon: "cloud-download"
+
+            },
+            {
+                name: "Themes",
+                openSettings: "theme",
+                icon: "paint-brush"
+            },
+            {
+                name: "Ports",
+                openSettings: "ports",
+                icon: "plug"
+            }
+
+
+        ];
+
+        this.open(page, {sidebar: sidebar, isSettings: true});
+    },
+
+    generateSidebar: function (obj) {
+        const sidebar = $('<ul class="multiselect" data-mcs-theme="dark">');
+
+        obj.forEach(function (t) {
+            if (typeof t === "string") {
+                sidebar.append($('<li>').html(t));
+            } else if (typeof t === 'object') {
+                var element = $('<li>').html(t.name);
+
+                if (typeof t.openSettings !== 'undefined')
+                    element.click(function () {
+                        modal.openSettings(t.openSettings);
+                    });
+
+                if (typeof t.icon !== 'undefined')
+                    element.prepend("<i class='fa fa-" + t.icon + "'>");
+
+                sidebar.append(element);
+            } else {
+                throw new Error("Invalid sidebar element provided");
+            }
+
+        });
+
+        return $('<div class="modalSidebar">').append(sidebar);
     }
 };

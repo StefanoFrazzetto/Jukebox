@@ -3,40 +3,6 @@
 require_once '../../vendor/autoload.php';
 
 use Lib\Speakers;
-use Lib\System;
-
-function get_string_between($string, $start, $end)
-{
-    $string = ' '.$string;
-    $ini = strpos($string, $start);
-
-    if ($ini == 0) {
-        return '';
-    }
-    $ini += strlen($start);
-    $len = strpos($string, $end, $ini) - $ini;
-
-    return substr($string, $ini, $len);
-}
-
-function factory($raw_materials)
-{
-    $components = explode(' ', $raw_materials); //Let's hope it's not kerosene;
-    $goods = [];
-
-    foreach ($components as $component) {
-        if (trim($component != '')) {
-            $goods[] = $component;
-        }
-    }
-
-    return $goods;
-}
-
-function getSpeakerStatus()
-{
-    return Speakers::getStatus();
-}
 
 ?>
 
@@ -46,80 +12,20 @@ function getSpeakerStatus()
         Speakers
         <div class="onoffswitch inline" id="speakers_div">
             <input type="checkbox" name="dhcp" class="onoffswitch-checkbox"
-                   id="speakers" <?php if (getSpeakerStatus()) {
-    echo 'checked';
-} ?>>
+                   id="speakers" <?php if (Speakers::getStatus()) {
+                echo 'checked';
+            } ?>>
             <label class="onoffswitch-label" for="speakers">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
             </label>
         </div>
-        <button onclick="modal.openPage('assets/modals/ports/index.php');">Ports</button>
-        <button onclick="$.ajax('assets/API/device.php?action=reboot');">Reboot</button>
+
         <button onclick="$.ajax('assets/API/device.php?action=eject');">Eject</button>
         <button onclick="$.ajax('assets/php/calibrate_screen.php');">Calibrate Screen</button>
-        <button onclick="modal.openPage('assets/modals/update');">Update</button>
-        <button onclick="modal.openPage('assets/modals/theme');">Theme</button>
-        <button onclick="location.reload();">Refresh</button>
         <button onclick="scanAlbums()">Restore Albums</button>
         <button class="nuclear" onclick="modal.openPage('assets/modals/format.php');">Factory Reset</button>
-    </div>
-
-
-    <hr/>
-
-    <div class="col-left">
-        <?php
-        $raw_materials = exec('df -hT /home');
-
-        $refined = factory($raw_materials);
-
-        ?>
-        <p>Firmware Storage</p>
-        <div class="progressBar" style="width: 100%;">
-            <div class="progress" style="width: <?php echo $refined[5] ?>">
-                <?php echo $refined[5]; ?>
-            </div>
-        </div>
-
-        <?php
-
-        $raw_materials = exec('df -hT /var/www/html/jukebox');
-        $refined = factory($raw_materials);
-
-        ?>
-
-        <p>Music Storage</p>
-        <div class="progressBar" style="width: 100%;">
-            <div class="progress" style="width: <?php echo $refined[5] ?>">
-                <?php echo $refined[5]; ?>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-right">
-        <?php
-        //use -bn2 for more accurate resuls, it will take a long time, tho
-        $percentage = exec('top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk \'{print 100 - $1"%"}\'');
-        ?>
-
-        <p>CPU Usage</p>
-        <div class="progressBar" style="width: 100%;">
-            <div class="progress" style="width: <?php echo $percentage ?>">
-                <?php echo $percentage; ?>
-            </div>
-        </div>
-
-        <?php
-        $temp = System::getSoctemp();
-        ?>
-
-        <p>CPU Temp</p>
-        <div class="progressBar" style="width: 100%;">
-            <div class="progress" style="width: <?php echo $temp ?>%">
-                <?php echo $temp; ?> &deg;C
-            </div>
-        </div>
+        <button onclick="location.reload();">Refresh</button>
     </div>
 
     <script>
