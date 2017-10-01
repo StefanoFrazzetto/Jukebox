@@ -1,5 +1,7 @@
 <?php
 
+$document_root = __DIR__.'/../../';
+
 return [
 
     /*
@@ -42,34 +44,35 @@ return [
      */
     'paths' => [
         'document_root'         => $_SERVER['DOCUMENT_ROOT'],
-        'albums_root'           => $_SERVER['DOCUMENT_ROOT'].'/jukebox/',
-        'downloads_directory'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/downloads/',
-        'tmp_uploads'           => $_SERVER['DOCUMENT_ROOT'].'/jukebox/tmp_uploads/',
-        'assets'                => $_SERVER['DOCUMENT_ROOT'].'/assets/',
-        'scripts'               => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/',
-        'uploader'              => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/',
-        'installation'          => $_SERVER['DOCUMENT_ROOT'].'/installation/',
-        'updater'               => $_SERVER['DOCUMENT_ROOT'].'/updater/',
+        'albums_root'           => $document_root.'jukebox/',
+        'downloads_directory'   => $document_root.'jukebox/downloads/',
+        'tmp_uploads'           => $document_root.'jukebox/tmp_uploads/',
+        'assets'                => $document_root.'assets/',
+        'scripts'               => $document_root.'assets/cmd/',
+        'uploader'              => $document_root.'jukebox/uploader/',
+        'installation'          => $document_root.'installation/',
+        'updater'               => $document_root.'updater/',
     ],
 
     'disc' => [
-        'logs'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/disc/logs/',
-        'scripts'       => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/',
-        'status_file'   => $_SERVER['DOCUMENT_ROOT'].'/jukebox/uploader/status.json',
+        'logs'          => $document_root.'jukebox/disc/logs/',
+        'scripts'       => $document_root.'assets/cmd/disc/',
+        'status_file'   => $document_root.'jukebox/uploader/status.json',
         'ripper'        => [
-            'parent'          => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper',
-            'input'           => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/input/',
-            'handler'         => $_SERVER['DOCUMENT_ROOT'].'/assets/cmd/disc/rip_handler.sh',
-            'cdparanoia_log'  => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/cdparanoia.log',
-            'lame_log'        => $_SERVER['DOCUMENT_ROOT'].'/jukebox/ripper/logs/lame.log',
+            'parent'          => $document_root.'jukebox/ripper',
+            'input'           => $document_root.'jukebox/ripper/input/',
+            'handler'         => $document_root.'assets/cmd/disc/rip_handler.sh',
+            'cdparanoia_log'  => $document_root.'jukebox/ripper/logs/cdparanoia.log',
+            'lame_log'        => $document_root.'jukebox/ripper/logs/lame.log',
         ],
     ],
 
     'phinx' => [
         'default_db'  => 'production',
-        'config'      => $_SERVER['DOCUMENT_ROOT'].'/phinx.yml',
-        'migrations'  => $_SERVER['DOCUMENT_ROOT'].'/db/migrations',
-        'seeds'       => $_SERVER['DOCUMENT_ROOT'].'/db/seeds',
+        'config'      => $document_root.'phinx.yml',
+        'bin'         => $document_root.'vendor/bin/phinx',
+        'migrations'  => $document_root.'db/migrations',
+        'seeds'       => $document_root.'db/seeds',
     ],
 
     /*

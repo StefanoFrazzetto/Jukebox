@@ -65,7 +65,9 @@ class UpdaterManager
      */
     public static function getUpdatesDirectory()
     {
-        return __DIR__.'/../../updater/';
+        $path = Config::getPath('updater');
+
+        return $path;
     }
 
     /**
