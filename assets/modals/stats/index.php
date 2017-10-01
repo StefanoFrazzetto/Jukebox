@@ -6,7 +6,7 @@ use Lib\System;
 
 function get_string_between($string, $start, $end)
 {
-    $string = ' ' . $string;
+    $string = ' '.$string;
     $ini = strpos($string, $start);
 
     if ($ini == 0) {

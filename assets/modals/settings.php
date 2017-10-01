@@ -20,8 +20,8 @@ use Lib\Speakers;
         <div class="onoffswitch inline" id="speakers_div">
             <input type="checkbox" name="dhcp" class="onoffswitch-checkbox"
                    id="speakers" <?php if (Speakers::getStatus()) {
-                echo 'checked';
-            } ?> />
+    echo 'checked';
+} ?> />
             <label class="onoffswitch-label" for="speakers">
                 <span class="onoffswitch-inner"></span>
                 <span class="onoffswitch-switch"></span>
