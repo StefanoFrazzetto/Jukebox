@@ -50,7 +50,7 @@ class UpdaterManager
      */
     private function setup()
     {
-        $this->updatesDirectory = __DIR__ . '/../../updater/';
+        $this->updatesDirectory = __DIR__.'/../../updater/';
 
         $database = new Database();
         if (!$database->tableExists(static::UPDATER_TABLE_NAME)) {
@@ -223,10 +223,10 @@ class UpdaterManager
 
         $database = new Database();
         $data = [
-            'version' => $updaterFile->getVersion(),
-            'file_name' => $updaterFile->getFileName(),
+            'version'    => $updaterFile->getVersion(),
+            'file_name'  => $updaterFile->getFileName(),
             'start_time' => $updaterFile->getStartTime(),
-            'end_time' => $updaterFile->getEndTime(),
+            'end_time'   => $updaterFile->getEndTime(),
         ];
 
         return $database->insert(static::UPDATER_TABLE_NAME, $data);
