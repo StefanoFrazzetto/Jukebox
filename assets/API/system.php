@@ -2,6 +2,7 @@
 
 require_once '../../vendor/autoload.php';
 
+use Lib\Calibrator;
 use Lib\Speakers;
 use Lib\System;
 
@@ -30,6 +31,14 @@ if (isset($_GET['action'])) {
 
         case 'runUpdate':
             return System::update() && System::upgrade();
+            break;
+
+        case 'eject':
+            System::eject();
+            break;
+
+        case 'calibrate':
+            Calibrator::run();
             break;
 
         default:
