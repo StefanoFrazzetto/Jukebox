@@ -7,7 +7,7 @@ final class ZipperTest extends JukeboxTestClass
     /**
      * @var string the directory where test files can be created
      */
-    const TEST_DIR = '/tmp/tests/';
+    const TEST_DIR = '/tmp/tests/zipper/';
 
     /**
      * @var string the test file(s) name
@@ -29,7 +29,9 @@ final class ZipperTest extends JukeboxTestClass
      */
     public static function setUpBeforeClass()
     {
-        mkdir(self::TEST_DIR, 0777, true);
+        if (!file_exists(self::TEST_DIR)) {
+            mkdir(self::TEST_DIR, 0777, true);
+        }
 
         for ($i = 0; $i < self::TEST_FILES_NUMBER; $i++) {
             $file_name = self::TEST_DIR.self::TEST_FILE_NAME.$i.self::TEST_FILE_EXTENSION;

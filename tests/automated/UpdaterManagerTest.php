@@ -8,7 +8,7 @@ final class UpdaterManagerTest extends JukeboxTestClass
     /**
      * @var string the directory where test files can be created
      */
-    const TEST_DIR = '/tmp/tests/';
+    const TEST_DIR = '/tmp/tests/updater/';
 
     /**
      * @var string the test file(s) name
@@ -32,9 +32,16 @@ final class UpdaterManagerTest extends JukeboxTestClass
      */
     public static function setUpBeforeClass()
     {
-        mkdir(self::TEST_DIR, 0777, true);
+        if (!file_exists(self::TEST_DIR)) {
+            mkdir(self::TEST_DIR, 0777, true);
+        }
 
+        // Create the updates directory
         $updates_path = \Lib\Config::getPath('updater');
+        if (!file_exists($updates_path)) {
+            mkdir($updates_path, 777, true);
+        }
+
         if (!\Lib\FileUtils::emptyDirectory($updates_path)) {
             throw new Exception('Cannot empty the updates directory');
         }
