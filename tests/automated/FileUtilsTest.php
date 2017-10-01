@@ -21,7 +21,9 @@ final class FileUtilsTest extends JukeboxTestClass
      */
     public static function setUpBeforeClass()
     {
-        mkdir(self::TEST_DIR, 0777);
+        if (!file_exists(self::TEST_DIR)) {
+            mkdir(self::TEST_DIR, 0777);
+        }
     }
 
     /**
@@ -29,17 +31,7 @@ final class FileUtilsTest extends JukeboxTestClass
      */
     public static function tearDownAfterClass()
     {
-        $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(self::TEST_DIR, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($files as $fileinfo) {
-            $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-            $todo($fileinfo->getRealPath());
-        }
-
-        rmdir(self::TEST_DIR);
+        FileUtils::remove(static::TEST_DIR, true);
     }
 
     public function testCreateFile()
@@ -68,6 +60,7 @@ final class FileUtilsTest extends JukeboxTestClass
      */
     public function testIsDirEmpty()
     {
+        FileUtils::emptyDirectory(self::TEST_DIR);
         $this->assertTrue(FileUtils::isDirEmpty(self::TEST_DIR), 'Cannot test if dir is empty.');
     }
 }

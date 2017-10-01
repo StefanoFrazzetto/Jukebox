@@ -1,6 +1,7 @@
 <?php
 
 
+use Lib\FileUtils;
 use Lib\UpdaterManager;
 
 require_once __DIR__.'/../JukeboxTestClass.php';
@@ -34,13 +35,17 @@ final class UpdaterManagerTest extends JukeboxTestClass
      */
     public static function setUpBeforeClass()
     {
+        // Create the test dir
+        if (!file_exists(static::TEST_DIR)) {
+            mkdir(static::TEST_DIR, 0777, true);
+        }
+
         $datetime = date('YmdHis');
         $testfile_path = static::TEST_DIR.static::TEST_FILE_NAME;
         $fake_update = [
             'author'   => 'Stefano Frazzetto',
             'date'     => $datetime,
             'aptitude' => [
-                'autoremove' => ['nano'],
                 'install'    => ['nano'],
             ],
             'raw' => ["echo '[$datetime] Running automated updater test' > $testfile_path"],
@@ -58,21 +63,9 @@ final class UpdaterManagerTest extends JukeboxTestClass
      */
     public static function tearDownAfterClass()
     {
-        $updates_path = \Lib\Config::getPath('updater');
-        if (!\Lib\FileUtils::emptyDirectory($updates_path)) {
-            throw new Exception('Cannot empty the updates directory');
-        }
+        FileUtils::remove(static::TEST_DIR, true);
 
-        $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(self::TEST_DIR, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($files as $fileinfo) {
-            $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-            $todo($fileinfo->getRealPath());
-        }
-
-        rmdir(self::TEST_DIR);
+        $git = new \Lib\Git();
+        $git->pull(null, true);
     }
 }
