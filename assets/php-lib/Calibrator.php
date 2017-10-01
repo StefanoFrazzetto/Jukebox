@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: vittorio
  * Date: 01/10/17
- * Time: 15:38
+ * Time: 15:38.
  */
 
 namespace Lib;
@@ -30,8 +30,8 @@ class Calibrator
 {
     private static $innerPattern = "/[0-9\s]*/";
     private static $pattern = "/(?<=Option\s\"Calibration\"\s\")([0-9\s]*)(?=\")/m";
-    private static $config = "/usr/share/X11/xorg.conf.d/10-evdev.conf";
-    private static $default = "1984 111 135 1928";
+    private static $config = '/usr/share/X11/xorg.conf.d/10-evdev.conf';
+    private static $default = '1984 111 135 1928';
 
     /**
      * Sets the default values to the configuration file.
@@ -43,14 +43,16 @@ class Calibrator
 
     /**
      * Sets the calibration to the persistent file.
+     *
      * @param $values string representing calibration values
+     *
      * @throws Exception if the argument is not valid.
      */
     public static function setConfiguration($values)
     {
         if (preg_match(static::$innerPattern, $values) !== 1) {
             throw new Exception("Invalid argument exception in setConfiguration with value `$values`.");
-        };
+        }
 
         $contents = file_get_contents(static::$config);
 
@@ -58,7 +60,7 @@ class Calibrator
 
         file_put_contents(static::$config, $contents);
 
-        OS::execute('sudo chmod 777 ' . static::$config);
+        OS::execute('sudo chmod 777 '.static::$config);
     }
 
     /**
@@ -89,16 +91,19 @@ class Calibrator
 
     /**
      * Extracts the calibration output from the wizard.
+     *
      * @param $output string output.
-     * @return string the calibration value
+     *
      * @throws Exception
+     *
+     * @return string the calibration value
      */
     private static function parseTheOutput($output)
     {
         preg_match(static::$pattern, $output, $matches);
 
         if (!isset($matches[1])) {
-            throw new Exception("Unable to parse the output!");
+            throw new Exception('Unable to parse the output!');
         }
 
         return $matches[1];
