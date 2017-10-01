@@ -28,7 +28,7 @@ use Exception;
  */
 class Calibrator
 {
-    private static $innerPattern = "[0-9\s]*";
+    private static $innerPattern = "/[0-9\s]*/";
     private static $pattern = "/(?<=Option\s\"Calibration\"\s\")([0-9\s]*)(?=\")/m";
     private static $config = "/usr/share/X11/xorg.conf.d/10-evdev.conf";
     private static $default = "1984 111 135 1928";
@@ -48,8 +48,8 @@ class Calibrator
      */
     public static function setConfiguration($values)
     {
-        if (preg_match($values, static::$innerPattern) !== 1) {
-            throw new Exception("Invalid argumente exception in setConfiguration with value `$values`.");
+        if (preg_match(static::$innerPattern, $values) !== 1) {
+            throw new Exception("Invalid argument exception in setConfiguration with value `$values`.");
         };
 
         $contents = file_get_contents(static::$config);
@@ -58,7 +58,7 @@ class Calibrator
 
         file_put_contents(static::$config, $contents);
 
-        OS::execute("sudo chmod 777", static::$config);
+        OS::execute('sudo chmod 777 ' . static::$config);
     }
 
     /**
