@@ -14,13 +14,11 @@ use Symfony\Component\Finder\Finder;
 class UpdaterManager
 {
     /** @var */
-    const UPDATER_FILE_NAME_PATTERN = '/^\d+_([\w_]+).json/i';
-
-    /** @var */
     const UPDATER_TABLE_NAME = 'updaterlog';
-
+    /** @var */
+    private static $UPDATER_FILE_NAME_PATTERN = '/^\d+_([\w_]+).json/i';
     /** @var string the directory containing the migrations */
-    private $updatesPath;
+    private $updatesDirectory;
 
     /** @var bool $errors */
     private $errors = false;
@@ -28,12 +26,12 @@ class UpdaterManager
     /** @var array $updates */
     private $updates;
 
-    /** @var bool $debug_mode true if running automated tests */
-    private $debug_mode = false;
+    /** @var bool $debugMode true if running automated tests */
+    private $debugMode = false;
 
     public function __construct($debug_mode = false)
     {
-        $this->debug_mode = $debug_mode;
+        $this->debugMode = $debug_mode;
 
         try {
             $this->setup();
@@ -46,13 +44,80 @@ class UpdaterManager
     }
 
     /**
-     * Check if there were errors during the initialization.
+     * Set up the class.
+     *
+     * @throws Exception
+     */
+    private function setup()
+    {
+        $this->updatesDirectory = __DIR__ . '/../../updater/';
+
+        $database = new Database();
+        if (!$database->tableExists(static::UPDATER_TABLE_NAME)) {
+            throw new Exception('The updater table does not exist');
+        }
+    }
+
+    /**
+     * Retrieve the update files.
+     *
+     * @throws Exception
+     *
+     * @return array if duplicate files are found
+     */
+    private function getUpdateFiles()
+    {
+        $finder = new Finder();
+        $files = $finder->in($this->updatesDirectory)->files();
+
+        $updates = [];
+        foreach ($files as $updaterFilePath) {
+            if (self::isValidMigrationFileName($updaterFilePath)) {
+                $version = UpdaterFile::getVersionFromName(basename($updaterFilePath));
+
+                // Check for duplicate updates
+                if (isset($updates[$version])) {
+                    throw new Exception('Updater: duplicate file found');
+                }
+
+                $updates[$version] = $updaterFilePath;
+            }
+        }
+
+        ksort($updates);
+
+        return $updates;
+    }
+
+    /**
+     * Check if an update file file name is valid.
+     *
+     * @param string $file_name file name
      *
      * @return bool
      */
-    public function hasErrors()
+    public static function isValidMigrationFileName($file_name)
     {
-        return $this->errors;
+        $matches = [];
+
+        return preg_match(static::$UPDATER_FILE_NAME_PATTERN, basename($file_name), $matches);
+    }
+
+    /**
+     * Remove the already executed updates from the array.
+     */
+    private function removeExecutedUpdates()
+    {
+        $database = new Database();
+        $updates = $database->select('version', static::UPDATER_TABLE_NAME);
+
+        foreach ($updates as $update) {
+            $version = $update->version;
+
+            if (isset($this->updates[$version])) {
+                unset($this->updates[$version]);
+            }
+        }
     }
 
     /**
@@ -97,6 +162,16 @@ class UpdaterManager
     }
 
     /**
+     * Check if there were errors during the initialization.
+     *
+     * @return bool
+     */
+    public function hasErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
      * Run the updates.
      *
      * @throws Exception if the updaters is not ready
@@ -120,7 +195,7 @@ class UpdaterManager
 
                 if ($update->wasSuccessful()) {
                     // Add the update to the database only if not in debug mode
-                    $ret = !$this->debug_mode ? $this->addToDatabase($update) : true;
+                    $ret = !$this->debugMode ? $this->addToDatabase($update) : true;
                 } else {
                     $this->errors = true;
                     break;
@@ -129,23 +204,6 @@ class UpdaterManager
         }
 
         return $ret;
-    }
-
-    /**
-     * Remove the already executed updates from the array.
-     */
-    private function removeExecutedUpdates()
-    {
-        $database = new Database();
-        $updates = $database->select('version', static::UPDATER_TABLE_NAME);
-
-        foreach ($updates as $update) {
-            $version = $update->version;
-
-            if (isset($this->updates[$version])) {
-                unset($this->updates[$version]);
-            }
-        }
     }
 
     /**
@@ -165,77 +223,12 @@ class UpdaterManager
 
         $database = new Database();
         $data = [
-            'version'    => $updaterFile->getVersion(),
-            'file_name'  => $updaterFile->getFileName(),
+            'version' => $updaterFile->getVersion(),
+            'file_name' => $updaterFile->getFileName(),
             'start_time' => $updaterFile->getStartTime(),
-            'end_time'   => $updaterFile->getEndTime(),
+            'end_time' => $updaterFile->getEndTime(),
         ];
 
         return $database->insert(static::UPDATER_TABLE_NAME, $data);
-    }
-
-    /**
-     * Set up the class.
-     *
-     * @throws Exception
-     */
-    private function setup()
-    {
-        $updatesPath = Config::getPath('updater');
-        if (is_null($updatesPath)) {
-            throw new Exception('Updater: cannot find the updates directory');
-        }
-
-        $this->updatesPath = $updatesPath;
-
-        $database = new Database();
-        if (!$database->tableExists(static::UPDATER_TABLE_NAME)) {
-            throw new Exception('The updater table does not exist');
-        }
-    }
-
-    /**
-     * Retrieve the update files.
-     *
-     * @throws Exception
-     *
-     * @return array if duplicate files are found
-     */
-    private function getUpdateFiles()
-    {
-        $finder = new Finder();
-        $files = $finder->in($this->updatesPath)->files();
-
-        $updates = [];
-        foreach ($files as $updaterFilePath) {
-            if (self::isValidMigrationFileName($updaterFilePath)) {
-                $version = UpdaterFile::getVersionFromName(basename($updaterFilePath));
-
-                // Check for duplicate updates
-                if (isset($updates[$version])) {
-                    throw new Exception('Updater: duplicate file found');
-                }
-
-                $updates[$version] = $updaterFilePath;
-            }
-        }
-
-        ksort($updates);
-
-        return $updates;
-    }
-
-    /**
-     * Check if an update file file name is valid.
-     *
-     * @param string $fileName file name
-     *
-     * @return bool
-     */
-    public static function isValidMigrationFileName($fileName)
-    {
-        $matches = [];
-
-        return preg_match(static::UPDATER_FILE_NAME_PATTERN, basename($fileName), $matches);
     }
 }
