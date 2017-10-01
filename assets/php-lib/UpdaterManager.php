@@ -65,7 +65,7 @@ class UpdaterManager
      */
     public static function getUpdatesDirectory()
     {
-        return __DIR__ . '/../../updater/';
+        return __DIR__.'/../../updater/';
     }
 
     /**
@@ -233,10 +233,10 @@ class UpdaterManager
 
         $database = new Database();
         $data = [
-            'version' => $updaterFile->getVersion(),
-            'file_name' => $updaterFile->getFileName(),
+            'version'    => $updaterFile->getVersion(),
+            'file_name'  => $updaterFile->getFileName(),
             'start_time' => $updaterFile->getStartTime(),
-            'end_time' => $updaterFile->getEndTime(),
+            'end_time'   => $updaterFile->getEndTime(),
         ];
 
         return $database->insert(static::UPDATER_TABLE_NAME, $data);
