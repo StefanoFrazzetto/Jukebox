@@ -50,12 +50,22 @@ class UpdaterManager
      */
     private function setup()
     {
-        $this->updatesDirectory = __DIR__.'/../../updater/';
+        $this->updatesDirectory = static::getUpdatesDirectory();
 
         $database = new Database();
         if (!$database->tableExists(static::UPDATER_TABLE_NAME)) {
             throw new Exception('The updater table does not exist');
         }
+    }
+
+    /**
+     * Return the directory containing the update files.
+     *
+     * @return string
+     */
+    public static function getUpdatesDirectory()
+    {
+        return __DIR__ . '/../../updater/';
     }
 
     /**
@@ -223,10 +233,10 @@ class UpdaterManager
 
         $database = new Database();
         $data = [
-            'version'    => $updaterFile->getVersion(),
-            'file_name'  => $updaterFile->getFileName(),
+            'version' => $updaterFile->getVersion(),
+            'file_name' => $updaterFile->getFileName(),
             'start_time' => $updaterFile->getStartTime(),
-            'end_time'   => $updaterFile->getEndTime(),
+            'end_time' => $updaterFile->getEndTime(),
         ];
 
         return $database->insert(static::UPDATER_TABLE_NAME, $data);

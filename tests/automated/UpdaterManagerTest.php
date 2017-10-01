@@ -1,6 +1,8 @@
 <?php
 
 
+use Lib\UpdaterManager;
+
 require_once __DIR__.'/../JukeboxTestClass.php';
 
 final class UpdaterManagerTest extends JukeboxTestClass
@@ -17,7 +19,7 @@ final class UpdaterManagerTest extends JukeboxTestClass
 
     public function testRun1()
     {
-        $updaterManager = new \Lib\UpdaterManager(true);
+        $updaterManager = new UpdaterManager();
 
         $this->assertTrue($updaterManager->runSystemUpdates());
     }
@@ -32,20 +34,6 @@ final class UpdaterManagerTest extends JukeboxTestClass
      */
     public static function setUpBeforeClass()
     {
-        if (!file_exists(self::TEST_DIR)) {
-            mkdir(self::TEST_DIR, 0777, true);
-        }
-
-        // Create the updates directory
-        $updates_path = \Lib\Config::getPath('updater');
-        if (!file_exists($updates_path)) {
-            mkdir($updates_path, 777, true);
-        }
-
-        if (!\Lib\FileUtils::emptyDirectory($updates_path)) {
-            throw new Exception('Cannot empty the updates directory');
-        }
-
         $datetime = date('YmdHis');
         $testfile_path = static::TEST_DIR.static::TEST_FILE_NAME;
         $fake_update = [
@@ -58,7 +46,7 @@ final class UpdaterManagerTest extends JukeboxTestClass
             'raw' => ["echo '[$datetime] Running automated updater test' > $testfile_path"],
         ];
 
-        $updateFile = $updates_path.$datetime.'_test_update.json';
+        $updateFile = UpdaterManager::getUpdatesDirectory().$datetime.'_test_update.json';
         $write = file_put_contents($updateFile, json_encode($fake_update));
         if ($write === false) {
             throw new Exception('Cannot write the update file');
