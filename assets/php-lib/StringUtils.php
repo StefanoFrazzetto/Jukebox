@@ -88,8 +88,8 @@ abstract class StringUtils
     public static function arrayContains($array_haystack, $needle)
     {
         $contains = false;
-        foreach ($array_haystack as $key => $value) {
-            if (self::contains($array_haystack[$key], $needle)) {
+        foreach ($array_haystack as $value) {
+            if (self::contains($value, $needle)) {
                 $contains = true;
             }
         }

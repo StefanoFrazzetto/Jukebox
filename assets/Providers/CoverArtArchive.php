@@ -48,7 +48,7 @@ class CoverArtArchive
      */
     public function __construct($release_id)
     {
-        if (empty($disc_id)) {
+        if (empty($release_id)) {
             throw new InvalidArgumentException('You must provide a release id.');
         }
 

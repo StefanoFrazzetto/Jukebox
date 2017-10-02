@@ -56,7 +56,7 @@ abstract class FileUtils
      */
     public static function writeJson($content, $file_path)
     {
-        if (empty($path)) {
+        if (empty($file_path)) {
             throw new InvalidArgumentException('You must specify a valid path.');
         }
 

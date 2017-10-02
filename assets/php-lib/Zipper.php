@@ -164,8 +164,8 @@ class Zipper
             RecursiveIteratorIterator::LEAVES_ONLY
         );
 
-        foreach ($files as $name => $file) {
-            // Skip directories (they would be added automatically)
+        foreach ($files as $file) {
+            // Skip directories$name =>  (they would be added automatically)
             if (!$file->isDir()) {
                 // Get real and relative path for current file
                 $file_path = $file->getRealPath();
