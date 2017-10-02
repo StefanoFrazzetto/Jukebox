@@ -2,7 +2,7 @@
 <div class="modalBody" data-mcs-theme="dark">
 
     <div id="fromTheWeb" style="width: 75%; float: left">
-        <form id="coverPickerForm" action="/assets/php/album_creation/add_cover.php">
+        <form id="coverPickerForm">
             <input type="hidden" name="coverFrom" id="coverFrom"/>
             <input type="hidden" name="uploadedCover" id="uploadedCover"/>
             <input type="hidden" name="coverURL" id="coverURL"/>
