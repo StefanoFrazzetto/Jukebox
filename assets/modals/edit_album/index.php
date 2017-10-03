@@ -2,6 +2,7 @@
 
 require_once '../../../vendor/autoload.php';
 
+use Lib\ICanHaz;
 use Lib\MusicClasses\Album;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
@@ -105,5 +106,4 @@ $tracks = $album->getSongs();
     }
 </style>
 
-<script type="text/javascript" src="/assets/js/Sortable.min.js"></script>
-<script type="text/javascript" src="/assets/modals/edit_album/js/scripts.js"></script>
+<?php ICanHaz::js(['$/Sortable.min.js', 'js/scripts.js'], true, true); ?>

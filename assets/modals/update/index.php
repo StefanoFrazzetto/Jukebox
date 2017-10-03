@@ -8,6 +8,7 @@
 require_once '../../../vendor/autoload.php';
 
 use Lib\Git;
+use Lib\ICanHaz;
 
 ?>
 
@@ -81,4 +82,5 @@ use Lib\Git;
 
     Current Branch: <b><?php echo "$current_branch"; ?></b>
 </div>
-<script src="/assets/modals/update/scripts.js"></script>
+
+<?php ICanHaz::js('scripts.js');

@@ -3,6 +3,7 @@
 require_once '../../../vendor/autoload.php';
 
 use Lib\Database;
+use Lib\ICanHaz;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
@@ -57,4 +58,4 @@ $tracks = json_decode($album_details->tracks);
     </ul>
 </div>
 
-<script type="text/javascript" src="assets/modals/edit_album/js/scripts.js"></script>
+<?php ICanHaz::js('js/scripts.js', true, true);

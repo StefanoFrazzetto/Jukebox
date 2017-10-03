@@ -7,6 +7,7 @@
  */
 require_once '../../../../vendor/autoload.php';
 
+use Lib\ICanHaz;
 use Lib\Radio;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -56,5 +57,4 @@ if ($radio == null) {
     <button class="right" id="editRadioSave">Save</button>
 </div>
 
-<script src="/assets/js/validateURL.js"></script>
-<script src="/assets/modals/radio/edit_radio/scripts.js"></script>
+<?php ICanHaz::js(['$/validateURL.js', 'scripts.js'], true, true);

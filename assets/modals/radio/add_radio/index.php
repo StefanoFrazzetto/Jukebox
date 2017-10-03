@@ -35,8 +35,12 @@
     <center id='loading' style='display: none'>
         <h2>LOADING...</h2>
     </center>
-
-    <script src="/assets/js/validateURL.js"></script>
-    <script src="/assets/modals/radio/add_radio/scripts.js?2"></script>
-    <script src="/assets/js/parseUri.js"></script>
 </div>
+
+<?php
+
+require_once '../../../../vendor/autoload.php';
+
+use Lib\ICanHaz;
+
+ICanHaz::js(['$/parseUri.js', '$/validateURL.js', 'scripts.js'], true, true);
