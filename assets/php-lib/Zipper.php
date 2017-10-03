@@ -54,7 +54,7 @@ class Zipper
      *
      * @param int $albumID the album id
      *
-     * @throws InvalidArgumentException if the album does not exist.
+     * @throws Exception
      */
     public function __construct($albumID)
     {
@@ -66,21 +66,23 @@ class Zipper
         $config = new Config();
         $paths = $config->get('paths');
 
-        $this->albumDirectoryPath = $paths['albums_root'].$albumID;
-        self::$DOWNLOADS_DIRECTORY = $paths['downloads_directory'];
-        self::$ZIP_LOCK = self::$DOWNLOADS_DIRECTORY.'zip_check';
+        $album_path = $paths['albums_root'].$albumID;
+        $downloads_directory = $paths['downloads_directory'];
 
-        // Check if the album directory exists
-        if (!file_exists($this->albumDirectoryPath)) {
+        // Check if the album directory exist
+        if (!file_exists($album_path)) {
             error_log("Trying to zip non existent album with ID $albumID");
-
             throw new InvalidArgumentException('Error. The album does not exist.');
         }
 
-        // Create the parent directory if does not exist
-        if (!file_exists(self::$DOWNLOADS_DIRECTORY)) {
-            mkdir(self::$DOWNLOADS_DIRECTORY);
+        // Create the downloads directory if does not exist
+        if (!file_exists($downloads_directory)) {
+            mkdir($downloads_directory, 0744, true);
         }
+
+        $this->albumDirectoryPath = realpath($album_path).'/';
+        self::$DOWNLOADS_DIRECTORY = realpath($downloads_directory).'/';
+        self::$ZIP_LOCK = self::$DOWNLOADS_DIRECTORY.'zip_check';
 
         // Create the file name
         $Album = Album::getAlbum($albumID);
@@ -169,7 +171,7 @@ class Zipper
             if (!$file->isDir()) {
                 // Get real and relative path for current file
                 $file_path = $file->getRealPath();
-                $relative_path = substr($file_path, strlen($this->albumDirectoryPath) + 1);
+                $relative_path = substr($file_path, strlen($this->albumDirectoryPath) );
 
                 // Add current file to archive
                 $zip->addFile($file_path, $relative_path);
