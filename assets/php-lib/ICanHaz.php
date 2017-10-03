@@ -126,13 +126,13 @@ abstract class ICanHaz
                     throw new Exception("Undefined variable 'times");
                 }
 
-                $cache_file = md5(implode($files)) . '.' . $extension;
+                $cache_file = md5(implode($files)).'.'.$extension;
 
                 $last_time = max($times);
 
-                if (!file_exists(self::getCacheFolder() . $cache_file) or filemtime(self::getCacheFolder() . $cache_file) != $last_time) {
-                    file_put_contents(self::getCacheFolder() . $cache_file, $merged_content);
-                    touch(self::getCacheFolder() . $cache_file, $last_time);
+                if (!file_exists(self::getCacheFolder().$cache_file) or filemtime(self::getCacheFolder().$cache_file) != $last_time) {
+                    file_put_contents(self::getCacheFolder().$cache_file, $merged_content);
+                    touch(self::getCacheFolder().$cache_file, $last_time);
                 }
 
                 echo $taggify("/assets/cached_resource/$cache_file?$last_time");
@@ -142,11 +142,12 @@ abstract class ICanHaz
 
     /**
      * Returns the default directory containing all javascript files.
+     *
      * @return string
      */
     private static function getScriptsRoot()
     {
-        return __DIR__ . '/../js/';
+        return __DIR__.'/../js/';
     }
 
     /**
@@ -171,13 +172,14 @@ abstract class ICanHaz
 
         foreach ($files as &$file) {
             if ($file[0] === '/') {
-                $file = $_SERVER['DOCUMENT_ROOT'] . $file;
+                $file = $_SERVER['DOCUMENT_ROOT'].$file;
             }
 
             $count = 1;
 
-            if (substr($file, 0, 2) == ICanHaz::magicPath)
-                $file = str_replace(ICanHaz::magicPath, static::getScriptsRoot(), $file, $count);
+            if (substr($file, 0, 2) == self::magicPath) {
+                $file = str_replace(self::magicPath, static::getScriptsRoot(), $file, $count);
+            }
 
             if (!file_exists($file)) {
                 throw new Exception("File $file not found.");
@@ -198,7 +200,7 @@ abstract class ICanHaz
      */
     public static function versionify(&$file)
     {
-        $file = $file . '?' . filemtime($file);
+        $file = $file.'?'.filemtime($file);
     }
 
     /**
@@ -208,7 +210,7 @@ abstract class ICanHaz
      */
     public static function getCacheFolder()
     {
-        return $_SERVER['DOCUMENT_ROOT'] . '/assets/cached_resource/';
+        return $_SERVER['DOCUMENT_ROOT'].'/assets/cached_resource/';
     }
 
     /**
