@@ -13,6 +13,8 @@ use InvalidArgumentException;
  */
 abstract class ICanHaz
 {
+    const magicPath = '$/';
+
     /**
      * YOU CAN HAZ JavaScript!
      *
@@ -69,13 +71,11 @@ abstract class ICanHaz
         }
 
         if ($merge) {
-            if ($hard) {
-                echo $taggify();
-            } else {
+            $merged_content = [];
+
+            if (!$hard) {
                 $times = [];
             }
-
-            $merged_content = [];
         }
 
         // Scary thing that will inject a variable with the remote port
@@ -91,25 +91,25 @@ abstract class ICanHaz
 
         foreach ($files as &$file) {
             if (!file_exists($file)) {
+                error_log("Could not find file $files in ICanHaz.");
                 continue;
             }
 
-            if (!$merge) {
-                if (!$hard) {
-                    self::versionify($file);
-
-                    echo $taggify(str_replace($_SERVER['DOCUMENT_ROOT'], '', $file));
-                } else {
-                    $content = file_get_contents($file);
-
-                    echo $taggify('', $content);
-                }
-            } else {
+            if ($merge) {
+                $merged_content[] = "\n/** -- BEGIN $file -- **/\n";
                 $merged_content[] = file_get_contents($file);
-                $merged_content[] = "\n/** $file **/\n";
+                $merged_content[] = "\n/** -- END $file -- **/\n";
 
-                if (!$hard) {
+                if (!$hard) { // merge && !hard
                     $times[] = filemtime($file);
+                }
+            } else { // !merge
+                if ($hard) { // !merge && hard
+                    $content = file_get_contents($file);
+                    echo $taggify('', $content);
+                } else { // !merge && !hard
+                    self::versionify($file);
+                    echo $taggify(str_replace($_SERVER['DOCUMENT_ROOT'], '', $file));
                 }
             }
         }
@@ -118,24 +118,35 @@ abstract class ICanHaz
             if (!isset($merged_content)) {
                 throw new Exception("Undefined variable 'merged content'");
             }
-            if (!isset($times)) {
-                throw new Exception("Undefined variable 'times");
-            }
-            if ($hard) {
-                echo implode($merged_content), $taggify(false, false, true, false);
-            } else {
-                $cache_file = md5(implode($files)).'.'.$extension;
+
+            if ($hard) { // merge && hard
+                echo $taggify(false, implode($merged_content), true, true);
+            } else { // merge && !hard
+                if (!isset($times)) {
+                    throw new Exception("Undefined variable 'times");
+                }
+
+                $cache_file = md5(implode($files)) . '.' . $extension;
 
                 $last_time = max($times);
 
-                if (!file_exists(self::getCacheFolder().$cache_file) or filemtime(self::getCacheFolder().$cache_file) != $last_time) {
-                    file_put_contents(self::getCacheFolder().$cache_file, $merged_content);
-                    touch(self::getCacheFolder().$cache_file, $last_time);
+                if (!file_exists(self::getCacheFolder() . $cache_file) or filemtime(self::getCacheFolder() . $cache_file) != $last_time) {
+                    file_put_contents(self::getCacheFolder() . $cache_file, $merged_content);
+                    touch(self::getCacheFolder() . $cache_file, $last_time);
                 }
 
                 echo $taggify("/assets/cached_resource/$cache_file?$last_time");
             }
         }
+    }
+
+    /**
+     * Returns the default directory containing all javascript files.
+     * @return string
+     */
+    private static function getScriptsRoot()
+    {
+        return __DIR__ . '/../js/';
     }
 
     /**
@@ -160,8 +171,13 @@ abstract class ICanHaz
 
         foreach ($files as &$file) {
             if ($file[0] === '/') {
-                $file = $_SERVER['DOCUMENT_ROOT'].$file;
+                $file = $_SERVER['DOCUMENT_ROOT'] . $file;
             }
+
+            $count = 1;
+
+            if (substr($file, 0, 2) == ICanHaz::magicPath)
+                $file = str_replace(ICanHaz::magicPath, static::getScriptsRoot(), $file, $count);
 
             if (!file_exists($file)) {
                 throw new Exception("File $file not found.");
@@ -182,7 +198,7 @@ abstract class ICanHaz
      */
     public static function versionify(&$file)
     {
-        $file = $file.'?'.filemtime($file);
+        $file = $file . '?' . filemtime($file);
     }
 
     /**
@@ -192,7 +208,7 @@ abstract class ICanHaz
      */
     public static function getCacheFolder()
     {
-        return $_SERVER['DOCUMENT_ROOT'].'/assets/cached_resource/';
+        return $_SERVER['DOCUMENT_ROOT'] . '/assets/cached_resource/';
     }
 
     /**

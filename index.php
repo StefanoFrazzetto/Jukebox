@@ -218,26 +218,26 @@ function isJukebox()
     }
 
 $scripts = [
-    'assets/js/vars.js',
-    'assets/js/Arrays.js',
-    'assets/js/alerts.js',
-    'assets/js/jquery.min.js',
-    'assets/js/jquery-ui.min.js',
-    'assets/js/sliders.js',
-    'assets/js/Player.js',
-    'assets/js/player_init.js',
-    'assets/js/searchbar.js',
-    'assets/js/modals.js',
-    'assets/js/jquery.mCustomScrollbar.concat.min.js',
-    'assets/js/ImageSelector.js',
-    'assets/js/Uploader.js',
-    'assets/js/dropzone.js',
-    'assets/js/post-script.js',
+    '$/vars.js',
+    '$/Arrays.js',
+    '$/alerts.js',
+    '$/jquery.min.js',
+    '$/jquery-ui.min.js',
+    '$/sliders.js',
+    '$/Player.js',
+    '$/player_init.js',
+    '$/searchbar.js',
+    '$/modals.js',
+    '$/jquery.mCustomScrollbar.concat.min.js',
+    '$/ImageSelector.js',
+    '$/Uploader.js',
+    '$/dropzone.js',
+    '$/post-script.js',
 ];
 
 if (isJukebox()) {   // Things that wil be done only by the local jukebox client
-    $scripts[0] = 'assets/js/vars_jb.js';
-    $scripts[] = 'assets/js/remote_listener.js';
+    $scripts[0] = '$/vars_jb.js';
+    $scripts[] = '$/remote_listener.js';
 }
 
 ICanHaz::js($scripts, true);
