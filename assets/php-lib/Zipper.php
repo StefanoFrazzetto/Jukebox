@@ -72,6 +72,7 @@ class Zipper
         // Check if the album directory exist
         if (!file_exists($album_path)) {
             error_log("Trying to zip non existent album with ID $albumID");
+
             throw new InvalidArgumentException('Error. The album does not exist.');
         }
 
@@ -171,7 +172,7 @@ class Zipper
             if (!$file->isDir()) {
                 // Get real and relative path for current file
                 $file_path = $file->getRealPath();
-                $relative_path = substr($file_path, strlen($this->albumDirectoryPath) );
+                $relative_path = substr($file_path, strlen($this->albumDirectoryPath));
 
                 // Add current file to archive
                 $zip->addFile($file_path, $relative_path);
