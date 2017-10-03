@@ -3,6 +3,10 @@
  */
 
 $(function () {
+    // This should set the right stage in the uploader
+    // when jumping to this modal from the cover picker.
+    uploader.stage = 2;
+
     var metaDataSongsTableBody = $('#metaDataSongsTableBody');
     var metaDataTitlesList = $('#metaDataTitlesList');
     var metaDataAlbumTitle = $('#metaDataAlbumTitle');
