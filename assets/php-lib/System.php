@@ -27,6 +27,8 @@ class System
     /** @var string the absolute path to the web-server directory */
     private $document_root;
 
+    const RESERVED_PORTS = [0, 22, 80, 443, 3306, 4201];
+
     public function __construct()
     {
         $this->database = new Database();

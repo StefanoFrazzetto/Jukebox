@@ -83,39 +83,55 @@ class Config
             throw new InvalidArgumentException('The argument is not an modal');
         }
 
+        // Check for duplicates
+        if (count($modal) !== count(array_unique($modal))) {
+            throw new InvalidArgumentException('Duplicate values are not allowed');
+        }
+
         $success = true;
         $system = new System();
         $ports = $this->get('ports');
+        $reserved_ports = System::RESERVED_PORTS;
 
         // HTTP
         if (isset($modal['http'])) {
             $http = $modal['http'];
-            if ($http !== System::getHttpPort()) {
-                $success &= $system->setHttpPort($http);
-                $this->setPortConfig('http', $http);
+
+            if (!in_array($http, $reserved_ports) || $http > 1024) {
+                if ($http !== System::getHttpPort()) {
+                    $success &= $system->setHttpPort($http);
+                    $this->setPortConfig('http', $http);
+                }
             }
         }
 
         // SSH
         if (isset($modal['ssh'])) {
             $ssh = $modal['ssh'];
-            if ($ssh !== System::getSshPort()) {
-                $success &= $system->setSshPort($ssh);
-                $this->setPortConfig('ssh', $ssh);
+
+            if (!in_array($ssh, $reserved_ports) || $ssh === 22) {
+                if ($ssh !== System::getSshPort()) {
+                    $success &= $system->setSshPort($ssh);
+                    $this->setPortConfig('ssh', $ssh);
+                }
             }
         }
 
         // Remote & Radio
         if (isset($modal['remote']) || isset($modal['radio'])) {
             $remote = $modal['remote'];
+            $radio = $modal['radio'];
 
-            if ($ports['remote'] !== $remote) {
-                $this->setPortConfig('remote', $remote);
+            if (!in_array($remote, $reserved_ports) || $remote > 1024) {
+                if ($ports['remote'] !== $remote) {
+                    $this->setPortConfig('remote', $remote);
+                }
             }
 
-            $radio = $modal['radio'];
-            if ($ports['radio'] !== $radio) {
-                $this->setPortConfig('radio', $radio);
+            if (!in_array($radio, $reserved_ports) || $radio > 1024) {
+                if ($ports['radio'] !== $radio) {
+                    $this->setPortConfig('radio', $radio);
+                }
             }
 
             // Restart the service if either one was changed
