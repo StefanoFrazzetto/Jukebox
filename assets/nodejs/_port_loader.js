@@ -1,22 +1,15 @@
-const request = require('request');
+module.exports = function portLoader(successCall, errorCall, alwaysCall) {
+    const exec = require('child_process').exec;
+    exec('php ../php/ports.php', function (error, stdout, stderr) {
+        console.log("[@] Spawned ports PHP process");
 
-const url = 'http://localhost/assets/API/ports.php';
-
-module.exports = function portLoader(success, error, always) {
-    console.log("[@] Retrieving ports from " + url);
-    request.get({
-        url: url,
-        json: true,
-        headers: {'User-Agent': 'request'}
-    }, function (err, res, data) {
-        if (err) {
-            error(err)
-        } else if (res.statusCode !== 200) {
-            error(res.statusCode);
+        if (error !== null) {
+            errorCall(stderr);
         } else {
-            success(data);
+            const data = JSON.parse(stdout);
+            successCall(data);
         }
-        always();
+
+        alwaysCall();
     });
 };
-
