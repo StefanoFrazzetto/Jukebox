@@ -48,13 +48,13 @@ class Uploader
     /** @var string the uploader session id */
     private $uploader_id;
 
-    /** @var  array */
+    /** @var array */
     private $music_brainz_info;
 
-    /** @var  string */
+    /** @var string */
     private $album_title;
 
-    /** @var  string */
+    /** @var string */
     private $release_id;
 
     public function __construct($media_source = '')
@@ -233,7 +233,6 @@ class Uploader
                 error_log('Uploader: '.$e->getMessage());
             }
         }
-
     }
 
     /**
