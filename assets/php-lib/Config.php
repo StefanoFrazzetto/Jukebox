@@ -32,13 +32,13 @@ class Config
 
     public function __construct()
     {
-        $config_dir = __DIR__ . '/../config/';
+        $config_dir = __DIR__.'/../config/';
 
         // Loads the static configuration file
-        $this->static_conf = include $config_dir . 'config.php';
+        $this->static_conf = include $config_dir.'config.php';
 
         // Loads the dynamic configuration file
-        $this->dynamic_conf_file = $config_dir . 'config.json';
+        $this->dynamic_conf_file = $config_dir.'config.json';
         if (!file_exists($this->dynamic_conf_file)) {
             file_put_contents($this->dynamic_conf_file, null);
         }
@@ -73,7 +73,7 @@ class Config
      * Set the ports number and restart their respective services.
      *
      * @param array $modal the associative array containing the port
-     * name and value.
+     *                     name and value.
      *
      * @return bool
      */
@@ -125,7 +125,6 @@ class Config
         // Save EVERYTHING!
         $this->retrieveDefaultPorts();
         $this->saveDynamicConfig();
-
 
         return $success;
     }
