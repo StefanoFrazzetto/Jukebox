@@ -37,7 +37,7 @@ class System
     }
 
     /**
-     * // TODO
+     * // TODO.
      */
     public static function getSinkInputs()
     {
@@ -123,6 +123,7 @@ class System
 
     /**
      * @param $port
+     *
      * @return bool
      */
     public function setHttpPort($port)
@@ -131,7 +132,7 @@ class System
             throw new InvalidArgumentException('Invalid port argument');
         }
 
-        $res_set = OS::executeWithResult("sudo sed -i -e 's/Listen " . self::getHttpPort() . "/Listen $port/' " . self::HTTP_CONFIG_FILE);
+        $res_set = OS::executeWithResult("sudo sed -i -e 's/Listen ".self::getHttpPort()."/Listen $port/' ".self::HTTP_CONFIG_FILE);
 
         return  $res_set && self::reloadApacheService();
     }
@@ -141,13 +142,14 @@ class System
      */
     public static function getSshPort()
     {
-        $value = OS::execute("grep 'Port' " . self::SSH_CONFIG_FILE . " | awk {'print $2'}");
+        $value = OS::execute("grep 'Port' ".self::SSH_CONFIG_FILE." | awk {'print $2'}");
 
         return intval($value);
     }
 
     /**
      * @param $port
+     *
      * @return bool
      */
     public function setSshPort($port)
@@ -156,7 +158,7 @@ class System
             throw new InvalidArgumentException('Invalid port argument');
         }
 
-        $res_set = OS::executeWithResult("sudo sed -i -e 's/Port " . self::getSshPort() . "/Port $port/' " . self::SSH_CONFIG_FILE);
+        $res_set = OS::executeWithResult("sudo sed -i -e 's/Port ".self::getSshPort()."/Port $port/' ".self::SSH_CONFIG_FILE);
 
         return  $res_set && self::reloadSshService();
     }
@@ -166,7 +168,7 @@ class System
      */
     public static function getHttpPort()
     {
-        $value = OS::execute("grep 'Listen' " . self::HTTP_CONFIG_FILE . " | grep -v 'Listen 443' | awk {'print $2'}");
+        $value = OS::execute("grep 'Listen' ".self::HTTP_CONFIG_FILE." | grep -v 'Listen 443' | awk {'print $2'}");
 
         return intval($value);
     }
@@ -176,7 +178,7 @@ class System
      */
     public function reloadApacheService()
     {
-        return OS::executeWithResult("sudo /etc/init.d/apache2 reload");
+        return OS::executeWithResult('sudo /etc/init.d/apache2 reload');
     }
 
     /**
@@ -184,7 +186,7 @@ class System
      */
     public function reloadNodeServerService()
     {
-        return OS::executeWithResult("sudo /etc/init.d/nodeserver force-reload");
+        return OS::executeWithResult('sudo /etc/init.d/nodeserver force-reload');
     }
 
     /**
@@ -192,7 +194,7 @@ class System
      */
     public function reloadSshService()
     {
-        return OS::executeWithResult("sudo /etc/init.d/ssh reload");
+        return OS::executeWithResult('sudo /etc/init.d/ssh reload');
     }
 
     /**
@@ -238,7 +240,7 @@ class System
     private function fixApacheConfig()
     {
         $PHP_INI_TARGET = '/etc/php5/apache2/conf.d/.user.ini';
-        $PHP_INI_SOURCE = $this->document_root . '/installation/.user.ini';
+        $PHP_INI_SOURCE = $this->document_root.'/installation/.user.ini';
 
         $res_copy = OS::executeWithResult("sudo cp -f $PHP_INI_SOURCE $PHP_INI_TARGET");
         $res_perm = OS::executeWithResult("sudo chmod 777 $PHP_INI_TARGET");
@@ -260,11 +262,10 @@ class System
     }
 
     /**
-     * // TODO
+     * // TODO.
      */
     private function getSinks()
     {
         $command = 'pacmd list-sinks';
-
     }
 }

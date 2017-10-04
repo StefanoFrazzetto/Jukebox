@@ -36,7 +36,6 @@ if (isset($_GET['set'], $_GET['value'])) {
 // BULK SET VIA JSON REQUEST
 $data = json_decode($payload, true);
 if ($data) {
-
     $config = new Config();
     $config->setPorts($data);
 

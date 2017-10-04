@@ -1,6 +1,7 @@
 <?php
 
 namespace Lib;
+
 use InvalidArgumentException;
 
 /**
@@ -47,6 +48,7 @@ class Config
 
     /**
      * @param $modal
+     *
      * @return bool
      */
     public function setPorts($modal)
@@ -61,7 +63,6 @@ class Config
 
         // HTTP
         if (isset($modal['http'])) {
-
             $http = $modal['http'];
             if ($http !== $ports['http']) {
                 $success &= $system->setHttpPort($http);
@@ -71,7 +72,6 @@ class Config
 
         // SSH
         if (isset($modal['ssh'])) {
-
             $ssh = $modal['ssh'];
             if ($ssh !== $ports['ssh']) {
                 $success &= $system->setSshPort($ssh);
@@ -81,7 +81,6 @@ class Config
 
         // Remote & Radio
         if (isset($modal['remote']) || isset($modal['radio'])) {
-
             $remote = $modal['remote'];
             if ($ports['remote'] !== $remote) {
                 $this->setPortConfig('remote', $remote);
