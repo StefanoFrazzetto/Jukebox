@@ -58,9 +58,9 @@ class Calibrator
 
         $contents = preg_replace(static::$pattern, $values, $contents);
 
-        file_put_contents(static::$config, $contents);
-
         OS::execute('sudo chmod 777 '.static::$config);
+
+        file_put_contents(static::$config, $contents);
     }
 
     /**
