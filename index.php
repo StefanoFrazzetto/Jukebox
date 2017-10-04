@@ -89,7 +89,7 @@ if (isJukebox()) {
         <div id="buttonsBar" class="toolbar">
 
                 <span class="searchbox-icon" id="home-btn">
-                    <i class="fa fa-home"></i>
+                    <i class="material-icons">home</i>
                 </span>
 
             <span id="alphabet">
@@ -123,41 +123,41 @@ if (isJukebox()) {
                 </span>
 
             <span class="searchbox-icon pull-right" id="searchbox-icon">
-                    <i class="fa fa-search"></i>
+                    <i class="material-icons">search</i>
                 </span>
 
             <span class="searchbox-icon pull-right" id="sort-icon">
-                   <i class="fa fa-sort"></i>
+                   <i class="material-icons">sort</i>
                 </span>
 
             <div id="sorter" class="toolbar">
                 <div class="by active" data-value="1">
                         <span class="searchbox-icon pull-right">
-                            <i class="fa fa-user"></i>
+                            <i class="material-icons" title="Artist">face</i>
                         </span>
                     <div>Artist</div>
                 </div>
                 <div class="by" data-value="2">
                         <span class="searchbox-icon pull-right">
-                            <i class="fa fa-dot-circle-o"></i>
+                            <i class="material-icons" title="Album">album</i>
                         </span>
                     <div>Album</div>
                 </div>
                 <div class="by" data-value="3">
                         <span class="searchbox-icon pull-right">
-                            <i class="fa fa-star"></i>
+                            <i class="material-icons" title="Popular">favorite</i>
                         </span>
                     <div>Hits</div>
                 </div>
                 <div class="by" data-value="4">
                         <span class="searchbox-icon pull-right">
-                            <i class="fa fa-clock-o"></i>
+                            <i class="material-icons" title="Last Played">history</i>
                         </span>
                     <div>Time</div>
                 </div>
                 <div class="by" data-value="5">
                         <span class="searchbox-icon pull-right">
-                            <i class="fa fa-upload"></i>
+                            <i class="material-icons" title="Last uploaded">file_upload</i>
                         </span>
                     <div>Added</div>
                 </div>
@@ -176,13 +176,13 @@ if (isJukebox()) {
 
             <span id="search-by" class="toolbar">
                     <span class="searchbox-icon active" id="artist-icon">
-                        <i class="fa fa-user"></i>
+                        <i class="material-icons" title="Artist">face</i>
                     </span>
                     <span class="searchbox-icon" id="album-icon">
-                        <i class="fa fa-dot-circle-o"></i>
+                        <i class="material-icons" title="Album">album</i>
                     </span>
                     <span class="searchbox-icon" id="song-icon">
-                        <i class="fa fa-music"></i>
+                        <i class="material-icons" title="Song">music_note</i>
                     </span>
                 </span>
 
