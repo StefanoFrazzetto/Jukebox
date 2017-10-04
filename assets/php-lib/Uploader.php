@@ -14,7 +14,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @author Stefano Frazzetto <https://github.com/StefanoFrazzetto>
  *
- * @version 1.0.0
+ * @version 1.0.1
  */
 class Uploader
 {
@@ -48,10 +48,13 @@ class Uploader
     /** @var string the uploader session id */
     private $uploader_id;
 
+    /** @var  array */
     private $music_brainz_info;
 
+    /** @var  string */
     private $album_title;
 
+    /** @var  string */
     private $release_id;
 
     public function __construct($media_source = '')
@@ -77,7 +80,7 @@ class Uploader
     {
         $config = new Config();
 
-        return $config->get('paths')['uploader'];
+        return realpath($config->get('paths')['uploader']);
     }
 
     /**
@@ -160,7 +163,8 @@ class Uploader
         $file_name = StringUtils::cleanString($_FILES['file']['name']);
         $source_file = $_FILES['file']['tmp_name'];
 
-        $destination_path = self::getPath().$uploadFolderID;
+        $destination_directory = self::getPath().$uploadFolderID.'/';
+//        error_log($destination_directory);
 
         // If a track is uploaded, attempts to store it in the correct cd.
         if (in_array($file_extension, self::ALLOWED_MUSIC_EXTENSIONS)) {
@@ -175,15 +179,15 @@ class Uploader
                 }
             }
 
-            $destination_path .= "/CD$cd";
+            $destination_directory .= "CD$cd/";
         }
 
         // Check if the destination directory exists
-        if (!is_dir($destination_path)) {
-            mkdir($destination_path, 0777, true);
+        if (!is_dir($destination_directory)) {
+            mkdir($destination_directory, 0744, true);
         }
 
-        $destination_file = $destination_path.'/'.$file_name;
+        $destination_file = $destination_directory.$file_name;
 
         return move_uploaded_file($source_file, $destination_file);
     }
@@ -203,12 +207,12 @@ class Uploader
         $id = uniqid('', true);
 
         // Check if the folder already exists
-        $dir = Config::getPath('uploader')."$id";
+        $dir = self::getPath()."$id";
         if (file_exists($dir)) {
             return self::getNewUploaderID();
         }
 
-        mkdir($dir, 0755, true);
+        mkdir($dir, 0744, true);
 
         return $id;
     }
@@ -219,13 +223,17 @@ class Uploader
     private static function removeOldDirectories()
     {
         $hoursInMinutes = 4 * 60;
+        $uploader_directory = self::getPath();
 
-        try {
-            // Delete old uploader directories
-            FileUtils::deleteDirectoriesOlderThan(static::getPath(), $hoursInMinutes);
-        } catch (InvalidArgumentException $e) {
-            // Should never happen.
+        if (file_exists($uploader_directory)) {
+            try {
+                // Delete old uploader directories
+                FileUtils::deleteDirectoriesOlderThan($uploader_directory, $hoursInMinutes);
+            } catch (InvalidArgumentException $e) {
+                error_log('Uploader: '.$e->getMessage());
+            }
         }
+
     }
 
     /**
@@ -235,8 +243,7 @@ class Uploader
      */
     public static function getUploadsInProgress()
     {
-        $upload_path = Config::getPath('uploader');
-        $directories = FileUtils::getDirectories($upload_path);
+        $directories = FileUtils::getDirectories(self::getPath());
 
         return $directories;
     }
@@ -347,7 +354,7 @@ class Uploader
             $finder = new Finder();
             $tracks = $finder->in($full_path."/CD$cdNo/")->files()->name('/^.*\.(mp3|wav)$/i')->sortByName();
 
-            if ($this->source == static::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
+            if ($this->source == self::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
                 $tracks_info["CD$cdNo"] = $this->createTracksInfoMusicBrainz($tracks);
             } else { // If the source is just files
                 $tracks_info["CD$cdNo"] = $this->createTracksInfoFromFiles($tracks);
