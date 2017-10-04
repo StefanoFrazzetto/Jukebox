@@ -80,10 +80,7 @@ function initPlayer() {
     };
 
     player.onPlayPause = function () {
-        if (player.isPlaying())
-            play_btn.css('background-image', 'url(/assets/img/buttons/pause.png)');
-        else
-            play_btn.css('background-image', 'url(/assets/img/buttons/playButton.png)');
+        play_btn.find('.material-icons').html(player.isPlaying() ? 'pause' : 'play_arrow');
     };
 
     player.onVolumeChange = function () {
@@ -163,11 +160,11 @@ function initPlayer() {
         $.each(player.tracks, function (key, val) {
             if (typeof val !== 'undefined')
                 items = items + (
-                        "<tr>" +
-                        "<td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' " +
-                        "id='track_" + key + "' data-track-id='" + val.id + "'>" + val.title + "</td>" +
-                        "</tr>"
-                    );
+                    "<tr>" +
+                    "<td data-album='" + val.album_id + "' data-track-no='" + val.track_no + "' " +
+                    "id='track_" + key + "' data-track-id='" + val.id + "'>" + val.title + "</td>" +
+                    "</tr>"
+                );
         });
 
         playlistTable.html(items);
