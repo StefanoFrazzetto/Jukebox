@@ -32,84 +32,18 @@ class Config
 
     public function __construct()
     {
-        $config_dir = __DIR__.'/../config/';
+        $config_dir = __DIR__ . '/../config/';
 
         // Loads the static configuration file
-        $this->static_conf = include $config_dir.'config.php';
+        $this->static_conf = include $config_dir . 'config.php';
 
         // Loads the dynamic configuration file
-        $this->dynamic_conf_file = $config_dir.'config.json';
+        $this->dynamic_conf_file = $config_dir . 'config.json';
         if (!file_exists($this->dynamic_conf_file)) {
             file_put_contents($this->dynamic_conf_file, null);
         }
 
         $this->dynamic_config = json_decode(file_get_contents($this->dynamic_conf_file), true);
-    }
-
-    /**
-     * @param $modal
-     *
-     * @return bool
-     */
-    public function setPorts($modal)
-    {
-        if (!is_array($modal)) {
-            throw new InvalidArgumentException('The argument is not an modal');
-        }
-
-        $success = true;
-        $system = new System();
-        $ports = $this->get('ports');
-
-        // HTTP
-        if (isset($modal['http'])) {
-            $http = $modal['http'];
-            if ($http !== $ports['http']) {
-                $success &= $system->setHttpPort($http);
-                $this->setPortConfig('http', $http);
-            }
-        }
-
-        // SSH
-        if (isset($modal['ssh'])) {
-            $ssh = $modal['ssh'];
-            if ($ssh !== $ports['ssh']) {
-                $success &= $system->setSshPort($ssh);
-                $this->setPortConfig('ssh', $ssh);
-            }
-        }
-
-        // Remote & Radio
-        if (isset($modal['remote']) || isset($modal['radio'])) {
-            $remote = $modal['remote'];
-            if ($ports['remote'] !== $remote) {
-                $this->setPortConfig('remote', $remote);
-            }
-
-            $radio = $modal['radio'];
-            if ($ports['radio'] !== $radio) {
-                $this->setPortConfig('radio', $radio);
-            }
-
-            // Restart the service if either one was changed
-            $success &= $system->reloadNodeServerService();
-        }
-
-        // Save EVERYTHING!
-        $this->saveDynamicConfig();
-
-        return $success;
-    }
-
-    /**
-     * Set the dynamic ports config.
-     *
-     * @param $key
-     * @param $value
-     */
-    private function setPortConfig($key, $value)
-    {
-        $this->dynamic_config[$key] = intval($value);
     }
 
     /**
@@ -136,6 +70,67 @@ class Config
     }
 
     /**
+     * Set the ports number and restart their respective services.
+     *
+     * @param array $modal the associative array containing the port
+     * name and value.
+     *
+     * @return bool
+     */
+    public function setPorts($modal)
+    {
+        if (!is_array($modal)) {
+            throw new InvalidArgumentException('The argument is not an modal');
+        }
+
+        $success = true;
+        $system = new System();
+        $ports = $this->get('ports');
+
+        // HTTP
+        if (isset($modal['http'])) {
+            $http = $modal['http'];
+            if ($http !== System::getHttpPort()) {
+                $success &= $system->setHttpPort($http);
+                $this->setPortConfig('http', $http);
+            }
+        }
+
+        // SSH
+        if (isset($modal['ssh'])) {
+            $ssh = $modal['ssh'];
+            if ($ssh !== System::getSshPort()) {
+                $success &= $system->setSshPort($ssh);
+                $this->setPortConfig('ssh', $ssh);
+            }
+        }
+
+        // Remote & Radio
+        if (isset($modal['remote']) || isset($modal['radio'])) {
+            $remote = $modal['remote'];
+
+            if ($ports['remote'] !== $remote) {
+                $this->setPortConfig('remote', $remote);
+            }
+
+            $radio = $modal['radio'];
+            if ($ports['radio'] !== $radio) {
+                $this->setPortConfig('radio', $radio);
+            }
+
+            // Restart the service if either one was changed
+            $success &= $system->reloadNodeServerService();
+        }
+
+        // Save EVERYTHING!
+        $this->retrieveDefaultPorts();
+        $this->saveDynamicConfig();
+
+
+        return $success;
+    }
+
+    /**
      * Returns the config key passed as parameter. If exists, the dynamic value will be returned,
      * otherwise the static configuration value will be returned. In case the value is not found
      * in any configuration file, null will be returned.
@@ -155,6 +150,55 @@ class Config
             return $this->getStatic($key);
         } else {
             return;
+        }
+    }
+
+    /**
+     * Set the dynamic ports config.
+     *
+     * @param $key
+     * @param $value
+     */
+    private function setPortConfig($key, $value)
+    {
+        $this->dynamic_config['ports'][$key] = intval($value);
+    }
+
+    /**
+     * Saves the configuration into the dynamic configuration file in json format.
+     */
+    private function saveDynamicConfig()
+    {
+        file_put_contents($this->dynamic_conf_file, json_encode($this->dynamic_config, JSON_PRETTY_PRINT));
+    }
+
+    /**
+     * Stores the value of a key in the json configuration file.
+     *
+     * @param $key - the key
+     * @param $value - the value associated to the key
+     */
+    public function set($key, $value)
+    {
+        $this->dynamic_config[$key] = $value;
+        $this->saveDynamicConfig();
+    }
+
+    /**
+     * If some (or all ports) were left with their default value,
+     * save these values into the dynamic configuration file. Otherwise the
+     * dynamic configuration for the ports could have contained NULL values.
+     */
+    private function retrieveDefaultPorts()
+    {
+        $dynamic_ports = isset($this->dynamic_config['ports']) ? $this->getDynamic('ports') : [];
+        $static_ports = $this->getStatic('ports');
+
+        $diff = array_diff(array_keys($static_ports), array_keys($dynamic_ports));
+        $dynamic_ports_array = &$this->dynamic_config['ports'];
+
+        foreach ($diff as $port_key) {
+            $dynamic_ports_array[$port_key] = $static_ports[$port_key];
         }
     }
 
@@ -180,25 +224,5 @@ class Config
     private function getStatic($key)
     {
         return $this->static_conf[$key];
-    }
-
-    /**
-     * Stores the value of a key in the json configuration file.
-     *
-     * @param $key - the key
-     * @param $value - the value associated to the key
-     */
-    public function set($key, $value)
-    {
-        $this->dynamic_config[$key] = $value;
-        $this->saveDynamicConfig();
-    }
-
-    /**
-     * Saves the configuration into the dynamic configuration file in json format.
-     */
-    private function saveDynamicConfig()
-    {
-        file_put_contents($this->dynamic_conf_file, json_encode($this->dynamic_config, JSON_PRETTY_PRINT));
     }
 }
