@@ -15,16 +15,24 @@ $ports = (new Config())->get('ports');
             in order to allow the jukebox to be accessible from outside the local network.</p>
         <p><b>NOTE:</b> A restart is required for the changes to take place.</p>
 
-        <form id="portsForm">
+        <form id="portsForm" class="quarter-wide margin-auto text-center">
             <?php foreach ($ports as $key => $port): ?>
-                <div class="col-row">
-                    <div class="col-left right text-right">
-                        <label for="port-<?php echo $port ?>"><?php echo $key ?></label>
-                    </div>
-                    <div class="col-right text-left">
-                        <input type="number" id="port-<?php echo $port ?>" name="<?php echo $key ?>"
-                               value="<?php echo $port ?>" min="1" max="65535" step="1">
-                    </div>
+                <div class="">
+                    <label
+                            for="port-<?php echo $port ?>"
+                            class="display-block"
+                    ><?php echo ucwords($key) ?></label>
+                    <input
+                            type="number"
+                            class="full-wide text-center"
+                            id="port-<?php echo $port ?>"
+                            name="<?php echo $key ?>"
+                            value="<?php echo $port ?>"
+                            min="1"
+                            max="65535"
+                            step="1"
+                    />
+                    <p></p>
                 </div>
             <?php endforeach; ?>
         </form>

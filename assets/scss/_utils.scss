@@ -46,12 +46,28 @@ hr {
   }
 }
 
+.quarter-wide {
+  width: 25% !important;
+}
+
 .half-wide {
   width: 50% !important;
 }
 
+.three-quarters-wide {
+  width: 75% !important;
+}
+
 .full-wide {
   width: 100% !important;
+}
+
+.margin-auto {
+  margin: auto;
+}
+
+.display-block {
+  display: block;
 }
 
 .cover-container {
@@ -105,7 +121,6 @@ hr {
 
   width: $size;
   height: $size;
-
 
   transition: 200ms all;
 
