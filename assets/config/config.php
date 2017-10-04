@@ -95,7 +95,7 @@ return [
      * | Default ports for the various jukebox services.
      */
     'ports' => [
-        'http'   => 80,
+        'http'   => 8080,
         'ssh'    => 22,
         'remote' => 4202,
         'radio'  => 4242,
