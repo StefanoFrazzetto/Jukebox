@@ -34,10 +34,11 @@ if (isset($_GET['set'], $_GET['value'])) {
 }
 
 // BULK SET VIA JSON REQUEST
-$data = json_decode($payload, true, JSON_NUMERIC_CHECK);
+$data = json_decode($payload, true);
 if ($data) {
-    // TODO Add real method
-    error_log(json_encode($data));
+
+    $config = new Config();
+    $config->setPorts($data);
 
     echo json_encode($config->get('ports'));
 

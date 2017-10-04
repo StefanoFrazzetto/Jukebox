@@ -1,6 +1,7 @@
 <?php
 
 namespace Lib;
+use InvalidArgumentException;
 
 /**
  * Class Config provides access to the configuration of this software.
@@ -42,6 +43,74 @@ class Config
         }
 
         $this->dynamic_config = json_decode(file_get_contents($this->dynamic_conf_file), true);
+    }
+
+    /**
+     * @param $modal
+     * @return bool
+     */
+    public function setPorts($modal)
+    {
+        if (!is_array($modal)) {
+            throw new InvalidArgumentException('The argument is not an modal');
+        }
+
+        $success = true;
+        $system = new System();
+        $ports = $this->get('ports');
+
+        // HTTP
+        if (isset($modal['http'])) {
+
+            $http = $modal['http'];
+            if ($http !== $ports['http']) {
+                $success &= $system->setHttpPort($http);
+                $this->setPortConfig('http', $http);
+            }
+        }
+
+        // SSH
+        if (isset($modal['ssh'])) {
+
+            $ssh = $modal['ssh'];
+            if ($ssh !== $ports['ssh']) {
+                $success &= $system->setSshPort($ssh);
+                $this->setPortConfig('ssh', $ssh);
+            }
+        }
+
+        // Remote & Radio
+        if (isset($modal['remote']) || isset($modal['radio'])) {
+
+            $remote = $modal['remote'];
+            if ($ports['remote'] !== $remote) {
+                $this->setPortConfig('remote', $remote);
+            }
+
+            $radio = $modal['radio'];
+            if ($ports['radio'] !== $radio) {
+                $this->setPortConfig('radio', $radio);
+            }
+
+            // Restart the service if either one was changed
+            $success &= $system->reloadNodeServerService();
+        }
+
+        // Save EVERYTHING!
+        $this->saveDynamicConfig();
+
+        return $success;
+    }
+
+    /**
+     * Set the dynamic ports config.
+     *
+     * @param $key
+     * @param $value
+     */
+    private function setPortConfig($key, $value)
+    {
+        $this->dynamic_config[$key] = intval($value);
     }
 
     /**

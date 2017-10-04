@@ -92,10 +92,11 @@ return [
      * |----------------------------------------------
      * | Ports
      * |----------------------------------------------
-     * | Default ports for the various http servers.
+     * | Default ports for the various jukebox services.
      */
     'ports' => [
-        'web'    => 80,
+        'http'  => 80,
+        'ssh'    => 22,
         'remote' => 4202,
         'radio'  => 4242,
     ],
