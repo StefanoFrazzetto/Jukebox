@@ -42,19 +42,48 @@ if (isJukebox()) {
 
             <div id="mask">
                 <div id="dropdownModal">
-                    <div id="power" class="crcbtn"></div>
-                    <div id="settings" class="crcbtn" onclick="modal.openSettings('settings.php')"></div>
-                    <div id="network_settings" class="crcbtn"
-                         onclick="alert('Bluetooth is not available yet.');"></div>
-                    <div id="qr" class="crcbtn" onclick="modal.openPage('assets/modals/qrcode.php')"></div>
-                    <div id="trash" class="crcbtn" onclick="storage.deleteAlbum(album_id);"></div>
-                    <div id="add" class="crcbtn"></div>
-                    <div id="shuffle" class="crcbtn"></div>
-                    <div id="wifi" class="crcbtn" onclick="modal.openPage('assets/modals/network_settings')"></div>
-                    <div id="ripper" class="crcbtn" onclick="modal.openPage('assets/modals/rip/rip_pre.php')"></div>
-                    <div id="eq_button" class="crcbtn" onclick="modal.openPage('assets/modals/eq/index.php')"></div>
-                    <div id="radio" class="crcbtn" onclick="modal.openPage('assets/modals/radio/index.php')"></div>
-                    <div id="burn" class="crcbtn" onclick="alert('Burner not available anymore.');"></div>
+                    <div id="power" class="crcbtn" title="Power settings">
+                        <i class="material-icons">settings_power</i>
+                    </div>
+                    <div id="settings" class="crcbtn" title="Settings" onclick="modal.openSettings('settings.php')">
+                        <i class="material-icons">settings</i>
+                    </div>
+                    <div id="network_settings" class="crcbtn" title="Bluetooth"
+                         onclick="alert('Bluetooth is not available yet.');">
+                        <i class="material-icons">bluetooth</i>
+                    </div>
+                    <div id="qr" class="crcbtn" title="Scan QR"
+                         onclick="modal.openPage('assets/modals/qrcode.php')">
+                        <i class="fa fa-qrcode"></i>
+                    </div>
+                    <div id="trash" class="crcbtn">
+                        <i class="material-icons">warning</i>
+                    </div>
+                    <div id="add" class="crcbtn" title="Add a new album">
+                        <i class="material-icons">library_add</i>
+                    </div>
+                    <div id="shuffle" class="crcbtn" title="Shuffle">
+                        <i class="material-icons">shuffle</i>
+                    </div>
+                    <div id="wifi" class="crcbtn" title="Network settings"
+                         onclick="modal.openPage('assets/modals/network_settings')">
+                        <i class="material-icons">wifi</i>
+                    </div>
+                    <div id="ripper" class="crcbtn" title="Rip a CD"
+                         onclick="modal.openPage('assets/modals/rip/rip_pre.php')">
+                        <i class="material-icons">disc_full</i>
+                    </div>
+                    <div id="eq_button" class="crcbtn" title="Equaliser"
+                         onclick="modal.openPage('assets/modals/eq/index.php')">
+                        <i class="material-icons">equalizer</i>
+                    </div>
+                    <div id="radio" class="crcbtn" title="Radio"
+                         onclick="modal.openPage('assets/modals/radio/index.php')">
+                        <i class="material-icons">settings_input_antenna</i>
+                    </div>
+                    <div id="burn" class="crcbtn" title="missing">
+                        <i class="material-icons">warning</i>
+                    </div>
                 </div>
 
                 <div id="marquee">
@@ -70,13 +99,29 @@ if (isJukebox()) {
 
                 <div id="slider" class="progressBar thin"></div>
 
-                <div id="repeat" class="crcbtn"></div>
-                <div id="stop" class="crcbtn"></div>
-                <div id="bwd" class="crcbtn"></div>
-                <div id="play"></div>
-                <div id="fwd" class="crcbtn"></div>
-                <div id="menu-btn" class="crcbtn"></div>
-                <div id="playlist" class="crcbtn" onclick="modal.openPage('assets/modals/playlist')"></div>
+                <div id="repeat" class="crcbtn">
+                    <i class="material-icons">repeat</i>
+                </div>
+                <div id="stop" class="crcbtn">
+                    <i class="material-icons">stop</i>
+                </div>
+                <div id="bwd" class="crcbtn">
+                    <i class="material-icons">skip_previous</i>
+                </div>
+                <div id="play" class="crcbtn bigger">
+                    <i class="material-icons">play_arrow</i>
+                </div>
+                <div id="fwd" class="crcbtn">
+                    <i class="material-icons">skip_next</i>
+                </div>
+
+                <div id="playlist" class="crcbtn" onclick="modal.openPage('assets/modals/playlist')">
+                    <i class="material-icons">queue_music</i>
+                </div>
+
+                <div id="menu-btn" class="crcbtn">
+                    <i class="material-icons">more_horiz</i>
+                </div>
 
             </div>
 

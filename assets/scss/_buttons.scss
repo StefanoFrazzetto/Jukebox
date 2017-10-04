@@ -1,28 +1,7 @@
 @import 'colors';
-//urls
-$url_3: url('../img/buttons/playButton.png');
-$url_4: url('../img/buttons/fwd.png');
-$url_5: url(../img/buttons/bwd.png);
-$url_6: url(../img/buttons/menu.png);
-$url_7: url(../img/buttons/repeat.png);
-$url_8: url(../img/buttons/playlist.png);
-$url_9: url(../img/buttons/stop.png);
-$url_10: url(../img/buttons/qr.png);
-$url_11: url(../img/buttons/power.png);
-$url_12: url(../img/buttons/settings.png);
-$url_13: url(../img/buttons/trash.png);
-$url_14: url(../img/buttons/add.png);
-$url_15: url(../img/buttons/shuffle.png);
-$url_16: url(../img/buttons/wifi.png);
-$bluetooth_icon: url('../img/buttons/bluetooth.png');
-$url_18: url(../img/buttons/radio.png);
-$burn_icon: url(../img/buttons/burn.png);
-$rip_icon: url(../img/buttons/rip.png);
-$eq_icon: url(../img/buttons/eq.png);
+@import 'mixins';
 
-button, .box-btn, input[type="button"], input[type="submit"], select {
-  @extend %ui_button;
-
+%ui_button_actions {
   &:hover, &:focus {
     background-color: $highlight_color;
     outline: none;
@@ -33,63 +12,53 @@ button, .box-btn, input[type="button"], input[type="submit"], select {
     //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
     box-shadow: inset 0 2px 1px $black_50, 0 1px 2px $black_20;
   }
+}
 
-  &.nuclear {
-    background-color: red;
-  }
+button, .box-btn, input[type="button"], input[type="submit"], select {
+  @extend %ui_button;
+  @extend %ui_button_actions;
 }
 
 select {
   margin: 0;
 }
 
-#play {
-  width: 37px;
-  height: 37px;
-  cursor: pointer;
-  position: absolute;
-  z-index: 50;
-  padding: 0;
-  bottom: 9px;
-  left: 159px;
-  background-image: $url_3;
-  &:hover {
-    background-position: -40px 0;
-  }
-  &:active {
-    background-position: 37px 0;
-  }
-  &.active {
-    background-position: 37px 0;
-    &:hover {
-      background-position: -40px 0;
-    }
-    &:active {
-      background-position: 0 0;
-    }
-  }
-}
-
 .crcbtn {
-  width: 35px;
-  height: 35px;
+  @extend %ui_button;
+  @extend %ui_button_actions;
+
+  transition: 150ms all;
+
+  $size: 35px;
+
+  box-sizing: border-box;
+  width: $size;
+  height: $size;
+
   z-index: 5;
   position: relative;
   display: inline-block;
   cursor: pointer;
-  &:hover {
-    background-position: -35px 0;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  border-radius: 100% !important;
+  text-align: center;
+
+  i {
+    margin-left: -1px;
+    line-height: $size;
+    font-size: 24px;
   }
-  &:active {
-    background-position: 35px 0;
-  }
-  &.active {
-    background-position: 35px 0;
-    &:hover {
-      background-position: -35px 0;
-    }
-    &:active {
-      background-position: left;
+
+  &.bigger {
+    width: 37px;
+    height: 37px;
+
+    i {
+      font-size: 35px;
+      line-height: 37px;
     }
   }
 }
@@ -127,104 +96,92 @@ select {
   }
 }
 
+// UI BUTTONS POSITIONING
+
+#play {
+  bottom: 8px !important;
+  left: 159px;
+}
+
 #fwd {
-  background-image: $url_4;
   left: 200px;
 }
 
 #bwd {
-  background-image: $url_5;
   left: 120px;
 }
 
-#menu-btn {
-  background-image: $url_6;
-  left: 260px;
-}
-
 #repeat {
-  background-image: $url_7;
   left: 10px;
 }
 
-#playlist {
-  background-image: $url_8;
+#menu-btn {
   left: 310px;
 }
 
+#playlist {
+  left: 260px;
+}
+
 #stop {
-  background-image: $url_9;
   left: 60px;
 }
 
 #qr {
-  background-image: $url_10;
   left: 118px;
 }
 
 #power {
-  background-image: $url_11;
   left: 12px;
 }
 
 #settings {
-  background-image: $url_12;
   left: 59px;
 }
 
 #network_settings {
-  background-image: $bluetooth_icon;
   top: 25px;
   left: 118px;
 }
 
 #trash {
-  background-image: $url_13;
   right: 12px;
 }
 
 #add {
-  background-image: $url_14;
   right: 59px;
 }
 
 #shuffle {
-  background-image: $url_15;
   right: 118px;
 }
 
 #wifi {
-  background-image: $url_16;
   left: 12px;
   top: 25px;
 }
 
 #ripper {
-  background-image: $rip_icon;
   right: 59px;
   top: 25px;
 }
 
 #bluetooth {
-  background-image: $bluetooth_icon;
   left: 59px;
   top: 25px;
 }
 
 #eq_button {
-  background-image: $eq_icon;
   left: 59px;
   top: 25px;
 }
 
 #radio {
-  background-image: $url_18;
   right: 12px;
   top: 25px;
 }
 
 #burn {
-  background-image: $burn_icon;
   right: 118px;
   top: 25px;
 }
