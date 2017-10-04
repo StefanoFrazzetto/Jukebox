@@ -1,10 +1,5 @@
-//fonts
-$font_0: LCD;
-$font_1: radio;
-$font_2: Nunito;
-$font_3: sans-serif;
-$font_4: Tahoma;
-$font_5: Arial;
+@import 'vars';
+@import 'goole_icons';
 
 $url_0: url(../fonts/digital-7.ttf);
 $url_1: url(../fonts/RADIOLAND.ttf);
@@ -25,5 +20,3 @@ $url_2: url(../fonts/Nunito-Light.ttf);
   src: local('Nunito-Light'), $url_2;
   unicode-range: U +0000-00FF, U +0131, U +0152-0153, U +02C6, U +02DA, U +02DC, U +2000-206F, U +2074, U +20AC, U +2212, U +2215, U +E0FF, U +EFFD, U +F000;
 }
-
-@import 'goole_icons';

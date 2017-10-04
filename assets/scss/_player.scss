@@ -1,3 +1,6 @@
+@import 'mixins';
+@import 'vars';
+
 %player_ui_element{
   @extend %ui_element;
   overflow: hidden;
