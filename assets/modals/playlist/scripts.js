@@ -5,7 +5,7 @@ function updateBigPlaylist() {
         playlistDetails.html("");
 
         player.tracks.forEach(function (song, key) {
-            var remove = $('<td class="text-center"><span class="removeTrackFromPlaylist mini-button" title="Remove track from playlist"><i class="fa fa-trash"></i></span></td>').click(function (e) {
+            var remove = $('<td class="text-center"><span class="removeTrackFromPlaylist mini-button" title="Remove track from playlist"><i class="material-icons">remove</i></span></td>').click(function (e) {
                 player.removeSongFromPlaylistAtIndex(key);
                 e.stopPropagation();
             });

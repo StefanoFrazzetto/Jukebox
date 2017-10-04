@@ -94,24 +94,27 @@ hr {
 
 .mini-button {
   $size: 25px;
-  $font-delta: 6px;
+  $font-delta: 4px;
 
   display: inline-block;
 
   cursor: pointer;
-  font-weight: 100;
   background-color: rgba($overlays, 0.6);
   border-radius: 100%;
+  text-align: center;
 
   width: $size;
   height: $size;
-  line-height: $size + $font-delta / 2;
 
-  text-align: center;
-  font-size: $size - $font-delta;
-  text-shadow: 0 0 8px rgba($overlays, 0.9);
 
   transition: 200ms all;
+
+  i {
+    font-size: $size - $font-delta;
+    text-shadow: 0 0 8px rgba($overlays, 0.9);
+    line-height: $size;
+    vertical-align: middle;
+  }
 
   &:hover {
     background-color: rgba($overlays, 0.8);

@@ -69,8 +69,9 @@ foreach ($artists_ids as $artist_id) {
                             </td>
                             <td class="playlist_title">
                                 <?php echo $track->getTitle(); ?>
-                                <span class="addTrackToPlaylist mini-button" title="Add track to playlist"><i
-                                            class="fa fa-plus"></i></span>
+                                <span class="addTrackToPlaylist mini-button" title="Add track to playlist">
+                                    <i class="material-icons">playlist_add</i>
+                                </span>
                             </td>
                             <td class="duration">
                                 <?php echo $track->getTimeString(); ?>
