@@ -95,7 +95,7 @@ return [
      * | Default ports for the various http servers.
      */
     'ports' => [
-        'web' => 80,
+        'web'    => 80,
         'remote' => 4202,
         'radio'  => 4242,
     ],
