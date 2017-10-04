@@ -8,8 +8,10 @@ require_once '../../vendor/autoload.php';
 
 $config = new Config();
 
+$payload = file_get_contents('php://input');
+
 // GET ALL
-if (count($_GET) === 0) {
+if (strlen($payload) == 0 && count($_GET) === 0) {
     echo json_encode($config->get('ports'));
 
     exit;
@@ -31,4 +33,16 @@ if (isset($_GET['set'], $_GET['value'])) {
     exit;
 }
 
+// BULK SET VIA JSON REQUEST
+$data = json_decode($payload, true, JSON_NUMERIC_CHECK);
+if ($data) {
+    // TODO Add real method
+    error_log(json_encode($data));
+
+    echo json_encode($config->get('ports'));
+
+    exit;
+}
+
+// INVALID REQUEST
 echo json_encode(['invalid request']);

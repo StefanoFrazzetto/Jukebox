@@ -7,8 +7,15 @@ $(function () {
     submit.click(function () {
         const values = form.serializeArray();
 
-        values.forEach(function (t) {
-            $.ajax('/assets/API/ports.php?set=' + t.name + '&value=' + t.value)
+        $.ajax({
+            url: '/assets/API/ports.php',
+            type: 'POST',
+            data: JSON.stringify(values),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function () {
+                alert("Ports assigned successfully!");
+            }
         });
     });
 
