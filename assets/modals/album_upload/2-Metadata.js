@@ -39,9 +39,13 @@ $(function () {
         uploader.title = $(this).val();
     });
 
-    if (typeof uploader.getAllArtists()[0] !== "undefined")
+    if (uploader.getAllArtists().length > 0) {
         metaDataAlbumArtist.val(uploader.getAllArtists()[0]);
 
+        if (uploader.getAllArtists().length > 1) {
+            metaDataAlbumArtist.val('Various artists');
+        }
+    }
 
     metaDataAlbumArtist.change(function () {
         var artist = $(this).val();
