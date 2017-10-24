@@ -13,9 +13,13 @@ header('Content-Type: application/json');
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
+$play = filter_input(INPUT_GET, 'play', FILTER_VALIDATE_BOOLEAN);
+
 $album = Album::getAlbum($id);
 
 if ($album != null) {
+    if ($play) $album->play();
+
     echo json_encode($album->getSongs());
 } else {
     echo '[]';

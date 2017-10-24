@@ -186,7 +186,7 @@ Player.prototype.reset = function () {
 
 //region Tracks Handling
 Player.prototype.getAlbumPlaylist = function (albumId, callback) {
-    this.getJSON('/assets/API/playlist.php?id=' + albumId,
+    this.getJSON('/assets/API/playlist.php?id=' + albumId + '&play=1',
         function (songs) {
             callback(Song.readMany(songs));
         },
