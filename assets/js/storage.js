@@ -8,7 +8,8 @@ var storage = {
     albumsFiltered: [],
     radios: [],
     artists: [],
-    cover_placeholder: null,
+    lastPlayed: null,
+    coverPlaceholder: null,
     //endregion Init
 
     //region Loader
@@ -20,8 +21,8 @@ var storage = {
                 storage.radios = pack(data.radios, Radio);
                 storage.albumsFiltered = storage.albums.slice();
 
-                //noinspection JSUnresolvedVariable
-                storage.cover_placeholder = data.placeholder;
+                storage.lastPlayed = data.last_played; //noinspection JSUnresolvedVariable
+                storage.coverPlaceholder = data.placeholder;
 
                 console.log("Loaded", memorySizeOf(data), "of storage.");
             })
@@ -380,14 +381,14 @@ Album.prototype.getCoverUrl = function () {
     if (this.cover !== null)
         return "/jukebox/" + this.id + "/thumb.jpg?" + this.cover;
     else
-        return storage.cover_placeholder;
+        return storage.coverPlaceholder;
 };
 
 Album.prototype.getFullCoverUrl = function () {
     if (this.cover !== null)
         return "/jukebox/" + this.id + "/cover.jpg?" + this.cover;
     else
-        return storage.cover_placeholder;
+        return storage.coverPlaceholder;
 };
 
 Album.prototype.play = function () {
@@ -411,14 +412,14 @@ Radio.prototype.getCoverUrl = function () {
     if (this.cover !== null)
         return "/jukebox/radio-covers/" + this.id + "/thumb.jpg?" + this.cover;
     else
-        return storage.cover_placeholder;
+        return storage.coverPlaceholder;
 };
 
 Radio.prototype.getFullCoverUrl = function () {
     if (this.cover !== null)
         return "/jukebox/radio-covers/" + this.id + "/cover.jpg?" + this.cover;
     else
-        return storage.cover_placeholder;
+        return storage.coverPlaceholder;
 };
 
 Radio.prototype.play = function () {

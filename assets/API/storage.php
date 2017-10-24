@@ -22,6 +22,7 @@ $storages = [
     'albums'      => Album::getAllAlbums(),
     'radios'      => Radio::getAllRadios(),
     'genres'      => json_decode($genres),
+    'last_played' => Album::getLastPlayedId(),
     'placeholder' => '/assets/img/album-placeholder.png',
 ];
 

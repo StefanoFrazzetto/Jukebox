@@ -55,7 +55,6 @@ function initPlayer() {
         if (player.getCurrentSong()) {
             songTitle.html(player.getCurrentSong().getArtistsNames());
         }
-
     };
 
     player.onPlaylistChange = function () {
@@ -63,8 +62,21 @@ function initPlayer() {
     };
 
     player.onAlbumChange = function () {
-        if (typeof player.getCurrentSong() !== "undefined" && player.getCurrentSong() !== null)
-            showAlbumsDetails(player.getCurrentSong().album_id);
+        if (typeof player.getCurrentSong() !== "undefined" && player.getCurrentSong() !== null) {
+            const album_id = player.getCurrentSong().album_id;
+
+            try {
+                const album = storage.getAlbum(album_id);
+
+                album.hits++;
+
+                if (storage.lastPlayed !== album.last_played || storage.lastPlayed === 0) {
+                    album.last_played = ++storage.lastPlayed;
+                }
+            } finally {
+                showAlbumsDetails(album_id);
+            }
+        }
     };
 
     player.onRadioChange = function () {
@@ -200,7 +212,7 @@ function initPlayer() {
         if (data.cover !== null)
             changeCover(data.getFullCoverUrl());
         else
-            changeCover(storage.cover_placeholder);
+            changeCover(storage.coverPlaceholder);
     }
 
     function playerError() {
