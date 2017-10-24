@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../../vendor/autoload.php';
+
 use Lib\ICanHaz;
 use Lib\Wifi;
 
@@ -98,7 +99,7 @@ use Lib\Wifi;
             </label>
         </span>
     </span>
-        <input type="submit" value="Save" class="right saveBtn" onclick="$('#network_settings_form').submit();"/>
+        <button onclick="modal.openSettings('network_settings/debug.php')">Network Diagnosis</button> <input type="submit" value="Save" class="right saveBtn" onclick="$('#network_settings_form').submit();"/>
     </div>
 </form>
 <?php
