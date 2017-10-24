@@ -105,9 +105,9 @@ class Database extends PDO
         putenv("PHINX_DB_NAME=$this->_database");
         putenv("PHINX_DB_USERNAME=$this->_username");
         putenv("PHINX_DB_PASSWORD=$this->_password");
-        putenv('PHINX_DB_MIGRATIONS_PATH='.$phinx['migrations']);
-        putenv('PHINX_DB_SEEDS_PATH='.$phinx['seeds']);
-        putenv('PHINX_DEFAULT_DB='.$phinx['default_db']);
+        putenv('PHINX_DB_MIGRATIONS_PATH=' . $phinx['migrations']);
+        putenv('PHINX_DB_SEEDS_PATH=' . $phinx['seeds']);
+        putenv('PHINX_DEFAULT_DB=' . $phinx['default_db']);
     }
 
     /**
@@ -131,7 +131,7 @@ class Database extends PDO
                 $this->query("USE $this->_database");
             }
         } catch (PDOException $e) {
-            error_log('Connection failed: '.$e->getMessage());
+            error_log('Connection failed: ' . $e->getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ class Database extends PDO
         $stmt = $this->prepare('SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :DB_NAME');
         $stmt->execute(['DB_NAME' => $db_name]);
 
-        return (bool) $stmt->fetchColumn();
+        return (bool)$stmt->fetchColumn();
     }
 
     /**
@@ -214,7 +214,7 @@ class Database extends PDO
         $res = $this->select(
             'COUNT(*)',
             'information_schema.tables',
-            'WHERE table_schema = \''.$this->_database.'\' AND table_name = \''.$table_name.'\' LIMIT 1;',
+            'WHERE table_schema = \'' . $this->_database . '\' AND table_name = \'' . $table_name . '\' LIMIT 1;',
             PDO::FETCH_NUM
         );
 
@@ -297,11 +297,11 @@ class Database extends PDO
     {
         $array_fields = array_keys($array);
 
-        $fields = '('.implode(',', $array_fields).')';
-        $val_holders = '(:'.implode(', :', $array_fields).')';
+        $fields = '(' . implode(',', $array_fields) . ')';
+        $val_holders = '(:' . implode(', :', $array_fields) . ')';
 
         $sql = "INSERT INTO $table";
-        $sql .= $fields.' VALUES '.$val_holders;
+        $sql .= $fields . ' VALUES ' . $val_holders;
 
         $stmt = $this->prepare($sql);
 
@@ -326,10 +326,10 @@ class Database extends PDO
     /**
      * Select data from a table.
      *
-     * @param string $columns     the columns to select
-     * @param string $table       the table containing the data
-     * @param string $query       the additional query
-     * @param int    $fetch_style
+     * @param string $columns the columns to select
+     * @param string $table the table containing the data
+     * @param string $query the additional query
+     * @param int $fetch_style
      *
      * @return array
      */
@@ -366,12 +366,12 @@ class Database extends PDO
 
         foreach ($array as $key => $value) {
             $value = addslashes($value);
-            $sql .= $key.'='."'$value'".',';
+            $sql .= $key . '=' . "'$value'" . ',';
         }
 
         $sql = rtrim($sql, ',');
 
-        $sql .= ' WHERE '.$where;
+        $sql .= ' WHERE ' . $where;
 
         $stmt = $this->prepare($sql);
 
@@ -411,7 +411,7 @@ class Database extends PDO
         $sql = rtrim($sql, ',');
 
         if ($where != '') {
-            $sql .= ' WHERE '.$where;
+            $sql .= ' WHERE ' . $where;
         }
 
         $stmt = $this->prepare($sql);
@@ -420,16 +420,19 @@ class Database extends PDO
     }
 
     /**
-     * Counts the occurrences of a query in a table.
+     * Runs a specific group function like maximum, average or count, and returns an integer value.
      *
-     * @param $table
-     * @param $where
+     * NOTE: Returns `0` in case no rows are found. Bad thing, I know.
      *
-     * @return int the number of occurrences
+     * @param string $table
+     * @param string $function e.g. MAX, MIN, COUNT
+     * @param string $column optional - '*' by default
+     * @param string $where optional - '1' by default
+     * @return int The result of the function
      */
-    public function count($table, $where)
+    private function executeNumericGroupFunction($table, $function, $column = '*', $where = '1')
     {
-        $sql = "SELECT COUNT(*) FROM $table WHERE $where";
+        $sql = "SELECT $function($column) FROM $table WHERE $where";
 
         $stmt = $this->prepare($sql);
 
@@ -442,6 +445,47 @@ class Database extends PDO
         }
 
         return intval($rows[0][0]);
+    }
+
+    /**
+     * Counts the occurrences of a query in a table.
+     *
+     * @param string $table
+     * @param string $where optional
+     *
+     * @return int the number of occurrences
+     */
+    public function count($table, $where = '1')
+    {
+        return $this->executeNumericGroupFunction($table, 'COUNT', '*', $where);
+    }
+
+    /**
+     * Gets the highest value of a numeric column.
+     *
+     * @param string $table
+     * @param string $column
+     * @param string $where optional
+     *
+     * @return int max value
+     */
+    public function max($table, $column, $where = '1')
+    {
+        return $this->executeNumericGroupFunction($table, 'MAX', $column, $where);
+    }
+
+    /**
+     * Gets the lowest value of a numeric column.
+     *
+     * @param string $table
+     * @param string $column
+     * @param string $where optional
+     *
+     * @return int min value
+     */
+    public function min($table, $column, $where = '1')
+    {
+        return $this->executeNumericGroupFunction($table, 'MIN', $column, $where);
     }
 
     /**
