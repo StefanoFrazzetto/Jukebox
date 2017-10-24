@@ -71,6 +71,7 @@ function paginate() {
 
 function reload(callback) {
     storage.loadAll(function () {
+        storage.getItSorted(sort_by);
         paginate();
         if (typeof callback === "function") callback();
     });
@@ -280,15 +281,9 @@ menu_btn.click(function () {
 
 home_btn.click(function () {
     storage.albumsFiltered = storage.albums.slice();
+    storage.getItSorted(sort_by);
 
-    sort_by = '1';
-    search_field = 'title';
     page = 1;
-
-    var sorter = $('#sorter');
-
-    sorter.find('.by.active').removeClass('active');
-    sorter.find('.by:first-of-type').addClass('active');
 
     paginate();
 });
