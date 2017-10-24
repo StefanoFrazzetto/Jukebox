@@ -211,7 +211,7 @@ Player.prototype.playAlbum = function (albumId, songNumber) {
 
         _player.addSongsToPlaylist(songs);
 
-        _player.playSongAtIndex(songNumber);
+        _player.playSongAtIndex(songNumber, false);
 
         _player.callback(_player.onAlbumChange);
         _player.callback(_player.onTrackChange);
@@ -234,8 +234,11 @@ Player.prototype.playSong = function (song) {
     this.playUrl(song.getUrl());
 };
 
-Player.prototype.playSongAtIndex = function (index) {
+Player.prototype.playSongAtIndex = function (index, fireEvents) {
     index = parseInt(index);
+
+    if (typeof fireEvents === "undefined")
+        fireEvents = true;
 
     if (index < 0) {
         console.warn("Index less than zero passed to Player.playSongAtIndex()");
@@ -255,12 +258,15 @@ Player.prototype.playSongAtIndex = function (index) {
 
     this.playSong(newSong);
 
-    if (typeof oldSong === "undefined" || oldSong.id !== newSong.id) {
-        this.callback(this.onTrackChange);
-    }
+    if (fireEvents) {
+        if (typeof oldSong === "undefined" || oldSong.id !== newSong.id) {
+            this.callback(this.onTrackChange);
+        }
 
-    if (typeof oldSong === "undefined" || oldSong.album_id !== newSong.album_id) {
-        this.callback(this.onAlbumChange)
+        if (typeof oldSong === "undefined" || oldSong.album_id !== newSong.album_id) {
+
+            this.callback(this.onAlbumChange);
+        }
     }
 };
 
