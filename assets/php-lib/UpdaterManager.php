@@ -167,7 +167,7 @@ class UpdaterManager
         }
 
         if (!$success) {
-            error_log("Failed to run the updater: $messages");
+            error_log("UpdaterManager: $messages");
         }
 
         return ['status' => $success, 'message' => $messages];
