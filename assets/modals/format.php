@@ -11,18 +11,19 @@
 </div>
 <div class="modalBody" data-mcs-theme="dark">
 
-	<div id="confirm_action">
-		<p><b>Do you really want to proceed?</b></p> 
-		<p><b>This operation cannot be undone.<b></p><br>
-		<div class="box-btn" id="confirm_action_button">Confirm</div>
-		<div class="box-btn cancel" id="exit_reset">Cancel</div>
-	</div>
-
 	<div class="choice" id="format_intro">
 		<p>Please click on the action that you want to perform:</p> <br>
+		<div class="box-btn" id="intro_reset_factory_setting">Reset settings</div>
 		<div class="box-btn" id="intro_hdd_database">Format HDD & Database</div>
 		<div class="box-btn" id="intro_factory">Factory Reset</div>
 	</div>
+
+    <div class="choice" id="reset_factory_setting">
+        <p>Do you really want to reset all the settings to factory values?</p>
+        <p>This operation WILL NOT remove your albums or radio stations.</p><br>
+        <div class="box-btn" id="confirm_reset_factory_setting">Confirm</div>
+        <div class="box-btn cancel">Cancel</div>
+    </div>
 
 	<div class="choice" id="format_hdd_database">
 		<p>Click "Confirm" to remove all the albums stored in the HDD.</p> 
@@ -46,17 +47,17 @@
 
 <script type="text/javascript">
 	function init() {
-		$('#format_intro').hide();
+        $('#reset_factory_setting').hide();
 		$('#format_hdd_database').hide();
 		$('#format_factory').hide();
 	}
 
 	init();
 
-	$('#confirm_action_button').click(function() {
-		$('#confirm_action').hide();
-		$('#format_intro').show();
-	});
+    $('#intro_reset_factory_setting').click(function() {
+        $('#format_intro').hide();
+        $('#reset_factory_setting').show();
+    });
 
 	$('#intro_hdd_database').click(function() {
 		$('#format_intro').hide();
@@ -70,12 +71,22 @@
 
 	$('.cancel').click(function() {
 		$('.choice').hide();
-		$('#confirm_action').show();
+		$('#format_intro').show();
 	});
 
 	$('#exit_reset').click(function(){
         modal.close();
 	});
+
+    $('#confirm_reset_factory_settings').click(function() {
+        $.ajax({
+            url: "assets/API/format.php?operation=reset_factory_settings"
+        }).done(function(data){
+            init();
+            $('#format_end').html("<p>" + data + "</p>");
+            reload();
+        });
+    });
 
 	$('#confirm_hdd_database').click(function() {
 		$.ajax({

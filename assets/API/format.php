@@ -4,10 +4,12 @@ require_once '../../vendor/autoload.php';
 
 use Lib\System;
 
-if (isset($_GET['operation'])) {
+$operation = $_GET['operation'];
+
+if (isset($operation)) {
     $fail = 'Error! It was not possible to perform the requested action.';
 
-    switch ($_GET['operation']) {
+    switch ($operation) {
         case 'format_hdd_database':
             $device = new System();
             $success_soft = 'The albums and the radio stations have been successfully removed.';
@@ -22,7 +24,15 @@ if (isset($_GET['operation'])) {
             echo $device->hardReset() ? $success_hard : $fail;
             break;
 
+        case 'reset_factory_settings':
+            $device = new System();
+            $success = "All settings have been reset to factory values.\nPlease reboot the system.";
+
+            echo $device->resetSettingsToFactoryValues() ? $success : $fail;
+            break;
+
         default:
-            echo 'An error occurred. File: format.php';
+            error_log("Unrecognised operation $operation in file format.php.");
+            echo 'An error occurred. Please try again.';
     }
 }
