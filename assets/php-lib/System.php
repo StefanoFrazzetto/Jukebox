@@ -208,6 +208,7 @@ class System
     {
         $res_perm = $this->fixPermissions();
         $res_apache = $this->fixApacheConfig();
+        $this->resetSettingsToFactoryValues();
 
         $database = new Database();
         $database->resetDatabase();
