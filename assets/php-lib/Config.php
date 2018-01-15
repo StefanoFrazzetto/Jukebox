@@ -51,22 +51,16 @@ class Config
      *
      * If the first parameter is not specified, an array of paths is returned.
      *
-     * @param string $path The path to get from the config file.
+     * @param string $name the path to get from the config file.
      *
-     * @return mixed|null If a path is passed, the specified path is returned
-     *                    if it does exist, otherwise null is returned. If no parameter is passed,
-     *                    the array of paths is returned instead.
+     * @return string|null the specified path, if set, otherwise null.
      */
-    public static function getPath($path = '')
+    public static function getPath($name)
     {
         $config = new self();
         $paths = $config->get('paths');
 
-        if (empty($paths)) {
-            return $paths;
-        }
-
-        return isset($paths[$path]) ? $paths[$path] : null;
+        return isset($paths[$name]) ? $paths[$name] : null;
     }
 
     /**
