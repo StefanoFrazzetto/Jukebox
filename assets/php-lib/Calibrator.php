@@ -36,9 +36,44 @@ class Calibrator
     /**
      * Sets the default values to the configuration file.
      */
-    public static function reset()
+    public static function setDefaultCalibration()
     {
         self::setConfiguration(static::$default);
+    }
+
+    /**
+     * Adds the lines necessary for the configuration to work.
+     */
+    public static function reset() {
+        $file_content = file_get_contents(static::$config);
+        $array = explode("\n", $file_content);
+
+        // Check if the file already contains the calibration lines and removes them
+        foreach ($array as $key => $line) {
+            if (StringUtils::contains($array[$key], ['Option "Calibration"', 'Option "SwapAxes"'])) {
+                unset($array[$key]);
+            }
+        }
+
+        // Find the place where the lines have to be inserted
+        foreach ($array as $key => $line) {
+            if (StringUtils::contains($line, 'Identifier "evdev touchscreen catchall"')) {
+
+                // Split the array in 2 parts using "Identifier "evdev touchscreen catchall"" as delimiter
+                $offset = $key + 1;
+                $first_part =  array_slice($array, 0, $offset);
+                $second_part =  array_slice($array, $offset, count($array) - $offset);
+
+                // Add the calibration lines
+                $first_part[] = "\tOption \"Calibration\" \"". static::$default .'"';
+                $first_part[] = "\tOption \"SwapAxes\" \"0\"";
+                $merged = array_merge($first_part, $second_part);
+                $output = implode("\n", $merged);
+
+                file_put_contents(static::$config, $output);
+                break;
+            }
+        }
     }
 
     /**
