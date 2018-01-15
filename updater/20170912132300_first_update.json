@@ -3,12 +3,11 @@
   "date": "12-09-2017 14:16",
   "aptitude": {
     "install": [
-      "nano"
     ],
     "autoremove": [
     ]
   },
   "raw": [
-    "echo 'Updater created!' > /tmp/updater_test.txt"
+    "echo 'System update launched successfully!' > /tmp/updater_test.txt"
   ]
 }
