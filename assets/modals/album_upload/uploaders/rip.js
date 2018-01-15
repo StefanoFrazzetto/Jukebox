@@ -28,8 +28,10 @@ $(function () {
                 success();
             } else if (status === "idle") {
                 alert("The ripper is in idle...");
+                stopProgress();
             } else {
                 error("Unknown status returned by the ripper");
+                stopProgress();
             }
         });
     }
