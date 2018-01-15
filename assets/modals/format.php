@@ -47,7 +47,7 @@
 
 <script type="text/javascript">
 	function init() {
-        $('#reset_factory_setting').hide();
+        $('#reset_default_settings').hide();
 		$('#format_hdd_database').hide();
 		$('#format_factory').hide();
 	}
