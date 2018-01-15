@@ -217,7 +217,7 @@ class System
     }
 
     /**
-     * Reset the jukebox to factory settings.
+     * Reset settings to factory.
      *
      * 1. Fix file/directory permissions
      * 2. Add/replace Apache .user.ini file with the one in "installation"
@@ -227,6 +227,25 @@ class System
         $this->fixPermissions();
         $this->fixApacheConfig();
         Calibrator::reset();
+
+        // Remove the network settings
+        $config_directory_path = Config::getPath('config_directory');
+        FileUtils::remove($config_directory_path.'wifiDB.json');
+        FileUtils::remove($config_directory_path.'network_settings.json');
+
+        $this->resetDefaultPorts();
+    }
+
+    /**
+     * Reset all the services ports to their default value.
+     */
+    public function resetDefaultPorts() {
+        $Config = new Config();
+        $ports = $Config->get('ports', true);
+        $Config->set('ports', $ports);
+
+        $this->setSshPort($ports['ssh']);
+        $this->setHttpPort($ports['http']);
     }
 
     /**
