@@ -44,7 +44,8 @@ class Calibrator
     /**
      * Adds the lines necessary for the configuration to work.
      */
-    public static function reset() {
+    public static function reset()
+    {
         $file_content = file_get_contents(static::$config);
         $array = explode("\n", $file_content);
 
@@ -61,11 +62,11 @@ class Calibrator
 
                 // Split the array in 2 parts using "Identifier "evdev touchscreen catchall"" as delimiter
                 $offset = $key + 1;
-                $first_part =  array_slice($array, 0, $offset);
-                $second_part =  array_slice($array, $offset, count($array) - $offset);
+                $first_part = array_slice($array, 0, $offset);
+                $second_part = array_slice($array, $offset, count($array) - $offset);
 
                 // Add the calibration lines
-                $first_part[] = "\tOption \"Calibration\" \"". static::$default .'"';
+                $first_part[] = "\tOption \"Calibration\" \"".static::$default.'"';
                 $first_part[] = "\tOption \"SwapAxes\" \"0\"";
                 $merged = array_merge($first_part, $second_part);
                 $output = implode("\n", $merged);
