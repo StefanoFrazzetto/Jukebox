@@ -223,7 +223,7 @@ class System
      * 2. Add/replace Apache .user.ini file with the one in "installation"
      * 3. Reset the screen calibration to the default one
      */
-    public function resetToFactorySettings() {
+    public function resetSettingsToFactoryValues() {
         $this->fixPermissions();
         $this->fixApacheConfig();
         Calibrator::reset();
