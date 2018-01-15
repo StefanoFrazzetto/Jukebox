@@ -54,7 +54,7 @@
 
 	init();
 
-    $('#intro_reset_factory_setting').click(function() {
+    $('#intro_reset_default_settings').click(function() {
         $('#format_intro').hide();
         $('#reset_factory_setting').show();
     });
