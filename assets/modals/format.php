@@ -56,7 +56,7 @@
 
     $('#intro_reset_default_settings').click(function() {
         $('#format_intro').hide();
-        $('#reset_factory_setting').show();
+        $('#reset_default_settings').show();
     });
 
 	$('#intro_hdd_database').click(function() {
