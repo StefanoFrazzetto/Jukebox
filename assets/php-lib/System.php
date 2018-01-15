@@ -234,6 +234,8 @@ class System
         FileUtils::remove($config_directory_path.'network_settings.json');
 
         $this->resetDefaultPorts();
+
+        return true;
     }
 
     /**
