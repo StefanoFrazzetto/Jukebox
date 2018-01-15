@@ -224,7 +224,8 @@ class System
      * 2. Add/replace Apache .user.ini file with the one in "installation"
      * 3. Reset the screen calibration to the default one
      */
-    public function resetSettingsToFactoryValues() {
+    public function resetSettingsToFactoryValues()
+    {
         $this->fixPermissions();
         $this->fixApacheConfig();
         Calibrator::reset();
@@ -242,7 +243,8 @@ class System
     /**
      * Reset all the services ports to their default value.
      */
-    public function resetDefaultPorts() {
+    public function resetDefaultPorts()
+    {
         $Config = new Config();
         $ports = $Config->get('ports', true);
         $Config->set('ports', $ports);
