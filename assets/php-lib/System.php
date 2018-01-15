@@ -217,6 +217,19 @@ class System
     }
 
     /**
+     * Reset the jukebox to factory settings.
+     *
+     * 1. Fix file/directory permissions
+     * 2. Add/replace Apache .user.ini file with the one in "installation"
+     * 3. Reset the screen calibration to the default one
+     */
+    public function resetToFactorySettings() {
+        $this->fixPermissions();
+        $this->fixApacheConfig();
+        Calibrator::reset();
+    }
+
+    /**
      * Fix files and directories permissions.
      *
      * Set directory permissions to 775 and file permissions to 664 recursively.
