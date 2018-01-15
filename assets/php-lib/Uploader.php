@@ -80,7 +80,7 @@ class Uploader
     {
         $config = new Config();
 
-        return realpath($config->get('paths')['uploader']);
+        return realpath($config->get('paths')['uploader']).'/';
     }
 
     /**

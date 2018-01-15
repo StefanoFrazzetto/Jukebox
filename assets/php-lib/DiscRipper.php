@@ -39,7 +39,7 @@ class DiscRipper extends Disc
 
         if (!empty($uploader_id)) {
             $this->uploader_id = $uploader_id;
-            $path = Config::getPath('uploader').$uploader_id."/CD$cd";
+            $path = Config::getPath('uploader')."/$uploader_id/CD$cd";
 
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
