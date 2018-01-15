@@ -21,7 +21,7 @@
     <div class="choice" id="reset_default_settings">
         <p>Do you really want to reset all the settings to their default values?</p>
         <p>This operation WILL NOT remove your albums or radio stations.</p><br>
-        <div class="box-btn" id="confirm_reset_factory_setting">Confirm</div>
+        <div class="box-btn" id="confirm_reset_default_settings">Confirm</div>
         <div class="box-btn cancel">Cancel</div>
     </div>
 
