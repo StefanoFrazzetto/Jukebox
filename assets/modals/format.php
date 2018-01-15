@@ -13,13 +13,13 @@
 
 	<div class="choice" id="format_intro">
 		<p>Please click on the action that you want to perform:</p> <br>
-		<div class="box-btn" id="intro_reset_factory_setting">Reset settings</div>
+		<div class="box-btn" id="intro_reset_default_settings">Reset default settings</div>
 		<div class="box-btn" id="intro_hdd_database">Format HDD & Database</div>
 		<div class="box-btn" id="intro_factory">Factory Reset</div>
 	</div>
 
-    <div class="choice" id="reset_factory_setting">
-        <p>Do you really want to reset all the settings to factory values?</p>
+    <div class="choice" id="reset_default_settings">
+        <p>Do you really want to reset all the settings to their default values?</p>
         <p>This operation WILL NOT remove your albums or radio stations.</p><br>
         <div class="box-btn" id="confirm_reset_factory_setting">Confirm</div>
         <div class="box-btn cancel">Cancel</div>
@@ -78,9 +78,9 @@
         modal.close();
 	});
 
-    $('#confirm_reset_factory_settings').click(function() {
+    $('#confirm_reset_default_settings').click(function() {
         $.ajax({
-            url: "assets/API/format.php?operation=reset_factory_settings"
+            url: "assets/API/format.php?operation=reset_default_settings"
         }).done(function(data){
             init();
             $('#format_end').html("<p>" + data + "</p>");

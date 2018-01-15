@@ -208,7 +208,7 @@ class System
     {
         $res_perm = $this->fixPermissions();
         $res_apache = $this->fixApacheConfig();
-        $this->resetSettingsToFactoryValues();
+        $this->resetDefaultSettings();
 
         $database = new Database();
         $database->resetDatabase();
@@ -218,13 +218,13 @@ class System
     }
 
     /**
-     * Reset settings to factory.
+     * Reset settings to their default values.
      *
      * 1. Fix file/directory permissions
      * 2. Add/replace Apache .user.ini file with the one in "installation"
      * 3. Reset the screen calibration to the default one
      */
-    public function resetSettingsToFactoryValues()
+    public function resetDefaultSettings()
     {
         $this->fixPermissions();
         $this->fixApacheConfig();

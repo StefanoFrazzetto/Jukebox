@@ -24,11 +24,11 @@ if (isset($operation)) {
             echo $device->hardReset() ? $success_hard : $fail;
             break;
 
-        case 'reset_factory_settings':
+        case 'reset_default_settings':
             $device = new System();
             $success = "All settings have been reset to factory values.\nPlease reboot the system.";
 
-            echo $device->resetSettingsToFactoryValues() ? $success : $fail;
+            echo $device->resetDefaultSettings() ? $success : $fail;
             break;
 
         default:
