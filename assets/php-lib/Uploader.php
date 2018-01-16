@@ -40,7 +40,7 @@ class Uploader
     const STATUS_FILE = 'uploader_status.json';
 
     /** @const array the array of allowed music extensions */
-    const ALLOWED_MUSIC_EXTENSIONS = ['mp3', 'wav'];
+    const ALLOWED_MUSIC_EXTENSIONS = ['mp3', 'wav', 'flac'];
 
     /** @var int the uploader source */
     private $source = 2;
@@ -351,7 +351,9 @@ class Uploader
             $cdNo = $matches[0][0];
 
             $finder = new Finder();
-            $tracks = $finder->in($full_path."/CD$cdNo/")->files()->name('/^.*\.(mp3|wav)$/i')->sortByName();
+            $formats = implode('|', self::ALLOWED_MUSIC_EXTENSIONS);
+            $pattern = "/^.*\.($formats)$/i";
+            $tracks = $finder->in($full_path."/CD$cdNo/")->files()->name($pattern)->sortByName();
 
             if ($this->source == self::MEDIA_SOURCE_RIPPER) { // If the source is the ripper
                 $tracks_info["CD$cdNo"] = $this->createTracksInfoMusicBrainz($tracks);

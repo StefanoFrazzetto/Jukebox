@@ -47,7 +47,7 @@ $(function () {
     });
 
     Dropzone.options.dropzone = {
-        acceptedFiles: '.mp3,.jpg,.jpeg,.png,.gif,.wav',
+        acceptedFiles: '.mp3,.jpg,.jpeg,.png,.gif,.wav,.flac',
         parallelUploads: 6,
         url: baseUrl
     };
