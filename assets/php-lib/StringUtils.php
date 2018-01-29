@@ -50,16 +50,10 @@ abstract class StringUtils
      *                               true will be returned only if the haystack contains all the elements
      *                               passed in the needle array.
      *
-     * @throws Exception if the needle is empty.
-     *
      * @return bool true if the string was found, false otherwise.
      */
     public static function contains($haystack, $needle, $strict = false)
     {
-        if (empty($needle)) {
-            throw new Exception('The needle cannot be empty.');
-        }
-
         $found = 0;
         if (is_array($needle)) {
             foreach ($needle as $element) {
