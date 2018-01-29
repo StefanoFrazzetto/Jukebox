@@ -2,8 +2,6 @@
 
 namespace Lib;
 
-use Exception;
-
 abstract class StringUtils
 {
     /**
