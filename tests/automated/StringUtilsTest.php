@@ -44,23 +44,21 @@ class StringUtilsTest extends JukeboxTestClass
         $this->assertFalse(StringUtils::contains($content, $check));
     }
 
-    public function testContains4()
-    {
-        $this->expectException(Exception::class);
-
-        $content = '';
-        $check = '';
-        StringUtils::contains($content, $check);
-    }
-
-    public function testContains5()
-    {
-        $this->expectException(Exception::class);
-
-        $content = 'some content';
-        $check = '';
-        StringUtils::contains($content, $check);
-    }
+//    public function testContains4()
+//    {
+//        $content = '';
+//        $check = '';
+//        $this->assertTrue(StringUtils::contains($content, $check));
+//    }
+//
+//    public function testContains5()
+//    {
+//        $this->expectException(Exception::class);
+//
+//        $content = 'some content';
+//        $check = '';
+//        $this->assertFalse(StringUtils::contains($content, $check));
+//    }
 
     public function testContainsNeedleArray1()
     {
@@ -109,14 +107,14 @@ class StringUtilsTest extends JukeboxTestClass
         $this->assertFalse(StringUtils::arrayContains($content, $check));
     }
 
-    public function testArrayContains3()
-    {
-        $this->expectException(Exception::class);
-
-        $content = ['string' => 'This is a test string'];
-        $check = '';
-        StringUtils::arrayContains($content, $check);
-    }
+//    public function testArrayContains3()
+//    {
+//        $this->expectException(Exception::class);
+//
+//        $content = ['string' => 'This is a test string'];
+//        $check = '';
+//        StringUtils::arrayContains($content, $check);
+//    }
 
     /**
      * Exceptional case. Result?
