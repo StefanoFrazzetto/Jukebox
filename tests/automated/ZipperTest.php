@@ -39,7 +39,8 @@ final class ZipperTest extends JukeboxTestClass
         }
     }
 
-    public function testFake() {
+    public function testFake()
+    {
         $this->assertTrue(true);
     }
 
